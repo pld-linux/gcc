@@ -66,6 +66,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch sparc64
 %define		_slibdir64	/lib64
 %define		_libdir		/usr/lib
+%define		rpmcflags	-mtune=ultrasparc
 %endif
 
 %description
@@ -632,9 +633,6 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-%ifarch sparc64
-OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-m64//g' -e 's/-m32//g' -e 's/-mcpu=ultrasparc/-mtune=ultrasparc/g'`
-%endif
 
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
