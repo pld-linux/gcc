@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
