@@ -936,7 +936,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
-%{_includedir}/gc*.h
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
