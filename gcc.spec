@@ -29,7 +29,6 @@ Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
-Patch5:		%{name}-gcc-page.c.patch
 Patch6:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
@@ -37,7 +36,6 @@ Patch16:	gcc32-boehm-gc-libs.patch
 Patch17:	gcc32-bogus-inline.patch
 Patch18:	gcc32-c++-nrv-test.patch
 Patch20:	gcc32-c++-tsubst-asm.patch
-Patch21:	gcc32-cfg-eh.patch
 Patch22:	gcc32-debug-pr7241.patch
 
 Patch24:	gcc32-duplicate-decl.patch
@@ -45,10 +43,7 @@ Patch25:	gcc32-dwarf2-pr6381.patch
 Patch26:	gcc32-dwarf2-pr6436-test.patch
 Patch27:	gcc32-fde-merge-compat.patch
 
-Patch31:	gcc32-i386-default-momit-leaf-frame-pointer.patch
 Patch32:	gcc32-i386-memtest-test.patch
-Patch33:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
-Patch34:	gcc32-i386-pic-label-thunk.patch
 Patch36:	gcc32-inline-label.patch
 Patch37:	gcc32-java-no-rpath.patch
 Patch40:	gcc32-test-rh65771.patch
@@ -567,7 +562,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 ##%%patch2 -p1
 ##%%patch3 -p1
 %patch4 -p1
-##%%patch5 -p1
 ##%%patch6 -p1
 
 ##%%patch10 -p1
@@ -575,17 +569,13 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 ##%%patch17
 %patch18
 %patch20
-##%%patch21
 %patch22
 
 %patch24
 %patch25
 %patch26
 %patch27
-##%%patch31
 %patch32
-##%%patch33
-##%%patch34
 %patch36
 %patch37
 %patch40
