@@ -28,6 +28,7 @@ BuildRequires:	gcc-ada
 BuildRequires:	perl-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{version}
+Requires:	libgcc = %{version}
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
