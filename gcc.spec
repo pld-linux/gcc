@@ -532,6 +532,7 @@ ln -sf	$RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
 %endif
 
+ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
@@ -550,7 +551,6 @@ ln -sf	libgnat-4.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.0.so
 ln -sf	libgnarl-4.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.0.so
 ln -sf	libgnat-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf	libgnarl-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
-ln -sf	%{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 %endif
 
 cd ..
