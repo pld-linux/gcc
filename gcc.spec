@@ -206,6 +206,7 @@ Group:		Development/Languages
 Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
+Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
