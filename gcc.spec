@@ -505,6 +505,14 @@ TEXCONFIG=false \
 
 cd ..
 
+%if %{with bootstrap}
+touch gcc/ada/treeprs.ads
+touch gcc/ada/einfo.h
+touch gcc/ada/sinfo.h
+touch gcc/ada/nmake.ads
+touch gcc/ada/nmake.adb
+%endif
+
 %{__make} -C obj-%{_target_platform} \
 	%{!?with_bootstrap:profiledbootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
