@@ -894,7 +894,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc READ* ChangeLog BUGS FAQ LAST_UPDATED MAINTAINERS gcc/README.Portability
+%doc READ* ChangeLog BUGS FAQ LAST_UPDATED MAINTAINERS gcc-3.4/README.Portability
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
