@@ -1,6 +1,6 @@
-diff -uNr gcc-3.4.0.orig/gcc/calls.c gcc-3.4.0/gcc/calls.c
---- gcc-3.4.0.orig/gcc/calls.c	2004-03-16 00:22:42.000000000 +0100
-+++ gcc-3.4.0/gcc/calls.c	2004-05-13 23:59:01.343404072 +0200
+diff -uNr gcc-3.4.3.orig/gcc/calls.c gcc-3.4.3/gcc/calls.c
+--- gcc-3.4.3.orig/gcc/calls.c	2004-06-24 09:26:50.000000000 +0200
++++ gcc-3.4.3/gcc/calls.c	2004-11-24 18:35:31.000000000 +0100
 @@ -2321,8 +2321,12 @@
  	  {
  	    /* For variable-sized objects, we must be called with a target
@@ -16,9 +16,25 @@ diff -uNr gcc-3.4.0.orig/gcc/calls.c gcc-3.4.0/gcc/calls.c
  
  	    mark_temp_addr_taken (d);
  	    structure_value_addr = XEXP (d, 0);
-diff -uNr gcc-3.4.0.orig/gcc/combine.c gcc-3.4.0/gcc/combine.c
---- gcc-3.4.0.orig/gcc/combine.c	2004-02-21 14:24:43.000000000 +0100
-+++ gcc-3.4.0/gcc/combine.c	2004-05-13 23:59:01.392396624 +0200
+diff -uNr gcc-3.4.3.orig/gcc/c-cppbuiltin.c gcc-3.4.3/gcc/c-cppbuiltin.c
+--- gcc-3.4.3.orig/gcc/c-cppbuiltin.c	2004-03-04 11:24:54.000000000 +0100
++++ gcc-3.4.3/gcc/c-cppbuiltin.c	2004-11-24 18:35:31.000000000 +0100
+@@ -408,6 +408,12 @@
+   if (c_dialect_objc () && flag_next_runtime)
+     cpp_define (pfile, "__NEXT_RUNTIME__");
+ 
++  /* Make the choice of the stack protector runtime visible to source code.  */
++  if (flag_propolice_protection)
++    cpp_define (pfile, "__SSP__=1");
++  if (flag_stack_protection)
++    cpp_define (pfile, "__SSP_ALL__=2");
++
+   /* A straightforward target hook doesn't work, because of problems
+      linking that hook's body when part of non-C front ends.  */
+ # define preprocessing_asm_p() (cpp_get_options (pfile)->lang == CLK_ASM)
+diff -uNr gcc-3.4.3.orig/gcc/combine.c gcc-3.4.3/gcc/combine.c
+--- gcc-3.4.3.orig/gcc/combine.c	2004-10-13 01:35:29.000000000 +0200
++++ gcc-3.4.3/gcc/combine.c	2004-11-24 18:35:31.000000000 +0100
 @@ -1401,6 +1401,10 @@
  	      && ! fixed_regs[REGNO (dest)]
  	      && CLASS_LIKELY_SPILLED_P (REGNO_REG_CLASS (REGNO (dest))))))
@@ -30,7 +46,7 @@ diff -uNr gcc-3.4.0.orig/gcc/combine.c gcc-3.4.0/gcc/combine.c
  
    return 0;
  }
-@@ -3780,7 +3784,20 @@
+@@ -3781,7 +3785,20 @@
  	  rtx inner_op0 = XEXP (XEXP (x, 0), 1);
  	  rtx inner_op1 = XEXP (x, 1);
  	  rtx inner;
@@ -52,7 +68,7 @@ diff -uNr gcc-3.4.0.orig/gcc/combine.c gcc-3.4.0/gcc/combine.c
  	  /* Make sure we pass the constant operand if any as the second
  	     one if this is a commutative operation.  */
  	  if (CONSTANT_P (inner_op0) && GET_RTX_CLASS (code) == 'c')
-@@ -4145,6 +4162,13 @@
+@@ -4146,6 +4163,13 @@
  	 they are now checked elsewhere.  */
        if (GET_CODE (XEXP (x, 0)) == PLUS
  	  && CONSTANT_ADDRESS_P (XEXP (XEXP (x, 0), 1)))
@@ -66,7 +82,7 @@ diff -uNr gcc-3.4.0.orig/gcc/combine.c gcc-3.4.0/gcc/combine.c
  	return gen_binary (PLUS, mode,
  			   gen_binary (PLUS, mode, XEXP (XEXP (x, 0), 0),
  				       XEXP (x, 1)),
-@@ -4272,8 +4296,14 @@
+@@ -4273,8 +4297,14 @@
  	}
  
        /* Canonicalize (minus A (plus B C)) to (minus (minus A B) C) for
@@ -83,9 +99,9 @@ diff -uNr gcc-3.4.0.orig/gcc/combine.c gcc-3.4.0/gcc/combine.c
  	return gen_binary (MINUS, mode,
  			   gen_binary (MINUS, mode, XEXP (x, 0),
  				       XEXP (XEXP (x, 1), 0)),
-diff -uNr gcc-3.4.0.orig/gcc/common.opt gcc-3.4.0/gcc/common.opt
---- gcc-3.4.0.orig/gcc/common.opt	2004-02-18 01:09:04.000000000 +0100
-+++ gcc-3.4.0/gcc/common.opt	2004-05-13 23:59:01.397395864 +0200
+diff -uNr gcc-3.4.3.orig/gcc/common.opt gcc-3.4.3/gcc/common.opt
+--- gcc-3.4.3.orig/gcc/common.opt	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/common.opt	2004-11-24 18:35:31.000000000 +0100
 @@ -152,6 +152,10 @@
  Common
  Warn when a variable is unused
@@ -97,7 +113,7 @@ diff -uNr gcc-3.4.0.orig/gcc/common.opt gcc-3.4.0/gcc/common.opt
  aux-info
  Common Separate
  -aux-info <file>	Emit declaration information into <file>
-@@ -738,6 +742,14 @@
+@@ -743,6 +747,14 @@
  Common
  Put zero initialized data in the bss section
  
@@ -112,9 +128,9 @@ diff -uNr gcc-3.4.0.orig/gcc/common.opt gcc-3.4.0/gcc/common.opt
  g
  Common JoinedOrMissing
  Generate debug information in default format
-diff -uNr gcc-3.4.0.orig/gcc/config/arm/arm.md gcc-3.4.0/gcc/config/arm/arm.md
---- gcc-3.4.0.orig/gcc/config/arm/arm.md	2004-01-13 14:24:37.000000000 +0100
-+++ gcc-3.4.0/gcc/config/arm/arm.md	2004-05-13 23:59:01.879322600 +0200
+diff -uNr gcc-3.4.3.orig/gcc/config/arm/arm.md gcc-3.4.3/gcc/config/arm/arm.md
+--- gcc-3.4.3.orig/gcc/config/arm/arm.md	2004-08-25 17:46:19.000000000 +0200
++++ gcc-3.4.3/gcc/config/arm/arm.md	2004-11-24 18:35:31.000000000 +0100
 @@ -3840,7 +3840,13 @@
  	(match_operand:DI 1 "general_operand" ""))]
    "TARGET_EITHER"
@@ -130,9 +146,9 @@ diff -uNr gcc-3.4.0.orig/gcc/config/arm/arm.md gcc-3.4.0/gcc/config/arm/arm.md
      {
        if (!no_new_pseudos)
          {
-diff -uNr gcc-3.4.0.orig/gcc/config/t-linux gcc-3.4.0/gcc/config/t-linux
---- gcc-3.4.0.orig/gcc/config/t-linux	2003-09-23 20:55:57.000000000 +0200
-+++ gcc-3.4.0/gcc/config/t-linux	2004-05-13 23:59:01.839328680 +0200
+diff -uNr gcc-3.4.3.orig/gcc/config/t-linux gcc-3.4.3/gcc/config/t-linux
+--- gcc-3.4.3.orig/gcc/config/t-linux	2003-09-23 20:55:57.000000000 +0200
++++ gcc-3.4.3/gcc/config/t-linux	2004-11-24 18:35:31.000000000 +0100
 @@ -1,7 +1,7 @@
  # Compile crtbeginS.o and crtendS.o with pic.
  CRTSTUFF_T_CFLAGS_S = $(CRTSTUFF_T_CFLAGS) -fPIC
@@ -142,10 +158,44 @@ diff -uNr gcc-3.4.0.orig/gcc/config/t-linux gcc-3.4.0/gcc/config/t-linux
  
  # Override t-slibgcc-elf-ver to export some libgcc symbols with
  # the symbol versions that glibc used.
-diff -uNr gcc-3.4.0.orig/gcc/cse.c gcc-3.4.0/gcc/cse.c
---- gcc-3.4.0.orig/gcc/cse.c	2004-03-22 00:01:49.000000000 +0100
-+++ gcc-3.4.0/gcc/cse.c	2004-05-13 23:59:01.437389784 +0200
-@@ -4203,7 +4203,14 @@
+diff -uNr gcc-3.4.3.orig/gcc/configure gcc-3.4.3/gcc/configure
+--- gcc-3.4.3.orig/gcc/configure	2004-11-05 05:14:05.000000000 +0100
++++ gcc-3.4.3/gcc/configure	2004-11-24 18:44:13.000000000 +0100
+@@ -4809,6 +4809,9 @@
+ fi;
+ 
+ 
++ENABLESSP=""
++
++
+ # -------------------------
+ # Checks for other programs
+ # -------------------------
+@@ -13036,6 +13039,7 @@
+ s,@TARGET_SYSTEM_ROOT_DEFINE@,$TARGET_SYSTEM_ROOT_DEFINE,;t t
+ s,@CROSS_SYSTEM_HEADER_DIR@,$CROSS_SYSTEM_HEADER_DIR,;t t
+ s,@onestep@,$onestep,;t t
++s,@ENABLESSP@,$ENABLESSP,;t t
+ s,@SET_MAKE@,$SET_MAKE,;t t
+ s,@AWK@,$AWK,;t t
+ s,@LN@,$LN,;t t
+diff -uNr gcc-3.4.3.orig/gcc/configure.ac gcc-3.4.3/gcc/configure.ac
+--- gcc-3.4.3.orig/gcc/configure.ac	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/configure.ac	2004-11-24 18:46:57.000000000 +0100
+@@ -613,6 +613,9 @@
+ [onestep=""])
+ AC_SUBST(onestep)
+ 
++ENABLESSP=""
++AC_SUBST(ENABLESSP)
++
+ # -------------------------
+ # Checks for other programs
+ # -------------------------
+diff -uNr gcc-3.4.3.orig/gcc/cse.c gcc-3.4.3/gcc/cse.c
+--- gcc-3.4.3.orig/gcc/cse.c	2004-10-26 20:05:42.000000000 +0200
++++ gcc-3.4.3/gcc/cse.c	2004-11-24 18:35:31.000000000 +0100
+@@ -4212,7 +4212,14 @@
  
  	      if (new_const == 0)
  		break;
@@ -161,7 +211,7 @@ diff -uNr gcc-3.4.0.orig/gcc/cse.c gcc-3.4.0/gcc/cse.c
  	      /* If we are associating shift operations, don't let this
  		 produce a shift of the size of the object or larger.
  		 This could occur when we follow a sign-extend by a right
-@@ -4735,6 +4742,14 @@
+@@ -4744,6 +4751,14 @@
        if (SET_DEST (x) == pc_rtx
  	  && GET_CODE (SET_SRC (x)) == LABEL_REF)
  	;
@@ -176,9 +226,65 @@ diff -uNr gcc-3.4.0.orig/gcc/cse.c gcc-3.4.0/gcc/cse.c
  
        /* Don't count call-insns, (set (reg 0) (call ...)), as a set.
  	 The hard function value register is used only once, to copy to
-diff -uNr gcc-3.4.0.orig/gcc/explow.c gcc-3.4.0/gcc/explow.c
---- gcc-3.4.0.orig/gcc/explow.c	2004-04-03 01:05:26.000000000 +0200
-+++ gcc-3.4.0/gcc/explow.c	2004-05-13 23:59:01.455387048 +0200
+diff -uNr gcc-3.4.3.orig/gcc/doc/invoke.texi gcc-3.4.3/gcc/doc/invoke.texi
+--- gcc-3.4.3.orig/gcc/doc/invoke.texi	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/doc/invoke.texi	2004-11-24 18:35:32.000000000 +0100
+@@ -228,7 +228,7 @@
+ -Wno-multichar  -Wnonnull  -Wpacked  -Wpadded @gol
+ -Wparentheses  -Wpointer-arith  -Wredundant-decls @gol
+ -Wreturn-type  -Wsequence-point  -Wshadow @gol
+--Wsign-compare  -Wstrict-aliasing @gol
++-Wsign-compare  -Wstack-protector  -Wstrict-aliasing @gol
+ -Wswitch  -Wswitch-default  -Wswitch-enum @gol
+ -Wsystem-headers  -Wtrigraphs  -Wundef  -Wuninitialized @gol
+ -Wunknown-pragmas  -Wunreachable-code @gol
+@@ -673,6 +673,7 @@
+ -fshort-double  -fshort-wchar @gol
+ -fverbose-asm  -fpack-struct  -fstack-check @gol
+ -fstack-limit-register=@var{reg}  -fstack-limit-symbol=@var{sym} @gol
++-fstack-protector  -fstack-protector-all @gol
+ -fargument-alias  -fargument-noalias @gol
+ -fargument-noalias-global  -fleading-underscore @gol
+ -ftls-model=@var{model} @gol
+@@ -3006,6 +3007,10 @@
+ complex; GCC will refuse to optimize programs when the optimization
+ itself is likely to take inordinate amounts of time.
+ 
++@item -Wstack-protector
++@opindex Wstack-protector
++Warn when not issuing stack smashing protection for some reason.
++
+ @item -Werror
+ @opindex Werror
+ Make all warnings into errors.
+@@ -11202,6 +11207,24 @@
+ @option{-Wl,--defsym,__stack_limit=0x7ffe0000} to enforce a stack limit
+ of 128KB@.  Note that this may only work with the GNU linker.
+ 
++@item -fstack-protector
++@item -fstack-protector-all
++@opindex fstack-protector
++@opindex fstack-protector-all
++@opindex fno-stack-protector
++Generate code to protect an application from a stack smashing
++attack. The features are (1) the insertion of random value next to the
++frame pointer to detect the integrity of the stack, (2) the reordering
++of local variables to place buffers after pointers to avoid the
++corruption of pointers that could be used to further corrupt arbitrary
++memory locations, (3) the copying of pointers in function arguments to
++an area preceding local variable buffers to prevent the corruption of
++pointers that could be used to further corrupt arbitrary memory
++locations, and the (4) omission of instrumentation code from some
++functions to decrease the performance overhead.  If the integrity
++would be broken, the program is aborted.  If stack-protector-all is
++specified, instrumentation codes are generated at every functions.
++
+ @cindex aliasing of parameters
+ @cindex parameters, aliased
+ @item -fargument-alias
+diff -uNr gcc-3.4.3.orig/gcc/explow.c gcc-3.4.3/gcc/explow.c
+--- gcc-3.4.3.orig/gcc/explow.c	2004-04-03 01:05:26.000000000 +0200
++++ gcc-3.4.3/gcc/explow.c	2004-11-24 18:35:31.000000000 +0100
 @@ -84,7 +84,8 @@
    rtx tem;
    int all_constant = 0;
@@ -189,17 +295,19 @@ diff -uNr gcc-3.4.0.orig/gcc/explow.c gcc-3.4.0/gcc/explow.c
      return x;
  
   restart:
-@@ -185,7 +186,8 @@
+@@ -185,7 +186,10 @@
        break;
      }
  
 -  if (c != 0)
++  /* For the use of stack protection, keep the frame and offset pattern
++     even if the offset is zero.  */
 +  if (c != 0
 +      || (flag_propolice_protection && x == virtual_stack_vars_rtx))
      x = gen_rtx_PLUS (mode, x, GEN_INT (c));
  
    if (GET_CODE (x) == SYMBOL_REF || GET_CODE (x) == LABEL_REF)
-@@ -474,6 +476,26 @@
+@@ -474,6 +478,26 @@
        if (memory_address_p (mode, oldx))
  	goto win2;
  
@@ -226,9 +334,9 @@ diff -uNr gcc-3.4.0.orig/gcc/explow.c gcc-3.4.0/gcc/explow.c
        /* Perform machine-dependent transformations on X
  	 in certain cases.  This is not necessary since the code
  	 below can handle all possible cases, but machine-dependent
-diff -uNr gcc-3.4.0.orig/gcc/expr.c gcc-3.4.0/gcc/expr.c
---- gcc-3.4.0.orig/gcc/expr.c	2004-04-03 01:05:28.000000000 +0200
-+++ gcc-3.4.0/gcc/expr.c	2004-05-13 23:59:01.495380968 +0200
+diff -uNr gcc-3.4.3.orig/gcc/expr.c gcc-3.4.3/gcc/expr.c
+--- gcc-3.4.3.orig/gcc/expr.c	2004-05-27 21:35:17.000000000 +0200
++++ gcc-3.4.3/gcc/expr.c	2004-11-24 18:35:31.000000000 +0100
 @@ -48,6 +48,7 @@
  #include "intl.h"
  #include "tm_p.h"
@@ -316,7 +424,7 @@ diff -uNr gcc-3.4.0.orig/gcc/expr.c gcc-3.4.0/gcc/expr.c
  
        cst = (*data->constfun) (data->constfundata, data->offset, mode);
        emit_insn ((*genfun) (to1, cst));
-@@ -5700,7 +5721,9 @@
+@@ -5701,7 +5722,9 @@
  	  && GET_CODE (XEXP (value, 0)) == PLUS
  	  && GET_CODE (XEXP (XEXP (value, 0), 0)) == REG
  	  && REGNO (XEXP (XEXP (value, 0), 0)) >= FIRST_VIRTUAL_REGISTER
@@ -327,10 +435,10 @@ diff -uNr gcc-3.4.0.orig/gcc/expr.c gcc-3.4.0/gcc/expr.c
  	{
  	  rtx temp = expand_simple_binop (GET_MODE (value), code,
  					  XEXP (XEXP (value, 0), 0), op2,
-diff -uNr gcc-3.4.0.orig/gcc/flags.h gcc-3.4.0/gcc/flags.h
---- gcc-3.4.0.orig/gcc/flags.h	2004-02-18 01:09:04.000000000 +0100
-+++ gcc-3.4.0/gcc/flags.h	2004-05-13 23:59:01.507379144 +0200
-@@ -186,6 +186,10 @@
+diff -uNr gcc-3.4.3.orig/gcc/flags.h gcc-3.4.3/gcc/flags.h
+--- gcc-3.4.3.orig/gcc/flags.h	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/flags.h	2004-11-24 18:35:31.492689688 +0100
+@@ -210,6 +210,10 @@
  
  extern bool warn_strict_aliasing;
  
@@ -341,7 +449,7 @@ diff -uNr gcc-3.4.0.orig/gcc/flags.h gcc-3.4.0/gcc/flags.h
  /* Nonzero if generating code to do profiling.  */
  
  extern int profile_flag;
-@@ -771,4 +775,12 @@
+@@ -795,4 +799,12 @@
  #define HONOR_SIGN_DEPENDENT_ROUNDING(MODE) \
    (MODE_HAS_SIGN_DEPENDENT_ROUNDING (MODE) && flag_rounding_math)
  
@@ -354,9 +462,9 @@ diff -uNr gcc-3.4.0.orig/gcc/flags.h gcc-3.4.0/gcc/flags.h
 +extern int flag_stack_protection;
 +
  #endif /* ! GCC_FLAGS_H */
-diff -uNr gcc-3.4.0.orig/gcc/function.c gcc-3.4.0/gcc/function.c
---- gcc-3.4.0.orig/gcc/function.c	2004-03-16 00:22:47.000000000 +0100
-+++ gcc-3.4.0/gcc/function.c	2004-05-13 23:59:01.545373368 +0200
+diff -uNr gcc-3.4.3.orig/gcc/function.c gcc-3.4.3/gcc/function.c
+--- gcc-3.4.3.orig/gcc/function.c	2004-10-14 01:18:13.000000000 +0200
++++ gcc-3.4.3/gcc/function.c	2004-11-24 18:35:31.542682088 +0100
 @@ -63,6 +63,7 @@
  #include "integrate.h"
  #include "langhooks.h"
@@ -458,8 +566,14 @@ diff -uNr gcc-3.4.0.orig/gcc/function.c gcc-3.4.0/gcc/function.c
  
    PUT_CODE (reg, MEM);
    PUT_MODE (reg, decl_mode);
-@@ -3930,7 +3947,8 @@
- 		 constant with that register.  */
+@@ -3937,10 +3954,13 @@
+ 		}
+ 
+ 	      /* Otherwise copy the new constant into a register and replace
+-		 constant with that register.  */
++		 constant with that register.
++		 At the use of stack protection, stop to replace the frame
++		 offset with a register.  */
  	      temp = gen_reg_rtx (Pmode);
  	      XEXP (x, 0) = new;
 -	      if (validate_change (object, &XEXP (x, 1), temp, 0))
@@ -468,52 +582,63 @@ diff -uNr gcc-3.4.0.orig/gcc/function.c gcc-3.4.0/gcc/function.c
  		emit_insn_before (gen_move_insn (temp, new_offset), object);
  	      else
  		{
-diff -uNr gcc-3.4.0.orig/gcc/gcse.c gcc-3.4.0/gcc/gcse.c
---- gcc-3.4.0.orig/gcc/gcse.c	2004-03-25 17:44:42.000000000 +0100
-+++ gcc-3.4.0/gcc/gcse.c	2004-05-13 23:59:01.581367896 +0200
-@@ -4178,7 +4178,7 @@
+diff -uNr gcc-3.4.3.orig/gcc/gcse.c gcc-3.4.3/gcc/gcse.c
+--- gcc-3.4.3.orig/gcc/gcse.c	2004-10-30 20:02:53.000000000 +0200
++++ gcc-3.4.3/gcc/gcse.c	2004-11-24 18:35:31.583675856 +0100
+@@ -4176,9 +4176,13 @@
+ 	continue;
+ 
        /* Find an assignment that sets reg_used and is available
- 	 at the start of the block.  */
+-	 at the start of the block.  */
++	 at the start of the block.
++
++         Skip the copy propagation not to eliminate the register that is
++	 the duplicated pointer of a function argument. It is used for
++	 the function argument protection.  */
        set = find_avail_set (regno, insn);
 -      if (! set)
 +      if (! set || SET_VOLATILE_P (set->expr))
  	continue;
  
        pat = set->expr;
-diff -uNr gcc-3.4.0.orig/gcc/integrate.c gcc-3.4.0/gcc/integrate.c
---- gcc-3.4.0.orig/gcc/integrate.c	2004-01-24 00:36:00.000000000 +0100
-+++ gcc-3.4.0/gcc/integrate.c	2004-05-13 23:59:01.601364856 +0200
-@@ -393,6 +393,10 @@
+diff -uNr gcc-3.4.3.orig/gcc/integrate.c gcc-3.4.3/gcc/integrate.c
+--- gcc-3.4.3.orig/gcc/integrate.c	2004-01-24 00:36:00.000000000 +0100
++++ gcc-3.4.3/gcc/integrate.c	2004-11-24 18:35:31.603672816 +0100
+@@ -393,6 +393,11 @@
    /* These args would always appear unused, if not for this.  */
    TREE_USED (copy) = 1;
  
-+  /* The inlined variable is marked as INLINE not to sweep by propolice */
++  /* The inlined variable is marked as INLINE not to change the location
++     by stack protector.  */
 +  if (flag_propolice_protection && TREE_CODE (copy) == VAR_DECL)
 +    DECL_COPIED (copy) = 1;
 +
    /* Set the context for the new declaration.  */
    if (!DECL_CONTEXT (decl))
      /* Globals stay global.  */
-@@ -1970,6 +1974,10 @@
+@@ -1970,6 +1975,12 @@
  
  	      seq = get_insns ();
  	      end_sequence ();
 +#ifdef ARGS_GROWS_DOWNWARD
++	      /* Mark this pointer as the top of the argument
++		 block. The pointer minus one is in the block.  */
 +	      if (flag_propolice_protection && GET_CODE (seq) == SET)
 +		RTX_INTEGRATED_P (SET_SRC (seq)) = 1;
 +#endif
  	      emit_insn_after (seq, map->insns_at_start);
  	      return temp;
  	    }
-diff -uNr gcc-3.4.0.orig/gcc/libgcc2.c gcc-3.4.0/gcc/libgcc2.c
---- gcc-3.4.0.orig/gcc/libgcc2.c	2003-11-14 03:23:13.000000000 +0100
-+++ gcc-3.4.0/gcc/libgcc2.c	2004-05-13 23:59:01.612363184 +0200
-@@ -1667,3 +1667,121 @@
+diff -uNr gcc-3.4.3.orig/gcc/libgcc2.c gcc-3.4.3/gcc/libgcc2.c
+--- gcc-3.4.3.orig/gcc/libgcc2.c	2004-09-26 22:47:14.000000000 +0200
++++ gcc-3.4.3/gcc/libgcc2.c	2004-11-24 18:35:31.627669168 +0100
+@@ -1678,3 +1678,124 @@
  #endif /* no INIT_SECTION_ASM_OP and not CTOR_LISTS_DEFINED_EXTERNALLY */
  #endif /* L_ctors */
  
 +
 +#ifdef L_stack_smash_handler
++#ifndef _LIBC_PROVIDES_SSP_
 +#include <stdio.h>
 +#include <string.h>
 +#include <fcntl.h>
@@ -558,6 +683,7 @@ diff -uNr gcc-3.4.0.orig/gcc/libgcc2.c gcc-3.4.0/gcc/libgcc2.c
 +  ((char*)__guard)[3] = 255;
 +}
 +
++extern void __stack_smash_handler (char func[], ATTRIBUTE_UNUSED int damaged);
 +void
 +__stack_smash_handler (char func[], ATTRIBUTE_UNUSED int damaged)
 +{
@@ -629,25 +755,28 @@ diff -uNr gcc-3.4.0.orig/gcc/libgcc2.c gcc-3.4.0/gcc/libgcc2.c
 +#endif
 +  _exit (127);
 +}
++#endif /* _LIBC_PROVIDES_SSP_ */
 +#endif /* L_stack_smash_handler */
-diff -uNr gcc-3.4.0.orig/gcc/libgcc-std.ver gcc-3.4.0/gcc/libgcc-std.ver
---- gcc-3.4.0.orig/gcc/libgcc-std.ver	2003-09-04 12:47:45.000000000 +0200
-+++ gcc-3.4.0/gcc/libgcc-std.ver	2004-05-13 23:59:01.606364096 +0200
-@@ -174,6 +174,10 @@
+diff -uNr gcc-3.4.3.orig/gcc/libgcc-std.ver gcc-3.4.3/gcc/libgcc-std.ver
+--- gcc-3.4.3.orig/gcc/libgcc-std.ver	2004-09-01 21:14:33.000000000 +0200
++++ gcc-3.4.3/gcc/libgcc-std.ver	2004-11-24 18:35:31.620670232 +0100
+@@ -174,6 +174,12 @@
    _Unwind_SjLj_RaiseException
    _Unwind_SjLj_ForcedUnwind
    _Unwind_SjLj_Resume
 +
++%if !defined(_LIBC_PROVIDES_SSP_)
 +  # stack smash handler symbols
 +  __guard
 +  __stack_smash_handler
++%endif
  }
  
  %inherit GCC_3.3 GCC_3.0
-diff -uNr gcc-3.4.0.orig/gcc/loop.c gcc-3.4.0/gcc/loop.c
---- gcc-3.4.0.orig/gcc/loop.c	2004-02-14 15:46:03.000000000 +0100
-+++ gcc-3.4.0/gcc/loop.c	2004-05-13 23:59:01.657356344 +0200
-@@ -6513,6 +6513,14 @@
+diff -uNr gcc-3.4.3.orig/gcc/loop.c gcc-3.4.3/gcc/loop.c
+--- gcc-3.4.3.orig/gcc/loop.c	2004-07-13 17:29:08.000000000 +0200
++++ gcc-3.4.3/gcc/loop.c	2004-11-24 18:35:31.680661112 +0100
+@@ -6514,6 +6514,14 @@
    if (GET_CODE (*mult_val) == USE)
      *mult_val = XEXP (*mult_val, 0);
  
@@ -662,10 +791,10 @@ diff -uNr gcc-3.4.0.orig/gcc/loop.c gcc-3.4.0/gcc/loop.c
    if (is_addr)
      *pbenefit += address_cost (orig_x, addr_mode) - reg_address_cost;
    else
-diff -uNr gcc-3.4.0.orig/gcc/Makefile.in gcc-3.4.0/gcc/Makefile.in
---- gcc-3.4.0.orig/gcc/Makefile.in	2004-05-13 23:50:28.000000000 +0200
-+++ gcc-3.4.0/gcc/Makefile.in	2004-05-13 23:59:01.310409088 +0200
-@@ -859,7 +859,7 @@
+diff -uNr gcc-3.4.3.orig/gcc/Makefile.in gcc-3.4.3/gcc/Makefile.in
+--- gcc-3.4.3.orig/gcc/Makefile.in	2004-11-24 18:04:18.000000000 +0100
++++ gcc-3.4.3/gcc/Makefile.in	2004-11-24 18:35:31.038758696 +0100
+@@ -867,7 +867,7 @@
   sibcall.o simplify-rtx.o sreal.o stmt.o stor-layout.o stringpool.o 	   \
   targhooks.o timevar.o toplev.o tracer.o tree.o tree-dump.o unroll.o	   \
   varasm.o varray.o version.o vmsdbgout.o xcoffout.o alloc-pool.o	   \
@@ -674,7 +803,16 @@ diff -uNr gcc-3.4.0.orig/gcc/Makefile.in gcc-3.4.0/gcc/Makefile.in
  
  OBJS-md = $(out_object_file)
  OBJS-archive = $(EXTRA_OBJS) $(host_hook_obj) hashtable.o tree-inline.o	   \
-@@ -1834,6 +1834,10 @@
+@@ -1549,7 +1549,7 @@
+    langhooks.h insn-flags.h cfglayout.h real.h cfgloop.h \
+    hosthooks.h $(LANGHOOKS_DEF_H) cgraph.h $(COVERAGE_H) alloc-pool.h
+ 	$(CC) $(ALL_CFLAGS) $(ALL_CPPFLAGS) $(INCLUDES) \
+-	  -DTARGET_NAME=\"$(target_noncanonical)\" \
++	  -DTARGET_NAME=\"$(target_noncanonical)\" @ENABLESSP@ \
+ 	  -c $(srcdir)/toplev.c $(OUTPUT_OPTION)
+ main.o : main.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) toplev.h
+ 
+@@ -1852,6 +1852,10 @@
  params.o : params.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(PARAMS_H) toplev.h
  hooks.o: hooks.c $(CONFIG_H) $(SYSTEM_H) coretypes.h $(TM_H) $(HOOKS_H)
  pretty-print.o: $(CONFIG_H) $(SYSTEM_H) pretty-print.c $(PRETTY_PRINT_H)
@@ -685,25 +823,26 @@ diff -uNr gcc-3.4.0.orig/gcc/Makefile.in gcc-3.4.0/gcc/Makefile.in
  
  $(out_object_file): $(out_file) $(CONFIG_H) coretypes.h $(TM_H) $(TREE_H) $(GGC_H) \
     $(RTL_H) $(REGS_H) hard-reg-set.h real.h insn-config.h conditions.h \
-diff -uNr gcc-3.4.0.orig/gcc/mklibgcc.in gcc-3.4.0/gcc/mklibgcc.in
---- gcc-3.4.0.orig/gcc/mklibgcc.in	2003-11-21 05:53:09.000000000 +0100
-+++ gcc-3.4.0/gcc/mklibgcc.in	2004-05-13 23:59:01.673353912 +0200
-@@ -51,7 +51,7 @@
- 	_trampoline __main _absvsi2 _absvdi2 _addvsi3 _addvdi3
- 	_subvsi3 _subvdi3 _mulvsi3 _mulvdi3 _negvsi2 _negvdi2 _ctors
+diff -uNr gcc-3.4.3.orig/gcc/mklibgcc.in gcc-3.4.3/gcc/mklibgcc.in
+--- gcc-3.4.3.orig/gcc/mklibgcc.in	2004-10-18 18:00:43.000000000 +0200
++++ gcc-3.4.3/gcc/mklibgcc.in	2004-11-24 18:35:31.699658224 +0100
+@@ -57,7 +57,7 @@
+ 	_enable_execute_stack _trampoline __main _absvsi2 _absvdi2 _addvsi3
+ 	_addvdi3 _subvsi3 _subvdi3 _mulvsi3 _mulvdi3 _negvsi2 _negvdi2 _ctors
  	_ffssi2 _ffsdi2 _clz _clzsi2 _clzdi2 _ctzsi2 _ctzdi2 _popcount_tab
 -	_popcountsi2 _popcountdi2 _paritysi2 _paritydi2'
 +	_popcountsi2 _popcountdi2 _paritysi2 _paritydi2 _stack_smash_handler'
  
  # Disable SHLIB_LINK if shared libgcc not enabled.
  if [ "@enable_shared@" = "no" ]; then
-diff -uNr gcc-3.4.0.orig/gcc/optabs.c gcc-3.4.0/gcc/optabs.c
---- gcc-3.4.0.orig/gcc/optabs.c	2004-03-03 01:45:01.000000000 +0100
-+++ gcc-3.4.0/gcc/optabs.c	2004-05-13 23:59:01.711348136 +0200
-@@ -678,6 +678,26 @@
+diff -uNr gcc-3.4.3.orig/gcc/optabs.c gcc-3.4.3/gcc/optabs.c
+--- gcc-3.4.3.orig/gcc/optabs.c	2004-03-03 01:45:01.000000000 +0100
++++ gcc-3.4.3/gcc/optabs.c	2004-11-24 18:35:31.739652144 +0100
+@@ -678,6 +678,27 @@
    if (target)
      target = protect_from_queue (target, 1);
  
++  /* Keep the frame and offset pattern at the use of stack protection.  */
 +  if (flag_propolice_protection
 +      && binoptab->code == PLUS
 +      && op0 == virtual_stack_vars_rtx
@@ -727,9 +866,9 @@ diff -uNr gcc-3.4.0.orig/gcc/optabs.c gcc-3.4.0/gcc/optabs.c
    if (flag_force_mem)
      {
        /* Load duplicate non-volatile operands once.  */
-diff -uNr gcc-3.4.0.orig/gcc/opts.c gcc-3.4.0/gcc/opts.c
---- gcc-3.4.0.orig/gcc/opts.c	2004-02-18 01:09:04.000000000 +0100
-+++ gcc-3.4.0/gcc/opts.c	2004-05-13 23:59:01.724346160 +0200
+diff -uNr gcc-3.4.3.orig/gcc/opts.c gcc-3.4.3/gcc/opts.c
+--- gcc-3.4.3.orig/gcc/opts.c	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/opts.c	2004-11-24 18:35:31.762648648 +0100
 @@ -125,6 +125,9 @@
  bool warn_unused_variable;
  bool warn_unused_value;
@@ -740,7 +879,7 @@ diff -uNr gcc-3.4.0.orig/gcc/opts.c gcc-3.4.0/gcc/opts.c
  /* Hack for cooperation between set_Wunused and set_Wextra.  */
  static bool maybe_warn_unused_parameter;
  
-@@ -798,6 +801,10 @@
+@@ -804,6 +807,10 @@
        warn_unused_variable = value;
        break;
  
@@ -751,7 +890,7 @@ diff -uNr gcc-3.4.0.orig/gcc/opts.c gcc-3.4.0/gcc/opts.c
      case OPT_aux_info:
      case OPT_aux_info_:
        aux_info_file_name = arg;
-@@ -1361,6 +1368,14 @@
+@@ -1367,6 +1374,14 @@
        stack_limit_rtx = gen_rtx_SYMBOL_REF (Pmode, ggc_strdup (arg));
        break;
  
@@ -766,10 +905,10 @@ diff -uNr gcc-3.4.0.orig/gcc/opts.c gcc-3.4.0/gcc/opts.c
      case OPT_fstrength_reduce:
        flag_strength_reduce = value;
        break;
-diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
---- gcc-3.4.0.orig/gcc/protector.c	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/protector.c	2004-03-22 08:34:40.000000000 +0100
-@@ -0,0 +1,2712 @@
+diff -uNr gcc-3.4.3.orig/gcc/protector.c gcc-3.4.3/gcc/protector.c
+--- gcc-3.4.3.orig/gcc/protector.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/protector.c	2004-09-02 11:36:11.000000000 +0200
+@@ -0,0 +1,2730 @@
 +/* RTL buffer overflow protection function for GNU C compiler
 +   Copyright (C) 2003 Free Software Foundation, Inc.
 +
@@ -839,7 +978,13 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +static int current_function_has_variable_string;
 +static int current_function_defines_vsized_array;
 +static int current_function_is_inlinable;
++
++/* Nonzero if search_string_def finds the variable which contains an array.  */
 +static int is_array;
++
++/* Nonzero if search_string_def finds a byte-pointer variable,
++   which may be assigned to alloca output.  */
++static int may_have_alloca_pointer;
 +
 +static rtx guard_area, _guard;
 +static rtx function_first_insn, prologue_insert_point;
@@ -1048,12 +1193,15 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +  current_function_defines_short_string = FALSE;
 +  current_function_has_variable_string = FALSE;
 +  current_function_defines_vsized_array = FALSE;
++  may_have_alloca_pointer = FALSE;
 +
 +  /* Search a string variable from local variables.  */
 +  blocks = DECL_INITIAL (current_function_decl);
 +  string_p = search_string_from_local_vars (blocks);
 +
-+  if (! current_function_defines_vsized_array && current_function_calls_alloca)
++  if (! current_function_defines_vsized_array
++      && may_have_alloca_pointer
++      && current_function_calls_alloca)
 +    {
 +      current_function_has_variable_string = TRUE;
 +      return TRUE;
@@ -1204,6 +1352,14 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +      break;
 +	
 +    case POINTER_TYPE:
++      /* Check if pointer variables, which may be a pointer assigned 
++	 by alloca function call, are declared.  */
++      if (TYPE_MAIN_VARIANT (TREE_TYPE(type)) == char_type_node
++	  || TYPE_MAIN_VARIANT (TREE_TYPE(type)) == signed_char_type_node
++	  || TYPE_MAIN_VARIANT (TREE_TYPE(type)) == unsigned_char_type_node)
++	may_have_alloca_pointer = TRUE;
++      break;
++
 +    case REFERENCE_TYPE:
 +    case OFFSET_TYPE:
 +    default:
@@ -1709,7 +1865,6 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +	  if (! DECL_EXTERNAL (types) && ! TREE_STATIC (types)
 +	      && TREE_CODE (types) == VAR_DECL
 +	      && ! DECL_ARTIFICIAL (types)
-+	      /* && ! DECL_COPIED (types): gcc3.4 can sweep inlined string.  */
 +	      && DECL_RTL_SET_P (types)
 +	      && GET_CODE (DECL_RTL (types)) == MEM
 +	      && GET_MODE (DECL_RTL (types)) == BLKmode
@@ -3049,6 +3204,8 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +		/* Copy the various flags, and other information.  */
 +		memcpy (insn, first, sizeof (struct rtx_def) - sizeof (rtunion));
 +		PATTERN (insn) = PATTERN (first);
++		INSN_CODE (insn) = INSN_CODE (first);
++		LOG_LINKS (insn) = LOG_LINKS (first);
 +		REG_NOTES (insn) = REG_NOTES (first);
 +
 +		/* then remove the first insn of splitted insns.  */
@@ -3482,9 +3639,9 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.c gcc-3.4.0/gcc/protector.c
 +  return FALSE;
 +}
 +#endif
-diff -uNr gcc-3.4.0.orig/gcc/protector.h gcc-3.4.0/gcc/protector.h
---- gcc-3.4.0.orig/gcc/protector.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/protector.h	2004-01-20 03:01:39.000000000 +0100
+diff -uNr gcc-3.4.3.orig/gcc/protector.h gcc-3.4.3/gcc/protector.h
+--- gcc-3.4.3.orig/gcc/protector.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/protector.h	2004-01-20 03:01:39.000000000 +0100
 @@ -0,0 +1,55 @@
 +/* RTL buffer overflow protection function for GNU C compiler
 +   Copyright (C) 2003 Free Software Foundation, Inc.
@@ -3541,9 +3698,9 @@ diff -uNr gcc-3.4.0.orig/gcc/protector.h gcc-3.4.0/gcc/protector.h
 +					      HOST_WIDE_INT, int);
 +
 +#endif
-diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
---- gcc-3.4.0.orig/gcc/reload1.c	2004-03-25 17:44:42.000000000 +0100
-+++ gcc-3.4.0/gcc/reload1.c	2004-05-13 23:59:01.761340536 +0200
+diff -uNr gcc-3.4.3.orig/gcc/reload1.c gcc-3.4.3/gcc/reload1.c
+--- gcc-3.4.3.orig/gcc/reload1.c	2004-05-02 14:37:17.000000000 +0200
++++ gcc-3.4.3/gcc/reload1.c	2004-11-24 18:35:31.812641048 +0100
 @@ -43,6 +43,7 @@
  #include "toplev.h"
  #include "except.h"
@@ -3552,7 +3709,7 @@ diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
  
  /* This file contains the reload pass of the compiler, which is
     run after register allocation has been done.  It checks that
-@@ -881,7 +882,7 @@
+@@ -891,7 +892,7 @@
        if (cfun->stack_alignment_needed)
          assign_stack_local (BLKmode, 0, cfun->stack_alignment_needed);
  
@@ -3561,7 +3718,7 @@ diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
  
        set_initial_elim_offsets ();
        set_initial_label_offsets ();
-@@ -945,7 +946,7 @@
+@@ -955,7 +956,7 @@
  	setup_save_areas ();
  
        /* If we allocated another stack slot, redo elimination bookkeeping.  */
@@ -3570,7 +3727,7 @@ diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
  	continue;
  
        if (caller_save_needed)
-@@ -964,7 +965,7 @@
+@@ -974,7 +975,7 @@
  
        /* If we allocated any new memory locations, make another pass
  	 since it might have changed elimination offsets.  */
@@ -3579,7 +3736,7 @@ diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
  	something_changed = 1;
  
        {
-@@ -1056,11 +1057,11 @@
+@@ -1066,11 +1067,11 @@
    if (insns_need_reload != 0 || something_needs_elimination
        || something_needs_operands_changed)
      {
@@ -3593,18 +3750,22 @@ diff -uNr gcc-3.4.0.orig/gcc/reload1.c gcc-3.4.0/gcc/reload1.c
  	abort ();
  
        if (num_eliminable)
-@@ -1948,7 +1949,7 @@
+@@ -1957,8 +1958,10 @@
+ 	 inherent space, and no less total space, then the previous slot.  */
        if (from_reg == -1)
  	{
- 	  /* No known place to spill from => no slot to reuse.  */
+-	  /* No known place to spill from => no slot to reuse.  */
 -	  x = assign_stack_local (GET_MODE (regno_reg_rtx[i]), total_size,
++	  /* No known place to spill from => no slot to reuse.
++	     For the stack protection, an allocated slot should be placed in
++	     the safe region from the stack smaching attack.  */
 +	  x = assign_stack_local_for_pseudo_reg (GET_MODE (regno_reg_rtx[i]), total_size,
  				  inherent_size == total_size ? 0 : -1);
  	  if (BYTES_BIG_ENDIAN)
  	    /* Cancel the  big-endian correction done in assign_stack_local.
-diff -uNr gcc-3.4.0.orig/gcc/rtl.h gcc-3.4.0/gcc/rtl.h
---- gcc-3.4.0.orig/gcc/rtl.h	2004-03-25 17:44:43.000000000 +0100
-+++ gcc-3.4.0/gcc/rtl.h	2004-05-13 23:59:01.767339624 +0200
+diff -uNr gcc-3.4.3.orig/gcc/rtl.h gcc-3.4.3/gcc/rtl.h
+--- gcc-3.4.3.orig/gcc/rtl.h	2004-10-13 01:35:32.000000000 +0200
++++ gcc-3.4.3/gcc/rtl.h	2004-11-24 18:35:31.830638312 +0100
 @@ -473,6 +473,18 @@
  			     __FUNCTION__);				\
     _rtx; })
@@ -3655,10 +3816,10 @@ diff -uNr gcc-3.4.0.orig/gcc/rtl.h gcc-3.4.0/gcc/rtl.h
  /* 1 if RTX is a mem that refers to an aggregate, either to the
     aggregate itself of to a field of the aggregate.  If zero, RTX may
     or may not be such a reference.  */
-diff -uNr gcc-3.4.0.orig/gcc/simplify-rtx.c gcc-3.4.0/gcc/simplify-rtx.c
---- gcc-3.4.0.orig/gcc/simplify-rtx.c	2004-01-24 12:05:08.000000000 +0100
-+++ gcc-3.4.0/gcc/simplify-rtx.c	2004-05-13 23:59:01.785336888 +0200
-@@ -2252,6 +2252,7 @@
+diff -uNr gcc-3.4.3.orig/gcc/simplify-rtx.c gcc-3.4.3/gcc/simplify-rtx.c
+--- gcc-3.4.3.orig/gcc/simplify-rtx.c	2004-10-10 23:53:35.000000000 +0200
++++ gcc-3.4.3/gcc/simplify-rtx.c	2004-11-24 18:35:31.858634056 +0100
+@@ -2287,6 +2287,7 @@
    int n_ops = 2, input_ops = 2, input_consts = 0, n_consts;
    int first, changed;
    int i, j;
@@ -3666,7 +3827,7 @@ diff -uNr gcc-3.4.0.orig/gcc/simplify-rtx.c gcc-3.4.0/gcc/simplify-rtx.c
  
    memset (ops, 0, sizeof ops);
  
-@@ -2277,6 +2278,10 @@
+@@ -2312,6 +2313,10 @@
  	  switch (this_code)
  	    {
  	    case PLUS:
@@ -3677,7 +3838,7 @@ diff -uNr gcc-3.4.0.orig/gcc/simplify-rtx.c gcc-3.4.0/gcc/simplify-rtx.c
  	    case MINUS:
  	      if (n_ops == 7)
  		return NULL_RTX;
-@@ -2438,11 +2443,24 @@
+@@ -2473,11 +2478,24 @@
        && GET_CODE (ops[n_ops - 1].op) == CONST_INT
        && CONSTANT_P (ops[n_ops - 2].op))
      {
@@ -3707,7 +3868,7 @@ diff -uNr gcc-3.4.0.orig/gcc/simplify-rtx.c gcc-3.4.0/gcc/simplify-rtx.c
      }
  
    /* Count the number of CONSTs that we generated.  */
-@@ -2460,6 +2478,59 @@
+@@ -2495,6 +2513,59 @@
  	  || (n_ops + n_consts == input_ops && n_consts <= input_consts)))
      return NULL_RTX;
  
@@ -3767,9 +3928,9 @@ diff -uNr gcc-3.4.0.orig/gcc/simplify-rtx.c gcc-3.4.0/gcc/simplify-rtx.c
    /* Put a non-negated operand first, if possible.  */
  
    for (i = 0; i < n_ops && ops[i].neg; i++)
-diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.dg/ssp-warn.c gcc-3.4.0/gcc/testsuite/gcc.dg/ssp-warn.c
---- gcc-3.4.0.orig/gcc/testsuite/gcc.dg/ssp-warn.c	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/testsuite/gcc.dg/ssp-warn.c	2003-11-21 09:41:19.000000000 +0100
+diff -uNr gcc-3.4.3.orig/gcc/testsuite/gcc.dg/ssp-warn.c gcc-3.4.3/gcc/testsuite/gcc.dg/ssp-warn.c
+--- gcc-3.4.3.orig/gcc/testsuite/gcc.dg/ssp-warn.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/testsuite/gcc.dg/ssp-warn.c	2003-11-21 09:41:19.000000000 +0100
 @@ -0,0 +1,32 @@
 +/* { dg-do compile } */
 +/* { dg-options "-fstack-protector" } */
@@ -3803,9 +3964,9 @@ diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.dg/ssp-warn.c gcc-3.4.0/gcc/testsuite
 +
 +  buf[0] = 0;
 +} /* { dg-bogus "not protecting function: buffer is less than 8 bytes long" } */
-diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute1.c gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute1.c
---- gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute1.c	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute1.c	2004-02-16 06:15:39.000000000 +0100
+diff -uNr gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute1.c gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute1.c
+--- gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute1.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute1.c	2004-02-16 06:15:39.000000000 +0100
 @@ -0,0 +1,54 @@
 +/* Test location changes of character array.  */
 +
@@ -3861,9 +4022,9 @@ diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute1.c gcc-3.4.0/g
 +
 +
 +  
-diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute2.c gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute2.c
---- gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute2.c	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute2.c	2003-11-22 09:44:33.000000000 +0100
+diff -uNr gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute2.c gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute2.c
+--- gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute2.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute2.c	2003-11-22 09:44:33.000000000 +0100
 @@ -0,0 +1,49 @@
 +void
 +test(int i, char *j, int k)
@@ -3914,11 +4075,11 @@ diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute2.c gcc-3.4.0/g
 +
 +
 +  
-diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute.exp
---- gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-3.4.0/gcc/testsuite/gcc.misc-tests/ssp-execute.exp	2003-11-22 01:28:12.000000000 +0100
-@@ -0,0 +1,48 @@
-+#   Copyright (C) 2003 Free Software Foundation, Inc.
+diff -uNr gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute.exp
+--- gcc-3.4.3.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp	1970-01-01 01:00:00.000000000 +0100
++++ gcc-3.4.3/gcc/testsuite/gcc.misc-tests/ssp-execute.exp	2004-06-02 13:23:36.000000000 +0200
+@@ -0,0 +1,35 @@
++#   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 +
 +# This program is free software; you can redistribute it and/or modify
 +# it under the terms of the GNU General Public License as published by
@@ -3933,19 +4094,6 @@ diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp gcc-3.4.0/
 +# You should have received a copy of the GNU General Public License
 +# along with this program; if not, write to the Free Software
 +# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
-+
-+# Test the functionality of programs compiled with -fstack-protector.
-+# ordering like c-torture options.
-+set TORTURE_OPTIONS [list \
-+    { -fstack-protector -O0 } \
-+    { -fstack-protector -O1 } \
-+    { -fstack-protector -O2 } \
-+    { -fstack-protector -O2 -fomit-frame-pointer } \
-+    { -fstack-protector -O3 -fomit-frame-pointer } \
-+    { -fstack-protector -O3 -fomit-frame-pointer -funroll-loops } \
-+    { -fstack-protector -O3 -fomit-frame-pointer -funroll-all-loops -finline-functions } \
-+    { -fstack-protector -O3 -g } \
-+    { -fstack-protector -Os } ]
 +
 +if $tracelevel then {
 +    strace $tracelevel
@@ -3964,12 +4112,20 @@ diff -uNr gcc-3.4.0.orig/gcc/testsuite/gcc.misc-tests/ssp-execute.exp gcc-3.4.0/
 +	continue
 +    }
 +
-+    c-torture-execute $src
++    c-torture-execute $src -fstack-protector
 +}
-diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
---- gcc-3.4.0.orig/gcc/toplev.c	2004-02-20 09:40:49.000000000 +0100
-+++ gcc-3.4.0/gcc/toplev.c	2004-05-13 23:59:01.806333696 +0200
-@@ -97,6 +97,10 @@
+diff -uNr gcc-3.4.3.orig/gcc/toplev.c gcc-3.4.3/gcc/toplev.c
+--- gcc-3.4.3.orig/gcc/toplev.c	2004-07-26 16:42:11.000000000 +0200
++++ gcc-3.4.3/gcc/toplev.c	2004-11-24 18:35:31.000000000 +0100
+@@ -79,6 +79,7 @@
+ #include "coverage.h"
+ #include "value-prof.h"
+ #include "alloc-pool.h"
++#include "protector.h"
+ 
+ #if defined (DWARF2_UNWIND_INFO) || defined (DWARF2_DEBUGGING_INFO)
+ #include "dwarf2out.h"
+@@ -97,6 +98,10 @@
  				   declarations for e.g. AIX 4.x.  */
  #endif
  
@@ -3980,7 +4136,7 @@ diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
  #ifndef HAVE_conditional_execution
  #define HAVE_conditional_execution 0
  #endif
-@@ -979,6 +983,15 @@
+@@ -979,6 +984,15 @@
     minimum function alignment.  Zero means no alignment is forced.  */
  int force_align_functions_log;
  
@@ -3996,7 +4152,7 @@ diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
  typedef struct
  {
    const char *const string;
-@@ -1154,7 +1167,9 @@
+@@ -1154,7 +1168,9 @@
    {"mem-report", &mem_report, 1 },
    { "trapv", &flag_trapv, 1 },
    { "wrapv", &flag_wrapv, 1 },
@@ -4007,7 +4163,7 @@ diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
  };
  
  /* Here is a table, controlled by the tm.h file, listing each -m switch
-@@ -2687,6 +2702,9 @@
+@@ -2686,6 +2702,9 @@
  
    insns = get_insns ();
  
@@ -4017,7 +4173,7 @@ diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
    /* Dump the rtl code if we are dumping rtl.  */
  
    if (open_dump_file (DFI_rtl, decl))
-@@ -4482,6 +4500,12 @@
+@@ -4483,6 +4502,12 @@
      /* The presence of IEEE signaling NaNs, implies all math can trap.  */
      if (flag_signaling_nans)
        flag_trapping_math = 1;
@@ -4030,9 +4186,9 @@ diff -uNr gcc-3.4.0.orig/gcc/toplev.c gcc-3.4.0/gcc/toplev.c
  }
  
  /* Initialize the compiler back end.  */
-diff -uNr gcc-3.4.0.orig/gcc/tree.h gcc-3.4.0/gcc/tree.h
---- gcc-3.4.0.orig/gcc/tree.h	2004-02-08 02:52:43.000000000 +0100
-+++ gcc-3.4.0/gcc/tree.h	2004-05-13 23:59:01.827330504 +0200
+diff -uNr gcc-3.4.3.orig/gcc/tree.h gcc-3.4.3/gcc/tree.h
+--- gcc-3.4.3.orig/gcc/tree.h	2004-11-24 18:04:19.000000000 +0100
++++ gcc-3.4.3/gcc/tree.h	2004-11-24 18:35:31.000000000 +0100
 @@ -1489,6 +1489,10 @@
     where it is called.  */
  #define DECL_INLINE(NODE) (FUNCTION_DECL_CHECK (NODE)->decl.inline_flag)
