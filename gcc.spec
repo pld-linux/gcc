@@ -769,7 +769,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
-%attr(755,root,root) %{_bindir}/gij
+#attr(755,root,root) %{_bindir}/gij		see PR18909
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/grepjar
@@ -779,7 +779,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcj*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
-%{_mandir}/man1/gij*
+#{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
 %{_mandir}/man1/grepjar*
 
