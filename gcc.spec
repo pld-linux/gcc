@@ -618,12 +618,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gcov.1*
 %{_infodir}/gcc*
 
+%attr(755,root,root) %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
+
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
-#%ifnarch alpha
 %attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
-#%endif
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 
@@ -649,8 +650,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
-%attr(755,root,root) %{_libdir}/libsupc++.la
-%{_libdir}/libsupc++.a
 
 %files objc
 %defattr(644,root,root,755)
