@@ -63,18 +63,16 @@ Patch45:	gcc32-tls3.patch
 Patch46:	gcc32-tls4.patch 
 Patch47:	gcc32-tls5.patch    
 Patch48:	gcc32-typeof-asm.patch  
-
 Patch100:	gcc-pre-3.2.1.patch.gz
-
-
-BuildRequires:	bison
-BuildRequires:	texinfo >= 4.1
-BuildRequires:	zlib-devel
-BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	autoconf
+BuildRequires:	bison
+BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
 %{!?_without_ada:BuildRequires:	gcc-ada}
+BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
+BuildRequires:	texinfo >= 4.1
+BuildRequires:	zlib-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{GCC_VERSION}
 Requires:	libgcc = %{GCC_VERSION}
