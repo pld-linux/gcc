@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{ver}
-Release:	19
+Release:	20
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -17,31 +17,21 @@ Patch2:		%{name}-libstdc++.patch
 Patch3:		%{name}-bootstrap.patch
 Patch4:		%{name}-cpp-macro-doc.patch
 Patch5:		%{name}-default-arch.patch
-Patch6:		%{name}-cvs-updates-20000826.patch.gz
-Patch7:		%{name}-libstdc++-out-of-mem.patch
-Patch8:		%{name}-libstdc++-wstring.patch
-Patch9:		%{name}-libstdc++-wall3.patch
-Patch10:	%{name}-libstdc++-bastring.patch
-Patch11:	%{name}-manpage.patch
-Patch12:	%{name}-cpp-dos-newlines.patch
-Patch13:	%{name}-gpc.patch
-Patch14:	%{name}-arm-config.patch
-Patch15:	%{name}-m68k-pic.patch
-Patch16:	%{name}-sparc32-rfi.patch
-Patch17:	%{name}-builtin-apply.patch
-Patch18:	%{name}-gcj-backport.patch
-Patch19:	%{name}-ppc-ice.patch
-Patch20:	%{name}-ppc-descriptions.patch
-Patch21:	%{name}-ppc-andrew-dwarf-eh.patch
-
-Patch22:	%{name}-alpha-complex-float.patch
-Patch23:	%{name}-emit-rtl.patch
-Patch24:	%{name}-gcj-vs-iconv.patch
-Patch25:	%{name}-libobjc.patch
-Patch26:	%{name}-pointer-arith.patch
-
-Patch27:	%{name}-glibc-2.2.patch
-Patch28:	%{name}-O2-bug.patch
+Patch6:		%{name}-libstdc++-out-of-mem.patch
+Patch7:		%{name}-libstdc++-wstring.patch
+Patch8:		%{name}-libstdc++-bastring.patch
+Patch9:		%{name}-manpage.patch
+Patch10:	%{name}-cpp-dos-newlines.patch
+Patch11:	%{name}-gpc.patch
+Patch12:	%{name}-m68k-pic.patch
+Patch13:	%{name}-sparc32-rfi.patch
+Patch14:	%{name}-builtin-apply.patch
+Patch15:	%{name}-ppc-ice.patch
+Patch16:	%{name}-ppc-descriptions.patch
+Patch17:	%{name}-alpha-complex-float.patch
+Patch18:	%{name}-gcj-vs-iconv.patch
+Patch19:	%{name}-libobjc.patch
+Patch20:	%{name}-pointer-arith.patch
 
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -320,39 +310,29 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch3 -p1
 %patch4 -p0
 %patch5 -p0
-#%patch6 -p1
+%patch6 -p0
 %patch7 -p0
 %patch8 -p0
-#%patch9 -p0
+%patch9 -p0
 %patch10 -p0
-%patch11 -p0
-%patch12 -p0
-%patch13 -p1
-#%ifarch arm
-#%patch14 -p0
-#%endif
+%patch11 -p1
 %ifarch m68k
-%patch15 -p0
+%patch12 -p0
 %endif
 %ifarch sparc sparc32
-%patch16 -p0
-%patch17 -p0
-%patch18 -p1
+%patch13 -p0
+%patch14 -p0
 %endif
 %ifarch ppc
-%patch19 -p0
-%patch20 -p0
-#%patch21 -p0
+%patch15 -p0
+%patch16 -p0
 %endif
 %ifarch alpha
-%patch22 -p1
+%patch17 -p1
 %endif
-#%patch23 -p0
-%patch24 -p0
-%patch25 -p0
-%patch26 -p0
-#%patch27 -p1
-#%patch28 -p1
+%patch18 -p0
+%patch19 -p0
+%patch20 -p0
 
 %build
 (cd gcc; autoconf)
