@@ -67,10 +67,12 @@ Patch53:	gcc32-tls5.patch
 #Patch54:	gcc32-tree-code.patch      
 #Patch55:	gcc32-trunc_int_for_mode.patch 
 Patch56:	gcc32-typeof-asm.patch  
-Patch57:	gcc32-typeof-skip-eval.patch       
+Patch57:	gcc32-typeof-skip-eval.patch 
+
 Patch58:	gcc32-locale_in_monetary_members.patch
 Patch59:	gcc32-locale_in_ctype_members.patch
- 
+Patch60:	gcc32-libstdc++-glibc.patch 
+
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -565,6 +567,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch57 
 %patch58
 %patch59 
+%patch60
 
 %build
 # cd gcc && autoconf; cd ..
