@@ -7,7 +7,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -473,7 +473,6 @@ TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
-	--enable-c-mbchar \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
