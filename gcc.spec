@@ -32,7 +32,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -611,7 +611,7 @@ cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 rm -rf	$gccdir/install-tools
 
 %if %{with multilib}
-ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/libgcc_s_32.so
+ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
 %endif
 ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
@@ -694,11 +694,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/32/libgcov.a
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
+%{_libdir}/gcc/*/*/32/libgcc_s.so
 %endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
-%{_libdir}/gcc/*/*/libgcc_s*.so
+%{_libdir}/gcc/*/*/libgcc_s.so
 %{_libdir}/gcc/*/*/specs
 %if %{with multilib}
 %{_libdir}/gcc/*/*/32/crt*.o
