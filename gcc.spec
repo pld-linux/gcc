@@ -3,7 +3,6 @@
 #		- http://gcc.gnu.org/PR11203
 #		- http://gcc.gnu.org/PR17384
 #		- http://gcc.gnu.org/PR17567
-#		- http://gcc.gnu.org/PR17942
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
