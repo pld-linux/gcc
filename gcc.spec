@@ -1,7 +1,10 @@
 #
 # Conditional build:
 #
+%bcond_without	ada		# build without ADA support
+%bcond_without	fortran		# build without Fortran support
 %bcond_without	java		# build without Java support
+%bcond_without	objc		# build without ObjC support
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
@@ -17,7 +20,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.0.3
+Release:	0.%{_snap}.0.4
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -39,8 +42,10 @@ BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
+%if %{with ada}
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
+%endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	gmp-devel
@@ -51,7 +56,7 @@ BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.94.0.1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
-Provides:	gcc(ada)
+%{?with_ada:Provides:	gcc(ada)}
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
@@ -479,7 +484,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f95,objc,ada%{?with_java:,java}" \
+	--enable-languages="c,c++%{?with_fortran:,f95}%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifarch amd64
@@ -528,9 +533,12 @@ ln -sf	$RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
+%if %{with fortran}
 ln -sf gfortran $RPM_BUILD_ROOT%{_bindir}/g95
 echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
+%endif
 
+%if %{with ada}
 # move ada shared libraries to proper place...
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
@@ -541,6 +549,7 @@ ln -sf	libgnarl-4.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.0.so
 ln -sf	libgnat-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf	libgnarl-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 ln -sf	%{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
+%endif
 
 cd ..
 
@@ -551,7 +560,9 @@ cp -f	fastjar/README java-doc/README.fastjar
 cp -f	libffi/README java-doc/README.libffi
 cp -f	libffi/LICENSE java-doc/LICENSE.libffi
 %endif
+%if %{with objc}
 cp -f	libobjc/README gcc/objc/README.libobjc
+%endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la};
@@ -559,8 +570,10 @@ do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libstdc++.la libsupc++.la libgfortran.la libgfortranbegin.la \
-	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} libobjc.la;
+for f in libstdc++.la libsupc++.la \
+	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
+	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
+	%{?with_objc:libobjc.la};
 do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
@@ -570,7 +583,7 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-mv -f	$gccdir/include/{%{?with_java:gcj,libffi/ffitarget.h,}objc,syslimits.h} \
+mv -f	$gccdir/include/{%{?with_java:gcj,libffi/ffitarget.h,}%{?with_objc:objc,}syslimits.h} \
 	$gccdir/tmp
 rm -rf	$gccdir/include
 mv -f	$gccdir/tmp \
@@ -693,6 +706,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libmudflap*.a
 
+%if %{with ada}
 %files ada
 %defattr(644,root,root,755)
 %doc gcc/ada/ChangeLog
@@ -721,6 +735,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/adalib/libgnarl.a
 %{_libdir}/gcc/*/*/adalib/libgnat.a
+%endif
 
 %files c++
 %defattr(644,root,root,755)
@@ -758,6 +773,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libstdc++.a
 
+%if %{with fortran}
 %files fortran
 %defattr(644,root,root,755)
 %doc gcc/fortran/ChangeLog
@@ -780,6 +796,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran-static
 %defattr(644,root,root,755)
 %{_libdir}/libgfortran.a
+%endif
 
 %if %{with java}
 %files java
@@ -860,6 +877,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.a
 %endif
 
+%if %{with objc}
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/README
@@ -876,3 +894,4 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libobjc-static
 %defattr(644,root,root,755)
 %{_libdir}/libobjc.a
+%endif
