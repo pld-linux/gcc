@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -863,7 +863,7 @@ ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
-ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/%{_lib}/cpp
+ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
 
@@ -1221,7 +1221,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n cpp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/cpp
+%attr(755,root,root) /lib/cpp
 %attr(755,root,root) %{_bindir}/cpp
 %{_mandir}/man1/cpp.1*
 %lang(ja) %{_mandir}/ja/man1/cpp.1*
