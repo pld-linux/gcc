@@ -14,7 +14,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.1
+Release:	0.2
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -26,7 +26,7 @@ Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
-
+Patch5:		%{name}-gcc-page.c.patch
 Patch6:		%{name}-info.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
@@ -505,6 +505,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch2 -p1
 #%patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 #%patch10
 %patch11
