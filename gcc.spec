@@ -6,7 +6,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3
+Release:	4
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -454,7 +454,8 @@ mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
-gzip -9nf ../READ* ../ChangeLog ../gcc/ksi/README ../gcc/ksi/NEWS
+gzip -9nf ../READ* ../ChangeLog
+gzip -9nf ../gcc/ksi/README ../gcc/ksi/NEWS ../gcc/ksi/t/*.{ksi,c,foo}
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -563,7 +564,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
 %files ksi
-%doc gcc/ksi/*.gz
+%doc gcc/ksi/*.gz gcc/ksi/t/*.gz
 %defattr(644,root,root,755)
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
