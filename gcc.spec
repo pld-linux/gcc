@@ -1,11 +1,13 @@
 #
 # Conditional build:
 #
+%bcond_without	java		# build without Java support
+#
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- disable internal zlib usage
-#		- bconds
+#		- bconds (ada, objc, fortran)
 #		- translations from gcc.spec:HEAD
 #
 %define		_snap		20050102
@@ -475,7 +477,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f95,objc,ada,java" \
+	--enable-languages="c,c++,f95,objc,ada%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifarch amd64
@@ -514,6 +516,8 @@ cd obj-%{_target_platform}
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install gcc/specs $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}
+
 %ifarch sparc64
 ln -sf	$RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
@@ -538,21 +542,23 @@ ln -sf	%{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
 
+%if %{with java}
 install -d java-doc
 cp -f	libjava/READ* java-doc
 cp -f	fastjar/README java-doc/README.fastjar
 cp -f	libffi/README java-doc/README.libffi
 cp -f	libffi/LICENSE java-doc/LICENSE.libffi
+%endif
 cp -f	libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
-for f in libstdc++.la libsupc++.la libgcj.la;
+for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la};
 do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libstdc++.la libsupc++.la libgfortran.la libgfortranbegin.la \
-	libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la libobjc.la;
+	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} libobjc.la;
 do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
@@ -562,7 +568,7 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-mv -f	$gccdir/include/{gcj,libffi/ffitarget.h,objc,syslimits.h} \
+mv -f	$gccdir/include/{%{?with_java:gcj,libffi/ffitarget.h,}objc,syslimits.h} \
 	$gccdir/tmp
 rm -rf	$gccdir/include
 mv -f	$gccdir/tmp \
@@ -736,10 +742,12 @@ rm -rf $RPM_BUILD_ROOT
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
+%if %{with java}
 %exclude %{_includedir}/c++/%{version}/java
 %exclude %{_includedir}/c++/%{version}/javax
 %exclude %{_includedir}/c++/%{version}/gcj
 %exclude %{_includedir}/c++/%{version}/gnu
+%endif
 %exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
 %{_libdir}/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.so
@@ -771,6 +779,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libgfortran.a
 
+%if %{with java}
 %files java
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
@@ -847,6 +856,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
+%endif
 
 %files objc
 %defattr(644,root,root,755)
