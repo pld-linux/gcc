@@ -812,7 +812,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/gcj
 %exclude %{_includedir}/c++/%{version}/gnu
 %endif
+%ifnarch sparc
 %exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
+%endif
 %if %{with multilib}
 %{_libdir32}/libstdc++.la
 %attr(755,root,root) %{_libdir32}/libstdc++.so
