@@ -20,6 +20,8 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.ta
 # Source0-md5:	85c6fc83d51be0fbb4f8205accbaff59
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
+Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
+# Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
@@ -37,6 +39,7 @@ BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
+BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -692,7 +695,7 @@ controle da numeração das linhas do programa.
 %patch4 -p1
 
 # because we distribute modified version of gcc...
-perl -pi -e 's/(version.*)";/$1-SSP (PLD Linux)";/' gcc/version.c
+perl -pi -e 's/(version.*)";/$1 SSP (PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
@@ -700,7 +703,7 @@ mv ChangeLog ChangeLog.general
 %build
 # cd gcc && autoconf; cd ..
 # autoconf is not needed!
-cp /usr/share/automake/config.sub .
+cp %{_datadir}/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
@@ -825,6 +828,8 @@ rm -rf $gccdir/install-tools
 %find_lang %{name}
 %find_lang libstdc\+\+
 
+zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -880,6 +885,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
+%{_aclocaldir}/gcc_stack_protect.m4
 
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/cc.1*
