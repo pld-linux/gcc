@@ -27,7 +27,7 @@ BuildRequires:	autoconf
 BuildRequires:	gcc
 BuildRequires:	gcc-ada
 BuildRequires:	perl-devel
-Requires:	binutils >= 2.9.1.0.25
+Requires:	binutils >= 2.12.90.0.1
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
