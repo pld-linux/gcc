@@ -202,6 +202,7 @@ Summary:	Header files and documentation for C++ development
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
