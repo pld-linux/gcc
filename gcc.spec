@@ -310,6 +310,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 	--enable-haifa \
 	--with-gnu-as \
 	--with-gnu-ld \
+	--with-gxx-include-dir="\$\{prefix\}/include/g++"
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
@@ -349,7 +350,7 @@ echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
-mv -f $RPM_BUILD_ROOT%{_includedir}/g++-3 $RPM_BUILD_ROOT%{_includedir}/g++
+ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so
 
 install -d $RPM_BUILD_ROOT/lib
 (cd $RPM_BUILD_ROOT; \
@@ -523,7 +524,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
 %{_includedir}/g++
-%attr(755,root,root) %{_libdir}/libst.so
+%attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
 %attr(644,root,root) %{_libdir}/libstdc++.a
