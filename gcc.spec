@@ -4,6 +4,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
+%bcond_without	var_tracking	# Disable vartracking in debug, http://gcc.gnu.org/gcc-3.5/changes.html 
 #
 %define		snap		20040327
 %define		GCC_VERSION	3.5
@@ -46,6 +47,9 @@ Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
+%if %{with var_tracking}
+Conflicts: gdb < 6.1
+%endif
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -53,7 +57,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch sparc64
 %define		_slibdir64	/lib64
 %define		_libdir		/usr/lib
-%define		rpmcflags	-O2 -mtune=ultrasparc
+%define		rpmcflags	-O2 -mtune=ultrasparc 
+%endif
+
+%if %{without var_tracking} && %{with debug}
+%define	specflags	-fno-var-tracking
 %endif
 
 %description
