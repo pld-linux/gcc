@@ -1,10 +1,8 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.1
-%define		STDC_VERSION	4.0.0
-%define		OBJC_VERSION	1.0.0
-%define		GCJ_VERSION	3.1
+%define		GCC_VERSION	3.1.1
 %define		KSI_VERSION	pre48
+
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
@@ -27,8 +25,8 @@ BuildRequires:	gcc
 BuildRequires:	gcc-ada
 BuildRequires:	perl-devel
 Requires:	binutils >= 2.12.90.0.4
-Requires:	cpp = %{version}
-Requires:	libgcc = %{version}
+Requires:	cpp = %{GCC_VERSION}
+Requires:	libgcc = %{GCC_VERSION}
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -99,7 +97,7 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
-Requires:	libobjc = %{OBJC_VERSION}
+Requires:	libobjc = %{GCC_VERSION}
 Requires:	gcc = %{GCC_VERSION}
 
 %description objc
@@ -136,8 +134,8 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
-Version:	%{OBJC_VERSION}
-Epoch:		2
+Version:	%{GCC_VERSION}
+Epoch:		3
 
 %description -n libobjc
 Objective C Libraries.
@@ -149,9 +147,9 @@ Biblioteki Obiektowego C.
 Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
-Version:	%{OBJC_VERSION}
-Epoch:		3
-Requires:	libobjc = %{OBJC_VERSION}
+Version:	%{GCC_VERSION}
+Epoch:		4
+Requires:	libobjc = %{GCC_VERSION}
 
 %description -n libobjc-static
 Static Objective C Libraries.
@@ -223,7 +221,7 @@ by³o przeprowadziæ kompilacjê.
 Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
-Version:	%{GCJ_VERSION}
+Version:	%{GCC_VERSION}
 Epoch:		2
 Requires:	zlib
 
@@ -237,9 +235,9 @@ Biblioteki Klas Javy.
 Summary:	Development files for Java Class Libraries
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
-Version:	%{GCJ_VERSION}
+Version:	%{GCC_VERSION}
 Epoch:		2
-Requires:	libgcj = %{GCJ_VERSION}
+Requires:	libgcj = %{GCC_VERSION}
 Requires:	%{name}-java
 
 %description -n libgcj-devel
@@ -252,9 +250,10 @@ Pliki nag³ówkowe dla Bibliotek Klas Javy.
 Summary:	Static Java Class Libraries
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
-Version:	%{GCJ_VERSION}
+Version:	%{GCC_VERSION}
 Epoch:		2
-Requires:	libstdc++-devel = %{STDC_VERSION}
+Requires:	libstdc++-devel = %{GCC_VERSION}
+Requires:	libgcj-devel = %{GCC_VERSION}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -266,7 +265,8 @@ Statyczne Biblioteki Klas Javy.
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
-Version:	%{STDC_VERSION}
+Version:	%{GCC_VERSION}
+Epoch:		1
 Obsoletes:	libg++
 
 %description -n libstdc++
@@ -300,8 +300,9 @@ Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Version:	%{STDC_VERSION}
-Requires:	libstdc++ = %{STDC_VERSION}
+Version:	%{GCC_VERSION}
+Epoch:		1
+Requires:	libstdc++ = %{GCC_VERSION}
 Requires:	%{name}-c++
 Obsoletes:	libg++-devel
 
@@ -319,8 +320,9 @@ programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 Summary:	Static C++ standard library
 Summary(pl):	Statyczna biblioteka standardowa C++
 Group:		Development/Libraries
-Version:	%{STDC_VERSION}
-Requires:	libstdc++-devel = %{STDC_VERSION}
+Version:	%{GCC_VERSION}
+Epoch:		1
+Requires:	libstdc++-devel = %{GCC_VERSION}
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -537,14 +539,15 @@ cd ..
 install  obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
 
 install -d java-doc
-mv -f libjava/doc/cni.sgml libjava/READ* java-doc
-mv -f fastjar/README java-doc/README.fastjar
-mv -f libffi/README java-doc/README.libffi
-mv -f libffi/LICENSE java-doc/LICENSE.libffi
+cp -f libjava/doc/cni.sgml libjava/READ* java-doc
+cp -f fastjar/README java-doc/README.fastjar
+cp -f libffi/README java-doc/README.libffi
+cp -f libffi/LICENSE java-doc/LICENSE.libffi
 
-mv -f libobjc/README gcc/objc/README.libobjc
+cp -f libobjc/README gcc/objc/README.libobjc
 
 %find_lang %{name}
+%find_lang libstdc++
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -646,15 +649,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
 
-%files -n libstdc++
+%files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
-%{_includedir}/g++*
+%dir %{_includedir}/c++
+%{_includedir}/c++/%{GCC_VERSION}
+# Bohem-GC - it should be here? I think not but...
+%{_includedir}/gc*.h
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
+%attr(755,root,root) %{_libdir}/libstdc++.la
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
@@ -681,6 +688,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
+%{_libdir}/libfrtbegin.a
 %attr(755,root,root) %{_libdir}/libg2c.la
 %attr(755,root,root) %{_libdir}/libg2c.so
 %{_mandir}/man1/g77.1*
@@ -711,6 +719,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jv-*
 %{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
+%{_mandir}/man1/rmi*
 
 %files -n libgcj
 %defattr(644,root,root,755)
