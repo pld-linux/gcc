@@ -4,7 +4,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 #
-%define		snap		20040404
+%define		snap		20040405
 %define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 #
@@ -21,7 +21,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 ##Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
 Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	5529f7cc55dbf00b96e12929075d7063
+# Source0-md5:	9d89d7e73d89065469e32c204c52611b
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -713,7 +713,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#patch2 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
