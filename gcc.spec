@@ -63,8 +63,8 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.90.0.3
-Requires:	cpp = %{epoch}:%{GCC_VERSION}
-Requires:	libgcc = %{epoch}:%{GCC_VERSION}
+Requires:	cpp = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libgcc = %{epoch}:%{GCC_VERSION}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
