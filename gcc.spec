@@ -20,7 +20,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	1
 Epoch:		5
 License:	GPL
@@ -89,6 +89,7 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.91.0.2
+Requires:	gcc-dirs >= 1.0-3
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
@@ -874,8 +875,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS NEWS bugs.html faq.html
 %doc gcc/{ChangeLog,ONEWS,README.Portability}
-%dir %{_libdir}/gcc
-%dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
 %{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
