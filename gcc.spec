@@ -1,4 +1,4 @@
-%define		DASHED_SNAP	2002-05-08
+%define		DASHED_SNAP	2002-05-10
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	4.0.0
