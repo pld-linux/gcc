@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 #
 %define		snap		20040406
-%define		GCC_VERSION	3.4
+%define		GCC_VERSION	3.4.0
 %define		KSI_VERSION	1.1.0.1567
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
@@ -19,9 +19,8 @@ Epoch:		5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-##Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-Source0:	%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	d2fe81f5df0f12279e12a05ceea7291c
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	e656a834d15b557ddf6f467fd5fb3d09
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -966,8 +965,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
-%{_includedir}/c++/%{version}.0
-%exclude %{_includedir}/c++/%{version}.0/*/bits/stdc++.h.gch
+%{_includedir}/c++/%{version}
+%exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
 %attr(755,root,root) %{_libdir}*/libstdc++.so
 %{_libdir}*/libstdc++.la
 %ifarch ppc
