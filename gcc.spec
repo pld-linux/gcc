@@ -819,6 +819,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
+%{!?with_bootstrap:%{_libdir}/libgij.la}
 %{!?with_bootstrap:%attr(755,root,root) %{_libdir}/libgij.so}
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib-org-*.la
@@ -827,6 +828,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
+%{!?with_bootstrap:%{_libdir}/libgij.a}
 %{_libdir}/lib-org-*.a
 
 %files -n libffi
