@@ -1,17 +1,15 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
-%define		rver		3.0
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	%{rver}
-Release:	0.1
+Version:	3.0
+Release:	0.8
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{snap}/%{name}-%{version}.tar.bz2
-Patch0:		%{name}-disableshared.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
@@ -21,6 +19,8 @@ Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_slibdir	/lib
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -274,7 +274,7 @@ programowaniu w jêzyku C++.
 
 %package -n libstdc++-static
 Summary:	Static c++ standard library
-Summary(pl):	Biblioeka statyczna c++
+Summary(pl):	Biblioteka statyczna c++
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
@@ -288,13 +288,28 @@ Static c++ standard library.
 %description -l pl -n libstdc++-static
 Biblioteka statyczna C++.
 
+%package -n libgcc
+Summary:	Shared gcc library
+Summary(pl):	Biblioteka gcc
+Group:		Libraries
+Group(de):	Libraries
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+Version:	%{version}
+
+%description -n libgcc
+Shared gcc library.
+
+%description -l pl -n libgcc
+Biblioteka dynamiczna gcc.
+
 %package -n cpp
 Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Version:	%{rver}
+Version:	%{version}
 Obsoletes:	egcs-cpp
 
 %description -n cpp
@@ -343,7 +358,6 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 cd gcc && autoconf; cd ..
@@ -364,13 +378,14 @@ TEXCONFIG=false ../configure \
 %endif
 	--enable-threads=posix \
 	--enable-haifa \
-	--enable-languages="c,gcov,c++,objc,f77" \
+        --enable-languages="c,c++,f77,gcov,java,objc" \
 	--enable-long-long \
 	--enable-namespaces \
 	--enable-multilib \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-system-zlib \
+	--with-slibdir=%{_slibdir} \
 	--without-x \
 	%{_target_platform}
 
@@ -389,10 +404,16 @@ install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
+# workaround
+cat gcc/Makefile | sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' > gcc/Makfefile.
+mv -f gcc/Makfefile. gcc/Makefile
+
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
-	infodir=$RPM_BUILD_ROOT%{_infodir}
+	infodir=$RPM_BUILD_ROOT%{_infodir} \
+	DESTDIR=$RPM_BUILD_ROOT
+#	slibdir=$RPM_BUILD_ROOT%{_slibdir}
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
@@ -480,7 +501,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %attr(755,root,root) %{_libdir}/libsupc++.la
 %{_libdir}/libsupc++.a
-#%{_infodir}/c-tree*
 
 %files objc
 %defattr(644,root,root,755)
@@ -515,33 +535,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files java
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/gcj*
-#%attr(755,root,root) %{_bindir}/gij
-#%attr(755,root,root) %{_bindir}/jcf-dump
-#%attr(755,root,root) %{_bindir}/jv-*
-#%attr(755,root,root) %{_bindir}/fastjar
-#%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
-#%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
-#%{_infodir}/gcj*
+%attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gij
+%attr(755,root,root) %{_bindir}/jcf-dump
+%attr(755,root,root) %{_bindir}/jv-*
+%attr(755,root,root) %{_bindir}/jar
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
+%{_infodir}/gcj*
 
 %files -n libgcj
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_libdir}/lib*cj*.so.*
+%attr(755,root,root) %{_libdir}/lib*cj*.so.*
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-#%{_includedir}/java
-#%{_includedir}/gcj
-#%{_includedir}/j*.h
-#%{_includedir}/gnu/*
-#%{_libdir}/lib*cj.spec
-#%{_datadir}/libgcj.jar
-#%attr(755,root,root) %{_libdir}/lib*cj*.la
-#%attr(755,root,root) %{_libdir}/lib*cj*.so
+%{_includedir}/java
+%{_includedir}/gcj
+%{_includedir}/j*.h
+%{_includedir}/gnu/*
+%{_libdir}/lib*cj.spec
+%{_datadir}/libgcj.jar
+%attr(755,root,root) %{_libdir}/lib*cj*.la
+%attr(755,root,root) %{_libdir}/lib*cj*.so
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-#%{_libdir}/lib*cj*.a
+%{_libdir}/lib*cj*.a
 
 %files -n libstdc++
 %defattr(644,root,root,755)
@@ -550,16 +570,19 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %{_includedir}/g++*
-#%{_prefix}/%{_target_cpu}*
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
 %attr(644,root,root) %{_libdir}/libstdc++.a
 
+%files -n libgcc
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdir}/lib*.so*
+
 %files -n cpp
 %defattr(644,root,root,755)
-%attr(755,root,root) /lib/cpp
+%attr(755,root,root) %{_slibdir}/cpp
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
