@@ -723,40 +723,40 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 %build
 # cd gcc && autoconf; cd ..
 # autoconf is not needed!
-##cp /usr/share/automake/config.sub .
+cp /usr/share/automake/config.sub .
 
-##rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
+rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-##CFLAGS="%{rpmcflags}" \
-##CXXFLAGS="%{rpmcflags}" \
-##TEXCONFIG=false ../configure \
-##	--prefix=%{_prefix} \
-##	--libdir=%{_libdir} \
-##	--libexecdir=%{_libexecdir} \
-##	--infodir=%{_infodir} \
-##	--mandir=%{_mandir} \
-##	--enable-shared \
-##	--enable-threads=posix \
-##	--enable-__cxa_atexit \
-##	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
-##	--enable-c99 \
-##	--enable-long-long \
-##%ifarch amd64
-##	--disable-multilib \
-##%else
-##	--enable-multilib \
-##%endif
-##	--enable-nls \
-##	--with-gnu-as \
-##	--with-gnu-ld \
-##	--with-system-zlib \
-##	--with-slibdir=%{_slibdir} \
-##	--without-x \
-##	%{_target_platform}
+CFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcflags}" \
+TEXCONFIG=false ../configure \
+	--prefix=%{_prefix} \
+	--libdir=%{_libdir} \
+	--libexecdir=%{_libexecdir} \
+	--infodir=%{_infodir} \
+	--mandir=%{_mandir} \
+	--enable-shared \
+	--enable-threads=posix \
+	--enable-__cxa_atexit \
+	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
+	--enable-c99 \
+	--enable-long-long \
+%ifarch amd64
+	--disable-multilib \
+%else
+	--enable-multilib \
+%endif
+	--enable-nls \
+	--with-gnu-as \
+	--with-gnu-ld \
+	--with-system-zlib \
+	--with-slibdir=%{_slibdir} \
+	--without-x \
+	%{_target_platform}
 
-##PATH=$PATH:/sbin:%{_sbindir}
+PATH=$PATH:/sbin:%{_sbindir}
 
-##cd ..
+cd ..
 %{__make} -C obj-%{_target_platform} profiledbootstrap \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags}" \
