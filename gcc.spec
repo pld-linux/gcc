@@ -830,7 +830,7 @@ rm -rf $gccdir/install-tools
 %if %{with ssp}
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 %endif
-install %{SOURCE3} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
+install %{SOURCE3} $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
 
 %clean
 rm -rf $RPM_BUILD_ROOT
