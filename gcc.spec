@@ -7,7 +7,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -617,6 +617,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 %attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
+%ifarch ppc
+%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ecrt*.o
+%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ncrt*.o
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/nof
+%dir %{_libdir}/nof
+%endif
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 
@@ -632,6 +638,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/mmintrin.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/xmmintrin.h
 %endif
+%ifarch ppc
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/altivec.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/ppc-asm.h
+%endif
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -646,12 +656,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %attr(755,root,root) %{_libdir}/libsupc++.la
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libsupc++.la
+%{_libdir}/nof/libsupc++.a
+%endif
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
+%endif
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
@@ -662,10 +679,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gc*.h
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
 %attr(755,root,root) %{_libdir}/libstdc++.la
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libstdc++.so
+%attr(755,root,root) %{_libdir}/nof/libstdc++.la
+%endif
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.a
+%ifarch ppc
+%{_libdir}/nof/libstdc++.a
+%endif
 
 %files objc
 %defattr(644,root,root,755)
@@ -673,14 +697,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
 %attr(755,root,root) %{_libdir}/libobjc.so
 %attr(755,root,root) %{_libdir}/libobjc.la
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libobjc.so
+%attr(755,root,root) %{_libdir}/nof/libobjc.la
+%endif
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
 
 %files -n libobjc
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
+%endif
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
 %{_libdir}/libobjc.a
+%ifarch ppc
+%{_libdir}/nof/libobjc.a
+%endif
 
 %files g77
 %defattr(644,root,root,755)
@@ -691,6 +726,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libfrtbegin.a
 %attr(755,root,root) %{_libdir}/libg2c.la
 %attr(755,root,root) %{_libdir}/libg2c.so
+%ifarch ppc
+%{_libdir}/nof/libfrtbegin.a
+%attr(755,root,root) %{_libdir}/nof/libg2c.la
+%attr(755,root,root) %{_libdir}/nof/libg2c.so
+%endif
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
@@ -698,9 +738,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libg2c
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
+%ifach ppc
+%attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
+%endif
 
 %files -n libg2c-static
 %{_libdir}/libg2c.a
+%ifarch ppc
+%{_libdir}/nof/libg2c.a
+%endif
 
 %files java
 %defattr(644,root,root,755)
@@ -734,16 +780,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
-%{_libdir}/lib*cj.spec
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/gcj
 %{_libdir}/security/*
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
+%{_libdir}/lib*cj.spec
 %attr(755,root,root) %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
+%ifarch ppc
+%{_libdir}/nof/lib*cj.spec
+%attr(755,root,root) %{_libdir}/nof/lib*cj*.la
+%attr(755,root,root) %{_libdir}/nof/lib*cj*.so
+%endif
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
+%ifarch ppc
+%{_libdir}/nof/lib*cj*.a
+%endif
 
 %files ada
 %defattr(644,root,root,755)
