@@ -18,6 +18,7 @@ Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
+Patch4:		%{name}-ppc-ada-hack.patch
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -465,6 +466,9 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%ifarch ppc
+%patch4 -p1
+%endif
 
 %build
 # cd gcc && autoconf; cd ..
