@@ -24,6 +24,7 @@
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
+#		- review ppc's nof files
 #
 %define		_snap		20050213
 #
@@ -608,10 +609,10 @@ cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf	$gccdir/install-tools
 
-ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 %if %{with multilib}
 ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/libgcc_s_32.so
 %endif
+ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
 %find_lang libstdc\+\+
@@ -837,6 +838,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gfortran
 %{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
+%if %{with multilib}
+%{_libdir32}/libgfortranbegin.a
+%{_libdir32}/libgfortranbegin.la
+%{_libdir32}/libgfortran.la
+%attr(755,root,root) %{_libdir32}/libgfortran.so
+%endif
 %{_libdir}/libgfortranbegin.a
 %{_libdir}/libgfortranbegin.la
 %{_libdir}/libgfortran.la
@@ -847,10 +854,16 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
+%endif
 %attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
 
 %files -n libgfortran-static
 %defattr(644,root,root,755)
+%if %{with multilib}
+%{_libdir32}/libgfortran.a
+%endif
 %{_libdir}/libgfortran.a
 %endif
 
@@ -933,6 +946,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/objc/README
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libobjc.so
+%{_libdir32}/libobjc.la
+%endif
 %attr(755,root,root) %{_libdir}/libobjc.so
 %{_libdir}/libobjc.la
 %{_libdir}/gcc/*/*/include/objc
@@ -940,9 +957,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libobjc
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
+%endif
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
+%if %{with multilib}
+%{_libdir32}/libobjc.a
+%endif
 %{_libdir}/libobjc.a
 %endif
