@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.5
+Release:	0.6
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -413,7 +413,7 @@ This is the GNU implementation of the standard C++ libraries. This
 package includes the header files needed for C++ development and
 library documentation.
 
-%description -n libstdc++-static -l es
+%description -n libstdc++-devel -l es
 Este es el soporte de las bibliotecas padrón del lenguaje C++. Este paquete
 incluye los archivos de inclusión y bibliotecas necesarios para desarrollo de
 programas en lenguaje C++.
@@ -423,7 +423,7 @@ Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
 bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
 programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 
-%description -n libstdc++-static -l pt_BR
+%description -n libstdc++-devel -l pt_BR
 Este pacote inclui os arquivos de inclusão e bibliotecas necessárias para
 desenvolvimento de programas C++.
 
