@@ -1,7 +1,6 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203
-#		- http://gcc.gnu.org/PR18648
 #		- disable internal zlib usage
 #		- bconds
 #		- translations from gcc.spec:HEAD
