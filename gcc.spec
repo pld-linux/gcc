@@ -35,7 +35,7 @@ Name:		gcc
 Epoch:		5
 Version:	4.0.0
 Release:	0.%{_snap}.1
-License:	GPL
+License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
@@ -48,7 +48,6 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
-Patch6:		%{name}-relink.patch
 # PRs
 Patch100:	%{name}-pr19317.patch
 Patch101:	%{name}-pr20249.patch
@@ -114,6 +113,7 @@ z GCC, trzeba zainstalowaæ odpowiedni podpakiet.
 %package -n libgcc
 Summary:	Shared gcc library
 Summary(pl):	Biblioteka gcc
+License:	GPL with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
 
@@ -217,6 +217,7 @@ standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 %package -n libstdc++
 Summary:	GNU C++ library
 Summary(pl):	Biblioteki GNU C++
+License:	GPL v2+ with free software exception
 Group:		Libraries
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
@@ -234,6 +235,7 @@ uruchomienia aplikacji napisanych w C++.
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
+License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
@@ -254,6 +256,7 @@ programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 %package -n libstdc++-static
 Summary:	Static C++ standard library
 Summary(pl):	Statyczna biblioteka standardowa C++
+License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
@@ -282,6 +285,7 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 95.
 %package -n libgfortran
 Summary:	Fortran 95 Libraries
 Summary(pl):	Biblioteki Fortranu 95
+License:	LGPL v2+
 Group:		Development/Libraries
 Obsoletes:	libg2c
 
@@ -294,6 +298,7 @@ Biblioteki Fortranu 95.
 %package -n libgfortran-static
 Summary:	Static Fortran 95 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 95
+License:	LGPL v2+
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c-static
@@ -327,6 +332,7 @@ by³o przeprowadziæ kompilacjê.
 %package -n libgcj
 Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
+License:	GPL with limited linking exception
 Group:		Libraries
 Requires:	zlib
 Obsoletes:	libgcj3
@@ -340,6 +346,7 @@ Biblioteki Klas Javy.
 %package -n libgcj-devel
 Summary:	Development files for Java Class Libraries
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
+License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
 Obsoletes:	libgcj3-devel
@@ -353,6 +360,7 @@ Pliki nag³ówkowe dla Bibliotek Klas Javy.
 %package -n libgcj-static
 Summary:	Static Java Class Libraries
 Summary(pl):	Statyczne Biblioteki Klas Javy
+License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
@@ -366,6 +374,7 @@ Statyczne Biblioteki Klas Javy.
 %package -n libffi
 Summary:	Foreign Function Interface library
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
+License:	BSD-like
 Group:		Libraries
 
 %description -n libffi
@@ -383,6 +392,7 @@ czasie wykonania.
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
 Summary(pl):	Pliki nag³ówkowe dla libffi
+License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi = %{epoch}:%{version}-%{release}
 
@@ -395,6 +405,7 @@ Pliki nag³ówkowe dla libffi.
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
 Summary(pl):	Statyczna biblioteka libffi
+License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 
@@ -446,6 +457,7 @@ standardowej biblioteki objc (która znajduje siê w osobnym pakiecie).
 %package -n libobjc
 Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	libobjc1
 
@@ -458,6 +470,7 @@ Biblioteki Obiektowego C.
 %package -n libobjc-static
 Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{version}-%{release}
 
@@ -481,7 +494,6 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-#patch6 -p1
 
 # PRs
 %patch100 -p1
