@@ -1,4 +1,4 @@
-%define		DASHED_SNAP	2002-04-23
+%define		DASHED_SNAP	2002-05-06
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	4.0.0
@@ -12,7 +12,7 @@ Version:	%{GCC_VERSION}
 Release:	0.%{SNAP}.0
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{GCC_VERSION}-%{SNAP}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
@@ -442,7 +442,7 @@ Ten pakiet zawiera biblioteki statyczne potrzebne do uruchamiania
 programów napisanych w Adzie.
 
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}-%{SNAP}
+%setup -q -a1 -n %{name}-%{SNAP}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
