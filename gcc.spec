@@ -97,14 +97,13 @@ Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
-%ifarch sparc64
+%ifarch amd64 ppc64 s390x sparc64
 %define		_slibdir32	/lib
+# XXX: avoid using "%{_libdir}*" - specify both paths separately
 %define		_libdir		/usr/lib
-%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
-%ifarch amd64
-%define         _slibdir32      /lib
-%define         _libdir         /usr/lib
+%ifarch sparc64
+%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
 %description
@@ -681,11 +680,11 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-CC=%__cc
+CC="%{__cc}"
 
 %if %{with multilib}
-
-%ifarch sparc64 
+# or better don't allow with_multilib for single ABI archs?
+%ifarch amd64 ppc64 s390x sparc64 
 cat > gcc64 <<"EOF"
 #!/bin/sh
 exec /usr/bin/gcc -m64 "$@"
@@ -693,16 +692,6 @@ EOF
 chmod +x gcc64
 CC=`pwd`/gcc64
 %endif 
-
-%ifarch amd64
-cat > gcc64 <<"EOF"
-#!/bin/sh
-exec /usr/bin/gcc -m64 "$@"
-EOF
-chmod +x gcc64
-CC=`pwd`/gcc64
-%endif 
-
 %endif
 
 CFLAGS="%{rpmcflags}" \
@@ -844,17 +833,10 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 rm -rf $gccdir/install-tools
 
 %if %{with multilib}
-
-%ifarch sparc64 
-ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
+%ifarch amd64 ppc64 s390x sparc64 
+ln -sf %{_slibdir}/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %endif 
-
-%ifarch amd64 
-ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
-ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
-%endif 
-
 %endif
 
 %find_lang %{name}
