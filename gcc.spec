@@ -8,7 +8,6 @@
 %bcond_with	bootstrap
 
 %if %{with bootstrap}
-%define		rpmcflags	-O
 %undefine	with_fortran
 %undefine	with_java
 %undefine	with_objc
@@ -510,7 +509,7 @@ cd ..
 	%{!?with_bootstrap:profiledbootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
-	STAGE1_CFLAGS="%{rpmcflags}" \
+	STAGE1_CFLAGS="%{rpmcflags} -O0" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
