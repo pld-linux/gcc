@@ -163,6 +163,7 @@ Summary(pl):	Obs³uga C++ dla gcc
 Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires(postun):	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
 
@@ -213,6 +214,7 @@ Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc
 Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires(postun):	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
@@ -292,6 +294,8 @@ Summary(es):	Soporte de Fortran 77 para gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
 Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires(postun):	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libg2c = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 
@@ -347,6 +351,7 @@ Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires(postun):	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	java-shared
@@ -595,6 +600,7 @@ Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires(postun):	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgnat = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
