@@ -660,7 +660,7 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%if 0%{?_with_ada:0}
+%if 0%{?_with_ada:1}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
