@@ -10,6 +10,7 @@ Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
 Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
+Source2:	gcov.1
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
 Patch2:		gcc-pld-linux.patch
@@ -367,7 +368,6 @@ PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
 make LDFLAGS_FOR_TARGET="-s" \
-#	bootstrap-lean \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
@@ -397,6 +397,7 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
+install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
@@ -458,6 +459,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cc
 
 %{_mandir}/man1/gcc.1*
+%{_mandir}/man1/gcov.1*
 %{_infodir}/gcc*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/SYSCALLS.c.X
