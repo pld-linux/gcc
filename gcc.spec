@@ -1,6 +1,6 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
-%define		snap		20010319
+%define		snap		20010320
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
@@ -358,7 +358,7 @@ TEXCONFIG=false ../configure \
 %endif
 	--enable-threads=posix \
 	--enable-haifa \
-	--enable-languages="c,gcov,c++,java,f77" \
+	--enable-languages="c,gcov,c++,objc,java,f77" \
 	--enable-long-long \
 	--enable-namespaces \
 	--enable-multilib \
@@ -368,8 +368,6 @@ TEXCONFIG=false ../configure \
 	--without-x \
 	--disable-nls \
 	%{_target_platform}
-# --enable-languages=objc
-# temporary disabled (objc doesn't build right now)
 
 PATH=$PATH:/sbin:%{_sbindir}
 
@@ -480,7 +478,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/c-tree*
 %{_infodir}/g++int*
 
-%ifarch temporary_disabled_does_not_compile
 %files objc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
@@ -488,7 +485,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.so*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.la
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
-%endif
 
 %files g77
 %defattr(644,root,root,755)
