@@ -74,9 +74,12 @@ uygulayabilir.
 %endif
 
 %build
-./configure --prefix=/usr \
-	--local-prefix=/usr/local --gxx-include-dir=/usr/include/g++ \
-	${RPM_ARCH}-pld-linux
+./configure \
+	--prefix=/usr \
+	--local-prefix=/usr/local \
+	--gxx-include-dir=/usr/include/g++ \
+	--host=i386-linux \
+	--target=i386-linux
 
 make LANGUAGES=c CFLAGS="-O2"
 make stage1
@@ -100,9 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644, root, root, 755)
 %doc NEWS PROBLEMS
-%attr(755, root, root) /usr/bin/gcc
-%attr(755, root, root) /usr/bin/cc
-%attr(755, root, root) /usr/bin/*-gcc
+%attr(755, root, root) /usr/bin/*-linux-gcc
 %dir /usr/lib/gcc-lib/*/*
 %dir /usr/lib/gcc-lib/*/*/include
 /usr/lib/gcc-lib/*/*/SYSCALLS.c.X
@@ -116,8 +117,11 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [2.7.2.3-16]
-- removed gcc man page (this can be provided by egcs),
-- removed gcc info pages (this can be provided by egcs).
+- now gcc 2.7.2.3 for backward compatybility for proper
+  compiling kernel 2.0.x is compiled like cross compilator
+  (remember use "CC=<arch>-linux-gcc" as make parameter during
+  compile kernel),
+- removed gcc man and inbfo page (this can be provided by egcs).
 
 * Sun Sep 27 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [2.7.2.3-15]
