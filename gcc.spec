@@ -92,6 +92,7 @@ BuildRequires:	autoconf
 BuildRequires:	gcc
 %{!?_without_ada:BuildRequires:	gcc-ada}
 BuildRequires:	perl-devel
+BuildRequires:	gettext-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{GCC_VERSION}
 Requires:	libgcc = %{GCC_VERSION}
