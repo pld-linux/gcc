@@ -1,4 +1,8 @@
 #
+# TODO:
+#		- merge cpp with gcc.
+#		- add ffitarget.h to libffi-devel.
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
