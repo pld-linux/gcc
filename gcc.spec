@@ -389,7 +389,7 @@ po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 
 
 %prep
-%setup -q -a1 -n %{name}-%{SNAP}
+%setup -q -a1 -n %{name}-%{GCC_VERSION}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
