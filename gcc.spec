@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 #
-%define		snap		20040225
+%define		snap		20040303
 %define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 
@@ -21,7 +21,7 @@ License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	8d3a36a3032c4d8f3a7528b103d544de
+# Source0-md5:	1e061213c3b5ca77764ef9faa8f13677
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -29,22 +29,6 @@ Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
-# -- stolen patches from RH --
-Patch10:	gcc32-ada-link.patch
-Patch11:	gcc32-boehm-gc-libs.patch
-Patch12:	gcc32-bogus-inline.patch
-Patch13:	gcc32-c++-nrv-test.patch
-Patch14:	gcc32-c++-tsubst-asm.patch
-Patch15:	gcc32-debug-pr7241.patch
-Patch16:	gcc32-duplicate-decl.patch
-Patch17:	gcc32-dwarf2-pr6381.patch
-Patch18:	gcc32-dwarf2-pr6436-test.patch
-Patch19:	gcc32-fde-merge-compat.patch
-Patch20:	gcc32-i386-memtest-test.patch
-Patch21:	gcc32-inline-label.patch
-Patch22:	gcc32-java-no-rpath.patch
-Patch23:	gcc32-test-rh65771.patch
-Patch24:	gcc32-test-rotate.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -731,22 +715,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 
-#%patch10 -p1
-#%patch11
-#%patch12
-#%patch13
-#%patch14
-#%patch15
-#%patch16
-#%patch17
-#%patch18
-#%patch19
-#%patch20
-#%patch21
-#%patch22
-#%patch23
-#%patch24
-
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
@@ -949,6 +917,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcc*
 
 %attr(755,root,root) %{_slibdir}*/lib*.so
+%{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
 %{_libdir}/gcc/*/*/specs
