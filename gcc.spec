@@ -30,14 +30,14 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
 Patch3:		%{name}-nodebug.patch
 Patch4:		%{name}-ssp.patch
-
-Patch6:		%{name}-ada-link.patch
-Patch7:		%{name}-pr15666.patch
+Patch5:		%{name}-ada-link.patch
+Patch6:		%{name}-pr15666.patch
+Patch7:		%{name}-pr16276.patch
 Patch8:		%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2.15.90.0.3
+BuildRequires:	binutils >= 2.15.91.0.2
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -51,7 +51,7 @@ BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2.15.90.0.3
+Requires:	binutils >= 2.15.91.0.2
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
@@ -700,10 +700,10 @@ controle da numeração das linhas do programa.
 %patch2 -p1
 %{!?debug:%patch3 -p1}
 %{?with_ssp:%patch4 -p1}
-
-%patch6 -p1
+%patch5 -p1
+%patch6 -p0
 %patch7 -p0
-%ifarch alpha
+%ifarch alpha ia64
 # only for bootstrap using gcc 3.3.x
 %patch8 -p2
 %endif
@@ -715,6 +715,10 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 mv ChangeLog ChangeLog.general
 
 %build
+# because pr16276 patch modifies configure.ac
+cd gcc
+%{__autoconf}
+cd ..
 # cd gcc && autoconf; cd ..
 # autoconf is not needed!
 cp -f /usr/share/automake/config.sub .
