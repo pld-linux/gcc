@@ -11,10 +11,10 @@
 %define		GCC_VERSION	3.3.2
 %define		KSI_VERSION	1.1.0.1567
 
-Summary:	GNU Compiler Collection
-Summary(es):	Colección de compiladores GNU
-Summary(pl):	Kolekcja Kompilatorów GNU
-Summary(pt_BR):	Coleção dos compiladores GNU
+Summary:	GNU Compiler Collection: the C compiler and shared files
+Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
+Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
+Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
 Release:	0.1
@@ -79,18 +79,31 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 A compiler aimed at integrating all the optimizations and features
 necessary for a high-performance and stable development environment.
 
+This package contains the C compiler and some files shared by various
+parts of the GNU Compiler Collection. In order to use another GCC
+compiler you will need to install the appropriate subpackage.
+
 %description -l es
-Un compilador destinado a la integración de todas las
-optimalizaciónes y características necesarias para un entorno de
-desarrollo eficaz y estable.
+Un compilador destinado a la integración de todas las optimalizaciones
+y características necesarias para un entorno de desarrollo eficaz y
+estable.
+
+Este paquete contiene el compilador de C y unos ficheros compartidos
+por varias parted de la colección de compiladores GNU (GCC). Para usar
+otro compilador de GCC será necesario que instale el subpaquete
+adecuado.
 
 %description -l pl
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
 wyprodukowania szybkiego i stablinego kodu wynikowego.
 
+Ten pakiet zawiera kompilator C i pliki wspó³dzielone przez ró¿ne
+czê¶ci kolekcji kompilatorów GNU (GCC). ¯eby u¿ywaæ innego kompilatora
+z GCC, trzeba zainstalowaæ odpowiedni podpakiet.
+
 %description -l pt_BR
-Este pacote adiciona infraestrutura básica e suporte a linguagem C
-ao GNU Compiler Collection.
+Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
+GNU Compiler Collection.
 
 %package -n libgcc
 Summary:	Shared gcc library
@@ -124,28 +137,29 @@ Obsoletes:	egcs-c++
 Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description c++
-This package adds C++ support to the GNU Compiler Collection. It includes
-support for most of the current C++ specification, including templates
-and exception handling. It does not include a standard C++ library,
-which is available separately.
+This package adds C++ support to the GNU Compiler Collection. It
+includes support for most of the current C++ specification, including
+templates and exception handling. It does not include a standard C++
+library, which is available separately.
 
 %description c++ -l de
-Dieses Paket enthält die C++-Unterstützung für den GNU-Compiler-Collection. Es
-unterstützt die aktuelle C++-Spezifikation, inkl. Templates und
-Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten -
-sie ist getrennt erhältlich.
+Dieses Paket enthält die C++-Unterstützung für den
+GNU-Compiler-Collection. Es unterstützt die aktuelle
+C++-Spezifikation, inkl. Templates und Ausnahmeverarbeitung. Eine
+C++-Standard-Library ist nicht enthalten - sie ist getrennt
+erhältlich.
 
 %description c++ -l es
-Este paquete añade soporte de C++ al GCC (colección de compiladores GNU).
-Ello incluye el soporte para la mayoría de la especificación actual de C++,
-incluyendo plantillas y manejo de excepciones. No incluye la biblioteca estándar
-de C++, la que es disponible separada.
+Este paquete añade soporte de C++ al GCC (colección de compiladores
+GNU). Ello incluye el soporte para la mayoría de la especificación
+actual de C++, incluyendo plantillas y manejo de excepciones. No
+incluye la biblioteca estándar de C++, la que es disponible separada.
 
 %description c++ -l fr
-Ce package ajoute un support C++ a la collection de compilateurs GNU. Il comprend un
-support pour la plupart des spécifications actuelles de C++, dont les
-modéles et la gestion des exceptions. Il ne comprend pas une
-bibliothéque C++ standard, qui est disponible séparément.
+Ce package ajoute un support C++ a la collection de compilateurs GNU.
+Il comprend un support pour la plupart des spécifications actuelles de
+C++, dont les modéles et la gestion des exceptions. Il ne comprend pas
+une bibliothéque C++ standard, qui est disponible séparément.
 
 %description c++ -l pl
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc. Ma wsparcie dla
@@ -174,28 +188,29 @@ Requires:	libobjc = %{epoch}:%{GCC_VERSION}
 Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description objc
-This package adds Objective C support to the GNU Compiler Collection. Objective
-C is a object oriented derivative of the C language, mainly used on
-systems running NeXTSTEP. This package does not include the standard
-objective C object library.
+This package adds Objective C support to the GNU Compiler Collection.
+Objective C is a object oriented derivative of the C language, mainly
+used on systems running NeXTSTEP. This package does not include the
+standard objective C object library.
 
 %description objc -l de
-Dieses Paket ergänzt den GNU-Compiler-Collection durch Objective-C-Support.
-Objective C ist ein objektorientiertes Derivat von C, das zur
-Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt. Die
-Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
+Dieses Paket ergänzt den GNU-Compiler-Collection durch
+Objective-C-Support. Objective C ist ein objektorientiertes Derivat
+von C, das zur Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt.
+Die Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
 
 %description objc -l es
-Este paquete añade soporte de Objective C al GCC (colección de compiladores
-GNU). Objective C es un lenguaje orientado a objetos derivado de C, principalmente
-usado en sistemas que funcionan bajo NeXTSTEP. El paquete no incluye la
-biblioteca de objetos estándar de Objective C.
+Este paquete añade soporte de Objective C al GCC (colección de
+compiladores GNU). Objective C es un lenguaje orientado a objetos
+derivado de C, principalmente usado en sistemas que funcionan bajo
+NeXTSTEP. El paquete no incluye la biblioteca de objetos estándar de
+Objective C.
 
 %description objc -l fr
-Ce package ajoute un support Objective C a la collection de compilateurs GNU.
-L'Objective C est un langage orienté objetdérivé du langage C,
-principalement utilisé sur les systèmes NeXTSTEP. Ce package n'inclue
-pas la bibliothéque Objective C standard.
+Ce package ajoute un support Objective C a la collection de
+compilateurs GNU. L'Objective C est un langage orienté objetdérivé du
+langage C, principalement utilisé sur les systèmes NeXTSTEP. Ce
+package n'inclue pas la bibliothéque Objective C standard.
 
 %description objc -l pl
 Ten pakiet dodaje obs³ugê obiektowego C do kompilatora gcc. Obiektowe
@@ -258,8 +273,8 @@ This package adds support for compiling Fortran 77 programs with the
 GNU compiler.
 
 %description g77 -l es
-Este paquete añade soporte para compilar programas escritos en Fortran 77
-con el compilador GNU.
+Este paquete añade soporte para compilar programas escritos en Fortran
+77 con el compilador GNU.
 
 %description g77 -l pl
 Ten pakiet dodaje obs³ugê Fortranu 77 do kompilatora gcc. Jest
@@ -319,9 +334,9 @@ and bytecode into native code. To use this you will also need the
 libgcj package.
 
 %description java -l es
-Este paquete añade soporte experimental para compilar programas Java(tm)
-y su bytecode en código nativo. Para usarlo también va a necesitar
-el paquete libgcj.
+Este paquete añade soporte experimental para compilar programas
+Java(tm) y su bytecode en código nativo. Para usarlo también va a
+necesitar el paquete libgcj.
 
 %description java -l pl
 Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
@@ -341,16 +356,16 @@ Obsoletes:	java-shared
 Obsoletes:	jar
 
 %description java-tools
-This package contains tools that are common for every Java(tm) implementation,
-such as rmic or jar.
+This package contains tools that are common for every Java(tm)
+implementation, such as rmic or jar.
 
 %description java-tools -l es
-Este paquete contiene herramientas que son comunes para cada implementación de
-Java(tm), como rmic o jar.
+Este paquete contiene herramientas que son comunes para cada
+implementación de Java(tm), como rmic o jar.
 
 %description java-tools -l pl
-Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji Javy(tm), takie
-jak rmic czy jar.
+Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
+Javy(tm), takie jak rmic czy jar.
 
 %package -n libgcj
 Summary:	Java Class Libraries
@@ -471,9 +486,9 @@ package includes the header files needed for C++ development and
 library documentation.
 
 %description -n libstdc++-devel -l es
-Este es el soporte de las bibliotecas padrón del lenguaje C++. Este paquete
-incluye los archivos de inclusión y bibliotecas necesarios para desarrollo de
-programas en lenguaje C++.
+Este es el soporte de las bibliotecas padrón del lenguaje C++. Este
+paquete incluye los archivos de inclusión y bibliotecas necesarios
+para desarrollo de programas en lenguaje C++.
 
 %description -n libstdc++-devel -l pl
 Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
@@ -481,8 +496,8 @@ bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
 programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 
 %description -n libstdc++-devel -l pt_BR
-Este pacote inclui os arquivos de inclusão e bibliotecas necessárias para
-desenvolvimento de programas C++.
+Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
+para desenvolvimento de programas C++.
 
 %package -n libstdc++-static
 Summary:	Static C++ standard library
@@ -515,15 +530,16 @@ call any function specified by a call interface description at run
 time.
 
 %description -n libffi -l es
-La biblioteca libffi provee una interfaz portable de programación de alto
-nivel para varias convenciones de llamada. Ello permite que un programador
-llame una función cualquiera especificada por una descripción de interfaz
-de llamada en el tiempo de ejecución.
+La biblioteca libffi provee una interfaz portable de programación de
+alto nivel para varias convenciones de llamada. Ello permite que un
+programador llame una función cualquiera especificada por una
+descripción de interfaz de llamada en el tiempo de ejecución.
 
 %description -n libffi -l pl
-Biblioteka libffi dostarcza przno¶nego, wysokopoziomowego miêdzymordzia
-do ró¿nych konwencji wywo³añ funkcji. Pozwala to programi¶cie wywo³ywaæ
-dowolne funkcje podaj±c konwencjê wywo³ania w czasie wykonania.
+Biblioteka libffi dostarcza przno¶nego, wysokopoziomowego
+miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
+programi¶cie wywo³ywaæ dowolne funkcje podaj±c konwencjê wywo³ania w
+czasie wykonania.
 
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
@@ -574,11 +590,12 @@ Obsoletes:	gnat-devel
 This package adds experimental support for compiling Ada programs.
 
 %description ada -l es
-Este paquete añade soporte experimental para compilar programas en Ada.
+Este paquete añade soporte experimental para compilar programas en
+Ada.
 
 %description ada -l pl
-Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów
-w Adzie.
+Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
+Adzie.
 
 %package -n libgnat
 Summary:	Ada standard libraries
@@ -594,12 +611,12 @@ This package contains shared libraries needed to run programs written
 in Ada.
 
 %description -n libgnat -l es
-Este paquete contiene las bibliotecas compartidas necesarias para ejecutar
-programas escritos en Ada.
+Este paquete contiene las bibliotecas compartidas necesarias para
+ejecutar programas escritos en Ada.
 
 %description -n libgnat -l pl
-Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów napisanych
-w Adzie.
+Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
+napisanych w Adzie.
 
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
@@ -624,21 +641,21 @@ Group:		Development/Languages
 Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description ksi
-This package adds experimental support for compiling Ksi programs
-into native code. You proabably don't need it, unless your are going
-to develop a compiler using Ksi as intermediate representation or
-you are using such compiler (like Gont).
+This package adds experimental support for compiling Ksi programs into
+native code. You proabably don't need it, unless your are going to
+develop a compiler using Ksi as intermediate representation or you are
+using such compiler (like Gont).
 
 %description ksi -l es
 Este paquete añade soporte experimental para compilar programas de Ksi
-en código nativo. Probablemento no lo necesitará, a menos que vaya
-a desarrollar un compilador que use Ksi como representación intermedia
-o use tal compilador (como Gont).
+en código nativo. Probablemento no lo necesitará, a menos que vaya a
+desarrollar un compilador que use Ksi como representación intermedia o
+use tal compilador (como Gont).
 
 %description ksi -l pl
-Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów
-w Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba
-¿e zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jako reprezentacji
+Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
+Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba ¿e
+zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jako reprezentacji
 po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 
 %package -n cpp
@@ -675,24 +692,26 @@ as you see fit:
 
 %description -n cpp -l es
 El preprocesador de C es un "procesador de macros" que es usado
-automáticamente por el compilador C para transformar su programa antes de
-que éste se actualmente compile. Se llama procesador de macros porque
-permite definir "macros", los que son abreviaciones concisas para
-construcciones más largas.
+automáticamente por el compilador C para transformar su programa antes
+de que éste se actualmente compile. Se llama procesador de macros
+porque permite definir "macros", los que son abreviaciones concisas
+para construcciones más largas.
 
-El preprocesador C provee cuatro cualidadedes distintas que puede usar como
-le convenga:
+El preprocesador C provee cuatro cualidadedes distintas que puede usar
+como le convenga:
 
-- Inclusión de ficheros de cabecera. Éstos son ficheros de declaraciones
-  que pueden incorporarse a su programa.
-- Expansión de macros. Puede definir "macros", los que son abreviaciones
-  para fragmentos arbitrarios de código C, y a lo largo del programa el
-  preprocesador sustituirá los macros con sus definiciones.
+- Inclusión de ficheros de cabecera. Éstos son ficheros de
+  declaraciones que pueden incorporarse a su programa.
+- Expansión de macros. Puede definir "macros", los que son
+  abreviaciones para fragmentos arbitrarios de código C, y a lo largo
+  del programa el preprocesador sustituirá los macros con sus
+  definiciones.
 - Compilación condicional. Usando especiales directivas del preproceso
   puede incluir o excluir partes del programa según varias condiciones.
-- Control de líneas. Si usa un programa para combinar o reorganizar el código
-  fuente en un fichero intermedio que luego es compilado, puede usar control
-  de líneas para informar el compilador de dónde origina cada línea.
+- Control de líneas. Si usa un programa para combinar o reorganizar el
+  código fuente en un fichero intermedio que luego es compilado, puede
+  usar control de líneas para informar el compilador de dónde origina
+  cada línea.
 
 %description -n cpp -l pl
 Przeprocesor C jest "makro procesorem" który jest automatycznie
@@ -724,8 +743,8 @@ permite a você definir "macros", que são abreviações para construções
 mais complicadas.
 
 O preprocessador C fornece quatro funcionalidades básicas: inclusão de
-arquivos de cabeçalho; expansão de macros; compilação condicional;
-e controle da numeração das linhas do programa.
+arquivos de cabeçalho; expansão de macros; compilação condicional; e
+controle da numeração das linhas do programa.
 
 %prep
 %setup -q -a1 -n %{name}-%{GCC_VERSION}
