@@ -1,10 +1,11 @@
 #
 # Conditional build:
-# _without_ada	- build without ADA support
-# _without_java	- build without Java support
-# _without_objc	- build without objc support
-# _with_pp	- build with ProPolice
-
+# _without_ada		- build without ADA support
+# _without_java		- build without Java support
+# _without_objc		- build without objc support
+# _with_bootstrap	- don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
+# _with_pp		- build with ProPolice
+#
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.3.2
@@ -51,7 +52,7 @@ BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
-%{!?_without_ada:BuildRequires:	gcc(ada)}
+%{!?_without_ada:%{!?_with_bootstrap:BuildRequires:	gcc(ada)}}
 %{!?_without_ada:BuildRequires: gcc-ada}
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
