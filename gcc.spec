@@ -6,8 +6,6 @@
 #
 %define		snap		20040416
 %define		GCC_VERSION	3.4.0
-%define		KSI_VERSION	1.1.0.1567
-%define		_version	3.4
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -22,11 +20,9 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
 # Source0-md5:	d6e215ce39a302c643f3ea8994ef6b68
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_version}-%{snap}/%{name}-%{_version}-%{snap}.tar.bz2
-Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-# Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
-Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
-# Source2-md5:	4736f3422ddfb808423b745629acc321
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
+# Source1-md5:	4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
@@ -594,32 +590,6 @@ This package contains static libraries for programs written in Ada.
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
 
-%package ksi
-Summary:	Ksi support for gcc
-Summary(es):	Soporte de Ksi para gcc
-Summary(pl):	Obs³uga Ksi dla gcc
-Version:	%{GCC_VERSION}.%{KSI_VERSION}
-Group:		Development/Languages
-Requires:	gcc = %{epoch}:%{version}-%{release}
-
-%description ksi
-This package adds experimental support for compiling Ksi programs into
-native code. You proabably don't need it, unless your are going to
-develop a compiler using Ksi as intermediate representation or you are
-using such compiler (like Gont).
-
-%description ksi -l es
-Este paquete añade soporte experimental para compilar programas de Ksi
-en código nativo. Probablemento no lo necesitará, a menos que vaya a
-desarrollar un compilador que use Ksi como representación intermedia o
-use tal compilador (como Gont).
-
-%description ksi -l pl
-Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
-Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba ¿e
-zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jako reprezentacji
-po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
-
 %package -n cpp
 Summary:	The C Pre Processor
 Summary(es):	El preprocesador de C
@@ -710,7 +680,6 @@ controle da numeração das linhas do programa.
 
 %prep
 %setup -q -a1 -n %{name}-%{version}-%{snap}
-mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
@@ -719,6 +688,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
+
+mv ChangeLog ChangeLog.general
 
 %build
 # cd gcc && autoconf; cd ..
@@ -827,7 +798,7 @@ for f in libstdc++.la libsupc++.la libg2c.la \
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
-bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
 # include/ contains install-tools/include/* and headers that were fixed up
@@ -866,12 +837,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%post ksi
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%postun ksi
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
 %post -n cpp
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
@@ -895,7 +860,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc ChangeLog MAINTAINERS README gcc/README.Portability
+%doc ChangeLog.general MAINTAINERS bugs.html faq.html
+%doc gcc/{README.Portability,NEWS,ChangeLog}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
@@ -1150,14 +1116,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/adalib/libgnarl.a
 %{_libdir}/gcc/*/*/adalib/libgnat.a
-%endif
-
-%if 0
-%files ksi
-%defattr(644,root,root,755)
-%doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
-%{_infodir}/ksi*
-%attr(755,root,root) %{_libdir}/gcc/*/*/ksi1
 %endif
 
 %files -n cpp
