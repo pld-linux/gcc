@@ -4,7 +4,7 @@ Summary:	GNU C Compiler
 Summary(pl):	Kompilator GNU
 Name:		gcc
 Version:	2.95.1
-Release:	2
+Release:	3
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -363,25 +363,25 @@ gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
 %post
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%preun
+%postun
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post g77
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%preun g77
+%postun g77
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post chill
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%preun chill
+%postun chill
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post -n cpp
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%preun -n cpp
+%postun -n cpp
 /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post libgcj  -p /sbin/ldconfig
