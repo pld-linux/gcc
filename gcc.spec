@@ -3,9 +3,6 @@
 # _without_ada  - build without ADA support
 # _without_java - build without Java support
 # _without_objc - build without objc support
-#
-# TODO:
-#  - make separate libffi{,-devel,-static}
 
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -17,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.3
+Release:	0.4
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -418,6 +415,49 @@ Static C++ standard library.
 %description -n libstdc++-static -l pl
 Statycza biblioteka standardowa C++.
 
+%package -n libffi
+Summary:	Foreign Function Interface library
+Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
+Group:		Libraries
+Version:	%{GCC_VERSION}
+
+%description -n libffi
+The libffi library provides a portable, high level programming
+interface to various calling conventions. This allows a programmer to
+call any function specified by a call interface description at run
+time.
+
+%description -n libffi -l pl
+Biblioteka libffi dostarcza przno¶nego, wysokopoziomowego miêdzymordzia
+do ró¿nych konwencji wywo³añ funkcji. Pozwala to programi¶cie wywo³ywaæ
+dowolne funkcje podaj±c konwencjê wywo³ania w czasie wykonania.
+
+%package -n libffi-devel
+Summary:	Development files for Foreign Function Interface library
+Summary(pl):	Pliki nag³ówkowe dla libffi
+Group:		Development/Libraries
+Version:	%{GCC_VERSION}
+Requires:	libffi = %{GCC_VERSION}
+
+%description -n libffi-devel
+Development files for Foreign Function Interface library.
+
+%description -n libffi-devel -l pl
+Pliki nag³ówkowe dla libffi.
+
+%package -n libffi-static
+Summary:	Static Foreign Function Interface library
+Summary(pl):	Statyczne libffi
+Group:		Development/Libraries
+Version:	%{GCC_VERSION}
+Requires:	libffi-devel = %{GCC_VERSION}
+
+%description -n libffi-static
+Static Foreign Function Interface library.
+
+%description -n libffi-static -l pl
+Statyczne libffi.
+
 %package ada
 Summary:	Ada support for gcc
 Summary(pl):	Obs³uga Ady do gcc
@@ -746,6 +786,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig -n libgcj
 %post   -p /sbin/ldconfig -n libgnat
 %postun -p /sbin/ldconfig -n libgnat
+%post   -p /sbin/ldconfig -n libffi
+%postun -p /sbin/ldconfig -n libffi
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -957,7 +999,21 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %endif
+
+%files -n libffi
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libffi*
+
+%files -n libffi-devel
+%defattr(644,root,root,755)
+%{_includedir}/ffi*
+%{_libdir}/libffi.la
+
+%files -n libffi-static
+%defattr(644,root,root,755)
+%{_libdir}/libffi.a
 %endif
+
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 %files ada
