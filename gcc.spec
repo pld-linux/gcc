@@ -14,7 +14,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.2
+Release:	0.3
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -212,7 +212,7 @@ Statyczne biblioteki Obiektowego C.
 %package g77
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
-Group:		Development/Languages
+Group:		Development/Languages/Fortran
 Version:	%{GCC_VERSION}
 Obsoletes:	egcs-g77
 Requires:	libg2c = %{GCC_VERSION}
@@ -253,14 +253,13 @@ Statyczne biblioteki Fortranu 77.
 %package java
 Summary:	Java support for gcc
 Summary(pl):	Obs³uga Javy dla gcc
-Group:		Development/Languages
+Group:		Development/Languages/Java
 Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 Requires:	libgcj-devel >= 3.0.0
+Requires:	java-shared
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
-Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
-Obsoletes:	fastjar
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
@@ -271,6 +270,25 @@ libgcj package.
 Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
 do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
 by³o przeprowadziæ kompilacjê.
+
+%package java-tools
+Summary:	Shared java tools
+Summary(pl):	Wspó³dzielone narzêdzia javy
+Group:          Development/Languages/Java
+Version:        %{GCC_VERSION}
+Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	java-shared
+Obsoletes:	fastjar
+Obsoletes:      java-shared
+Obsoletes:      jar
+
+%description java-tools
+This package contains tools that are common for every Java(tm) implementation,
+such as rmic or jar.
+
+%description java-tools -l pl
+Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji Javy(tm), takie
+jak rmic czy jar.
 
 %package -n libgcj
 Summary:	Java Class Libraries
@@ -875,8 +893,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/rmi*
-%attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
@@ -885,7 +901,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jv-*
 %{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
+
+%files java-tools
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/rmi*
+%attr(755,root,root) %{_bindir}/jar
 %{_mandir}/man1/rmi*
+
 
 %files -n libgcj
 %defattr(644,root,root,755)
