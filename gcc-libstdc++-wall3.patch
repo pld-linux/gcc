@@ -1,0 +1,153 @@
+# DP: 1999-11-10  Benjamin Kosnik  <bkoz@haight.constant.com>
+# DP: 	    Matthias Klose  <doko@cs.tu-berlin.de>
+# DP: 
+# DP: 	* stl_rope.h: Fix initialization order.
+# DP: 	* stl_deque.h: Use static_casts<size_type>(signed_type).
+
+
+1999-11-10  Benjamin Kosnik  <bkoz@haight.constant.com>
+	    Matthias Klose  <doko@cs.tu-berlin.de>
+
+	* stl_rope.h: Fix initialization order.
+	* stl_deque.h: Use static_casts<size_type>(signed_type).
+
+--- libstdc++/stl/stl_deque.h~	Wed Sep  2 19:24:47 1998
++++ libstdc++/stl/stl_deque.h	Wed Nov 10 23:10:27 1999
+@@ -815,7 +815,7 @@
+     iterator __next = __pos;
+     ++__next;
+     difference_type __index = __pos - _M_start;
+-    if (__index < (size() >> 1)) {
++    if (static_cast<size_type>(__index) < (size() >> 1)) {
+       copy_backward(_M_start, __pos, __next);
+       pop_front();
+     }
+@@ -1048,7 +1048,7 @@
+   else {
+     difference_type __n = __last - __first;
+     difference_type __elems_before = __first - _M_start;
+-    if (__elems_before < (size() - __n) / 2) {
++    if (static_cast<size_type>(__elems_before) < (size() - __n) / 2) {
+       copy_backward(_M_start, __first, __last);
+       iterator __new_start = _M_start + __n;
+       destroy(_M_start, __new_start);
+@@ -1282,7 +1282,7 @@
+ {
+   difference_type __index = __pos - _M_start;
+   value_type __x_copy = __x;
+-  if (__index < size() / 2) {
++  if (static_cast<size_type>(__index) < size() / 2) {
+     push_front(front());
+     iterator __front1 = _M_start;
+     ++__front1;
+@@ -1311,7 +1311,7 @@
+ deque<_Tp,_Alloc,__bufsize>::_M_insert_aux(iterator __pos)
+ {
+   difference_type __index = __pos - _M_start;
+-  if (__index < size() / 2) {
++  if (static_cast<size_type>(__index) < size() / 2) {
+     push_front(front());
+     iterator __front1 = _M_start;
+     ++__front1;
+@@ -1344,7 +1344,7 @@
+   const difference_type __elems_before = __pos - _M_start;
+   size_type __length = size();
+   value_type __x_copy = __x;
+-  if (__elems_before < __length / 2) {
++  if (static_cast<size_type>(__elems_before) < __length / 2) {
+     iterator __new_start = _M_reserve_elements_at_front(__n);
+     iterator __old_start = _M_start;
+     __pos = _M_start + __elems_before;
+@@ -1403,7 +1403,7 @@
+ {
+   const difference_type __elemsbefore = __pos - _M_start;
+   size_type __length = size();
+-  if (__elemsbefore < __length / 2) {
++  if (static_cast<size_type>(__elemsbefore) < __length / 2) {
+     iterator __new_start = _M_reserve_elements_at_front(__n);
+     iterator __old_start = _M_start;
+     __pos = _M_start + __elemsbefore;
+--- libstdc++/stl/stl_rope.h.old	Wed Sep  2 19:25:05 1998
++++ libstdc++/stl/stl_rope.h	Wed Nov 10 23:25:36 1999
+@@ -386,8 +386,8 @@
+     typedef _Rope_rep_base<_CharT,_Alloc>::allocator_type allocator_type;
+     _Rope_RopeRep(_Tag __t, int __d, bool __b, size_t __size,
+                   allocator_type __a)
+-        : _M_tag(__t), _M_depth(__d), _M_is_balanced(__b), _M_c_string(0),
+-          _Rope_rep_base<_CharT,_Alloc>(__size, __a)
++        : _Rope_rep_base<_CharT,_Alloc>(__size, __a),
++          _M_tag(__t), _M_depth(__d), _M_is_balanced(__b), _M_c_string(0)
+     {
+ #       ifndef __GC
+             _M_refcount = 1;
+@@ -562,8 +562,8 @@
+                                 /* doesn't matter.               */
+     typedef _Rope_rep_base<_CharT,_Alloc>::allocator_type allocator_type;
+     _Rope_RopeLeaf(__GC_CONST _CharT* __d, size_t __size, allocator_type __a)
+-        : _M_data(__d)
+-        , _Rope_RopeRep<_CharT,_Alloc>(_S_leaf, 0, true, __size, __a)
++        : _Rope_RopeRep<_CharT,_Alloc>(_S_leaf, 0, true, __size, __a),
++	  _M_data(__d)
+         {
+         __stl_assert(__size > 0);
+         if (_S_is_basic_char_type((_CharT *)0)) {
+@@ -593,10 +593,10 @@
+     _Rope_RopeConcatenation(_Rope_RopeRep<_CharT,_Alloc>* __l,
+                              _Rope_RopeRep<_CharT,_Alloc>* __r,
+                              allocator_type __a)
+-      : _M_left(__l), _M_right(__r)
+-      , _Rope_RopeRep<_CharT,_Alloc>(
++      : _Rope_RopeRep<_CharT,_Alloc>(
+           _S_concat, max(__l->_M_depth, __r->_M_depth) + 1, false,
+-          __l->_M_size + __r->_M_size, __a)
++          __l->_M_size + __r->_M_size, __a),
++      _M_left(__l), _M_right(__r)
+       {}
+ # ifndef __GC
+     ~_Rope_RopeConcatenation() {
+@@ -629,11 +629,12 @@
+     typedef _Rope_rep_base<_CharT,_Alloc>::allocator_type allocator_type;
+     _Rope_RopeFunction(char_producer<_CharT>* __f, size_t __size,
+                         bool __d, allocator_type __a)
+-      : _M_fn(__f)
++      :_Rope_RopeRep<_CharT,_Alloc>(_S_function, 0, true, __size, __a), 
++       _M_fn(__f)
+ #       ifndef __GC
+       , _M_delete_when_done(__d)
+ #       endif
+-      , _Rope_RopeRep<_CharT,_Alloc>(_S_function, 0, true, __size, __a) {
++          {
+         __stl_assert(__size > 0);
+ #       ifdef __GC
+             if (__d) {
+@@ -693,9 +694,8 @@
+     typedef _Rope_rep_base<_CharT,_Alloc>::allocator_type allocator_type;
+     _Rope_RopeSubstring(_Rope_RopeRep<_CharT,_Alloc>* __b, size_t __s,
+                           size_t __l, allocator_type __a)
+-      : _M_base(__b)
++      : _Rope_RopeFunction<_CharT,_Alloc>(this, __l, false, __a), _M_base(__b)
+       , _M_start(__s)
+-      , _Rope_RopeFunction<_CharT,_Alloc>(this, __l, false, __a) 
+     {
+         __stl_assert(__l > 0);
+         __stl_assert(__s + __l <= __b->_M_size);
+@@ -766,16 +766,16 @@
+     _My_rope* _M_root;     // The whole rope.
+   public:
+     _Rope_char_ref_proxy(_My_rope* __r, size_t __p) :
+-        _M_pos(__p), _M_root(__r), _M_current_valid(false) {}
++        _M_pos(__p), _M_current_valid(false), _M_root(__r) {}
+     _Rope_char_ref_proxy(const _Rope_char_ref_proxy& __x) :
+-        _M_pos(__x._M_pos), _M_root(__x._M_root), _M_current_valid(false) {}
++        _M_pos(__x._M_pos), _M_current_valid(false), _M_root(__x._M_root) {}
+         // Don't preserve cache if the reference can outlive the
+         // expression.  We claim that's not possible without calling
+         // a copy constructor or generating reference to a proxy
+         // reference.  We declare the latter to have undefined semantics.
+     _Rope_char_ref_proxy(_My_rope* __r, size_t __p,
+                     _CharT __c) :
+-        _M_pos(__p), _M_root(__r), _M_current(__c), _M_current_valid(true) {}
++        _M_pos(__p), _M_current(__c), _M_current_valid(true), _M_root(__r) {}
+     inline operator _CharT () const;
+     _Rope_char_ref_proxy& operator= (_CharT __c);
+     _Rope_char_ptr_proxy<_CharT,_Alloc> operator& () const;

@@ -1,0 +1,622 @@
+# DP: The Dwarf EH patch for powerpc, from Andrew Macleod, via Franz Sirl
+# DP:  (Revised for gcc 2.95)
+
+Index: gcc/collect2.c
+--- collect2.c	1999/05/17 22:56:24	1.72
++++ gcc/collect2.c	1999/06/12 18:55:22
+@@ -2955,6 +2955,21 @@ scan_prog_file (prog_name, which_pass)
+ 			    add_to_list (&destructors, name);
+ 			  break;
+ #endif
++			case 5:
++			  add_to_list (&frame_tables, name);
++#ifdef COLLECT_EXPORT_LIST
++			  if (which_pass == PASS_OBJ)
++			    add_to_list (&exports, name);
++			  /* If this symbol was undefined and we are building
++			     an import list, we should add a symbol to this
++			     list.  */
++			  else
++			    if (import_flag
++				&& is_in_list (name, undefined.first))
++			      add_to_list (&imports, name);
++#endif
++			  break;
++
+ 
+ 			default:	/* not a constructor or destructor */
+ #ifdef COLLECT_EXPORT_LIST
+Index: gcc/dwarf2.h
+--- dwarf2.h	1999/01/11 13:43:21	1.11
++++ gcc/dwarf2.h	1999/06/12 18:55:25
+@@ -501,7 +501,8 @@ enum dwarf_call_frame_info
+ 
+     /* GNU extensions */
+     DW_CFA_GNU_window_save = 0x2d,
+-    DW_CFA_GNU_args_size = 0x2e
++    DW_CFA_GNU_args_size = 0x2e,
++    DW_CFA_GNU_negative_offset_extended = 0x2f
+   };
+ 
+ #define DW_CIE_ID	  0xffffffff
+Index: gcc/dwarf2out.c
+--- dwarf2out.c	1999/06/03 02:30:03	1.91.4.2
++++ gcc/dwarf2out.c	1999/06/12 18:55:27
+@@ -415,38 +415,54 @@ static void dwarf2out_stack_adjust	PROTO
+ /* We don't have unaligned support, let's hope the normal output works for
+    .debug_frame.  */
+ 
++#ifndef ASM_OUTPUT_DWARF_ADDR
+ #define ASM_OUTPUT_DWARF_ADDR(FILE,LABEL) \
+   assemble_integer (gen_rtx_SYMBOL_REF (Pmode, LABEL), PTR_SIZE, 1)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_OFFSET4
+ #define ASM_OUTPUT_DWARF_OFFSET4(FILE,LABEL) \
+   assemble_integer (gen_rtx_SYMBOL_REF (SImode, LABEL), 4, 1)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_OFFSET
+ #define ASM_OUTPUT_DWARF_OFFSET(FILE,LABEL) \
+   assemble_integer (gen_rtx_SYMBOL_REF (SImode, LABEL), 4, 1)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_DELTA2
+ #define ASM_OUTPUT_DWARF_DELTA2(FILE,LABEL1,LABEL2)			\
+   assemble_integer (gen_rtx_MINUS (HImode,			      	\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL1),   	\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL2)),	\
+ 		    2, 1)
++#endif
+   
++#ifndef ASM_OUTPUT_DWARF_DELTA4
+ #define ASM_OUTPUT_DWARF_DELTA4(FILE,LABEL1,LABEL2)			\
+   assemble_integer (gen_rtx_MINUS (SImode,			      	\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL1),   	\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL2)),	\
+ 		    4, 1)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_ADDR_DELTA
+ #define ASM_OUTPUT_DWARF_ADDR_DELTA(FILE,LABEL1,LABEL2)			\
+   assemble_integer (gen_rtx_MINUS (Pmode,				\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL1),	\
+ 			     gen_rtx_SYMBOL_REF (Pmode, LABEL2)),	\
+ 		    PTR_SIZE, 1)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_DELTA
+ #define ASM_OUTPUT_DWARF_DELTA(FILE,LABEL1,LABEL2) \
+   ASM_OUTPUT_DWARF_DELTA4 (FILE,LABEL1,LABEL2)
++#endif
+ 
++#ifndef ASM_OUTPUT_DWARF_DATA4
+ #define ASM_OUTPUT_DWARF_DATA4(FILE,VALUE) \
+   assemble_integer (GEN_INT (VALUE), 4, 1)
++#endif
+ 
+ #endif /* UNALIGNED_INT_ASM_OP */
+ 
+@@ -719,6 +735,8 @@ dwarf_cfi_name (cfi_opc)
+       return "DW_CFA_GNU_window_save";
+     case DW_CFA_GNU_args_size:
+       return "DW_CFA_GNU_args_size";
++    case DW_CFA_GNU_negative_offset_extended:
++      return "DW_CFA_GNU_negative_offset_extended";
+ 
+     default:
+       return "DW_CFA_<unknown>";
+@@ -948,7 +966,10 @@ reg_save (label, reg, sreg, offset)
+ 
+       offset /= DWARF_CIE_DATA_ALIGNMENT;
+       if (offset < 0)
+-	abort ();
++        {
++          cfi->dw_cfi_opc = DW_CFA_GNU_negative_offset_extended;
++          offset = -offset;
++        }
+       cfi->dw_cfi_oprnd2.dw_cfi_offset = offset;
+     }
+   else
+@@ -1421,6 +1442,10 @@ dwarf2out_frame_debug (insn)
+   char *label;
+   rtx src;
+ 
++  /* A temporary register used in adjusting SP or setting up the store_reg.  */
++  static unsigned cfa_temp_reg;
++  static long cfa_temp_value;
++
+   if (insn == NULL_RTX)
+     {
+       /* Set up state for generating call frame debug info.  */
+@@ -1635,6 +1660,7 @@ output_cfi (cfi, fde)
+ 	  break;
+ #endif
+ 	case DW_CFA_offset_extended:
++	case DW_CFA_GNU_negative_offset_extended:
+ 	case DW_CFA_def_cfa:
+ 	  output_uleb128 (cfi->dw_cfi_oprnd1.dw_cfi_reg_num);
+           fputc ('\n', asm_out_file);
+@@ -5862,6 +5888,14 @@ output_line_info ()
+   /* We used to set the address register to the first location in the text
+      section here, but that didn't accomplish anything since we already
+      have a line note for the opening brace of the first function.  */
++
++  fputc ('\n', asm_out_file);
++  output_uleb128 (1 + PTR_SIZE);
++  fputc ('\n', asm_out_file);
++  ASM_OUTPUT_DWARF_DATA1 (asm_out_file, DW_LNE_set_address);
++  fputc ('\n', asm_out_file);
++  ASM_OUTPUT_DWARF_ADDR (asm_out_file, text_section_label);
++  fputc ('\n', asm_out_file);
+ 
+   /* Generate the line number to PC correspondence table, encoded as
+      a series of state machine operations.  */
+Index: gcc/dwarfout.c
+--- dwarfout.c	1999/04/18 13:09:27	1.35
++++ gcc/dwarfout.c	1999/06/12 18:55:29
+@@ -864,7 +864,7 @@ static int is_redundant_typedef		PROTO((
+   ASM_OUTPUT_ASCII ((FILE), P, strlen (P)+1)
+ #else
+ #define ASM_OUTPUT_DWARF_STRING_NEWLINE(FILE,P) \
+-  ASM_OUTPUT_DWARF_STRING (FILE,P), ASM_OUTPUT_DWARF_STRING (FILE,"\n") 
++  do { ASM_OUTPUT_DWARF_STRING (FILE,P); ASM_OUTPUT_DWARF_STRING (FILE,"\n"); } while (0)
+ #endif
+ 
+ 
+Index: gcc/except.c
+--- except.c	1999/04/15 19:54:09	1.82
++++ gcc/except.c	1999/06/12 18:55:30
+@@ -2706,7 +2706,7 @@ eh_regs (pcontext, psp, pra, outgoing)
+      rtx *pcontext, *psp, *pra;
+      int outgoing;
+ {
+-  rtx rcontext, rsp, rra;
++  rtx rcontext, rsp, rra = NULL_RTX;
+   int i;
+ 
+ #ifdef FUNCTION_OUTGOING_VALUE
+@@ -2718,6 +2718,16 @@ eh_regs (pcontext, psp, pra, outgoing)
+     rcontext = FUNCTION_VALUE (build_pointer_type (void_type_node),
+ 			       current_function_decl);
+ 
++/* If we've specified the register to communicate the stack offset or
++   return address, use it instead of picking one */
++
++#ifdef DWARF2_EH_RA_REG
++  rra = gen_rtx_REG (Pmode, DWARF2_EH_RA_REG);
++#endif
++
++#ifdef DWARF2_EH_SP_REG
++  rsp = gen_rtx_REG (Pmode, DWARF2_EH_SP_REG);
++#else
+ #ifdef STATIC_CHAIN_REGNUM
+   if (outgoing)
+     rsp = static_chain_incoming_rtx;
+@@ -2726,6 +2736,7 @@ eh_regs (pcontext, psp, pra, outgoing)
+   if (REGNO (rsp) == REGNO (rcontext))
+ #endif /* STATIC_CHAIN_REGNUM */
+     rsp = NULL_RTX;
++#endif
+ 
+   if (rsp == NULL_RTX)
+     {
+@@ -2738,14 +2749,16 @@ eh_regs (pcontext, psp, pra, outgoing)
+       rsp = gen_rtx_REG (Pmode, i);
+     }
+ 
+-  for (i = 0; i < FIRST_PSEUDO_REGISTER; ++i)
+-    if (call_used_regs[i] && ! fixed_regs[i]
+-	&& i != REGNO (rcontext) && i != REGNO (rsp))
+-      break;
+-  if (i == FIRST_PSEUDO_REGISTER)
+-    abort();
+-
+-  rra = gen_rtx_REG (Pmode, i);
++  if (rra == NULL_RTX)
++    {
++      for (i = 0; i < FIRST_PSEUDO_REGISTER; ++i)
++        if (call_used_regs[i] && ! fixed_regs[i]
++            && i != REGNO (rcontext) && i != REGNO (rsp))
++          break;
++      if (i == FIRST_PSEUDO_REGISTER)
++        abort();
++      rra = gen_rtx_REG (Pmode, i);
++    }
+ 
+   *pcontext = rcontext;
+   *psp = rsp;
+@@ -2808,7 +2821,8 @@ expand_eh_return ()
+ #ifdef HAVE_eh_epilogue
+   if (HAVE_eh_epilogue)
+     {
+-      emit_insn (gen_eh_epilogue (reg1, reg2, reg3));
++      emit_insn (gen_eh_epilogue (eh_return_context, eh_return_stack_adjust,
++				  eh_return_handler));
+       return;
+     }
+ #endif
+@@ -2833,6 +2847,12 @@ expand_eh_return ()
+   if (tmp != ra)
+     emit_move_insn (ra, tmp);
+ 
++  eh_regs (&reg1, &reg2, &reg3, 1);
++
++  emit_move_insn (reg1, eh_return_context);
++  emit_move_insn (reg2, eh_return_stack_adjust);
++  emit_move_insn (reg3, eh_return_handler);
++   
+   /* Indicate that the registers are in fact used.  */
+   emit_insn (gen_rtx_USE (VOIDmode, reg1));
+   emit_insn (gen_rtx_USE (VOIDmode, reg2));
+Index: gcc/frame.c
+--- frame.c	1998/12/16 20:55:48	1.25
++++ gcc/frame.c	1999/06/12 18:55:30
+@@ -714,6 +714,14 @@ execute_cfa_insn (void *p, struct frame_
+       state->s.args_size = offset;
+       break;
+ 
++    case DW_CFA_GNU_negative_offset_extended:
++      p = decode_uleb128 (p, &reg);
++      p = decode_uleb128 (p, &offset);
++      offset *= info->data_align;
++      state->s.saved[reg] = REG_SAVED_OFFSET;
++      state->s.reg_or_offset[reg] = -offset;
++      break;
++
+     default:
+       abort ();
+     }
+Index: gcc/config/rs6000/aix31.h
+--- aix31.h	1998/12/16 21:11:43	1.2
++++ gcc/config/rs6000/aix31.h	1999/06/12 18:55:33
+@@ -22,6 +22,7 @@ Boston, MA 02111-1307, USA.  */
+ 
+ 
+ #include "rs6000/rs6000.h"
++#include "aix-dwarf.h"
+ 
+ /* AIX 3.2 defined _AIX32, but older versions do not.  */
+ #undef CPP_PREDEFINES
+Index: gcc/config/rs6000/aix3newas.h
+--- aix3newas.h	1998/12/16 21:11:44	1.2
++++ gcc/config/rs6000/aix3newas.h	1999/06/12 18:55:33
+@@ -30,6 +30,7 @@ Boston, MA 02111-1307, USA.  */
+   {"no-xl-call",	- MASK_XL_CALL},
+ 
+ #include "rs6000/rs6000.h"
++#include "aix-dwarf.h"
+ 
+ /* Tell the assembler to assume that all undefined names are external.  */
+ 
+Index: gcc/config/rs6000/aix41.h
+--- aix41.h	1999/03/27 18:21:29	1.6
++++ gcc/config/rs6000/aix41.h	1999/06/12 18:55:33
+@@ -32,6 +32,7 @@ Boston, MA 02111-1307, USA.  */
+   {"pe",		0},
+ 
+ #include "rs6000/rs6000.h"
++#include "aix-dwarf.h"
+ 
+ #undef ASM_SPEC
+ #define ASM_SPEC "-u %(asm_cpu)"
+Index: gcc/config/rs6000/aix43.h
+--- aix43.h	1999/05/03 20:10:05	1.5
++++ gcc/config/rs6000/aix43.h	1999/06/12 18:55:33
+@@ -58,6 +58,7 @@ do {									\
+ } while (0);
+ 
+ #include "rs6000/rs6000.h"
++#include "aix-dwarf.h"
+ 
+ #undef ASM_SPEC
+ #define ASM_SPEC "-u %{maix64:-a64 -mppc64} %(asm_cpu)"
+Index: gcc/config/rs6000/eabi-ci.asm
+--- eabi-ci.asm	1998/12/16 21:11:50	1.2
++++ gcc/config/rs6000/eabi-ci.asm	1999/06/12 18:55:33
+@@ -102,6 +102,11 @@ __SBSS2_START__:
+ 	.type	__EXCEPT_START__,@object
+ __EXCEPT_START__:
+ 
++	.section ".eh_frame","aw"
++	.globl	__EH_FRAME_BEGIN__
++	.type	__EH_FRAME_BEGIN__,@object
++__EH_FRAME_BEGIN__:
++
+ # Head of __init function used for static constructors in Solaris
+ 	.section ".init","ax"
+ 	.align 2
+Index: gcc/config/rs6000/eabi-cn.asm
+--- eabi-cn.asm	1998/12/16 21:11:51	1.2
++++ gcc/config/rs6000/eabi-cn.asm	1999/06/12 18:55:33
+@@ -94,6 +94,12 @@ __SBSS2_END__:
+ 	.type	__EXCEPT_END__,@object
+ __EXCEPT_END__:
+ 
++	.section ".eh_frame","aw"
++	.globl	__EH_FRAME_END__
++	.type	__EH_FRAME_END__,@object
++__EH_FRAME_END__:
++        .long   0
++
+ # Tail of __init used for static constructors in Solaris
+ 	.section ".init","ax"
+ 	lwz 0,12(1)
+Index: gcc/config/rs6000/eabi-ctors.c
+--- eabi-ctors.c	1998/12/16 21:11:52	1.2
++++ gcc/config/rs6000/eabi-ctors.c	1999/06/12 18:55:33
+@@ -40,7 +40,24 @@ extern func_ptr __CTOR_LIST__[];
+ extern func_ptr __CTOR_END__ [];
+ extern func_ptr __DTOR_LIST__[];
+ extern func_ptr __DTOR_END__ [];
++extern char __EH_FRAME_BEGIN__ [];
+ 
++struct object {
++  void *pc_begin;
++  void *pc_end;
++  struct dwarf_fde *fde_begin;
++  struct dwarf_fde **fde_array;
++  long count;
++  struct object *next;
++};
++
++extern void __register_frame_info (void *, struct object *);
++extern void __register_frame_info_table (void *, struct object *);
++extern void __deregister_frame_info (void *);
++
++
++#define EH_FRAME_SECTION_ASM_OP ".section\t.eh_frame,\"aw\""
++
+ extern void __do_global_ctors (void);
+ extern void __do_global_dtors (void);
+ 
+@@ -61,6 +78,11 @@ __do_global_ctors (void)
+   func_ptr *ptr = &__CTOR_LIST__[0];
+   func_ptr *end = &__CTOR_END__[0];
+ 
++#ifdef EH_FRAME_SECTION_ASM_OP
++  static struct object object;
++    __register_frame_info (__EH_FRAME_BEGIN__, &object);
++#endif
++
+   if (__atexit)
+     __atexit (__do_global_dtors);
+ 
+@@ -88,5 +110,8 @@ __do_global_dtors (void)
+   for ( ; ptr >= start; ptr--)
+     if (*ptr)
+       (*ptr)();
+-}
+ 
++#ifdef EH_FRAME_SECTION_ASM_OP
++  __deregister_frame_info (__EH_FRAME_BEGIN__);
++#endif
++}
+Index: gcc/config/rs6000/rs6000.c
+--- rs6000.c	1999/06/09 15:59:36	1.70.4.2
++++ gcc/config/rs6000/rs6000.c	1999/06/12 18:55:34
+@@ -77,6 +77,11 @@ static int common_mode_defined;
+ rtx rs6000_compare_op0, rs6000_compare_op1;
+ int rs6000_compare_fp_p;
+ 
++/* If we've defined this, we need a counter for the fixup labels */
++#ifdef ASM_OUTPUT_DWARF_ADDR
++int dwarflabelno = 0;
++#endif
++
+ #ifdef USING_SVR4_H
+ /* Label number of label created for -mrelocatable, to call to so we can
+    get the address of the GOT section */
+@@ -3860,6 +3874,9 @@ rs6000_allocate_stack_space (file, size,
+     }
+ }
+ 
++#define SET_DWARF_LABEL(X) (X = ((X == NULL) ? \
++                                (char *) dwarf2out_cfi_label () : X ))
++
+ 
+ /* Write function prologue.  */
+ void
+@@ -3873,6 +3890,7 @@ output_prolog (file, size)
+   const char *load_reg;
+   int sp_reg = 1;
+   int sp_offset = 0;
++  char *dw2_label = NULL;
+ 
+   if (TARGET_32BIT)
+     {
+@@ -3948,6 +3966,19 @@ output_prolog (file, size)
+     asm_fprintf (file, "\tbl %s%d%s\n", SAVE_FP_PREFIX,
+ 		 info->first_fp_reg_save - 32, SAVE_FP_SUFFIX);
+ 
++  /* Regardless of whether its inlined or not, the net effect at this point
++     is that the FPRs have been saved from first to the end.*/
++  if (dwarf2out_do_frame () && info->first_fp_reg_save != 64)
++    {
++      int regno = info->first_fp_reg_save;
++      int loc = info->fp_save_offset;
++      SET_DWARF_LABEL (dw2_label);
++      for ( ; regno < 64; regno++, loc += 8)
++        {
++	  dwarf2out_reg_save (dw2_label, regno, loc);
++        }
++    }
++
+   /* Now save gpr's.  */
+   if (! TARGET_MULTIPLE || info->first_gp_reg_save == 31 || TARGET_64BIT)
+     {
+@@ -3964,6 +3995,19 @@ output_prolog (file, size)
+ 		 info->gp_save_offset + sp_offset,
+ 		 reg_names[sp_reg]);
+ 
++  /* Regardless of whether its inlined or not, the net effect at this point
++     is that the GPRs have been saved from first to the end.*/
++  if (dwarf2out_do_frame () && info->first_gp_reg_save != 32)
++    {
++      int regno = info->first_gp_reg_save;
++      int loc = info->gp_save_offset;
++      SET_DWARF_LABEL (dw2_label);
++      for ( ; regno < 32; regno++, loc += reg_size)
++        {
++	  dwarf2out_reg_save (dw2_label, regno, loc);
++        }
++    }
++
+   /* Save main's arguments if we need to call a function */
+ #ifdef NAME__MAIN
+   if (info->main_save_p)
+@@ -3982,6 +4026,11 @@ output_prolog (file, size)
+     asm_fprintf (file, store_reg, reg_names[0], info->lr_save_offset + sp_offset,
+ 		 reg_names[sp_reg]);
+ 
++  if (dwarf2out_do_frame () && info->lr_save_p)
++    {
++      SET_DWARF_LABEL (dw2_label);
++      dwarf2out_return_save (dw2_label, info->lr_save_offset);
++    }
+   /* Save CR if we use any that must be preserved.  */
+   if (info->cr_save_p)
+     {
+@@ -3995,6 +4044,13 @@ output_prolog (file, size)
+       else
+ 	asm_fprintf (file, store_reg, reg_names[12], info->cr_save_offset + sp_offset,
+ 		     reg_names[sp_reg]);
++      /* we save all the condition registers as if they are a single 
++         register. The are physically, so this should work fine. */
++      if (dwarf2out_do_frame ())
++        {
++          SET_DWARF_LABEL (dw2_label);
++          dwarf2out_reg_save (dw2_label, 70, info->cr_save_offset);
++	}
+     }
+ 
+   /* If we need PIC_OFFSET_TABLE_REGNUM, initialize it now */
+@@ -4054,6 +4110,14 @@ output_prolog (file, size)
+   if (info->push_p && DEFAULT_ABI != ABI_V4 && DEFAULT_ABI != ABI_SOLARIS)
+     rs6000_allocate_stack_space (file, info->total_size, FALSE);
+ 
++  /* Update the stack frame by size, We update it for all targets here
++     at the end since we saved everything relative to the incoming value. */
++
++  if (dwarf2out_do_frame () && info->push_p)
++    {
++      SET_DWARF_LABEL (dw2_label);
++      dwarf2out_def_cfa (dw2_label, 1 , info->total_size);
++    }
+   /* Set frame pointer, if needed.  */
+   if (frame_pointer_needed)
+     asm_fprintf (file, "\tmr %s,%s\n", reg_names[31], reg_names[1]);
+Index: gcc/config/rs6000/rs6000.h
+--- rs6000.h	1999/06/09 15:59:37	1.49.4.1
++++ gcc/config/rs6000/rs6000.h	1999/06/12 18:55:36
+@@ -3139,6 +3175,54 @@ do {									\
+ 
+ #define ASM_OPEN_PAREN "("
+ #define ASM_CLOSE_PAREN ")"
++
++#define ASM_OUTPUT_DWARF_STRING(FILE,P) \
++  do {                                                                        \
++    register int slen = strlen(P);                                            \
++    register char *p = (P);                                                   \
++    register int i;                                                           \
++    fprintf (FILE, "\t.asciz \"");                                            \
++    for (i = 0; i < slen; i++)                                                \
++      {                                                                       \
++          register int c = p[i];                                              \
++          if (c == '\"' || c == '\\')                                         \
++            putc ('\\', FILE);                                                \
++          if (c >= ' ' && c < 0177)                                           \
++            putc (c, FILE);                                                   \
++          else                                                                \
++            {                                                                 \
++              fprintf (FILE, "\\%o", c);                                      \
++            }                                                                 \
++      }                                                                       \
++    fprintf (FILE, "\"");                                                     \
++  }                                                                           \
++  while (0)
++
++
++/* We can't communicate with the epilogue directly via the eh_epilogue
++   pattern, because we need to adjust the stack pointer JUST before
++   returning.  If the floating point registers are restored via a
++   function call (instead of being inlined), we can't adjust the stack 
++   before the callor the floating point registers will be restored from 
++   the wrong address (its based of the SP.) Control never returns
++   from these routines since the return address is adjusted such that
++   when they return, they go to the target location. We leave the stub
++   mechanism in place, let the function or FP routines return to the stub
++   and do things the normal way. We have to tell the stub mechanism
++   whiuch registers to use however, since the general mechanism
++   in eh_regs (except.c) will end up choosing r0 (which is overwritten
++   by the epilogue, and R11, which is used by the epilogue for system V
++   targets.  We'll just always use R4 and R5. Thats good for all targets. */
++
++#define DWARF2_EH_SP_REG    4
++#define DWARF2_EH_RA_REG    5
++
++
++/* Pick up the return address upon entry to a procedure. Used for
++   dwarf2 unwind information. This also enables the table driven mechanism. */
++
++#define INCOMING_RETURN_ADDR_RTX   gen_rtx (REG, Pmode, 65)
++
+ 
+ /* Define results of standard character escape sequences.  */
+ #define TARGET_BELL 007
+Index: gcc/config/rs6000/rs6000.md
+--- rs6000.md	1999/06/09 15:59:39	1.55.4.1
++++ gcc/config/rs6000/rs6000.md	1999/06/12 18:55:37
+@@ -7738,7 +7738,7 @@
+ 
+ (define_insn "nonlocal_goto_receiver"
+   [(unspec_volatile [(const_int 0)] 1)]
+-  "TARGET_TOC && TARGET_MINIMAL_TOC"
++  "TARGET_TOC && TARGET_MINIMAL_TOC && get_pool_size () != 0"
+   "*
+ {
+   rs6000_output_load_toc_table (asm_out_file, 30);
+Index: gcc/config/rs6000/sysv4.h
+--- sysv4.h	1999/05/28 02:46:56	1.19.4.1
++++ gcc/config/rs6000/sysv4.h	1999/06/12 18:55:38
+@@ -803,6 +803,40 @@ do {									\
+       fprintf (FILE, "\t.long ");					\
+       output_addr_const (FILE, (VALUE));				\
+       fprintf (FILE, "\n");						\
++    }									\
++} while (0)
++
++
++/* This is how to output an assembler line defining an address 
++   constant for the dwarf call unwinding information.
++   For -mrelocatable, we mark all addresses that need to be fixed up
++   in the .fixup section.  */
++
++extern int dwarflabelno;
++
++#undef	ASM_OUTPUT_DWARF_ADDR
++#define ASM_OUTPUT_DWARF_ADDR(FILE,LABEL)		                \
++do {									\
++  if ((TARGET_RELOCATABLE || flag_pic))					\
++    {									\
++      char buf[256], *p;						\
++									\
++      ASM_GENERATE_INTERNAL_LABEL (buf, "LCDW", dwarflabelno++);	\
++      STRIP_NAME_ENCODING (p, buf);					\
++      fprintf (FILE, "%s:\n", p);					\
++      fprintf (FILE, "\t.4byte\t");					\
++      assemble_name (FILE, LABEL);      				\
++      fprintf (FILE, "\n");					        \
++      fprintf (FILE, "\t.section \".fixup\",\"aw\"\n");			\
++      ASM_OUTPUT_ALIGN (FILE, 2);					\
++      fprintf (FILE, "\t.long\t%s\n", p);				\
++      fprintf (FILE, "\t.previous\n");					\
++    }									\
++  else                                                                  \
++    {									\
++      fprintf (FILE, "\t.4byte\t");                                     \
++      assemble_name (FILE, LABEL);                                      \
++      fprintf (FILE, "\n");					        \
+     }									\
+ } while (0)
+ 
