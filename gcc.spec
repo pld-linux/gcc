@@ -1,6 +1,6 @@
 #
 # Conditional build:
-# _with_ada	- build without ADA support
+# _with_ada	- build with ADA support
 # _without_java	- build without Java support
 # _without_objc	- build without objc support
 
