@@ -16,33 +16,31 @@ Patch2:		%{name}-libstdc++.patch
 Patch3:		%{name}-bootstrap.patch
 Patch4:		%{name}-cpp-macro-doc.patch
 Patch5:		%{name}-default-arch.patch
-Patch6:		%{name}-cvs-updates-20000220.patch.gz
+Patch6:		%{name}-cvs-updates-20000826.patch.gz
 Patch7:		%{name}-libstdc++-out-of-mem.patch
 Patch8:		%{name}-libstdc++-wstring.patch
 Patch9:		%{name}-libstdc++-wall3.patch
 Patch10:	%{name}-libstdc++-bastring.patch
 Patch11:	%{name}-manpage.patch
 Patch12:	%{name}-cpp-dos-newlines.patch
-Patch13:	%{name}-g++-is-tree.patch
-Patch14:	%{name}-gpc.patch
-Patch15:	%{name}-arm-config.patch
-Patch16:	%{name}-m68k-pic.patch
-Patch17:	%{name}-sparc32-rfi.patch
-Patch18:	%{name}-builtin-apply.patch
-Patch19:	%{name}-gcj-backport.patch
-Patch20:	%{name}-ppc-ice.patch
-Patch21:	%{name}-ppc-descriptions.patch
-Patch22:	%{name}-ppc-andrew-dwarf-eh.patch
+Patch13:	%{name}-gpc.patch
+Patch14:	%{name}-arm-config.patch
+Patch15:	%{name}-m68k-pic.patch
+Patch16:	%{name}-sparc32-rfi.patch
+Patch17:	%{name}-builtin-apply.patch
+Patch18:	%{name}-gcj-backport.patch
+Patch19:	%{name}-ppc-ice.patch
+Patch20:	%{name}-ppc-descriptions.patch
+Patch21:	%{name}-ppc-andrew-dwarf-eh.patch
 
-Patch23:	%{name}-alpha-complex-float.patch
-Patch24:	%{name}-emit-rtl.patch
-Patch25:	%{name}-empty-struct-init.patch
-Patch26:	%{name}-gcj-vs-iconv.patch
-Patch27:	%{name}-libobjc.patch
-Patch28:	%{name}-pointer-arith.patch
+Patch22:	%{name}-alpha-complex-float.patch
+Patch23:	%{name}-emit-rtl.patch
+Patch24:	%{name}-gcj-vs-iconv.patch
+Patch25:	%{name}-libobjc.patch
+Patch26:	%{name}-pointer-arith.patch
 
-Patch29:	%{name}-glibc-2.2.patch
-Patch30:	%{name}-O2-bug.patch
+Patch27:	%{name}-glibc-2.2.patch
+Patch28:	%{name}-O2-bug.patch
 
 BuildRequires:	bison
 Requires:	binutils >= 2.9.1.0.25
@@ -328,33 +326,31 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch11 -p0
 %patch12 -p0
 %patch13 -p1
-%patch14 -p1
 %ifarch arm
-%patch15 -p0
+%patch14 -p0
 %endif
 %ifarch m68k
-%patch16 -p0
+%patch15 -p0
 %endif
 %ifarch sparc sparc32
+%patch16 -p0
 %patch17 -p0
-%patch18 -p0
-%patch19 -p1
+%patch18 -p1
 %endif
 %ifarch ppc
+%patch19 -p0
 %patch20 -p0
 %patch21 -p0
-%patch22 -p0
 %endif
 %ifarch alpha
-%patch23 -p1
+%patch22 -p1
 %endif
+%patch23 -p0
 %patch24 -p0
 %patch25 -p0
 %patch26 -p0
-%patch27 -p0
-%patch28 -p0
-%patch29 -p1
-%patch30 -p1
+%patch27 -p1
+%patch28 -p1
 
 %build
 (cd gcc; autoconf)
