@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	7
+Release:	8
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -170,7 +170,7 @@ Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
-Requires:	libgcj = %{version}
+Requires:	libgcj >= 2.95.1
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
