@@ -1,6 +1,5 @@
 #
 # Conditional build:
-%bcond_with	bootstrap	# exclude gij/libgij.so
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
@@ -776,7 +775,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
-%{!?with_bootstrap:%attr(755,root,root) %{_bindir}/gij}
+%attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
@@ -785,7 +784,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
 %{_mandir}/man1/gcj*
-%{!?with_bootstrap:%{_mandir}/man1/gij*}
+%{_mandir}/man1/gij*
 %{_mandir}/man1/grepjar*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
@@ -803,7 +802,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
-%{!?with_bootstrap:%attr(755,root,root) %{_libdir}/libgij.so.*.*.*}
+%attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %{_libdir}/logging.properties
 
@@ -821,8 +820,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
-%{!?with_bootstrap:%{_libdir}/libgij.la}
-%{!?with_bootstrap:%attr(755,root,root) %{_libdir}/libgij.so}
+%{_libdir}/libgij.la
+%attr(755,root,root) %{_libdir}/libgij.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib-org-*.la
 %{_pkgconfigdir}/libgcj.pc
@@ -830,7 +829,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
-%{!?with_bootstrap:%{_libdir}/libgij.a}
+%{_libdir}/libgij.a
 %{_libdir}/lib-org-*.a
 
 %files -n libffi
