@@ -398,7 +398,7 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cp -a	$RPM_BUILD_ROOT%{_includedir}/g++*/%{_target_cpu}-*/bits/* \
 	$RPM_BUILD_ROOT%{_includedir}/g++*/bits/
-rm -rf	$RPM_BUILD_ROOT%{_includedir}/g++/%{_target_cpu}-*
+rm -r	$RPM_BUILD_ROOT%{_includedir}/g++*/%{_target_cpu}-*
 
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
