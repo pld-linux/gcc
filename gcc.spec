@@ -3,6 +3,7 @@
 # _without_ada	- build without ADA support
 # _without_java	- build without Java support
 # _without_objc	- build without objc support
+# +with_pp	- build with ProPolice
 
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -14,7 +15,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1.1
+Release:	1.2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -44,6 +45,7 @@ Patch21:	gcc32-inline-label.patch
 Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
+Patch25:	%{name}-3.3.1-propolice.patch
 BuildRequires:	autoconf
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
@@ -623,6 +625,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch22
 %patch23
 %patch24
+%{?_with_pp:%patch25 -p1}
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
