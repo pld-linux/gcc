@@ -14,7 +14,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.3
+Release:	0.4
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -28,6 +28,7 @@ Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-gcc-page.c.patch
 Patch6:		%{name}-info.patch
+Patch7:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -524,8 +525,9 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch7 -p1
 
-#%patch10
+%patch10 -p1
 %patch11
 %patch12
 %patch13
@@ -639,12 +641,12 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
-rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so
+rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
 (cd $RPM_BUILD_ROOT%{_libdir} && \
- ln -s libgnat-*so libgnat.so.1   && ln -s libgnat-*so libgnat.so && \
- ln -s libgnarl-*so libgnarl.so.1 && ln -s libgnarl-*so libgnarl.so)
+ ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
+ ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -964,7 +966,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*-*so
+%attr(755,root,root) %{_libdir}/libgna*-*so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
