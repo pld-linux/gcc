@@ -19,6 +19,7 @@ Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
+# Source0-md5:	39147717455d8dba4d43d1b058ea46e2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5: 66f07491b44f06928fd95b0e65bb8cd3
 Source2:	%{name}-non-english-man-pages.tar.bz2
