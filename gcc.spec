@@ -6,13 +6,16 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.4
-Release:	0.%{snap}.0
+Release:	0.%{snap}.1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{rver}/%{name}-%{rver}.tar.gz
 Source1:	gcov.1
+# generated from binutils' info
+Source2:	c++filt.1
+Source3:	%{name}-non-english-man-pages.tar.gz
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
 Patch2:		%{name}-libstdc++.patch
@@ -406,6 +409,8 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
+install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1/
+tar xzvf %{SOURCE3} -C $RPM_BUILD_ROOT%{_mandir}/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
@@ -461,6 +466,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
+%lang(fr) %{_mandir}/fr/man1/gcc.1*
+%lang(ja) %{_mandir}/ja/man1/gcc.1*
 %{_infodir}/gcc*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/SYSCALLS.c.X
@@ -489,7 +496,10 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(644,root,root,755)
 
-%{_mandir}/man1/g++.1.gz
+%{_mandir}/man1/g++.1*
+%{_mandir}/man1/c++filt.1*
+%lang(ja) %{_mandir}/ja/man1/g++.1*
+%lang(es) %{_mandir}/es/man1/c++filt*
 
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/c++
@@ -522,6 +532,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
+%lang(ja) %{_mandir}/ja/man1/g77.1*
+%lang(ja) %{_mandir}/ja/man1/f77.1*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
@@ -569,4 +581,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/cccp.1*
+%lang(ja) %{_mandir}/ja/man1/cpp.1*
+%lang(ja) %{_mandir}/ja/man1/cccp.1*
 %{_infodir}/cpp.info*.gz
