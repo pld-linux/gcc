@@ -10,7 +10,7 @@
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		_snap		20041203
+%define		_snap		20041210
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -26,7 +26,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	70f98184491345741d871643dbd1e0cc
+# Source0-md5:	1a894ff4c170a9e283e78843c6889a01
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
@@ -40,6 +40,7 @@ Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
+Patch8:		%{name}-pr19005.patch
 #
 # -fvisibility={default|internal|hidden|protected}
 #
@@ -664,6 +665,7 @@ Adzie.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p0
+%patch8 -p1
 
 %patch30 -p1
 %ifarch alpha ia64
