@@ -1,8 +1,8 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203
-#		- http://gcc.gnu.org/PR17384
 #		- http://gcc.gnu.org/PR17567
+#
 # - after 3.4.3 release snaps should go to DEVEL branch
 #
 # Conditional build:
@@ -19,7 +19,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	1
 Epoch:		5
 License:	GPL
@@ -66,6 +66,7 @@ Patch8:		%{name}-ada-bootstrap.patch
 # How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
 #
 Patch9:		%{name}-visibility.patch
+Patch10:	%{name}-pr17384.patch
 #
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -663,6 +664,7 @@ Adzie.
 %patch8 -p2
 %endif
 %patch9 -p1
+%patch10 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
