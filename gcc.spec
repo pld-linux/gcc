@@ -400,7 +400,7 @@ ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
-gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
+gzip -9nf ../READ* ../ChangeLog
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
