@@ -25,7 +25,7 @@ Name:		gcc
 Version:	3.4.3
 Release:	5
 Epoch:		5
-License:	GPL
+License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	e744b30c834360fccac41eb7269a3011
@@ -146,6 +146,7 @@ Summary:	Shared gcc library
 Summary(es):	Biblioteca compartida de gcc
 Summary(pl):	Biblioteka gcc
 Summary(pt_BR):	Biblioteca runtime para o GCC
+License:	GPL with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
 
@@ -263,6 +264,7 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	libobjc1
 
@@ -279,6 +281,7 @@ Biblioteki Obiektowego C.
 Summary:	Static Objective C Libraries
 Summary(es):	Bibliotecas estáticas de Objective C
 Summary(pl):	Statyczne Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{version}-%{release}
 
@@ -319,6 +322,7 @@ Suporte Fortran 77 para o GCC.
 Summary:	Fortran 77 Libraries
 Summary(es):	Bibliotecas de Fortran 77
 Summary(pl):	Biblioteki Fortranu 77
+License:	LGPL v2+
 Group:		Libraries
 
 %description -n libg2c
@@ -334,6 +338,7 @@ Biblioteki Fortranu 77.
 Summary:	Static Fortran 77 Libraries
 Summary(es):	Bibliotecas estáticas de Fortran 77
 Summary(pl):	Statyczne Biblioteki Fortranu 77
+License:	LGPL v2+
 Group:		Development/Libraries
 Requires:	libg2c = %{epoch}:%{version}-%{release}
 
@@ -399,6 +404,7 @@ Javy(tm), takie jak rmic czy jar.
 Summary:	Java Class Libraries
 Summary(es):	Bibliotecas de clases de Java
 Summary(pl):	Biblioteki Klas Javy
+License:	GPL with limited linking exception
 Group:		Libraries
 Requires:	zlib
 Obsoletes:	libgcj3
@@ -416,6 +422,7 @@ Biblioteki Klas Javy.
 Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
+License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	%{name}-java = %{epoch}:%{version}-%{release}
 Requires:	libgcj = %{epoch}:%{version}-%{release}
@@ -434,6 +441,7 @@ Pliki nag³ówkowe dla Bibliotek Klas Javy.
 Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
+License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
@@ -452,6 +460,7 @@ Summary:	GNU c++ library
 Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
 Summary(pt_BR):	Biblioteca C++ GNU
+License:	GPL v2+ with free software exception
 Group:		Libraries
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
@@ -497,6 +506,7 @@ Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
+License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
@@ -527,6 +537,7 @@ para desenvolvimento de programas C++.
 Summary:	Static C++ standard library
 Summary(es):	Biblioteca estándar estática de C++
 Summary(pl):	Statyczna biblioteka standardowa C++
+License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
@@ -543,6 +554,7 @@ Statyczna biblioteka standardowa C++.
 Summary:	Foreign Function Interface library
 Summary(es):	Biblioteca de interfaz de funciones ajenas
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
+License:	BSD-like
 Group:		Libraries
 
 %description -n libffi
@@ -567,6 +579,7 @@ czasie wykonania.
 Summary:	Development files for Foreign Function Interface library
 Summary(es):	Ficheros de desarrollo para libffi
 Summary(pl):	Pliki nag³ówkowe dla libffi
+License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi = %{epoch}:%{version}-%{release}
 
@@ -583,6 +596,7 @@ Pliki nag³ówkowe dla libffi.
 Summary:	Static Foreign Function Interface library
 Summary(es):	Biblioteca libffi estática
 Summary(pl):	Statyczna biblioteka libffi
+License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 
@@ -620,6 +634,7 @@ Adzie.
 Summary:	Ada standard libraries
 Summary(es):	Bibliotecas estándares de Ada
 Summary(pl):	Biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	gnat
 Obsoletes:	libgnat1
@@ -639,6 +654,7 @@ napisanych w Adzie.
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	gnat-static
 
