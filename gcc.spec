@@ -902,6 +902,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}*/lib*.so
+%ifarch ia64
+%{_slibdir}*/libunwind.a
+%endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
