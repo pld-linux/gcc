@@ -51,7 +51,8 @@ BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
-%{!?_without_ada:BuildRequires:	gcc-ada}
+%{!?_without_ada:BuildRequires:	gcc(ada)}
+%{!?_without_ada:BuildRequires: gcc-ada}
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
@@ -60,6 +61,7 @@ BuildRequires:	gettext-devel
 Requires:	binutils >= 2.14
 Requires:	cpp = %{epoch}:%{GCC_VERSION}
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}
+%{!?_without_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
