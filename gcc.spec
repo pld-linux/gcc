@@ -14,7 +14,10 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
+#		- http://gcc.gnu.org/PR18628 (miscompilation of switch statement in loop)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
+#		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
+#		- http://gcc.gnu.org/PR20349 (multilib, libjava32 doesn't build)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
