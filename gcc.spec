@@ -494,10 +494,7 @@ cd ..
 	infodir=%{_infodir}
 
 # make Gnat Reference Manual
-cd gcc/ada
-ln -s ../doc/include/fdl.texi gfdl.texi
-makeinfo gnat_rm.texi
-cd ../..
+%{__make} -C obj-%{_target_platform}/gcc/ada doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
