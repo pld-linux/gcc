@@ -1,0 +1,54 @@
+This happens when a pointer to volatile storage takes the address of a variable.
+One way to fix this is by marking variables that have been aliased with
+volatile tags.  When adding operands for these variables, we mark the statement
+as having volatile operands.  While correct, this tends to pessimize code.  I'm
+working on a variant of this patch that would only mark variables whose address
+is taken by a pointer pointing to volatile memory.
+
+Jeff has been working on the idea of exposing volatile operands to the
+optimizers and make the optimizers responsible for dealing with them properly. 
+This has the advantage that we would not have any magic operands hidden from us,
+but it requires auditing all the optimizers to make sure that they don't mess
+things up.
+
+Given the stage that we are for 4.0, it may be better to go with the simpler
+solution.  But perhaps we can finish the other approach in time.
+
+Diego.
+
+--- gcc-4.0-20050102/gcc/tree-flow.h.orig	2004-12-10 22:54:41.000000000 +0100
++++ gcc-4.0-20050102/gcc/tree-flow.h	2005-01-08 11:47:00.361513808 +0100
+@@ -174,6 +174,9 @@
+      in the v_may_def list.  */
+   unsigned in_v_may_def_list : 1;
+ 
++  /* Nonzero if this variable is aliased to a volatile variable.  */
++  unsigned aliased_with_volatile : 1;
++
+   /* An artificial variable representing the memory location pointed-to by
+      all the pointers that TBAA (type-based alias analysis) considers
+      to be aliased.  If the variable is not a pointer or if it is never
+--- gcc-4.0-20050102/gcc/tree-ssa-alias.c.orig	2004-12-20 19:18:28.000000000 +0100
++++ gcc-4.0-20050102/gcc/tree-ssa-alias.c	2005-01-08 11:47:00.379511072 +0100
+@@ -1668,6 +1668,9 @@
+   else if (is_call_clobbered (alias))
+     mark_call_clobbered (var);
+ 
++  if (TREE_THIS_VOLATILE (var))
++    a_ann->aliased_with_volatile = 1;
++
+   VARRAY_PUSH_TREE (v_ann->may_aliases, alias);
+   a_ann->is_alias_tag = 1;
+ }
+--- gcc-4.0-20050102/gcc/tree-ssa-operands.c.orig	2004-12-10 18:28:32.000000000 +0100
++++ gcc-4.0-20050102/gcc/tree-ssa-operands.c	2005-01-08 11:47:00.385510160 +0100
+@@ -1528,6 +1528,9 @@
+       return;
+     }
+ 
++  if (v_ann->aliased_with_volatile && s_ann)
++    s_ann->has_volatile_ops = true;
++
+   if (is_real_op)
+     {
+       /* The variable is a GIMPLE register.  Add it to real operands.  */
