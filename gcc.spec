@@ -24,6 +24,7 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
 Patch3:		%{name}-nodebug.patch
+Patch4:		%{name}-ssp.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -688,9 +689,10 @@ controle da numeração das linhas do programa.
 %patch1 -p1
 %patch2 -p1
 %{!?debug:%patch3 -p1}
+%patch4 -p1
 
 # because we distribute modified version of gcc...
-perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
+perl -pi -e 's/(version.*)";/$1-SSP (PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
