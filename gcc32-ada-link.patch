@@ -1,6 +1,7 @@
---- gcc/ada/link.c.jj	Tue May  7 12:50:23 2002
-+++ gcc/ada/link.c	Wed Jun  5 14:45:32 2002
-@@ -158,11 +158,11 @@ const char *object_library_extension = "
+diff -Nur gcc-3.2.2/gcc/ada/link.c gcc-3.2.2-20030218/gcc/ada/link.c
+--- gcc-3.2.2/gcc/ada/link.c	Sat May  4 05:28:18 2002
++++ gcc-3.2.2-20030218/gcc/ada/link.c	Tue Sep 24 15:07:49 2002
+@@ -158,11 +158,11 @@
  
  #elif defined (linux)
  const char *object_file_option = "";
@@ -15,9 +16,10 @@
  const char *object_library_extension = ".a";
  
  #elif defined (__svr4__) && defined (i386)
---- gcc/ada/Makefile.in.jj	Wed Jun  5 16:06:56 2002
-+++ gcc/ada/Makefile.in	Wed Jun  5 16:27:33 2002
-@@ -134,7 +134,7 @@ MISCLIB =
+diff -Nur gcc-3.2.2/gcc/ada/Makefile.in gcc-3.2.2-20030218/gcc/ada/Makefile.in
+--- gcc-3.2.2/gcc/ada/Makefile.in	Wed Jan 29 18:34:08 2003
++++ gcc-3.2.2-20030218/gcc/ada/Makefile.in	Tue Feb 18 17:05:26 2003
+@@ -134,7 +134,7 @@
  objext = .o
  exeext =
  arext  = .a
@@ -26,7 +28,7 @@
  shext  =
  
  HOST_CC=$(CC)
-@@ -1214,6 +1214,33 @@ ifeq ($(strip $(filter-out %86 linux%,$(
+@@ -1214,6 +1214,69 @@
    endif
  endif
  
@@ -57,10 +59,46 @@
 +  LIBRARY_VERSION := $(strip $(shell grep Library_Version $(fsrcpfx)gnatvsn.ads | sed -e 's/.*GNAT Lib v\(.*\)[ "].*/\1/'))
 +endif
 +
++ifeq ($(strip $(filter-out x86_64 linux%,$(arch) $(osys))),)
++  MLIB_TGT=5lml-tgt
++  MISCLIB=
++  THREADSLIB=-lpthread
++  GNATLIB_SHARED=gnatlib-shared-dual
++  GMEM_LIB=gmemlib
++  LIBRARY_VERSION := $(strip $(shell grep Library_Version $(fsrcpfx)gnatvsn.ads | sed -e 's/.*GNAT Lib v\(.*\)[ "].*/\1/'))
++endif
++
++ifeq ($(strip $(filter-out ppc linux%,$(arch) $(osys))),)
++  MLIB_TGT=5lml-tgt
++  MISCLIB=
++  THREADSLIB=-lpthread
++  GNATLIB_SHARED=gnatlib-shared-dual
++  GMEM_LIB=gmemlib
++  LIBRARY_VERSION := $(strip $(shell grep Library_Version $(fsrcpfx)gnatvsn.ads | sed -e 's/.*GNAT Lib v\(.*\)[ "].*/\1/'))
++endif
++
++ifeq ($(strip $(filter-out s390 linux%,$(arch) $(osys))),)
++  MLIB_TGT=5lml-tgt
++  MISCLIB=
++  THREADSLIB=-lpthread
++  GNATLIB_SHARED=gnatlib-shared-dual
++  GMEM_LIB=gmemlib
++  LIBRARY_VERSION := $(strip $(shell grep Library_Version $(fsrcpfx)gnatvsn.ads | sed -e 's/.*GNAT Lib v\(.*\)[ "].*/\1/'))
++endif
++
++ifeq ($(strip $(filter-out s390x linux%,$(arch) $(osys))),)
++  MLIB_TGT=5lml-tgt
++  MISCLIB=
++  THREADSLIB=-lpthread
++  GNATLIB_SHARED=gnatlib-shared-dual
++  GMEM_LIB=gmemlib
++  LIBRARY_VERSION := $(strip $(shell grep Library_Version $(fsrcpfx)gnatvsn.ads | sed -e 's/.*GNAT Lib v\(.*\)[ "].*/\1/'))
++endif
++
  ifeq ($(strip $(filter-out mips sgi irix%,$(targ))),)
    ifeq ($(strip $(filter-out mips sgi irix6%,$(targ))),)
      LIBGNAT_TARGET_PAIRS = \
-@@ -2179,6 +2179,9 @@ endif
+@@ -2179,9 +2242,12 @@
  
  gnatlib: ../stamp-gnatlib1 ../stamp-gnatlib2
  #	../xgcc -B../ -dD -E ../tconfig.h $(INCLUDES) > rts/tconfig.h
@@ -69,8 +107,12 @@
 +	$(MV) *.o save/
  	$(MAKE) -C rts CC="../../xgcc -B../../" \
  	        INCLUDES="$(INCLUDES_FOR_SUBDIR) -I./../.." \
-                 CFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -DIN_RTS" \
-@@ -2192,6 +2195,8 @@ gnatlib: ../stamp-gnatlib1 ../stamp-gnat
+-                CFLAGS="$(GNATLIBCFLAGS) $(LIBGCC2_CFLAGS) -DIN_RTS" \
++                CFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -DIN_RTS" \
+ 		ADA_CFLAGS="$(GNATLIBCFLAGS)" \
+ 		srcdir=$(fsrcdir) \
+ 	        -f ../Makefile $(LIBGNAT_OBJS)
+@@ -2192,6 +2258,8 @@
  		srcdir=$(fsrcdir) \
  	        -f ../Makefile \
  	        $(GNATRTL_OBJS)
@@ -79,22 +121,28 @@
  	$(RM) rts/libgnat$(arext) rts/libgnarl$(arext)
  	$(AR) $(AR_FLAGS) rts/libgnat$(arext) \
  	   $(addprefix rts/,$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS))
-@@ -2315,12 +2315,12 @@ gnatlib-shared-default:
+@@ -2279,16 +2347,16 @@
+ gnatlib-shared-default:
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+-	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(LIBGCC2_CFLAGS)" \
++	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS)" \
  	     THREAD_KIND="$(THREAD_KIND)" \
               gnatlib
  	$(RM) rts/libgnat$(soext) rts/libgnarl$(soext)
--	cd rts; ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
+-	cd rts; ../../xgcc -B../../ -shared $(LIBGCC2_CFLAGS) \
 +	cd rts; ../../xgcc -B../../ -shared -shared-libgcc $(TARGET_LIBGCC2_CFLAGS) \
  		-o libgnat-$(LIBRARY_VERSION)$(soext) $(SO_OPTS)libgnat-$(LIBRARY_VERSION)$(soext) \
  		$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS) $(MISCLIB) -lm
- 	cd rts; ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
+-	cd rts; ../../xgcc -B../../ -shared $(LIBGCC2_CFLAGS) \
++	cd rts; ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
  		-o libgnarl-$(LIBRARY_VERSION)$(soext) $(SO_OPTS)libgnarl-$(LIBRARY_VERSION)$(soext) \
 -		$(GNATRTL_TASKING_OBJS) $(THREADSLIB)
 +		$(GNATRTL_TASKING_OBJS) $(THREADSLIB) ./libgnat-$(LIBRARY_VERSION)$(soext)
  	cd rts; $(LN) libgnat-$(LIBRARY_VERSION)$(soext) libgnat$(soext)
  	cd rts; $(LN) libgnarl-$(LIBRARY_VERSION)$(soext) libgnarl$(soext)
  
-@@ -2358,62 +2363,62 @@ TREE_H = $(srcdir)/../tree.h $(srcdir)/.
+@@ -2358,62 +2426,62 @@
  
  ada_extra_files : treeprs.ads einfo.h sinfo.h nmake.adb nmake.ads
  
@@ -172,30 +220,3 @@
  	$(GNATBIND) $(ADA_INCLUDES) -o b_gnatdll.c gnatdll.ali
  b_gnatdll.o : b_gnatdll.c
  
---- gcc/ada/gnat_rm.texi.jj	Tue Apr 23 20:27:39 2002
-+++ gcc/ada/gnat_rm.texi	Thu Jun  6 14:30:21 2002
-@@ -31,6 +31,10 @@
- @settitle GNAT Reference Manual
- @setchapternewpage odd
- @syncodeindex fn cp
-+@dircategory Programming
-+@direntry
-+* gnat_rm: (gnat_rm).            GNAT Reference Manual
-+@end direntry
- 
- @titlepage
- 
---- gcc/ada/gnat_ug.texi.jj	Tue May  7 12:50:03 2002
-+++ gcc/ada/gnat_ug.texi	Thu Jun  6 14:30:33 2002
-@@ -75,6 +75,11 @@
- @syncodeindex fn cp
- @c %**end of header
- 
-+@dircategory Programming
-+@direntry
-+* gnat_ug: (gnat_ug).            GNAT User's Guide
-+@end direntry
-+
- @titlepage
- 
- @ifset vms
