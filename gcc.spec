@@ -1,12 +1,12 @@
-%define		GCC_VERSION	3.0.3
-%define		STDC_VERSION	3.0.3
-%define		GCJ_VERSION	3.0.3
-%define		KSI_VERSION	pre45
+%define		GCC_VERSION	3.0.4
+%define		STDC_VERSION	3.0.4
+%define		GCJ_VERSION	3.0.4
+%define		KSI_VERSION	pre46
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	5
+Release:	1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -368,6 +368,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %package ksi
 Summary:	Ksi support for gcc
 Summary(pl):	Wspomoganie Ksi dla gcc
+Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
