@@ -3,7 +3,7 @@
 # _without_ada	- build without ADA support
 # _without_java	- build without Java support
 # _without_objc	- build without objc support
-# +with_pp	- build with ProPolice
+# _with_pp	- build with ProPolice
 
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
