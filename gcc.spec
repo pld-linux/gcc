@@ -793,7 +793,7 @@ install -d $RPM_BUILD_ROOT{/lib,%{_aclocaldir},%{_datadir},%{_infodir}}
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
-%{__make} install \
+%{__make} -j1 install \
 	mandir=%{_mandir} \
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
