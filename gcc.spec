@@ -482,6 +482,7 @@ Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	glibc-devel
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
