@@ -339,7 +339,7 @@ Biblioteka dynamiczna gcc.
 Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
-Version:	%{version}
+Version:	%{GCC_VERSION}
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
 
