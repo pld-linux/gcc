@@ -1,4 +1,5 @@
-%define		STDC_VERSION 3.0.0
+%define		STDC_VERSION	3.0.0
+%define		GCJ_VERSION	1.0.0
 %define		ver 3.0
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
@@ -155,6 +156,51 @@ This package adds experimental support for compiling Java(tm) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
+%package -n libgcj
+Summary:	Java Class Libraries
+Summary(pl):	Biblioteki Klas Javy
+Group:		Libraries
+Version:	%{GCJ_VERSION}
+
+%description -n libgcj
+Java Class Libraries
+
+%description -n libcj -l pl
+Biblioteki Klass Javy
+
+%package -n libgcj-devel
+Summary:	Development files for Java Class Libraries
+Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klass Javy
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+Version:	%{GCJ_VERSION}
+Requires:	libgcj = %{GCJ_VERSION}
+Requires:	%{name}-java
+
+%description -n libgcj-devel
+Development files for Java Class Libraries
+
+%description -n libgcj-devel -l pl
+Pliki nag³ówkowe dla Bibliotek Klass Javy
+
+%package -n libgcj-static
+Summary:	Static Java Class Libraries
+Summary(pl):	Statyczne Biblioteki Klass Javy
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+Version:	%{GCJ_VERSION}
+Requires:	libstdc++-devel = %{GCJ_VERSION}
+
+%description -n libgcj-static
+Static Java Class Libraries
+
+%description -l pl -n libgcj-static
+Statyczne Biblioteki Klass Javy
+
 %package -n libstdc++
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
@@ -300,10 +346,8 @@ TEXCONFIG=false ../configure \
 %ifarch sparc64
 	--with-cpu=ultrasparc \
 %endif
-%ifnarch sparc sparc64
 	--enable-threads=posix \
 	--enable-haifa \
-%endif
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-gxx-include-dir="%{_includedir}/g++" \
@@ -382,33 +426,26 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc READ* ChangeLog.gz
-
 %dir %{_libdir}/gcc-lib
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*/*
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*/*/include
-
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcc
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
-
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
 %{_infodir}/gcc*
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
-
 %ifnarch alpha
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
 %endif
-
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 %attr(755,root,root) %{_libdir}/libgcc_s.so*
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
@@ -421,65 +458,76 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++
 %defattr(644,root,root,755)
-
 %{_mandir}/man1/g++.1.gz
-
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
+%{_infodir}/c-tree*
+%{_indodir}/g++int*
 
+%ifarch temporary_disabled_does_not_compile
 %files objc
 %defattr(644,root,root,755)
-
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.a
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.so*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.la
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
+%endif
 
 %files g77
 %defattr(644,root,root,755)
-
 %attr(755,root,root) %{_bindir}/g77
 %attr(755,root,root) %{_bindir}/f77
-
 %{_infodir}/g77*
-
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libg2c.a
-
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
-%ifarch xyz
+%ifarch no_longer_supported_by_gcc_team
 %files chill
 %defattr(644,root,root,755)
 %doc gcc/ch/chill.brochure.gz
 
 %attr(755,root,root) %{_bindir}/chill
-
 %{_infodir}/chill*
-
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1chill
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/chill*.o
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libchill.a
+%endif
 
 %files java
 %defattr(644,root,root,755)
-
-%attr(755,root,root) %{_bindir}/gcj
-%attr(755,root,root) %{_bindir}/gcjh
+%attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
-%attr(755,root,root) %{_bindir}/jv-scan
-
+%attr(755,root,root) %{_bindir}/jv-*
+%attr(755,root,root) %{_bindir}/fastjar
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
-%endif
+%{_infodir}/gcj*
+
+%files -n libgcj
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
+
+%files -n libgcj-devel
+%defattr(644,root,root,755)
+%{_includedir}/java
+%{_includedir}/gcj
+%{_includedir}/j*.h
+%{_includedir}/gnu/*
+%{_libdir}/lib*cj.spec
+%{_datadir}/libgcj.jar
+%attr(755,root,root) %{_libdir}/lib*cj*.la
+%attr(755,root,root) %{_libdir}/lib*cj*.so
+
+%files -n libgcj-static
+%defattr(644,root,root,755)
+%{_libdir}/lib*cj*.a
 
 %files -n libstdc++
 %defattr(644,root,root,755)
@@ -487,7 +535,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
-%{_includedir}/g++
+%{_includedir}/g++*
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
@@ -500,6 +548,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
-
 %{_mandir}/man1/cpp.1*
-%{_infodir}/cpp.info*.gz
+%{_infodir}/cpp*
