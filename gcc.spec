@@ -1,14 +1,15 @@
 %define		DASHED_SNAP	2002-03-11
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
-%define		STDC_VERSION	3.1
+%define		STDC_VERSION	4.0.0
+%define		OBJC_VERSION	1.0.0
 %define		GCJ_VERSION	3.1
 %define		KSI_VERSION	pre48
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{SNAP}.1
+Release:	0.%{SNAP}.2
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.bz2
@@ -83,7 +84,7 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
-Requires:	libobjc = %{GCC_VERSION}
+Requires:	libobjc = %{OBJC_VERSION}
 Requires:	gcc = %{GCC_VERSION}
 
 %description objc
@@ -118,6 +119,8 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
+Version:	%{OBJC_VERSION}
+Epoch:		2
 
 %description -n libobjc
 Objective C Libraries
@@ -129,8 +132,9 @@ Biblioteki Obiektowego C
 Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
-Epoch:		2
-Requires:	libobjc = %{GCC_VERSION}
+Version:	%{OBJC_VERSION}
+Epoch:		3
+Requires:	libobjc = %{OBJC_VERSION}
 
 %description -n libobjc-static
 Static Objective C Libraries
@@ -246,7 +250,7 @@ Summary(pl):	Statyczne Biblioteki Klass Javy
 Group:		Development/Libraries
 Version:	%{GCJ_VERSION}
 Epoch:		2
-Requires:	libstdc++-devel = %{GCJ_VERSION}
+Requires:	libstdc++-devel = %{STDC_VERSION}
 
 %description -n libgcj-static
 Static Java Class Libraries
