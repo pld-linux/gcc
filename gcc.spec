@@ -110,12 +110,12 @@ parts of the GNU Compiler Collection. In order to use another GCC
 compiler you will need to install the appropriate subpackage.
 
 %description -l es
-Un compilador destinado a la integración de todas las optimalizaciones
-y características necesarias para un entorno de desarrollo eficaz y
+Un compilador que intenta integrar todas las optimalizaciones y
+características necesarias para un entorno de desarrollo eficaz y
 estable.
 
 Este paquete contiene el compilador de C y unos ficheros compartidos
-por varias parted de la colección de compiladores GNU (GCC). Para usar
+por varias partes de la colección de compiladores GNU (GCC). Para usar
 otro compilador de GCC será necesario que instale el subpaquete
 adecuado.
 
