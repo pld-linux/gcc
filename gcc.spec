@@ -4,7 +4,6 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%bcond_with	bootstrap64	# bootstrap gcc64 using crosssparc64
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -63,7 +62,6 @@ BuildRequires:	fileutils >= 4.0.41
 %{?with_ada:BuildRequires: gcc-ada}
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
-%{?with_bootstrap64: BuildRequires:	crosssparc64-gcc}
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -802,19 +800,8 @@ cp /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-CC=%__cc
-%ifarch sparc64
-cat > gcc64 <<"EOF"
-#!/bin/sh
-exec /usr/bin/sparc64-pld-linux-gcc -m64 "$@"
-EOF
-chmod +x gcc64
-CC=`pwd`/gcc64
-%endif
-
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
-CC="$CC" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
