@@ -51,6 +51,7 @@ Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
 Patch25:	gcc-cmpi.patch
+Patch26:	gcc-ffi64.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.90.0.3
@@ -782,6 +783,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch23
 %patch24
 %patch25 -p1
+%patch26 -p2
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
