@@ -237,7 +237,7 @@ Group:		Development/Libraries
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
-Requires:	%{name}-g++ = %{version}
+Requires:	%{name}-g++
 Obsoletes:	libg++-devel
 
 %description -n libstdc++-devel
