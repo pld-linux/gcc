@@ -58,8 +58,8 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 BuildRequires:	gettext-devel
 Requires:	binutils >= 2.14
-Requires:	cpp = %{GCC_VERSION}
-Requires:	libgcc = %{GCC_VERSION}
+Requires:	cpp = %{epoch}:%{GCC_VERSION}
+Requires:	libgcc = %{epoch}:%{GCC_VERSION}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -102,7 +102,7 @@ Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
-Requires:	gcc = %{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description c++
 This package adds C++ support to the GNU C compiler. It includes
@@ -144,8 +144,8 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
-Requires:	libobjc = %{GCC_VERSION}
-Requires:	gcc = %{GCC_VERSION}
+Requires:	libobjc = %{epoch}:%{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description objc
 This package adds Objective C support to the GNU C compiler. Objective
@@ -195,7 +195,7 @@ Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libobjc = %{GCC_VERSION}
+Requires:	libobjc = %{epoch}:%{GCC_VERSION}
 
 %description -n libobjc-static
 Static Objective C Libraries.
@@ -210,7 +210,7 @@ Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
 Version:	%{GCC_VERSION}
 Obsoletes:	egcs-g77
-Requires:	libg2c = %{GCC_VERSION}
+Requires:	libg2c = %{epoch}:%{GCC_VERSION}
 
 %description g77
 This apckage adds support for compiling Fortran 77 programs with the
@@ -240,7 +240,7 @@ Summary:	Static Fortran 77 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libg2c = %{GCC_VERSION}
+Requires:	libg2c = %{epoch}:%{GCC_VERSION}
 
 %description -n libg2c-static
 Static Fortran 77 Libraries.
@@ -253,7 +253,7 @@ Summary:	Java support for gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Version:	%{GCC_VERSION}
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{epoch}:%{version}
 Requires:	libgcj >= 3.0.0
 Requires:	libgcj-devel >= 3.0.0
 Requires:	java-shared
@@ -307,7 +307,7 @@ Summary:	Development files for Java Class Libraries
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libgcj = %{GCC_VERSION}
+Requires:	libgcj = %{epoch}:%{GCC_VERSION}
 Requires:	%{name}-java
 Obsoletes:	libgcj3-devel
 
@@ -322,8 +322,8 @@ Summary:	Static Java Class Libraries
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libstdc++-devel = %{GCC_VERSION}
-Requires:	libgcj-devel = %{GCC_VERSION}
+Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}
+Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -382,8 +382,8 @@ Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libstdc++ = %{GCC_VERSION}
-Requires:	%{name}-c++ = %{GCC_VERSION}
+Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}
+Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -411,7 +411,7 @@ Summary:	Static C++ standard library
 Summary(pl):	Statyczna biblioteka standardowa C++
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libstdc++-devel = %{GCC_VERSION}
+Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -441,7 +441,7 @@ Summary:	Development files for Foreign Function Interface library
 Summary(pl):	Pliki nag³ówkowe dla libffi
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libffi = %{GCC_VERSION}
+Requires:	libffi = %{epoch}:%{GCC_VERSION}
 
 %description -n libffi-devel
 Development files for Foreign Function Interface library.
@@ -454,7 +454,7 @@ Summary:	Static Foreign Function Interface library
 Summary(pl):	Statyczna biblioteka libffi
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Requires:	libffi-devel = %{GCC_VERSION}
+Requires:	libffi-devel = %{epoch}:%{GCC_VERSION}
 
 %description -n libffi-static
 Static Foreign Function Interface library.
@@ -467,8 +467,8 @@ Summary:	Ada support for gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
 Version:	%{GCC_VERSION}
-Requires:	libgnat = %{GCC_VERSION}
-Requires:	gcc = %{GCC_VERSION}
+Requires:	libgnat = %{epoch}:%{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{GCC_VERSION}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
 
@@ -514,7 +514,7 @@ Summary:	Ksi support for gcc
 Summary(pl):	Obs³uga Ksi dla gcc
 Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
-Requires:	gcc = %{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{GCC_VERSION}
 
 %description ksi
 This package adds experimental support for compiling Ksi programs
