@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	6
+Release:	6.1
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -18,8 +18,8 @@ Patch3:		gcc-libstdc++.patch
 Patch4:		%{name}-bootstrap.patch
 Patch5:		%{name}-cpp-macro-doc.patch
 Patch6:		%{name}-default-arch.patch
-Patch7:		%{name}-cvs-updates.patch
-Patch8:		%{name}-alpha-ev5-fix.patch
+Patch7:		%{name}-cvs-updates.patch.gz
+Patch8:		%{name}-cvs-updates-20000220.patch.gz
 Patch9:		gcc-libstdc++-out-of-mem.patch
 Patch10:	gcc-libstdc++-valarray.patch
 Patch11:	gcc-libstdc++-wstring.patch
@@ -37,7 +37,24 @@ Patch22:	%{name}-ppc-ice.patch
 Patch23:	%{name}-ppc-descriptions.patch
 Patch24:	%{name}-ppc-andrew-dwarf-eh.patch
 
-Patch30:	%{name}-glibc-2.2.patch
+Patch25:	gcc-alpha-complex-float.patch
+Patch26:	gcc-alpha-spec.patch
+Patch27:	gcc-aspell.patch
+Patch28:	gcc-combine.patch
+Patch29:	gcc-emit-rtl.patch
+Patch30:	gcc-empty-struct-init.patch
+Patch31:	gcc-gcj-backport.patch
+Patch32:	gcc-gcj-vs-iconv-orig.patch
+Patch33:	gcc-gcj-vs-iconv.patch
+Patch34:	gcc-gpc-updates.patch
+Patch35:	gcc-libg++-update.patch
+Patch36:	gcc-libobjc.patch
+Patch37:	gcc-libstdc++-deque.patch
+Patch38:	gcc-new-cpp.patch
+Patch39:	gcc-objc-testsuite.patch
+Patch40:	gcc-pointer-arith.patch
+
+Patch100:	%{name}-glibc-2.2.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -332,10 +349,10 @@ mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch4 -p1
 %patch5 -p0
 %patch6 -p0
-%patch7 -p1
-%patch8 -p0
+#%patch7 -p1
+%patch8 -p1
 %patch9 -p0
-%patch10 -p0
+#%patch10 -p0
 %patch11 -p0
 %patch12 -p0
 %patch13 -p0
@@ -350,7 +367,23 @@ mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch22 -p0
 %patch23 -p0
 %patch24 -p0
-#%patch30 -p1
+%patch25 -p1
+%patch26 -p1
+#%patch27 -p0
+#%patch28 -p0
+%patch29 -p0
+%patch30 -p0
+%patch31 -p1
+#%patch32 -p0
+%patch33 -p0
+#%patch34 -p0
+#%patch35 -p0
+%patch36 -p0
+%patch37 -p0
+%patch38 -p0
+#%patch39 -p0
+%patch40 -p0
+#%patch100 -p1
 
 %build
 (cd gcc; autoconf)
