@@ -1,10 +1,10 @@
 #
 # Conditional build:
-# _without_ada		- build without ADA support
-# _without_java		- build without Java support
-# _without_objc		- build without objc support
-# _with_bootstrap	- don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-# _with_pp		- build with ProPolice
+%bcond_without	ada		# build without ADA support
+%bcond_without	java		# build without Java support
+%bcond_without	objc		# build without objc support
+%bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
+%bcond_with	pp		# build with ProPolice
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -32,6 +32,7 @@ Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-pr12965.patch
+Patch5:		%{name}-pr11793.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -54,8 +55,8 @@ BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
-%{!?_without_ada:%{!?_with_bootstrap:BuildRequires:	gcc(ada)}}
-%{!?_without_ada:BuildRequires: gcc-ada}
+%{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
+%{?with_ada:BuildRequires: gcc-ada}
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
@@ -64,7 +65,7 @@ BuildRequires:	zlib-devel
 Requires:	binutils >= 2.14
 Requires:	cpp = %{epoch}:%{GCC_VERSION}
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}
-%{!?_without_ada:Provides: gcc(ada)}
+%{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -756,6 +757,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %patch10 -p1
 %patch11
@@ -773,7 +775,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch22
 %patch23
 %patch24
-%{?_with_pp:%patch25 -p1}
+%{?with_pp:%patch25 -p1}
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -797,7 +799,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{!?_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java},ksi" \
 	--enable-c99 \
 	--enable-long-long \
 %ifarch amd64
@@ -821,7 +823,7 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%if 0%{!?_without_ada:1}
+%if %{with ada}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
@@ -851,7 +853,7 @@ echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
-%if 0%{!?_without_ada:1}
+%if %{with ada}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
@@ -867,7 +869,7 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
 
-%if %{!?_without_java:1}%{?_without_java:0}
+%if %{with java}
 install -d java-doc
 cp -f libjava/doc/cni.sgml libjava/READ* java-doc
 cp -f fastjar/README java-doc/README.fastjar
@@ -875,18 +877,18 @@ cp -f libffi/README java-doc/README.libffi
 cp -f libffi/LICENSE java-doc/LICENSE.libffi
 %endif
 
-%if %{!?_without_objc:1}0
+%if %{with objc}
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
-for f in libstdc++.la libsupc++.la %{!?_without_java:libgcj.la} ; do
+for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libstdc++.la libsupc++.la libg2c.la \
-	%{!?_without_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
-	%{!?_without_objc:libobjc.la}; do
+	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
+	%{?with_objc:libobjc.la}; do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
@@ -898,12 +900,12 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{%{!?_without_objc:objc,}g2c.h,syslimits.h%{!?_without_java:,gcj}} $gccdir/tmp
+mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
-rm -rf $gccdir/install-tools/
+rm -rf $gccdir/install-tools
 
 %find_lang %{name}
 %find_lang libstdc\+\+
@@ -1044,7 +1046,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libstdc++.a
 %endif
 
-%if %{!?_without_objc:1}0
+%if %{with objc}
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/READ*
@@ -1106,7 +1108,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libg2c.a
 %endif
 
-%if %{!?_without_java:1}%{?_without_java:0}
+%if %{with java}
 %files java
 %defattr(644,root,root,755)
 %doc java-doc/*
@@ -1188,7 +1190,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.a
 %endif
 
-%if 0%{!?_without_ada:1}
+%if %{with ada}
 %files ada
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/*/*/gnat1
