@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	4
+Release:	4.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -99,6 +99,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir		/usr/lib
 %define		rpmcflags	-O2 -mtune=ultrasparc
+%endif
+%ifarch amd64
+%define         _slibdir32      /lib
+%define         _libdir         /usr/lib
 %endif
 
 %description
@@ -684,6 +688,16 @@ chmod +x gcc64
 CC=`pwd`/gcc64
 %endif 
 
+%ifarch amd64
+cat > gcc64 <<"EOF"
+#!/bin/sh
+exec /usr/bin/gcc -m64 "$@"
+EOF
+chmod +x gcc64
+CC=`pwd`/gcc64
+%endif 
+
+
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 CC="$CC" \
@@ -823,6 +837,11 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 rm -rf $gccdir/install-tools
 
 %ifarch sparc64 
+ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
+ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
+%endif 
+
+%ifarch amd64 
 ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %endif 
