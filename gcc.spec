@@ -709,10 +709,10 @@ TEXCONFIG=false \
 	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
-%if %{with multilib}
-	--enable-multilib \
-%else
+%ifnarch ppc
+%if %{without multilib}
 	--disable-multilib \
+%endif
 %endif
 	--enable-nls \
 	--with-gnu-as \
