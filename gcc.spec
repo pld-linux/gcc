@@ -624,12 +624,12 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so \
 	$RPM_BUILD_ROOT%{_libdir}
-rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
+rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so
 (cd $RPM_BUILD_ROOT%{_libdir} && \
- ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
- ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
+ ln -s libgnat-*so libgnat.so.1   && ln -s libgnat-*so libgnat.so && \
+ ln -s libgnarl-*so libgnarl.so.1 && ln -s libgnarl-*so libgnarl.so)
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -946,7 +946,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*-*so.1
+%attr(755,root,root) %{_libdir}/libgna*-*so
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
