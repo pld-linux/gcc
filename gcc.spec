@@ -22,20 +22,20 @@
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
-%define		_snap		20050305
+%define		_snap		20050312
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.7
+Release:	0.%{_snap}.1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-# Source0-md5:	3a3544f9e4ded4b1ec4d9c36546502db
+# Source0-md5:	38b8f2d145741881898c26a64ee9fc2e
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -473,7 +473,7 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+#patch6 -p1
 
 # PRs
 %patch100 -p1
