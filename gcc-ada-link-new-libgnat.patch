@@ -1,0 +1,42 @@
+--- gcc-3.2.2/gcc/ada/Makefile.in.orig	Fri Mar  7 11:02:33 2003
++++ gcc-3.2.2/gcc/ada/Makefile.in	Fri Mar  7 13:13:08 2003
+@@ -2420,33 +2420,33 @@
+ treeprs.ads : treeprs.adt sinfo.ads xtreeprs.adb
+ 	-$(MKDIR) bldtools
+ 	$(CP) $^ bldtools
+-	(cd bldtools; gnatmake -q xtreeprs ; ./xtreeprs ../treeprs.ads )
++	(cd bldtools; gnatmake -q xtreeprs -aO../rts ; ./xtreeprs ../treeprs.ads )
+ 
+ einfo.h : einfo.ads einfo.adb xeinfo.adb
+ 	-$(MKDIR) bldtools
+ 	$(CP) $^ bldtools
+-	(cd bldtools; gnatmake -q xeinfo ; ./xeinfo ../einfo.h )
++	(cd bldtools; gnatmake -q xeinfo -aO../rts ; ./xeinfo ../einfo.h )
+ 
+ sinfo.h : sinfo.ads xsinfo.adb
+ 	-$(MKDIR) bldtools
+ 	$(CP) $^ bldtools
+-	(cd bldtools; gnatmake -q xsinfo ; ./xsinfo ../sinfo.h )
++	(cd bldtools; gnatmake -q xsinfo -aO../rts ; ./xsinfo ../sinfo.h )
+ 
+ nmake.adb : sinfo.ads nmake.adt xnmake.adb
+ 	-$(MKDIR) bldtools
+ 	$(CP) $^ bldtools
+-	(cd bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
++	(cd bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
+ 
+ nmake.ads :  sinfo.ads nmake.adt xnmake.adb
+ 	-$(MKDIR) bldtools
+ 	$(CP) $^ bldtools
+-	(cd bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
++	(cd bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -s ../nmake.ads )
+ 
+ # We remove the generated .texi files to force regeneration.
+ doctools/xgnatug : xgnatug.adb
+ 	-$(MKDIR) doctools
+ 	$(CP) $^ doctools
+-	(cd doctools ; gnatmake -q xgnatug)
++	(cd doctools ; gnatmake -q xgnatug -aO../rts)
+ 	-rm gnat_ug_*.texi
+ 
+ # We cannot list the dependency on the xgnatug binary here because we
