@@ -1,12 +1,12 @@
 %define		GCC_VERSION	3.0.3
 %define		STDC_VERSION	3.0.3
 %define		GCJ_VERSION	3.0.3
-%define		KSI_VERSION	pre42
+%define		KSI_VERSION	pre45
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	5
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
