@@ -521,7 +521,9 @@ TEXCONFIG=false \
 cd ..
 
 %{__make} -C obj-%{_target_platform} \
+%ifnarch ppc
 	%{!?with_bootstrap:profiledbootstrap} \
+%endif
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
