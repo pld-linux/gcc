@@ -72,6 +72,7 @@ BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
 %{!?_without_ada:BuildRequires:	gcc-ada}
 BuildRequires:	glibc-devel >= 2.2.5-20
+%{!?_without_dist_kernel:BuildRequires: kernel-headers}
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
