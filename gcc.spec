@@ -46,7 +46,7 @@ necessary for a high-performance and stable development environment.
 
 %description -l pl
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
-wyprodukowania szybkiego i stablinego kodu wynikowego.
+wyprodukowania szybkiego i stabilnego kodu wynikowego.
 
 %package c++
 Summary:	C++ support for gcc
