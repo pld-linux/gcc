@@ -10,7 +10,7 @@
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		_snap		20050114
+%define		_snap		20050121
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
