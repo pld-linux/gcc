@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	3
+Release:	3.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -96,7 +96,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
 %ifarch sparc64
-%define		_slibdir64	/lib64
+%define		_slibdir32	/lib
 %define		_libdir		/usr/lib
 %define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
@@ -674,12 +674,23 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+CC=%__cc
+%ifarch sparc64 
+cat > gcc64 <<"EOF"
+#!/bin/sh
+exec /usr/bin/gcc -m64 "$@"
+EOF
+chmod +x gcc64
+CC=`pwd`/gcc64
+%endif 
+
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
+CC="$CC" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
-	--libexecdir=%{_libexecdir} \
+	--libexecdir=%{_libdir} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--enable-shared \
@@ -811,6 +822,11 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf $gccdir/install-tools
 
+%ifarch sparc64 
+ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
+ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
+%endif 
+
 %find_lang %{name}
 %find_lang libstdc\+\+
 
@@ -896,6 +912,8 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch sparc64
 %{_libdir}/gcc/*/*/*/libgcc.a
 %{_libdir}/gcc/*/*/*/libgcc_eh.a
+%{_libdir}/gcc/*/*/*/libgcov.a
+%{_libdir}/gcc/*/*/libgcc*so
 %attr(644,root,root) %{_libdir}*/gcc/*/*/*/crt*.o
 %endif
 %ifarch ppc
@@ -913,6 +931,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}*/lib*.so.*
+%ifarch sparc64
+%attr(755,root,root) %{_slibdir32}/lib*.so.*
+%endif
 
 %files c++
 %defattr(644,root,root,755)
