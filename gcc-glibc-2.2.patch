@@ -1,6 +1,14 @@
 diff -ur gcc-2.95.2/libio/libio.h gcc-2.95.2.new/libio/libio.h
 --- gcc-2.95.2/libio/libio.h	Mon Jun 29 20:06:26 1998
 +++ gcc-2.95.2.new/libio/libio.h	Mon Jul 17 20:59:17 2000
+@@ -136,6 +136,7 @@
+ #define _IO_IS_APPENDING 0x1000
+ #define _IO_IS_FILEBUF 0x2000
+ #define _IO_BAD_SEEN 0x4000
++#define _IO_USER_LOCK 0x8000
+ 
+ /* These are "formatting flags" matching the iostream fmtflags enum values. */
+ #define _IO_SKIPWS 01
 @@ -348,11 +348,11 @@
  extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
  
