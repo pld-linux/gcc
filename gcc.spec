@@ -923,17 +923,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jv-*
 %{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
+%{_mandir}/man1/grepjar*
 
 %files java-tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/rmi*
 %attr(755,root,root) %{_bindir}/jar
 %{_mandir}/man1/rmi*
+%{_mandir}/man1/jar*
+%{_infodir}/fastjar*
 
 %files -n libgcj
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*
+%attr(755,root,root) %{_libdir}/lib-org*.so.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %endif
@@ -954,6 +958,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
+%attr(755,root,root) %{_libdir}/lib-org-*.so
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
@@ -962,6 +967,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
+%{_libdir}/lib-org-*.a
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %endif
