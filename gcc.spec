@@ -50,7 +50,7 @@ Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
 Patch25:	%{name}-3.3.1-propolice.patch
 BuildRequires:	autoconf
-BuildRequires:	automake >= 1.7.9-2
+BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
