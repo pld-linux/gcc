@@ -95,7 +95,7 @@ make CC="stage2/xgcc -Bstage2/" CFLAGS="-O2" LDFLAGS="-s" install \
 
 gzip -n -9f $RPM_BUILD_ROOT%{_infodir}/gcc.info*
 ln -sf gcc $RPM_BUILD_ROOT/usr/bin/cc
-rm -rf $RPM_BUILD_ROOT/usr/lib/gcc-lib/${RPM_ARCH}/*/include/objc
+rm -rf $RPM_BUILD_ROOT%{_libdir}/gcc-lib/${RPM_ARCH}/*/include/objc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -104,15 +104,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644, root, root, 755)
 %doc NEWS PROBLEMS
 %attr(755, root, root) /usr/bin/*-linux-gcc
-%dir /usr/lib/gcc-lib/*/*
-%dir /usr/lib/gcc-lib/*/*/include
-/usr/lib/gcc-lib/*/*/SYSCALLS.c.X
-%attr(755, root, root) /usr/lib/gcc-lib/*/*/cc1
-%attr(755, root, root) /usr/lib/gcc-lib/*/*/cpp
-/usr/lib/gcc-lib/*/*/libgcc.a
-/usr/lib/gcc-lib/*/*/specs
-/usr/lib/gcc-lib/*/*/include/*
-/usr/lib/gcc-lib/*/*/*.o
+%dir %{_libdir}/gcc-lib/*/*
+%dir %{_libdir}/gcc-lib/*/*/include
+%{_libdir}/gcc-lib/*/*/SYSCALLS.c.X
+%attr(755, root, root) %{_libdir}/gcc-lib/*/*/cc1
+%attr(755, root, root) %{_libdir}/gcc-lib/*/*/cpp
+%{_libdir}/gcc-lib/*/*/libgcc.a
+%{_libdir}/gcc-lib/*/*/specs
+%{_libdir}/gcc-lib/*/*/include/*
+%{_libdir}/gcc-lib/*/*/*.o
 
 %changelog
 * Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
