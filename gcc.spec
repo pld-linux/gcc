@@ -30,7 +30,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -52,6 +52,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
+%{?with_java:BuildRequires:	cairo-devel}
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
 %if %{with ada}
@@ -62,6 +63,7 @@ BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
+%{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -520,9 +522,12 @@ TEXCONFIG=false \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
 	--enable-cmath \
+%if %{with java}
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
+	--enable-gtk-cairo \
+%endif
 	%{_target_platform}
 
 cd ..
