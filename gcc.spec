@@ -1,40 +1,19 @@
 %define		STDC_VERSION 2.10.0
-%define		ver 2.95.3
+%define		ver 3.0
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{ver}
-Release:	22
+Release:	20010305
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}-prerelease/%{name}-%{version}.test4.tar.gz
-Source1:	gcov.1
-Patch0:		%{name}-info.patch
-Patch1:		%{name}-pld-linux.patch
-Patch2:		%{name}-libstdc++.patch
-Patch3:		%{name}-bootstrap.patch
-Patch4:		%{name}-cpp-macro-doc.patch
-Patch5:		%{name}-default-arch.patch
-Patch6:		%{name}-libstdc++-out-of-mem.patch
-Patch7:		%{name}-libstdc++-wstring.patch
-Patch8:		%{name}-libstdc++-bastring.patch
-Patch9:		%{name}-manpage.patch
-Patch10:	%{name}-cpp-dos-newlines.patch
-Patch11:	%{name}-gpc.patch
-Patch12:	%{name}-m68k-pic.patch
-Patch13:	%{name}-sparc32-rfi.patch
-Patch14:	%{name}-builtin-apply.patch
-Patch15:	%{name}-ppc-ice.patch
-Patch16:	%{name}-ppc-descriptions.patch
-Patch17:	%{name}-alpha-complex-float.patch
-Patch18:	%{name}-gcj-vs-iconv.patch
-Patch19:	%{name}-libobjc.patch
-Patch20:	%{name}-pointer-arith.patch
-
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{release}.tar.gz
+Patch0:		gcc-stage.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
+BuildRequires:	zlib-devel
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -303,63 +282,45 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{ver}.test4
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p0
-%patch5 -p0
-%patch6 -p0
-%patch7 -p0
-%patch8 -p0
-%patch9 -p0
-%patch10 -p0
-%patch11 -p1
-%ifarch m68k
-%patch12 -p0
-%endif
-%ifarch sparc sparc32
-%patch13 -p0
-%patch14 -p0
-%endif
-%ifarch ppc
-%patch15 -p0
-%patch16 -p0
-%endif
-%ifarch alpha
-%patch17 -p1
-%endif
-%patch18 -p0
-%patch19 -p0
-%patch20 -p0
+%setup -q -n %{name}-%{release}
+#%patch0 -p1
 
 %build
-(cd gcc; autoconf)
-rm -rf obj-%{_target_platform}
-install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
+rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
 CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
 CXXFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
+	--mandir=%{_mandir} \
 	--enable-shared \
+%ifarch sparc
+	--with-cpu=sparc \
+%endif
+%ifarch sparc64
+	--with-cpu=ultrasparc \
+%endif
 %ifnarch sparc sparc64
-	--enable-threads \
+	--enable-threads=posix \
 	--enable-haifa \
 %endif
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-gxx-include-dir="\$\{prefix\}/include/g++" \
+	--enable-objc-gc \
+	--enable-java-gc=boehm \
+	--enable-long-long \
+	--enable-cshadow-headers \
+	--enable-namespaces \
+	--without-x \
 	--disable-nls \
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
-touch  ../gcc/c-gperf.h
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap \
+%{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
@@ -385,7 +346,6 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
-install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
