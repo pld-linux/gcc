@@ -30,7 +30,10 @@ BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
-%{?with_ada:BuildRequires:	gcc(ada)}
+%if %{with ada}
+BuildRequires:	gcc(ada)
+BuildRequires:	gcc-ada
+%endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
