@@ -12,7 +12,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		_snap		20041008
+%define		_snap		20041015
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -20,7 +20,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.1
 #Release:	1
 Epoch:		5
 License:	GPL
@@ -28,11 +28,14 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	9e5a58db111be1b31227b5a1139a740b
+# Source0-md5:	d971fc8d8d01dc1e3edbc214f85966e3
+# Source0-size:	25076867
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
+# Source1-size:	63307
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
 # Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
+# Source2-size:	667
 Source3:	gcc_visibility.m4
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -68,7 +71,6 @@ Patch8:		%{name}-ada-bootstrap.patch
 # How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
 #
 Patch9:		%{name}-visibility.patch
-Patch10:	%{name}-pr17384.patch
 #
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -666,7 +668,6 @@ Adzie.
 %patch8 -p2
 %endif
 %patch9 -p1
-%patch10 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
