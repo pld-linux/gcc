@@ -4,15 +4,14 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%bcond_without	var_tracking	# Disable vartracking in debug, http://gcc.gnu.org/gcc-3.5/changes.html 
 #
-%define		snap		20040327
-%define		GCC_VERSION	3.5
+%define		snap		20040324
+%define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
-Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
+Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
@@ -22,7 +21,7 @@ License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	eab7b638e1b5a2cee161463cf00f1515
+# Source0-md5:	878b8ec18ac49028e34fc835c82b20d7
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -35,6 +34,7 @@ BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
+BuildRequires:	flex
 %{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
 %{?with_ada:BuildRequires: gcc-ada}
 BuildRequires:	gettext-devel
@@ -47,9 +47,6 @@ Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
-%if %{with var_tracking}
-Conflicts: gdb < 6.1
-%endif
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -57,11 +54,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch sparc64
 %define		_slibdir64	/lib64
 %define		_libdir		/usr/lib
-%define		rpmcflags	-O2 -mtune=ultrasparc 
-%endif
-
-%if %{without var_tracking} && %{with debug}
-%define	specflags	-fno-var-tracking
+%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
 %description
