@@ -3,6 +3,7 @@
 #		- http://gcc.gnu.org/PR11203
 #		- http://gcc.gnu.org/PR17384
 #		- http://gcc.gnu.org/PR17567
+# - after 3.4.3 release snaps should go to DEVEL branch
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
