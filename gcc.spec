@@ -7,28 +7,27 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.3
-%define		KSI_VERSION	pre55
+%define		KSI_VERSION	1.0.1.1567
 
 Summary:	GNU C Compiler
 Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.2
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
-Patch0:		%{name}-slibdir.patch
+Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-gcc-page.c.patch
-Patch6:		%{name}-info.patch
-Patch7:		%{name}-ada-link-new-libgnat.patch
+Patch6:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -403,7 +402,7 @@ Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	libstdc++ = %{GCC_VERSION}
-Requires:	%{name}-c++
+Requires:	%{name}-c++ = %{GCC_VERSION}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -582,7 +581,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch7 -p1
+%patch6 -p1
 
 %patch10 -p1
 %patch11
@@ -620,8 +619,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45
 %patch46
 %patch47
-
-%patch6 -p1
 
 perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
 
@@ -684,10 +681,7 @@ cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
 %{__make} install \
-	prefix=$RPM_BUILD_ROOT%{_prefix} \
-	mandir=$RPM_BUILD_ROOT%{_mandir} \
-	infodir=$RPM_BUILD_ROOT%{_infodir} \
-	slibdir=$RPM_BUILD_ROOT/lib
+	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
