@@ -729,8 +729,13 @@ cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
-for f in libstdc++.la %{!?_without_java:libgcj.la} ; do
+for f in libstdc++.la libsupc++.la %{!?_without_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
+done
+# normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
+for f in libstdc++.la libsupc++.la libg2c.la \
+	%{!?_without_java:libgcj.la} %{!?_without_objc:libobjc.la}; do
+	perl -pi -e "s@^libdir='.*@libdir='/usr/lib'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
 bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
