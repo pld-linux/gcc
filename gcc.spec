@@ -43,29 +43,29 @@ Patch21:	gcc32-cfg-eh.patch
 Patch22:	gcc32-debug-pr7241.patch
 
 Patch24:	gcc32-duplicate-decl.patch
-Patch25:	gcc32-dwarf2-pr6381.patch 
+Patch25:	gcc32-dwarf2-pr6381.patch
 Patch26:	gcc32-dwarf2-pr6436-test.patch
-Patch27:	gcc32-fde-merge-compat.patch 
+Patch27:	gcc32-fde-merge-compat.patch
 Patch28:	gcc32-fold-const-associate.patch
 Patch29:	gcc32-hard-reg-sharing.patch
-Patch30:	gcc32-hard-reg-sharing2.patch 
+Patch30:	gcc32-hard-reg-sharing2.patch
 Patch31:	gcc32-i386-default-momit-leaf-frame-pointer.patch
-Patch32:	gcc32-i386-memtest-test.patch 
+Patch32:	gcc32-i386-memtest-test.patch
 Patch33:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
 Patch34:	gcc32-i386-pic-label-thunk.patch
 Patch35:	gcc32-i386-profile-olfp.patch
-Patch36:	gcc32-inline-label.patch 
+Patch36:	gcc32-inline-label.patch
 Patch37:	gcc32-java-no-rpath.patch
-Patch38:	gcc32-pr6842.patch 
+Patch38:	gcc32-pr6842.patch
 Patch39:	gcc32-sparc-sll1.patch
-Patch40:	gcc32-test-rh65771.patch 
-Patch41:	gcc32-test-rotate.patch  
-Patch42:	gcc32-tls-dwarf2.patch 
-Patch43:	gcc32-tls.patch      
-Patch44:	gcc32-tls2.patch 
+Patch40:	gcc32-test-rh65771.patch
+Patch41:	gcc32-test-rotate.patch
+Patch42:	gcc32-tls-dwarf2.patch
+Patch43:	gcc32-tls.patch
+Patch44:	gcc32-tls2.patch
 Patch45:	gcc32-tls3.patch
-Patch46:	gcc32-tls4.patch 
-Patch47:	gcc32-tls5.patch    
+Patch46:	gcc32-tls4.patch
+Patch47:	gcc32-tls5.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -312,7 +312,7 @@ Statyczne Biblioteki Klas Javy.
 
 %package -n libstdc++
 Summary:	GNU c++ library
-Summary(pl):	Biblioteki GNU C++ 
+Summary(pl):	Biblioteki GNU C++
 Group:		Libraries
 Version:	%{GCC_VERSION}
 Obsoletes:	libg++
@@ -503,42 +503,42 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %patch4 -p1
 
-%patch10 
-%patch11 
-%patch12 
-%patch13 
-%patch14 
-%patch15 
-%patch16 
-%patch17 
-%patch18 
-%patch19 
-%patch20 
-%patch21 
-%patch22 
+%patch10
+%patch11
+%patch12
+%patch13
+%patch14
+%patch15
+%patch16
+%patch17
+%patch18
+%patch19
+%patch20
+%patch21
+%patch22
 
-%patch24 
-%patch25 
-%patch26 
-%patch27 
-%patch28 
-%patch29 
-%patch30 
-%patch31 
-%patch32 
-%patch33 
-%patch34 
-%patch35 
-%patch36 
-%patch37 
-%patch38 
-%patch39 
-%patch40 
-%patch41 
-%patch42 
+%patch24
+%patch25
+%patch26
+%patch27
+%patch28
+%patch29
+%patch30
+%patch31
+%patch32
+%patch33
+%patch34
+%patch35
+%patch36
+%patch37
+%patch38
+%patch39
+%patch40
+%patch41
+%patch42
 %patch43
-%patch44 
-%patch45 
+%patch44
+%patch45
 %patch46
 %patch47
 
