@@ -156,6 +156,11 @@ This package adds experimental support for compiling Java(tm) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
+%description -l pl java
+Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak
+i do natywnego kodu. Bêdziesz potrzebowa³ pakietu libgcj by móc przeprowadziæ
+kompilacjê.
+
 %package -n libgcj
 Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
@@ -348,13 +353,13 @@ TEXCONFIG=false ../configure \
 %endif
 	--enable-threads=posix \
 	--enable-haifa \
-	--with-gnu-as \
-	--with-gnu-ld \
-	--with-gxx-include-dir="%{_includedir}/g++" \
 	--enable-languages="c,gcov,c++,java,f77" \
 	--enable-long-long \
-	--enable-cshadow-headers \
 	--enable-namespaces \
+	--enable-multilib \
+	--with-gnu-as \
+	--with-gnu-ld \
+	--with-system-zlib \
 	--without-x \
 	--disable-nls \
 	%{_target_platform}
@@ -440,9 +445,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcc*
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
-%ifnarch alpha
+#%ifnarch alpha
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
-%endif
+#%endif
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 %attr(755,root,root) %{_libdir}/libgcc_s.so*
