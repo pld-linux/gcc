@@ -490,6 +490,7 @@ Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+Requires:	glibc-devel
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
