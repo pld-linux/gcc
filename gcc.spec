@@ -905,7 +905,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f gcc.lang
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS bugs.html faq.html
-%doc gcc/{README.Portability,ONEWS,ChangeLog}
+%doc gcc/{README.Portability,NEWS,ChangeLog}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
