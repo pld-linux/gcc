@@ -447,7 +447,7 @@ Pliki nag³ówkowe dla libffi.
 
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
-Summary(pl):	Statyczne libffi
+Summary(pl):	Statyczna biblioteka libffi
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	libffi-devel = %{GCC_VERSION}
@@ -456,7 +456,7 @@ Requires:	libffi-devel = %{GCC_VERSION}
 Static Foreign Function Interface library.
 
 %description -n libffi-static -l pl
-Statyczne libffi.
+Statyczna biblioteka libffi.
 
 %package ada
 Summary:	Ada support for gcc
@@ -719,7 +719,8 @@ for f in libstdc++.la libsupc++.la %{!?_without_java:libgcj.la} ; do
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libstdc++.la libsupc++.la libg2c.la \
-	%{!?_without_java:libgcj.la} %{!?_without_objc:libobjc.la}; do
+	%{!?_without_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
+	%{!?_without_objc:libobjc.la}; do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/lib'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
@@ -986,7 +987,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
-%attr(755,root,root) %{_libdir}/lib-org-*.la
+%{_libdir}/lib-org-*.la
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
@@ -1002,12 +1003,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libffi
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libffi*
+%attr(755,root,root) %{_libdir}/libffi-*.so
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
-%{_includedir}/ffi*
+%attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%{_includedir}/ffi*
 
 %files -n libffi-static
 %defattr(644,root,root,755)
