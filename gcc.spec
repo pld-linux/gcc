@@ -1,5 +1,6 @@
 #
 # TODO:
+#		- http://gcc.gnu.org/PR11203
 #		- http://gcc.gnu.org/PR17384
 #		- http://gcc.gnu.org/PR17567
 #
@@ -39,7 +40,32 @@ Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
 Patch8:		%{name}-ada-bootstrap.patch
+#
+# -fvisibility={default|internal|hidden|protected}
+#
+# Set the default ELF image symbol visibility to the specified option.
+# All symbols will be marked with this unless overrided within the code.
+# Using this feature can very substantially improve linking and load times
+# of shared object libraries, produce more optimised code, provide near-perfect
+# API export and prevent symbol clashes. It is strongly recommended that you
+# use this in any shared objects you distribute.
+#
+# -fvisibility-inlines-hidden
+#
+# Causes all inlined methods to be marked with __attribute__((visibility("hidden")))
+# so that they do not appear in the export table of a DSO and do not require a PLT
+# indirection when used within the DSO. Enabling this option can have a dramatic
+# effect on load and link times of a DSO as it massively reduces the size
+# of the dynamic export table when the library makes heavy use of templates.
+# While it can cause bloating through duplication of code within each DSO
+# where it is used, often the wastage is less than the considerable space
+# occupied by a long symbol name in the export table which is typical when using
+# templates and namespaces.
+#
+# How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
+#
 Patch9:		%{name}-visibility.patch
+#
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
