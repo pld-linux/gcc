@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		_snap		20040716
+%define		_snap		20040723
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -20,9 +20,8 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	b2206ef2e150b91940a179ede7cf7a2c
-Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
-# Source1-md5:	4736f3422ddfb808423b745629acc321
+# Source0-md5:	39fe8a65498f19b3d37cde257cb2fb80
+#Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
 # Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
 Patch0:		%{name}-info.patch
@@ -848,7 +847,7 @@ for f in libstdc++.la libsupc++.la libg2c.la \
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
 # include/ contains install-tools/include/* and headers that were fixed up
