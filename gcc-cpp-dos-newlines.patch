@@ -1,0 +1,76 @@
+# DP: Handle DOS newlines after backslashes.
+# DP: Patch from http://www.cygnus.com/ml/egcs/1999-Jan/0784.html
+
+--- gcc/cccp.c.orig	Thu Jun 24 15:11:40 1999
++++ gcc/cccp.c	Mon Aug  9 12:21:55 1999
+@@ -1023,7 +1023,8 @@
+    retrying if necessary.  If MAX_READ_LEN is defined, read at most
+    that bytes at a time.  Return a negative value if an error occurs,
+    otherwise return the actual number of bytes read,
+-   which must be LEN unless end-of-file was reached.  */
++   which may be < LEN if CRs have been skipped, though we try not to do
++   that.  */
+ 
+ static int
+ safe_read (desc, ptr, len)
+@@ -1032,6 +1033,7 @@
+      int len;
+ {
+   int left, rcount, nchars;
++  char *rptr;
+ 
+   left = len;
+   while (left > 0) {
+@@ -1051,8 +1053,20 @@
+       }
+     if (nchars == 0)
+       break;
+-    ptr += nchars;
++
++    /* CRLF pairs, found with Unix when processing DOS files,
++       throw off backslash-newline removal.
++       Therefore, CRs are thrown away here. */
+     left -= nchars;
++    rptr = ptr;
++    while(nchars--)
++      {
++	if(*rptr == '\r' && *(rptr+1) == '\n')
++	  left++;
++	else
++	  *ptr++ = *rptr;
++	rptr++;
++      }
+   }
+   return len - left;
+ }
+@@ -2085,8 +2099,8 @@
+     for (;;) {
+       cnt = safe_read (f, (char *) fp->buf + size, bsize - size);
+       if (cnt < 0) goto perror;	/* error! */
++      if (cnt == 0) break; /* End of file */
+       size += cnt;
+-      if (size != bsize) break;	/* End of file */
+       bsize *= 2;
+       fp->buf = (U_CHAR *) xrealloc (fp->buf, bsize + 2);
+     }
+@@ -5024,6 +5038,8 @@
+ 	  map_list_ptr->map_list_map = ptr;
+ 
+ 	  while ((ch = getc (f)) != '\n')
++	    if (ch == '\r')
++		continue;
+ 	    if (ch == EOF)
+ 	      break;
+ 	}
+@@ -5256,9 +5272,9 @@
+       i = safe_read (f, (char *) fp->buf + st_size, bsize - st_size);
+       if (i < 0)
+ 	goto nope;      /* error! */
+-      st_size += i;
+-      if (st_size != bsize)
++      if (i == 0)
+ 	break;	/* End of file */
++      st_size += i;
+       bsize *= 2;
+       fp->buf = (U_CHAR *) xrealloc (fp->buf, bsize + 2);
+     }

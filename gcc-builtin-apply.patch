@@ -1,0 +1,62 @@
+# DP: On Sparc, message forwarding in the GNUstep framework
+# DP: (gstep-base) relies on this patch. I didn't experience any side
+# DP: effects of this "workaround" on a sparc Solaris platform. However
+# DP: this workaround affects the all compilers of the egcs package.
+
+From: Richard Henderson <rth@dot.cygnus.com>
+To: Matthias.Klose@cs.tu-berlin.de, scottc@net-community.com
+Subject: Re: patch for expand_builtin_apply for sparc architecture
+Date: Mon, 16 Feb 1998 05:11:32 -0800
+
+In article <199802160833.JAA11275.cygnus.egcs.bugs@gargleblaster.cs.tu-berlin.de>,
+Matthias Klose <Matthias.Klose@cs.tu-berlin.de> wrote:
+>The following patch fixes the generation of an 'unimp 4095'
+>instruction for the expansion of __builtin_apply on the sparc
+>architecture; fix by Scott Christley (<scottc@net-community.com>), but
+>doesn't seem to be submitted to the the egcs list.
+
+You'll have to submit a test case and an explanation of why you think
+this is correct.  The Sparc32 ABI calls for an unimp instruction to
+be emitted following calls to functions that return structures.  The
+0-4095 immediate is commentary, but that's all the room in that field
+so we cannot simply remove the mask.
+
+My guess is that it is yet another example of why __builtin_apply
+is inadequate for the needs of all but completely stack-based calling
+conventions and should not be used.
+
+
+r~
+
+diff -c gcc/config/sparc/sparc.md~ gcc/config/sparc/sparc.md
+*** gcc/config/sparc/sparc.md~	Mon Nov 16 12:31:32 1998
+--- gcc/config/sparc/sparc.md	Mon Nov 16 12:35:56 1998
+***************
+*** 7294,7299 ****
+--- 7294,7300 ----
+  	 Why cannot we have delay slots filled if it were a CALL?  */
+  
+        if (! TARGET_ARCH64 && INTVAL (operands[3]) != 0)
++ #if 0
+  	emit_jump_insn
+  	  (gen_rtx_PARALLEL (VOIDmode,
+  		    gen_rtvec (3,
+***************
+*** 7302,7307 ****
+--- 7303,7318 ----
+  			       GEN_INT (INTVAL (operands[3]) & 0xfff),
+  			       gen_rtx_CLOBBER (VOIDmode,
+  					gen_rtx_REG (Pmode, 15)))));
++ #else
++ 	emit_jump_insn
++ 	  (gen_rtx_PARALLEL (VOIDmode,
++ 		    gen_rtvec (3,
++ 			       gen_rtx_SET (VOIDmode, pc_rtx,
++ 					XEXP (operands[0], 0)),
++ 			       operands[3],
++ 			       gen_rtx_CLOBBER (VOIDmode,
++ 					gen_rtx_REG (Pmode, 15)))));
++ #endif
+        else
+  	emit_jump_insn
+  	  (gen_rtx_PARALLEL (VOIDmode,

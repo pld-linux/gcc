@@ -1,0 +1,20 @@
+# DP: Document exit codes.
+
+Wed Oct 20 22:55:23 1999  Matthias Klose  <doko@debian.org>
+
+	* gcc.1: Document exit codes.
+
+--- gcc/gcc.1.orig	Thu Oct 21 12:52:54 1999
++++ gcc/gcc.1	Thu Oct 21 12:53:15 1999
+@@ -4141,6 +4141,11 @@
+ if available, else
+ .B /tmp\c
+ \&).
++.SH "EXIT STATUS"
++Normally the exit status is 0, if compilation or link edit are successful,
++and nonzero else. The option
++.B -Werror
++treats each warning as an error.
+ .SH "SEE ALSO"
+ cpp(1), as(1), ld(1), gdb(1), adb(1), dbx(1), sdb(1).
+ .br

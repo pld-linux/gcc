@@ -1,0 +1,361 @@
+Changes for GCC version 2.95.1 for GNU Pascal 2.1
+
+Before applying these diffs, go to the directory gcc-2.95.1
+and use the command
+
+    patch -p1
+
+feeding it the following diffs as input.
+
+*** gcc-2.95.1/gcc/expr.c.orig	Thu Jul  1 00:59:55 1999
+--- gcc-2.95.1/gcc/expr.c	Sun Oct 24 14:01:38 1999
+*************** store_constructor (exp, target, cleared)
+*** 4430,4435 ****
+--- 4430,4444 ----
+  
+        domain_min = convert (sizetype, TYPE_MIN_VALUE (domain));
+        domain_max = convert (sizetype, TYPE_MAX_VALUE (domain));
++ 
++ #ifdef GPC
++       /* Align the set.  */
++       if (set_alignment)
++         domain_min = size_binop (MINUS_EXPR, domain_min,
++                                  size_binop (TRUNC_MOD_EXPR, domain_min,
++                                              size_int (set_alignment)));
++ #endif /* GPC */
++ 
+        bitlength = size_binop (PLUS_EXPR,
+  			      size_binop (MINUS_EXPR, domain_max, domain_min),
+  			      size_one_node);
+*************** store_constructor (exp, target, cleared)
+*** 4444,4450 ****
+--- 4453,4461 ----
+        if (GET_MODE (target) != BLKmode || nbits <= 2 * BITS_PER_WORD
+  	  || (nbytes <= 32 && TREE_CHAIN (elt) != NULL_TREE))
+  	{
++ #ifndef GPC
+  	  int set_word_size = TYPE_ALIGN (TREE_TYPE (exp));
++ #endif /* not GPC */
+  	  enum machine_mode mode = mode_for_size (set_word_size, MODE_INT, 1);
+  	  char *bit_buffer = (char *) alloca (nbits);
+  	  HOST_WIDE_INT word = 0;
+*************** store_constructor (exp, target, cleared)
+*** 4456,4462 ****
+--- 4467,4477 ----
+  	    {
+  	      if (bit_buffer[ibit])
+  		{
++ #ifdef GPC
++ 		  if (set_words_big_endian)
++ #else /* not GPC */
+  		  if (BYTES_BIG_ENDIAN)
++ #endif /* not GPC */
+  		    word |= (1 << (set_word_size - 1 - bit_pos));
+  		  else
+  		    word |= 1 << bit_pos;
+*************** store_constructor (exp, target, cleared)
+*** 4570,4575 ****
+--- 4585,4596 ----
+  	  else
+  #endif
+  	    {
++ #ifdef GPC
++               /* The language-specific run time library must provide
++                  a suitable `__setbits()' function whose action coincides
++                  with the values of `set_word_size', `set_alignment', and
++                  `set_words_big_endian'.  */
++ #endif /* GPC */
+  	      emit_library_call (gen_rtx_SYMBOL_REF (Pmode, "__setbits"),
+  				 0, VOIDmode, 4, XEXP (targetx, 0), Pmode,
+  				 bitlength_rtx, TYPE_MODE (sizetype),
+*** gcc-2.95.1/gcc/stor-layout.c.orig	Thu Mar 11 14:56:20 1999
+--- gcc-2.95.1/gcc/stor-layout.c	Wed Oct 27 16:39:10 1999
+*************** int maximum_field_alignment;
+*** 53,58 ****
+--- 53,69 ----
+     May be overridden by front-ends.  */
+  int set_alignment = 0;
+  
++ #ifdef GPC
++ /* The word size of a bitstring or (power-)set value, in bits.
++    Must be non-zero.
++    May be overridden by front-ends.  */
++ int set_word_size = BITS_PER_UNIT;
++ 
++ /* If non-zero, bits in (power-)sets start with the highest bit.
++    May be overridden by front-ends.  */
++ int set_words_big_endian /*= BYTES_BIG_ENDIAN*/;  /* @@@ Needn't be a constant!  */
++ #endif /* GPC */
++ 
+  static tree layout_record	PROTO((tree));
+  static void layout_union	PROTO((tree));
+  
+*************** static tree pending_sizes;
+*** 65,70 ****
+--- 76,88 ----
+  
+  int immediate_size_expand;
+  
++ #ifdef GPC
++ /* Nonzero means that the size of a type may vary
++    within one function context.  */
++ 
++ int size_volatile = 0;
++ #endif /* GPC */
++ 
+  tree
+  get_pending_sizes ()
+  {
+*************** variable_size (size)
+*** 102,108 ****
+--- 120,131 ----
+        || global_bindings_p () < 0 || contains_placeholder_p (size))
+      return size;
+  
++ #ifdef GPC
++   if (! size_volatile)
++     size = save_expr (size);
++ #else /* not GPC */
+    size = save_expr (size);
++ #endif
+  
+    if (global_bindings_p ())
+      {
+*************** variable_size (size)
+*** 119,125 ****
+--- 142,152 ----
+         Also, we would like to pass const0_rtx here, but don't have it.  */
+      expand_expr (size, expand_expr (integer_zero_node, NULL_PTR, VOIDmode, 0),
+  		 VOIDmode, 0);
++ #ifdef GPC
++   else if (! size_volatile)
++ #else /* not GPC */
+    else
++ #endif
+      pending_sizes = tree_cons (NULL_TREE, size, pending_sizes);
+  
+    return size;
+*************** layout_type (type)
+*** 1040,1045 ****
+--- 1067,1086 ----
+  	abort();
+        else
+  	{
++ #ifdef GPC
++ 	  int alignment = set_alignment ? set_alignment : set_word_size;
++           int lower_bound = TREE_INT_CST_LOW (TYPE_MIN_VALUE (TYPE_DOMAIN (type)));
++           int upper_bound = TREE_INT_CST_LOW (TYPE_MAX_VALUE (TYPE_DOMAIN (type)));
++ 	  int size_in_bits, rounded_size;
++           if (set_alignment)
++             size_in_bits = upper_bound - (lower_bound / alignment) * alignment + 1;
++           else
++ 	    size_in_bits
++               = (TREE_INT_CST_LOW (TYPE_MAX_VALUE (TYPE_DOMAIN (type)))
++ 	         - TREE_INT_CST_LOW (TYPE_MIN_VALUE (TYPE_DOMAIN (type))) + 1);
++ 	  rounded_size
++ 	    = ((size_in_bits + alignment - 1) / alignment) * alignment;
++ #else /* not GPC */
+  #ifndef SET_WORD_SIZE
+  #define SET_WORD_SIZE BITS_PER_WORD
+  #endif
+*************** layout_type (type)
+*** 1049,1054 ****
+--- 1090,1096 ----
+  	       - TREE_INT_CST_LOW (TYPE_MIN_VALUE (TYPE_DOMAIN (type))) + 1);
+  	  int rounded_size
+  	    = ((size_in_bits + alignment - 1) / alignment) * alignment;
++ #endif /* not GPC */
+  	  if (rounded_size > alignment)
+  	    TYPE_MODE (type) = BLKmode;
+  	  else
+*** gcc-2.95.1/gcc/tree.c.orig	Wed Sep 29 19:41:05 1999
+--- gcc-2.95.1/gcc/tree.c	Tue Oct 19 00:04:25 1999
+*************** get_set_constructor_bits (init, buffer, 
+*** 4986,4991 ****
+--- 4986,4998 ----
+    HOST_WIDE_INT domain_min
+      = TREE_INT_CST_LOW (TYPE_MIN_VALUE (TYPE_DOMAIN (TREE_TYPE (init))));
+    tree non_const_bits = NULL_TREE;
++ 
++ #ifdef GPC
++   /* Align the set.  */
++   if (set_alignment)
++     domain_min -= domain_min % set_alignment;
++ #endif /* GPC */
++ 
+    for (i = 0; i < bit_size; i++)
+      buffer[i] = 0;
+  
+*************** get_set_constructor_bytes (init, buffer,
+*** 5038,5045 ****
+--- 5045,5056 ----
+       int wd_size;
+  {
+    int i;
++ #ifdef GPC
++   int bit_size = wd_size * BITS_PER_UNIT;
++ #else /* not GPC */
+    int set_word_size = BITS_PER_UNIT;
+    int bit_size = wd_size * set_word_size;
++ #endif /* not GPC */
+    int bit_pos = 0;
+    unsigned char *bytep = buffer;
+    char *bit_buffer = (char *) alloca(bit_size);
+*************** get_set_constructor_bytes (init, buffer,
+*** 5050,5055 ****
+--- 5061,5084 ----
+  
+    for (i = 0; i < bit_size; i++)
+      {
++ #ifdef GPC
++       if (bit_buffer[i])
++ 	{
++           int k = bit_pos / BITS_PER_UNIT;
++           if (WORDS_BIG_ENDIAN)
++             k = set_word_size / BITS_PER_UNIT - 1 - k;
++ 	  if (set_words_big_endian)
++ 	    bytep[k] |= (1 << (BITS_PER_UNIT - 1 - bit_pos % BITS_PER_UNIT));
++ 	  else
++ 	    bytep[k] |= 1 << (bit_pos % BITS_PER_UNIT);
++ 	}
++       bit_pos++;
++       if (bit_pos >= set_word_size)
++ 	{
++           bit_pos = 0;
++           bytep += set_word_size / BITS_PER_UNIT;
++         }
++ #else /* not GPC */
+        if (bit_buffer[i])
+  	{
+  	  if (BYTES_BIG_ENDIAN)
+*************** get_set_constructor_bytes (init, buffer,
+*** 5060,5065 ****
+--- 5089,5095 ----
+        bit_pos++;
+        if (bit_pos >= set_word_size)
+  	bit_pos = 0, bytep++;
++ #endif /* not GPC */
+      }
+    return non_const_bits;
+  }
+*** gcc-2.95.1/gcc/tree.h.orig	Mon Oct 18 12:19:46 1999
+--- gcc-2.95.1/gcc/tree.h	Mon Oct 18 12:36:04 1999
+*************** extern int maximum_field_alignment;
+*** 1630,1635 ****
+--- 1630,1643 ----
+  /* If non-zero, the alignment of a bitstring or (power-)set value, in bits. */
+  extern int set_alignment;
+  
++ #ifdef GPC
++ /* The word size of a bitstring or (power-)set value, in bits.  */
++ extern int set_word_size;
++ 
++ /* If non-zero, bits in (power-)sets start with the highest bit.  */
++ extern int set_words_big_endian;
++ #endif /* GPC */
++ 
+  /* Concatenate two lists (chains of TREE_LIST nodes) X and Y
+     by making the last node in X point to Y.
+     Returns X, except if X is 0 returns Y.  */
+*** gcc-2.95.1/gcc/tree.def.orig	Mon May 17 09:21:12 1999
+--- gcc-2.95.1/gcc/tree.def	Tue Oct 26 04:16:43 1999
+*************** DEFTREECODE (WITH_CLEANUP_EXPR, "with_cl
+*** 490,528 ****
+  DEFTREECODE (CLEANUP_POINT_EXPR, "cleanup_point_expr", 'e', 1)
+  
+  /* The following two codes are used in languages that have types where
+!    the position and/or sizes of fields vary from object to object of the
+!    same type, i.e., where some other field in the object contains a value
+!    that is used in the computation of another field's offset or size.
+! 
+!    For example, a record type with a discriminant in Ada is such a type.
+!    This mechanism is also used to create "fat pointers" for unconstrained
+!    array types in Ada; the fat pointer is a structure one of whose fields is
+!    a pointer to the actual array type and the other field is a pointer to a
+!    template, which is a structure containing the bounds of the array.  The
+!    bounds in the type pointed to by the first field in the fat pointer refer
+!    to the values in the template.
+! 
+!    These "self-references" are doing using a PLACEHOLDER_EXPR.  This is a
+!    node that will later be replaced with the object being referenced.  Its type
+!    is that of the object and selects which object to use from a chain of
+!    references (see below).
+! 
+!    When we wish to evaluate a size or offset, we check it is contains a
+!    placeholder.  If it does, we construct a WITH_RECORD_EXPR that contains
+!    both the expression we wish to evaluate and an expression within which the
+!    object may be found.  The latter expression is the object itself in
+!    the simple case of an Ada record with discriminant, but it can be the
+!    array in the case of an unconstrained array.
+! 
+!    In the latter case, we need the fat pointer, because the bounds of the
+!    array can only be accessed from it.  However, we rely here on the fact that
+!    the expression for the array contains the dereference of the fat pointer
+!    that obtained the array pointer.
+  
+     Accordingly, when looking for the object to substitute in place of
+     a PLACEHOLDER_EXPR, we look down the first operand of the expression
+!    passed as the second operand to WITH_RECORD_EXPR until we find something
+!    of the desired type or reach a constant.  */
+  
+  /* Denotes a record to later be supplied with a WITH_RECORD_EXPR when
+     evaluating this expression.  The type of this expression is used to
+--- 490,547 ----
+  DEFTREECODE (CLEANUP_POINT_EXPR, "cleanup_point_expr", 'e', 1)
+  
+  /* The following two codes are used in languages that have types where
+!    some field in an object of the type contains a value that is used in
+!    the computation of another field's offset or size and/or the size of
+!    the type.  The positions and/or sizes of fields can vary from object
+!    to object of the same type or even for one and the same object within
+!    its scope.
+! 
+!    Record types with discriminants in Ada or schema types in Pascal are
+!    examples of such types.  This mechanism is also used to create "fat
+!    pointers" for unconstrained array types in Ada; the fat pointer is a
+!    structure one of whose fields is a pointer to the actual array type
+!    and the other field is a pointer to a template, which is a structure
+!    containing the bounds of the array.  The bounds in the type pointed
+!    to by the first field in the fat pointer refer to the values in the
+!    template.
+! 
+!    When you wish to construct such a type you need "self-references"
+!    that allow you to reference the object having this type from the
+!    TYPE node, i.e. without having a variable instantiating this type.
+! 
+!    Such a "self-references" is done using a PLACEHOLDER_EXPR.  This is
+!    a node that will later be replaced with the object being referenced.
+!    Its type is that of the object and selects which object to use from
+!    a chain of references (see below).  No other slots are used in the
+!    PLACEHOLDER_EXPR.
+! 
+!    For example, if your type FOO is a RECORD_TYPE with a field BAR,
+!    and you need the value of <variable>.BAR to calculate TYPE_SIZE
+!    (FOO), just substitute <variable> above with a PLACEHOLDER_EXPR
+!    whose TREE_TYPE is FOO.  Then construct your COMPONENT_REF with
+!    the PLACEHOLDER_EXPR as the first operand (which has the correct
+!    type).  Later, when the size is needed in the program, the back-end
+!    will find this PLACEHOLDER_EXPR and generate code to calculate the
+!    actual size at run-time.  In the following, we describe how this
+!    calculation is done.
+! 
+!    When we wish to evaluate a size or offset, we check whether it
+!    contains a PLACEHOLDER_EXPR.  If it does, we construct a
+!    WITH_RECORD_EXPR that contains both the expression we wish to
+!    evaluate and an expression within which the object may be found.
+!    The latter expression is the object itself in the simple case of an
+!    Ada record with discriminant, but it can be the array in the case of
+!    an unconstrained array.
+! 
+!    In the latter case, we need the fat pointer, because the bounds of
+!    the array can only be accessed from it.  However, we rely here on the
+!    fact that the expression for the array contains the dereference of
+!    the fat pointer that obtained the array pointer.
+  
+     Accordingly, when looking for the object to substitute in place of
+     a PLACEHOLDER_EXPR, we look down the first operand of the expression
+!    passed as the second operand to WITH_RECORD_EXPR until we find
+!    something of the desired type or reach a constant.  */
+  
+  /* Denotes a record to later be supplied with a WITH_RECORD_EXPR when
+     evaluating this expression.  The type of this expression is used to

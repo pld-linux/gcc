@@ -1,0 +1,30 @@
+# DP: set the default architecture to i386; even if gcc is configured
+# DP: with i386-linux, it builds with Pentium instructions, tuned for i386.
+
+From: Joel Klecker <jk@espy.org>
+To: Matthias Klose <doko@cs.tu-berlin.de>
+Subject: Re: gcc: forwarded message from Markus F.X.J. Oberhumer
+Date: Wed, 11 Aug 1999 08:48:54 -0700
+
+Found it, and fixed it.
+
+--- gcc/config/i386/i386.c~	Sat Aug 14 19:35:24 1999
++++ gcc/config/i386/i386.c	Sat Aug 14 19:37:00 1999
+@@ -291,7 +291,7 @@
+ 
+   if (ix86_arch_string == 0)
+     {
+-      ix86_arch_string = PROCESSOR_PENTIUM_STRING;
++      ix86_arch_string = PROCESSOR_DEFAULT_STRING;
+       if (ix86_cpu_string == 0)
+ 	ix86_cpu_string = PROCESSOR_DEFAULT_STRING;
+     }
+@@ -308,7 +308,7 @@
+   if (i == ptt_size)
+     {
+       error ("bad value (%s) for -march= switch", ix86_arch_string);
+-      ix86_arch_string = PROCESSOR_PENTIUM_STRING;
++      ix86_arch_string = PROCESSOR_DEFAULT_STRING;
+       ix86_arch = PROCESSOR_DEFAULT;
+     }
+ 

@@ -1,0 +1,153 @@
+# DP: Make bootstrap: restartable at any point
+# DP: From: Donn Terry <donn@interix.com>
+
+Make bootstrap: restartable at any point.
+
+This is in response to a discussion on this topic.  This is "take 2"          |
+which should work with parallel builds, though I haven't tested that.         |
+
+When doing a make bootstrap, it's hard to know (at least when
+not throughly versed in the process details) how to restart
+after making a fix.  In general, retyping "make bootstrap"
+will do the wrong thing (particularly if the host and target
+compilers object files are incompatible!)
+
+This change keeps track of the stages completed.  The old 
+bootstrap2[234] (and *-lean) targets are rewritten, but work the
+same.
+
+I've tested this by doing a make bootstrap (on CVS sources as of              |
+last night) and by typing 'make bootstrap' after it's done,                   |
+in which case it thinks a moment and does nothing. (Which is exactly
+the right answer.)
+
+I've also done a complete regression, with no surprises.                      |
+
+I tested whether stopping/restarting at a few arbitrary points along the
+way works with older sources, but haven't tested it real recently,
+except to do a ^C halfway through a testbuild at one point.                   |
+Again, if it works at all, it should work as well as it ever did.
+I specficially did test it during the period where make bootstrap
+wasn't succeeding for me, and it helped a LOT in being able to pick up
+where I left off.  
+
+An interesting side-effect: make bootstrap-lean after a make bootstrap        |
+JUST cleans out stage1, with no unwanted consequences.                        |
+
+
+Fri May 28 15:27:02 1999  Donn Terry (donn@interix.com)
+	* Makefile.in: restructure bootstrap stages to allow 
+	clean restart after failure.
+
+diff -urP egcs.source.old/gcc/Makefile.in egcs.source/gcc/Makefile.in
+--- egcs.source.old/gcc/Makefile.in	Sun May 23 13:39:21 1999
++++ egcs.source/gcc/Makefile.in	Thu May 27 16:59:42 1999
+@@ -2360,6 +2360,8 @@ clean: mostlyclean intl.clean lang.clean
+ 	  rm -rf `echo $(MULTILIB_OPTIONS) | sed -e 's/\// /g'`; \
+ 	fi ; fi
+ 	-rm -fr stage1 stage2 stage3 stage4
++	-rm -f boot_stage_a boot_stage_b boot_stage_c boot_stage_d
++	-rm -f boot_stage_e boot_stage_f
+ 
+ # Delete all files that users would normally create
+ # while building and installing GCC.
+@@ -2924,33 +2926,83 @@ diff:
+ 	  $(LANG_DIFF_EXCLUDES) \
+ 	  gcc-$(oldversion) gcc-$(version) &gt; gcc-$(oldversion)-$(version).diff
+ 
+-bootstrap bootstrap-lean: force
++
+ # Only build the C compiler for stage1, because that is the only one that
+ # we can guarantee will build with the native compiler, and also it is the
+ # only thing useful for building stage2.
+-	$(MAKE) CC="$(CC)" libdir=$(libdir) LANGUAGES="$(BOOT_LANGUAGES)"
+-	$(MAKE) stage1
++boot_stage_a:
++	+$(MAKE) CC="$(CC)" libdir=$(libdir) LANGUAGES="$(BOOT_LANGUAGES)"
++	touch boot_stage_a
++	echo ---------------------- stage a complete ---------------------
++
++boot_stage_b:
++	+$(MAKE) stage1
++	touch boot_stage_b
++	echo ---------------------- stage b complete ---------------------
++
+ # This used to define ALLOCA as empty, but that would lead to bad results
+ # for a subsequent `make install' since that would not have ALLOCA empty.
+ # To prevent `make install' from compiling alloca.o and then relinking cc1
+ # because alloca.o is newer, we permit these recursive makes to compile
+ # alloca.o.  Then cc1 is newer, so it won't have to be relinked.
+-	$(MAKE) CC="stage1/xgcc$(exeext) -Bstage1/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage1/ LANGUAGES="$(LANGUAGES)"
+-	$(MAKE) stage2
+-	-if test $@ = bootstrap-lean; then rm -rf stage1; else true; fi
+-	$(MAKE) CC="stage2/xgcc$(exeext) -Bstage2/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage2/ LANGUAGES="$(LANGUAGES)"
++boot_stage_c:
++	+$(MAKE) CC="stage1/xgcc$(exeext) -Bstage1/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage1/ LANGUAGES="$(LANGUAGES)"
++	touch boot_stage_c
++	echo ---------------------- stage c complete ---------------------
+ 
+-bootstrap2 bootstrap2-lean: force
+-	$(MAKE) CC="stage1/xgcc$(exeext) -Bstage1/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage1/ LANGUAGES="$(LANGUAGES)"
+-	$(MAKE) stage2
+-	-if test $@ = bootstrap2-lean; then rm -rf stage1; else true; fi
+-	$(MAKE) CC="stage2/xgcc$(exeext) -Bstage2/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage2/ LANGUAGES="$(LANGUAGES)"
++boot_stage_d:
++	+$(MAKE) stage2
++	touch boot_stage_d
++	echo ---------------------- stage d complete ---------------------
+ 
+-bootstrap3 bootstrap3-lean: force
+-	$(MAKE) CC="stage2/xgcc$(exeext) -Bstage2/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage2/ LANGUAGES="$(LANGUAGES)"
++boot_stage_e:
++	+$(MAKE) CC="stage2/xgcc$(exeext) -Bstage2/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage2/ LANGUAGES="$(LANGUAGES)"
++	touch boot_stage_e
++	echo ---------------------- stage e complete ---------------------
++
++# Only bootstrap4 uses stage f.
++boot_stage_f:
++	+$(MAKE) CC="stage3/xgcc$(exeext) -Bstage3/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage3/ LANGUAGES="$(LANGUAGES)"
++	touch boot_stage_f
++	echo ---------------------- stage f complete ---------------------
++
++boot_clean_stage1:
++	rm -rf stage1
++
++# This next little bit is the way it is for parallel builds.  It's simply
++# a chain of stages which DO have to be done sequentially.
++
++bootstrap_a:              boot_stage_a
++bootstrap_b:  bootstrap_a boot_stage_b
++bootstrap_c:  bootstrap_b boot_stage_c
++bootstrap_d:  bootstrap_c boot_stage_d
++bootstrap_e:  bootstrap_d boot_stage_e
++bootstrap: force bootstrap_e
++
++bootstrap-lean_a:                   boot_stage_a
++bootstrap-lean_b:  bootstrap-lean_a boot_stage_b
++bootstrap-lean_c:  bootstrap-lean_b boot_stage_c
++bootstrap-lean_d:  bootstrap-lean_c boot_stage_d
++bootstrap-lean_e:  bootstrap-lean_d boot_clean_stage1
++bootstrap-lean_f:  bootstrap-lean_e boot_stage_e
++bootstrap-lean: force bootstrap-lean_f
++
++bootstrap2_c:               boot_stage_c
++bootstrap2_d:  bootstrap2_c boot_stage_d
++bootstrap2_e:  bootstrap2_d boot_stage_e
++bootstrap2: force bootstrap2_e
++
++bootstrap2-lean_c:                    boot_stage_c
++bootstrap2-lean_d:  bootstrap2-lean_c boot_stage_d
++bootstrap2-lean_e:  bootstrap2-lean_d boot_clean_stage1
++bootstrap2-lean_f:  bootstrap2-lean_e boot_stage_e
++bootstrap2-lean: force bootstrap2-lean_f
++
++bootstrap3 bootstrap3-lean: force boot_stage_e
++
++# Only bootstrap4 uses stage f.
++bootstrap4 bootstrap4-lean: force boot_stage_f
+ 
+-bootstrap4 bootstrap4-lean: force
+-	$(MAKE) CC="stage3/xgcc$(exeext) -Bstage3/ -B$(build_tooldir)/bin/" CFLAGS="$(WARN_CFLAGS) $(BOOT_CFLAGS)" LDFLAGS="$(BOOT_LDFLAGS)" libdir=$(libdir) STAGE_PREFIX=stage3/ LANGUAGES="$(LANGUAGES)"
+ 
+ # Compare the object files in the current directory with those in the
+ # stage2 directory.

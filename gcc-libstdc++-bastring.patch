@@ -1,0 +1,46 @@
+/*
+From: Richard Kettlewell <rjk@sfere.greenend.org.uk>
+To: submit@bugs.debian.org
+Subject: Bug#46550: basic_string<wchar_t> can't be instantiated
+Date: Sun, 3 Oct 1999 22:49:50 +0100
+
+Package: libstdc++2.9-dev
+Version: 2.91.60-5
+
+Hi,
+
+This ought to work, but it doesn't:
+
+------------------------------------------------------------------------
+lyonesse$ cat t.cc
+*/
+
+#include <string>
+
+template basic_string<wchar_t>;
+
+/*
+lyonesse$ c++ -c t.cc
+/usr/include/g++-2/std/bastring.h: In method `const __wchar_t * basic_string<__wchar_t,string_char_traits<__wchar_t>,__default_alloc_template<true,0> >::c_str<__wchar_t, string_char_traits<__wchar_t>, alloc>() const':
+t.cc:3:   instantiated from here
+/usr/include/g++-2/std/bastring.h:301: return to `const __wchar_t *' from `char *'
+lyonesse$ 
+------------------------------------------------------------------------
+
+# DP: Here is a patch to /usr/include/g++-2/std/bastring.h which makes it
+# DP: work for me (though note that I have not tested the c_str() method as
+# DP: such):
+
+------------------------------------------------------------------------
+--- libstdc++/std/bastring.h.orig	Sun Oct  3 22:32:06 1999
++++ libstdc++/std/bastring.h	Sun Oct  3 22:36:17 1999
+@@ -332,7 +332,8 @@
+ 
+ public:
+   const charT* c_str () const
+-    { if (length () == 0) return ""; terminate (); return data (); }
++    { const charT* null_str = ""; 
++      if (length () == 0) return null_str; terminate (); return data (); }
+   void resize (size_type n, charT c);
+   void resize (size_type n)
+     { resize (n, eos ()); }
