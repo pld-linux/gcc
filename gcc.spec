@@ -582,10 +582,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-BUILD_LANG="c,c++,f77,gcov,objc,ksi"
-%{!?_without_ada:BUILD_LANG=$BUILD_LANG+",ada";export BUILD_LANG}
-%{!?_without_java:BUILD_LANG=$BUILD_LANG+",java";export BUILD_LANG}
-
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
@@ -595,7 +591,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-        --enable-languages="$BUILD_LANG" \
+        --enable-languages="c,c++,f77,gcov,objc,ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -947,7 +943,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
-# Bohem-GC - it should be here? I think not but...
 %{_includedir}/gc*.h
 
 %files -n libgcj-static
