@@ -3,7 +3,6 @@
 #		- http://gcc.gnu.org/PR11203
 #		- http://gcc.gnu.org/PR18648
 #		- disable internal zlib usage
-#		- obsoletes
 #		- bconds
 #		- translations from gcc.spec:HEAD
 #
@@ -45,6 +44,11 @@ Requires:	binutils >= 2:2.15.94.0.1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 Provides:	gcc(ada)
+Obsoletes:	cpp
+Obsoletes:	egcs-cpp
+Obsoletes:	gcc-cpp
+Obsoletes:	gcc-ksi
+Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -70,6 +74,7 @@ z GCC, trzeba zainstalowaæ odpowiedni podpakiet.
 Summary:	Shared gcc library
 Summary(pl):	Biblioteka gcc
 Group:		Libraries
+Obsoletes:	libgcc1
 
 %description -n libgcc
 Shared gcc library.
@@ -111,6 +116,8 @@ Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgnat = %{epoch}:%{version}-%{release}
+Obsoletes:	gcc-gnat
+Obsoletes:	gnat-devel
 
 %description ada
 This package adds experimental support for compiling Ada programs.
@@ -123,6 +130,8 @@ Adzie.
 Summary:	Ada standard libraries
 Summary(pl):	Biblioteki standardowe dla Ady
 Group:		Development/Libraries
+Obsoletes:	gnat
+Obsoletes:	libgnat1
 
 %description -n libgnat
 This package contains shared libraries needed to run programs written
@@ -136,6 +145,7 @@ napisanych w Adzie.
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Group:		Development/Libraries
+Obsoletes:	gnat-static
 
 %description -n libgnat-static
 This package contains static libraries for programs written in Ada.
@@ -167,6 +177,8 @@ standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 Summary:	GNU C++ library
 Summary(pl):	Biblioteki GNU C++
 Group:		Libraries
+Obsoletes:	libg++
+Obsoletes:	libstdc++3
 
 %description -n libstdc++
 This is the GNU implementation of the standard C++ libraries, along
@@ -184,6 +196,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+Obsoletes:	libg++-devel
+Obsoletes:	libstdc++3-devel
 
 %description -n libstdc++-devel
 This is the GNU implementation of the standard C++ libraries. This
@@ -212,6 +226,8 @@ Summary:	Fortran 95 support for gcc
 Summary(pl):	Obs³uga Fortranu 95 dla gcc
 Group:		Development/Languages/Fortran
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
+Obsoletes:	egcs-g77
+Obsoletes:	gcc-g77
 
 %description fortran
 This package adds support for compiling Fortran 95 programs with the
@@ -225,6 +241,7 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 95.
 Summary:	Fortran 95 Libraries
 Summary(pl):	Biblioteki Fortranu 95
 Group:		Development/Libraries
+Obsoletes:	libg2c
 
 %description -n libgfortran
 Fortran 95 Libraries.
@@ -237,6 +254,7 @@ Summary:	Static Fortran 95 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 95
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
+Obsoletes:	libg2c-static
 
 %description -n libgfortran-static
 Static Fortran 95 Libraries.
@@ -269,6 +287,7 @@ Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
 Requires:	zlib
+Obsoletes:	libgcj3
 
 %description -n libgcj
 Java Class Libraries.
@@ -282,6 +301,7 @@ Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
 Requires:	%{name}-java = %{epoch}:%{version}-%{release}
 Requires:	libgcj = %{epoch}:%{version}-%{release}
+Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
 Development files for Java Class Libraries.
@@ -367,6 +387,8 @@ Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
+Obsoletes:	egcc-objc
+Obsoletes:	egcs-objc
 
 %description objc
 This package adds Objective C support to the GNU Compiler Collection.
@@ -384,6 +406,7 @@ standardowej biblioteki objc (która znajduje siê w osobnym pakiecie).
 Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
+Obsoletes:	libobjc1
 
 %description -n libobjc
 Objective C Libraries.
