@@ -71,7 +71,8 @@ Patch57:	gcc32-typeof-skip-eval.patch
 
 Patch58:	gcc32-locale_in_monetary_members.patch
 Patch59:	gcc32-locale_in_ctype_members.patch
-Patch60:	gcc32-libstdc++-glibc.patch 
+Patch60:	gcc32-locale_in_ctype_members_header.patch
+Patch61:	gcc32-libstdc++-glibc.patch
 
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
@@ -568,6 +569,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch58
 %patch59 
 %patch60
+%patch61
 
 %build
 # cd gcc && autoconf; cd ..
