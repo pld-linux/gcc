@@ -393,10 +393,6 @@ TEXCONFIG=false ../configure \
 
 PATH=$PATH:/sbin:%{_sbindir}
 
-# workaround
-sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' Makefile > Makfefile.
-mv -f Makfefile. Makefile
-
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
@@ -414,6 +410,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} \
+	slibdir=$RPM_BUILD_ROOT%{_slibdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
