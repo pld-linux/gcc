@@ -14,20 +14,20 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.3
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
+Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-gcc-page.c.patch
-Patch6:		%{name}-info.patch
-Patch7:		%{name}-ada-link-new-libgnat.patch
+Patch6:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -575,12 +575,13 @@ e controle da numeração das linhas do programa.
 %setup -q -a1 -n %{name}-%{GCC_VERSION}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch7 -p1
+%patch6 -p1
 
 %patch10 -p1
 %patch11
@@ -618,8 +619,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45
 %patch46
 %patch47
-
-%patch6 -p1
 
 perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
 
