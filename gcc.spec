@@ -1,19 +1,21 @@
-%define		GCC_VERSION	3.0.4
-%define		STDC_VERSION	3.0.4
-%define		GCJ_VERSION	3.0.4
+%define		SNAP		20020218
+%define		DASHED_SNAP	2002-02-18
+%define		GCC_VERSION	3.1
+%define		STDC_VERSION	3.1
+%define		GCJ_VERSION	3.1
 %define		KSI_VERSION	pre46
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	0.%{SNAP}
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.gz
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-Patch0:		gcc-DESTDIR.patch
+Patch0:		gcc-slibdir.patch
 Patch1:		gcc-paths.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -83,9 +85,10 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Requires:	%{name} = %{version}
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
+Requires:	libobjc = %{GCC_VERSION}
+Requires:	gcc = %{GCC_VERSION}
 
 %description objc
 This package adds Objective C support to the GNU C compiler. Objective
@@ -115,6 +118,37 @@ C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
 sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
 kitaplýðý bu pakette yer almaz.
 
+%package -n libobjc
+Summary:	Objective C Libraries
+Summary(pl):	Biblioteki Obiektowego C
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+
+%description -n libobjc
+Objective C Libraries
+
+%description -n libobjc -l pl
+Biblioteki Obiektowego C
+
+%package -n libobjc-static
+Summary:	Static Objective C Libraries
+Summary(pl):	Statyczne Biblioteki Obiektowego C
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+Epoch:		2
+Requires:	libobjc = %{GCC_VERSION}
+
+%description -n libobjc-static
+Static Objective C Libraries
+
+%description -l pl -n libobjc-static
+Statyczne Obiektowego C
+
 %package g77
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
@@ -122,6 +156,7 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-g77
+Requires:	libg2c = %{GCC_VERSION}
 
 %description g77
 This apckage adds support for compiling Fortran 77 programs with the
@@ -130,6 +165,37 @@ GNU compiler.
 %description -l pl g77
 Ten pakiet jest wsparciem Fortran 77 dla kompilatora gcc. Jest
 potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
+
+%package -n libg2c
+Summary:	Fortran 77 Libraries
+Summary(pl):	Biblioteki Fortranu 77
+Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
+
+%description -n libg2c
+Fortran 77 Libraries
+
+%description -n libg2c -l pl
+Biblioteki Fortranu 77
+
+%package -n libg2c-static
+Summary:	Static Fortran 77 Libraries
+Summary(pl):	Statyczne Biblioteki Fortranu 77
+Group:		Development/Libraries
+Group(de):	Entwicklung/Libraries
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
+Epoch:		2
+Requires:	libg2c = %{GCC_VERSION}
+
+%description -n libg2c-static
+Static Fortran 77 Libraries
+
+%description -l pl -n libg2c-static
+Statyczne Fortranu 77
 
 %package chill
 Summary:	CHILL support for gcc
@@ -373,7 +439,7 @@ Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Requires:	%{name} = %{GCC_VERSION}
+Requires:	gcc = %{GCC_VERSION}
 
 %description ksi
 This package adds experimental support for compiling Ksi programs
@@ -436,7 +502,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} \
-	DESTDIR=$RPM_BUILD_ROOT
+	slibdir=$RPM_BUILD_ROOT/lib
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo .so gcc.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
@@ -457,6 +523,8 @@ cd ..
 gzip -9nf READ* ChangeLog
 gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 gzip -9nf libjava/doc/cni.sgml
+
+%find_lang %{name}
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -500,11 +568,15 @@ gzip -9nf libjava/doc/cni.sgml
 %postun -p /sbin/ldconfig -n libstdc++
 %post   -p /sbin/ldconfig -n libgcj
 %postun -p /sbin/ldconfig -n libgcj
+%post   -p /sbin/ldconfig -n libg2c
+%postun -p /sbin/ldconfig -n libg2c
+%post   -p /sbin/ldconfig -n libobjc
+%postun -p /sbin/ldconfig -n libobjc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc READ* ChangeLog.gz
 %dir %{_libdir}/gcc-lib
@@ -533,12 +605,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/proto.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/mmintrin.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdarg.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdbool.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stddef.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/syslimits.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/varargs.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/xmmintrin.h
 
 %files c++
 %defattr(644,root,root,755)
@@ -555,10 +628,15 @@ rm -rf $RPM_BUILD_ROOT
 %files objc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.a
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.so*
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.la
+%attr(755,root,root) %{_libdir}/libobjc.so
+%attr(755,root,root) %{_libdir}/libobjc.la
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
+
+%files -n libobjc
+%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+
+%files -n libobjc-static
+%{_libdir}/libobjc.a
 
 %files g77
 %defattr(644,root,root,755)
@@ -566,10 +644,17 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/libg2c.a
+%attr(755,root,root) %{_libdir}/libg2c.la
+%attr(755,root,root) %{_libdir}/libg2c.so
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
+
+%files -n libg2c
+%attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
+
+%files -n libg2c-static
+%{_libdir}/libg2c.a
 
 %files ksi
 %doc gcc/ksi/*.gz gcc/ksi/t/*.gz
@@ -596,11 +681,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
+%attr(755,root,root) %{_bindir}/rmi*
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 %{_infodir}/gcj*
+%{_mandir}/man1/jcf-*
+%{_mandir}/man1/jv-*
+%{_mandir}/man1/gij*
+%{_mandir}/man1/gcj*
 
 %files -n libgcj
 %defattr(644,root,root,755)
