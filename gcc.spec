@@ -186,24 +186,6 @@ Static Fortran 77 Libraries
 %description -l pl -n libg2c-static
 Statyczne Fortranu 77
 
-%package chill
-Summary:	CHILL support for gcc
-Summary(pl):	Wspomoganie CHILL dla gcc
-Group:		Development/Languages
-Version:        %{GCC_VERSION}
-Requires:	%{name} = %{version}
-
-%description chill
-This package adds support for compiling CHILL programs with the GNU
-compiler.
-
-Chill is the "CCITT High-Level Language", where CCITT is the old name
-for what is now ITU, the International Telecommunications Union. It is
-is language in the Modula2 family, and targets many of the same
-applications as Ada (especially large embedded systems). Chill was
-never used much in the United States, but is still being used in
-Europe, Brazil, Korea, and other places.
-
 %package java
 Summary:	Java support for gcc
 Summary(pl):	Wspomoganie Java dla gcc
@@ -584,12 +566,6 @@ gzip -9nf gcc/objc/READ*
 %postun g77
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%post chill
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%postun chill
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
 %post java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
@@ -738,18 +714,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgnat
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgna*-*so
-
-%ifarch no_longer_supported_by_gcc_team
-%files chill
-%defattr(644,root,root,755)
-%doc gcc/ch/chill.brochure.gz
-
-%attr(755,root,root) %{_bindir}/chill
-%{_infodir}/chill*
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1chill
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/chill*.o
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/libchill.a
-%endif
 
 %files java
 %defattr(644,root,root,755)
