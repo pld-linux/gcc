@@ -803,14 +803,14 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
 	$RPM_BUILD_ROOT%{_libdir}/
 # check if symlink to be made is valid
-test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
-ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
-ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
-ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+#test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
+#ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
+#ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
+#ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+#ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -967,6 +967,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_libdir}*/libsupc++.a
 %{_mandir}/man1/g++.1*
+%{_libdir}/logging.properties
 %lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
@@ -1067,9 +1068,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/grepjar
-%attr(755,root,root) %{_bindir}/*-gcj
+%attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
+%{_pkgconfigdir}/libgcj.pc
 %{_infodir}/gcj*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
@@ -1150,15 +1152,15 @@ rm -rf $RPM_BUILD_ROOT
 %ifnarch ppc
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
-%{_libdir}/gcc/*/*/adalib/Makefile.adalib
+##%{_libdir}/gcc/*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
 %attr(755,root,root) %{_libdir}/libgnat*.so
 %attr(755,root,root) %{_libdir}/libgnarl*.so
 
-%files -n libgnat
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*.so.1
+##%files -n libgnat
+##%defattr(644,root,root,755)
+##%attr(755,root,root) %{_libdir}/libgna*.so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
