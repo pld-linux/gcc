@@ -19,6 +19,58 @@ Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-march-i686-fix.patch
 Patch6:		%{name}-loop-ice.patch
+# -- stolen patches from RH --
+Patch10:	gcc32-ada-link.patch
+Patch11:	gcc32-attr-visibility.patch
+Patch12:	gcc32-attr-visibility2.patch
+Patch13:	gcc32-attr-visibility3.patch
+Patch14:	gcc32-attr-visibility4.patch
+Patch15:	gcc32-attr-visibility5.patch
+Patch16:	gcc32-boehm-gc-libs.patch
+Patch17:	gcc32-bogus-inline.patch
+Patch18:	gcc32-c++-nrv-test.patch
+Patch19:	gcc32-c++-pretty_function.patch
+Patch20:	gcc32-c++-tail-pad.patch
+Patch21:	gcc32-c++-tail-pad2.patch
+Patch22:	gcc32-c++-tsubst-asm.patch
+Patch23:	gcc32-cfg-eh.patch
+Patch24:	gcc32-debug-pr7241.patch
+Patch25:	gcc32-doc-gcov.patch 
+Patch26:	gcc32-duplicate-decl.patch
+Patch27:	gcc32-dwarf2-pr6381.patch 
+Patch28:	gcc32-dwarf2-pr6436-test.patch
+Patch29:	gcc32-fde-merge-compat.patch 
+Patch30:	gcc32-fold-const-associate.patch
+Patch31:	gcc32-fold-const2.patch
+Patch32:	gcc32-hard-reg-sharing.patch
+Patch33:	gcc32-hard-reg-sharing2.patch 
+Patch34:	gcc32-i386-default-momit-leaf-frame-pointer.patch
+Patch35:	gcc32-i386-memtest-test.patch 
+Patch36:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
+Patch37:	gcc32-i386-pic-label-thunk.patch
+Patch38:	gcc32-i386-pr7242.patch
+Patch39:	gcc32-i386-profile-olfp.patch
+Patch40:	gcc32-inline-label.patch 
+Patch41:	gcc32-java-no-rpath.patch
+Patch42:	gcc32-loop-prefetch.patch 
+Patch43:	gcc32-pr6842.patch 
+Patch44:	gcc32-rh69989.patch
+Patch45:	gcc32-sparc-sll1.patch
+Patch46:	gcc32-test-rh65771.patch 
+Patch47:	gcc32-test-rotate.patch  
+Patch48:	gcc32-tls-dwarf2.patch 
+Patch49:	gcc32-tls.patch      
+Patch50:	gcc32-tls2.patch 
+Patch51:	gcc32-tls3.patch
+Patch52:	gcc32-tls4.patch 
+Patch53:	gcc32-tls5.patch    
+#Patch54:	gcc32-tree-code.patch      
+#Patch55:	gcc32-trunc_int_for_mode.patch 
+Patch56:	gcc32-typeof-asm.patch  
+Patch57:	gcc32-typeof-skip-eval.patch       
+Patch58:	gcc32-locale_in_monetary_members.patch
+Patch59:	gcc32-locale_in_ctype_members.patch
+ 
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -463,6 +515,56 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch5 -p0
 %endif
 %patch6 -p1
+%patch10 
+%patch11 
+%patch12 
+%patch13 
+%patch14 
+%patch15 
+%patch16 
+%patch17 
+%patch18 
+%patch19 
+%patch20 
+%patch21 
+%patch22 
+%patch23 
+%patch24 
+%patch25 
+%patch26 
+%patch27 
+%patch28 
+%patch29 
+%patch30 
+%patch31 
+%patch32 
+%patch33 
+%patch34 
+%patch35 
+%patch36 
+%patch37 
+%patch38 
+%patch39 
+%patch40 
+%patch41 
+%patch42 
+%patch43 
+%patch44 
+%patch45 
+%patch46 
+%patch47 
+%patch48 
+%patch49 
+%patch50 
+%patch51 
+%patch52 
+%patch53 
+#%patch54 
+#%patch55 
+%patch56 
+%patch57 
+%patch58
+%patch59 
 
 %build
 # cd gcc && autoconf; cd ..
@@ -544,12 +646,12 @@ sed -e "s#^libdir='/usr/lib'#libdir='$LIBSTDC'#g" $RPM_BUILD_ROOT%{_libdir}/libs
  > $RPM_BUILD_ROOT%{_libdir}/libstdc++.la
 
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
-rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so
+rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
 (cd $RPM_BUILD_ROOT%{_libdir} && \
- ln -s libgnat-*so libgnat.so && \
- ln -s libgnarl-*so libgnarl.so)
+ ln -s libgnat-*so.1 libgnat.so.1 && \
+ ln -s libgnarl-*so.1 libgnarl.so.1)
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
@@ -835,12 +937,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat.so
-%attr(755,root,root) %{_libdir}/libgnarl.so
+%attr(755,root,root) %{_libdir}/libgnat.so.1
+%attr(755,root,root) %{_libdir}/libgnarl.so.1
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*-*so
+%attr(755,root,root) %{_libdir}/libgna*-*so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
