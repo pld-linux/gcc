@@ -258,6 +258,7 @@ Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
 Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
+Obsoletes:	fastjar
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
