@@ -8,7 +8,7 @@ Release:	1
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
 Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
@@ -16,6 +16,7 @@ Patch2:		gcc-pld-linux.patch
 Patch3:		gcc-libstdc++.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
+Obsoletes:	egcs
 Prereq:		/usr/sbin/fix-info-dir
 URL:		http://www.gnu.org/
 BuildRoot:	/tmp/%{name}-%{version}-root
@@ -36,6 +37,7 @@ Summary(tr):	gcc için C++ desteði
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-c++
+Obsoletes:	egcs-c++
 
 %description c++
 This package adds C++ support to the GNU C compiler. It includes support
@@ -74,6 +76,7 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-objc
+Obsoletes:	egcs-objc
 
 %description objc
 This package adds Objective C support to the GNU C compiler. Objective C is
@@ -109,6 +112,7 @@ Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Prereq:		/usr/sbin/fix-info-dir
+Obsoletes:	egcs-g77
 
 %description g77
 This apckage adds support for compiling Fortran 77 programs with the GNU
