@@ -97,7 +97,7 @@ adecuado.
 
 %description -l pl
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
-wyprodukowania szybkiego i stablinego kodu wynikowego.
+wyprodukowania szybkiego i stabilnego kodu wynikowego.
 
 Ten pakiet zawiera kompilator C i pliki wspó³dzielone przez ró¿ne
 czê¶ci kolekcji kompilatorów GNU (GCC). ¯eby u¿ywaæ innego kompilatora
@@ -341,7 +341,7 @@ Java(tm) y su bytecode en código nativo. Para usarlo también va a
 necesitar el paquete libgcj.
 
 %description java -l pl
-Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
+Wsparcie dla kompilowania programów Java(tm) zarówno do bajt-kodu jak i
 do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
 by³o przeprowadziæ kompilacjê.
 
@@ -516,7 +516,7 @@ Static C++ standard library.
 Biblioteca estándar estática de C++.
 
 %description -n libstdc++-static -l pl
-Statycza biblioteka standardowa C++.
+Statyczna biblioteka standardowa C++.
 
 %package -n libffi
 Summary:	Foreign Function Interface library
@@ -538,7 +538,7 @@ programador llame una función cualquiera especificada por una
 descripción de interfaz de llamada en el tiempo de ejecución.
 
 %description -n libffi -l pl
-Biblioteka libffi dostarcza przno¶nego, wysokopoziomowego
+Biblioteka libffi dostarcza przeno¶nego, wysokopoziomowego
 miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
 programi¶cie wywo³ywaæ dowolne funkcje podaj±c konwencjê wywo³ania w
 czasie wykonania.
@@ -716,7 +716,7 @@ como le convenga:
   cada línea.
 
 %description -n cpp -l pl
-Przeprocesor C jest "makro procesorem" który jest automatycznie
+Preprocesor C jest "makro procesorem" który jest automatycznie
 u¿ywany przez kompilator C do obróbki kompilowanego programu przed
 w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
 umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
