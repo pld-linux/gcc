@@ -906,8 +906,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
-%doc ChangeLog.general MAINTAINERS bugs.html faq.html
-%doc gcc/{README.Portability,NEWS,ChangeLog}
+%doc ChangeLog.general MAINTAINERS NEWS bugs.html faq.html
+%doc gcc/{ChangeLog,ONEWS,README.Portability}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
@@ -955,6 +955,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++
 %defattr(644,root,root,755)
+%doc gcc/cp/{ChangeLog,NEWS}
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/*-g++
 %attr(755,root,root) %{_bindir}/c++
@@ -971,6 +972,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
+%doc libstdc++-v3/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}*/libstdc++.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
@@ -999,7 +1001,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with objc}
 %files objc
 %defattr(644,root,root,755)
-%doc gcc/objc/READ*
+%doc gcc/objc/README
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
 %attr(755,root,root) %{_libdir}*/libobjc.so
 %{_libdir}*/libobjc.la
@@ -1011,6 +1013,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libobjc
 %defattr(644,root,root,755)
+%doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}*/libobjc.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
@@ -1026,6 +1029,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files g77
 %defattr(644,root,root,755)
+%doc gcc/f/{BUGS,ChangeLog,NEWS}
 %attr(755,root,root) %{_bindir}/g77
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
@@ -1046,6 +1050,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libg2c
 %defattr(644,root,root,755)
+%doc libf2c/{ChangeLog,README,TODO}
 %attr(755,root,root) %{_libdir}*/libg2c.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
@@ -1061,7 +1066,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with java}
 %files java
 %defattr(644,root,root,755)
-%doc java-doc/*
+%doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
@@ -1087,6 +1092,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj
 %defattr(644,root,root,755)
+%doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
@@ -1128,6 +1134,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libffi
 %defattr(644,root,root,755)
+%doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
 %attr(755,root,root) %{_libdir}/libffi-*.so
 
 %files -n libffi-devel
@@ -1144,6 +1151,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with ada}
 %files ada
 %defattr(644,root,root,755)
+%doc gcc/ada/ChangeLog
 %attr(755,root,root) %{_bindir}/gnat*
 %attr(755,root,root) %{_bindir}/gpr*
 %attr(755,root,root) %{_libdir}/libgnarl*.so
