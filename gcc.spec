@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	6.1
+Release:	6.2
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -12,47 +12,35 @@ Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
 Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
 Source2:	gcov.1
 Patch0:		%{name}-info.patch
-Patch1:		%{name}-libgcj-config.patch
-Patch2:		%{name}-pld-linux.patch
-Patch3:		gcc-libstdc++.patch
-Patch4:		%{name}-bootstrap.patch
-Patch5:		%{name}-cpp-macro-doc.patch
-Patch6:		%{name}-default-arch.patch
-Patch7:		%{name}-cvs-updates.patch.gz
-Patch8:		%{name}-cvs-updates-20000220.patch.gz
-Patch9:		gcc-libstdc++-out-of-mem.patch
-Patch10:	gcc-libstdc++-valarray.patch
-Patch11:	gcc-libstdc++-wstring.patch
-Patch12:	gcc-libstdc++-wall3.patch
-Patch13:	gcc-libstdc++-bastring.patch
-Patch14:	%{name}-manpage.patch
-Patch15:	%{name}-cpp-dos-newlines.patch
-Patch16:	gcc-g++-is-tree.patch
-Patch17:	%{name}-gpc.patch
-Patch18:	%{name}-arm-config.patch
-Patch19:	%{name}-m68k-pic.patch
-Patch20:	%{name}-sparc32-rfi.patch
-Patch21:	%{name}-builtin-apply.patch
-Patch22:	%{name}-ppc-ice.patch
-Patch23:	%{name}-ppc-descriptions.patch
-Patch24:	%{name}-ppc-andrew-dwarf-eh.patch
+Patch1:		%{name}-pld-linux.patch
+Patch2:		%{name}-libstdc++.patch
+Patch3:		%{name}-bootstrap.patch
+Patch4:		%{name}-cpp-macro-doc.patch
+Patch5:		%{name}-default-arch.patch
+Patch6:		%{name}-cvs-updates-20000220.patch.gz
+Patch7:		%{name}-libstdc++-out-of-mem.patch
+Patch8:		%{name}-libstdc++-wstring.patch
+Patch9:		%{name}-libstdc++-wall3.patch
+Patch10:	%{name}-libstdc++-bastring.patch
+Patch11:	%{name}-manpage.patch
+Patch12:	%{name}-cpp-dos-newlines.patch
+Patch13:	%{name}-g++-is-tree.patch
+Patch14:	%{name}-gpc.patch
+Patch15:	%{name}-arm-config.patch
+Patch16:	%{name}-m68k-pic.patch
+Patch17:	%{name}-sparc32-rfi.patch
+Patch18:	%{name}-builtin-apply.patch
+Patch19:	%{name}-gcj-backport.patch
+Patch20:	%{name}-ppc-ice.patch
+Patch21:	%{name}-ppc-descriptions.patch
+Patch22:	%{name}-ppc-andrew-dwarf-eh.patch
 
-Patch25:	gcc-alpha-complex-float.patch
-Patch26:	gcc-alpha-spec.patch
-Patch27:	gcc-aspell.patch
-Patch28:	gcc-combine.patch
-Patch29:	gcc-emit-rtl.patch
-Patch30:	gcc-empty-struct-init.patch
-Patch31:	gcc-gcj-backport.patch
-Patch32:	gcc-gcj-vs-iconv-orig.patch
-Patch33:	gcc-gcj-vs-iconv.patch
-Patch34:	gcc-gpc-updates.patch
-Patch35:	gcc-libg++-update.patch
-Patch36:	gcc-libobjc.patch
-Patch37:	gcc-libstdc++-deque.patch
-Patch38:	gcc-new-cpp.patch
-Patch39:	gcc-objc-testsuite.patch
-Patch40:	gcc-pointer-arith.patch
+Patch23:	%{name}-alpha-complex-float.patch
+Patch24:	%{name}-emit-rtl.patch
+Patch25:	%{name}-empty-struct-init.patch
+Patch26:	%{name}-gcj-vs-iconv.patch
+Patch27:	%{name}-libobjc.patch
+Patch28:	%{name}-pointer-arith.patch
 
 Patch100:	%{name}-glibc-2.2.patch
 Requires:	binutils >= 2.9.1.0.25
@@ -206,8 +194,8 @@ Java programs using the gcc Java compiler (gcj).
 %package libgcj-static
 Summary:	Static java runtime library for gcc
 Group:		Development/Libraries
-Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(fr):	Development/Librairies
 URL:		http://sourceware.cygnus.com/java/
 Requires:	%{name}-libgcj = %{version}
 
@@ -219,8 +207,8 @@ staticly compile your Java programs using the gcc Java compiler (gcj).
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
+Group(pl):	Biblioteki
 Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Obsoletes:	libg++
 
@@ -254,8 +242,8 @@ Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
 Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(fr):	Development/Librairies
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
 Requires:	%{name}-c++
@@ -275,8 +263,8 @@ programowaniu w jêzyku C++.
 Summary:	Static c++ standard library
 Summary(pl):	Biblioeka statyczna c++
 Group:		Development/Libraries
-Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
+Group(fr):	Development/Librairies
 Version:	%{STDC_VERSION}
 Requires:	libstdc++-devel = %{STDC_VERSION}
 
@@ -339,50 +327,48 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q
-%setup -q -a1 -D -T
-mv -f libgcj-%{GCJ_VERSION} libgcj
-mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
+#%setup -q -a1 -D -T
+#mv -f libgcj-%{GCJ_VERSION} libgcj
+#mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+%patch4 -p0
 %patch5 -p0
-%patch6 -p0
-#%patch7 -p1
-%patch8 -p1
+%patch6 -p1
+%patch7 -p0
+%patch8 -p0
 %patch9 -p0
-#%patch10 -p0
+%patch10 -p0
 %patch11 -p0
 %patch12 -p0
-%patch13 -p0
-%patch14 -p0
+%patch13 -p1
+%patch14 -p1
+%ifarch arm
 %patch15 -p0
-%patch16 -p1
-%patch17 -p1
+%endif
+%ifarch m68k
+%patch16 -p0
+%endif
+%ifarch sparc sparc32
+%patch17 -p0
 %patch18 -p0
-%patch19 -p0
+%patch19 -p1
+%endif
+%ifarch ppc
 %patch20 -p0
 %patch21 -p0
 %patch22 -p0
-%patch23 -p0
+%endif
+%ifarch alpha
+%patch23 -p1
+%endif
 %patch24 -p0
-%patch25 -p1
-%patch26 -p1
-#%patch27 -p0
-#%patch28 -p0
-%patch29 -p0
-%patch30 -p0
-%patch31 -p1
-#%patch32 -p0
-%patch33 -p0
-#%patch34 -p0
-#%patch35 -p0
-%patch36 -p0
-%patch37 -p0
-%patch38 -p0
-#%patch39 -p0
-%patch40 -p0
+%patch25 -p0
+%patch26 -p0
+%patch27 -p0
+%patch28 -p0
 #%patch100 -p1
 
 %build
@@ -582,25 +568,25 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcj
 %attr(755,root,root) %{_bindir}/gcjh
 %attr(755,root,root) %{_bindir}/jcf-dump
-%attr(755,root,root) %{_bindir}/jv-convert
+#%attr(755,root,root) %{_bindir}/jv-convert
 %attr(755,root,root) %{_bindir}/jv-scan
 
-%{_libdir}/*.spec
+#%{_libdir}/*.spec
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 
-%files libgcj
-%defattr(644,root,root,755)
+#%files libgcj
+#%defattr(644,root,root,755)
+#
+#%attr(755,root,root) %{_libdir}/lib*gcj*.so
+#%attr(755,root,root) %{_libdir}/lib*gcj*.so.*.*.*
 
-%attr(755,root,root) %{_libdir}/lib*gcj*.so
-%attr(755,root,root) %{_libdir}/lib*gcj*.so.*.*.*
-
-%files libgcj-static
-%defattr(644,root,root,755)
-
-%{_libdir}/lib*gcj*.a
-%{_libdir}/lib*gcj*.la
+#%files libgcj-static
+#%defattr(644,root,root,755)
+#
+#%{_libdir}/lib*gcj*.a
+#%{_libdir}/lib*gcj*.la
 
 %files -n libstdc++
 %defattr(644,root,root,755)
