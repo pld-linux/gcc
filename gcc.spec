@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 #
-%define		snap		20040218
+%define		snap		20040225
 %define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 
@@ -21,7 +21,7 @@ License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	1d6034e9f3a8f7f3f4e36b49b00b7bca
+# Source0-md5:	8d3a36a3032c4d8f3a7528b103d544de
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -1002,6 +1002,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}.0
+%exclude %{_includedir}/c++/%{version}.0/*/bits/stdc++.h.gch
 %attr(755,root,root) %{_libdir}*/libstdc++.so
 %{_libdir}*/libstdc++.la
 %ifarch ppc
