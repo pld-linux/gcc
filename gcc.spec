@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.3
-Release:	27
+Release:	28
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -267,6 +267,7 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-cpp
+Obsoletes:	gcc-cpp
 
 %description -n cpp
 The C preprocessor is a "macro processor" that is used automatically
