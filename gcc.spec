@@ -724,7 +724,6 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{ix86}
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
-%{_datadir}/gnat
 %{_infodir}/gnat*
 
 %files -n libgnat
