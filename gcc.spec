@@ -31,6 +31,7 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
+Patch4:		%{name}-nodebug.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -754,6 +755,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%{!?debug:%patch4 -p1}
 
 %patch10 -p1
 %patch11
@@ -815,6 +817,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
+	GCJFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
