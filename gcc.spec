@@ -519,6 +519,9 @@ TEXCONFIG=false \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
 	--enable-cmath \
+	--enable-libgcj \
+	--enable-libgcj-multifile \
+	--enable-libgcj-database \
 	%{_target_platform}
 
 cd ..
@@ -900,6 +903,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
+%dir %{_libdir}/gcj-%{version}
+%{_libdir}/gcj-%{version}/classmap.db
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %{_libdir}/logging.properties
