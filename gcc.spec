@@ -316,7 +316,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-make LDFLAGS_FOR_TARGET="-s" \
+make -j3 LDFLAGS_FOR_TARGET="-s" \
 	bootstrap-lean \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
@@ -350,7 +350,7 @@ echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
-ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so
+(cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
 
 install -d $RPM_BUILD_ROOT/lib
 (cd $RPM_BUILD_ROOT; \
