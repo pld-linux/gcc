@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	8
+Release:	9
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
