@@ -1,3 +1,9 @@
+
+ libjava/Makefile.am |    1 
+ libjava/Makefile.in |    1 
+ ltmain.sh           |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 64 insertions(+), 1 deletion(-)
+
 --- gcc-4.0-20050305/ltmain.sh.orig	2005-03-01 23:29:34.000000000 +0100
 +++ gcc-4.0-20050305/ltmain.sh	2005-03-09 22:47:06.107449312 +0100
 @@ -829,6 +829,7 @@
@@ -126,3 +132,23 @@
  	  $echo "$modename: warning: relinking \`$file'" 1>&2
  	  $show "$relink_command"
  	  if $run eval "$relink_command"; then :
+--- gcc-4.0-20050305/libjava/Makefile.am.orig	2005-03-09 22:45:09.000000000 +0100
++++ gcc-4.0-20050305/libjava/Makefile.am	2005-03-10 20:44:58.013963576 +0100
+@@ -624,6 +624,7 @@
+ 	$(libgcj0_convenience_la_LINK) \
+ 	-objectlist libgcj0_convenience.objectlist \
+ 	$(libgcj0_convenience_la_LIBADD) \
++	-L$(here)/.libs \
+ 	-rpath $(toolexeclibdir) $(libgcj0_convenience_la_LDFLAGS) $(LIBS)
+ 
+ lib-gnu-awt-xlib.la: $(lib_gnu_awt_xlib_la_OBJECTS) $(lib_gnu_awt_xlib_la_DEPENDENCIES)
+--- gcc-4.0-20050305/libjava/Makefile.in.orig	2005-03-10 20:44:41.077538304 +0100
++++ gcc-4.0-20050305/libjava/Makefile.in	2005-03-10 20:44:44.908955840 +0100
+@@ -26699,6 +26699,7 @@
+ 	$(libgcj0_convenience_la_LINK) \
+ 	-objectlist libgcj0_convenience.objectlist \
+ 	$(libgcj0_convenience_la_LIBADD) \
++	-L$(here)/.libs \
+ 	-rpath $(toolexeclibdir) $(libgcj0_convenience_la_LDFLAGS) $(LIBS)
+ 
+ lib-gnu-awt-xlib.la: $(lib_gnu_awt_xlib_la_OBJECTS) $(lib_gnu_awt_xlib_la_DEPENDENCIES)
