@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.3
-Release:	11
+Release:	12
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -43,6 +43,7 @@ Patch28:	%{name}-pointer-arith.patch
 
 Patch29:	%{name}-glibc-2.2.patch
 
+BuildRequires:	bison
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
