@@ -317,8 +317,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-# bootstrap patch is broken
-#%patch3 -p1
+%patch3 -p1
 %patch4 -p0
 %patch5 -p0
 %patch6 -p1
@@ -380,7 +379,8 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-%{__make} bootstrap \
+cd ..
+%{__make} -C obj-%{_target_platform} bootstrap \
 	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
