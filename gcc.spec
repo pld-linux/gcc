@@ -1,11 +1,11 @@
-%define		GCC_VERSION	3.0
-%define		STDC_VERSION	3.0.0
-%define		GCJ_VERSION	3.0.0
+%define		GCC_VERSION	3.0.1
+%define		STDC_VERSION	3.0.1
+%define		GCJ_VERSION	3.0.1
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	3.0.0
-Release:	0.85
+Version:	%{GCC_VERSION}
+Release:	0.1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -367,7 +367,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch0 -p1
 
 %build
-cd gcc && autoconf; cd ..
+# cd gcc && autoconf; cd ..
+# autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
 CFLAGS="%{rpmcflags}" \
@@ -488,7 +489,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 #%ifnarch alpha
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
+%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
 #%endif
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
@@ -507,7 +508,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_mandir}/man1/g++.1.gz
 %attr(755,root,root) %{_bindir}/g++
+%attr(755,root,root) %{_bindir}/%{_target_cpu}*-g++
 %attr(755,root,root) %{_bindir}/c++
+%attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %attr(755,root,root) %{_libdir}/libsupc++.la
@@ -557,6 +560,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*
 
 %files -n libgcj-devel
