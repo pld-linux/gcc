@@ -111,7 +111,7 @@
  
  
 -echo $ac_n "checking for dlopen in -ldl""... $ac_c" 1>&6
--echo "configure:2763: checking for dlopen in -ldl" >&5
+-echo "configure:2850: checking for dlopen in -ldl" >&5
 -ac_lib_var=`echo dl'_'dlopen | sed 'y%./+-%__p_%'`
 -if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
 -  echo $ac_n "(cached) $ac_c" 1>&6
@@ -119,7 +119,7 @@
 -  ac_save_LIBS="$LIBS"
 -LIBS="-ldl  $LIBS"
 -cat > conftest.$ac_ext <<EOF
--#line 2771 "configure"
+-#line 2858 "configure"
 -#include "confdefs.h"
 -/* Override any gcc2 internal prototype to avoid an error.  */
 -/* We use char because int might match the return type of a gcc2
@@ -130,7 +130,7 @@
 -dlopen()
 -; return 0; }
 -EOF
--if { (eval echo configure:2782: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+-if { (eval echo configure:2869: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
 -  rm -rf conftest*
 -  eval "ac_cv_lib_$ac_lib_var=yes"
 -else
