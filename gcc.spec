@@ -1,6 +1,5 @@
 #
 # TODO:
-#		- merge cpp with gcc.
 #		- add ffitarget.h to libffi-devel.
 #
 # Conditional build:
@@ -56,11 +55,14 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2.15.91.0.2
-Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
+Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 %{?with_ssp:Provides:	gcc(ssp)}
 # ksi for gcc > 3.3.x not ready yet
+Obsoletes:	cpp
+Obsoletes:	egcs-cpp
+Obsoletes:	gcc-cpp
 Obsoletes:	gcc-ksi
 Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
@@ -610,93 +612,6 @@ This package contains static libraries for programs written in Ada.
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
 
-%package -n cpp
-Summary:	The C Pre Processor
-Summary(es):	El preprocesador de C
-Summary(pl):	Preprocesor C
-Summary(pt_BR):	Preprocessador para a linguagem C
-Group:		Development/Languages
-Obsoletes:	egcs-cpp
-Obsoletes:	gcc-cpp
-
-%description -n cpp
-The C preprocessor is a "macro processor" that is used automatically
-by the C compiler to transform your program before actual compilation.
-It is called a macro processor because it allows you to define
-"macros", which are brief abbreviations for longer constructs.
-
-The C preprocessor provides four separate facilities that you can use
-as you see fit:
-
-- Inclusion of header files. These are files of declarations that can
-  be substituted into your program.
-- Macro expansion. You can define "macros", which are abbreviations
-  for arbitrary fragments of C code, and then the C preprocessor will
-  replace the macros with their definitions throughout the program.
-- Conditional compilation. Using special preprocessing directives, you
-  can include or exclude parts of the program according to various
-  conditions.
-- Line control. If you use a program to combine or rearrange source
-  files into an intermediate file which is then compiled, you can use
-  line control to inform the compiler of where each source line
-  originally came from.
-
-%description -n cpp -l es
-El preprocesador de C es un "procesador de macros" que es usado
-automáticamente por el compilador C para transformar su programa antes
-de que éste se actualmente compile. Se llama procesador de macros
-porque permite definir "macros", los que son abreviaciones concisas
-para construcciones más largas.
-
-El preprocesador C provee cuatro cualidadedes distintas que puede usar
-como le convenga:
-
-- Inclusión de ficheros de cabecera. Éstos son ficheros de
-  declaraciones que pueden incorporarse a su programa.
-- Expansión de macros. Puede definir "macros", los que son
-  abreviaciones para fragmentos arbitrarios de código C, y a lo largo
-  del programa el preprocesador sustituirá los macros con sus
-  definiciones.
-- Compilación condicional. Usando especiales directivas del preproceso
-  puede incluir o excluir partes del programa según varias condiciones.
-- Control de líneas. Si usa un programa para combinar o reorganizar el
-  código fuente en un fichero intermedio que luego es compilado, puede
-  usar control de líneas para informar el compilador de dónde origina
-  cada línea.
-
-%description -n cpp -l pl
-Przeprocesor C jest "makro procesorem" który jest automatycznie
-u¿ywany przez kompilator C do obróbki kompilowanego programu przed
-w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
-umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
-d³ugich konstrukcji w jêzyku C.
-
-Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
-
-- Do³±czanie plików (np. nag³ówkowych). Wstawia pliki w miejscu
-  deklaracji polecenia do³±czenia innego pliku.
-- Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
-  których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
-  indentyfikatora deklarowan± wcze¶niej warto¶ci±.
-- Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
-  ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne
-  fragmenty obrabianego strumienia tekstów.
-- Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom
-  podlega wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania
-  s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
-  odpowiada fragment pliku wynikowego.
-
-%description -n cpp -l pt_BR
-O preprocessador C é um "processador de macros", que é utilizado pelo
-compilador C para fazer algumas modificações no seu programa, antes da
-compilação em si. Ele é chamado de "processador de macros" porque
-permite a você definir "macros", que são abreviações para construções
-mais complicadas.
-
-O preprocessador C fornece quatro funcionalidades básicas: inclusão de
-arquivos de cabeçalho; expansão de macros; compilação condicional; e
-controle da numeração das linhas do programa.
-
 %prep
 %setup -q -n %{name}-3.4-%{_snap} -a1
 %patch0 -p1
@@ -898,12 +813,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%post -n cpp
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%postun -n cpp
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
 %post   -p /sbin/ldconfig -n libgcc
 %postun -p /sbin/ldconfig -n libgcc
 %post   -p /sbin/ldconfig -n libstdc++
@@ -928,18 +837,26 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
 %{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
+
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
+%attr(755,root,root) %{_bindir}/cpp
 
-%{_mandir}/man1/gcc.1*
 %{_mandir}/man1/cc.1*
-%{_mandir}/man1/gcov.1*
+%{_mandir}/man1/cpp.1*
+%lang(ja) %{_mandir}/ja/man1/cpp.1*
+%{_mandir}/man1/gcc.1*
 %lang(fr) %{_mandir}/fr/man1/gcc.1*
 %lang(ja) %{_mandir}/ja/man1/gcc.1*
+%{_mandir}/man1/gcov.1*
+
+%{_infodir}/cpp*
 %{_infodir}/gcc*
+
+%attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}*/lib*.so
 %{_libdir}/gcc/*/*/libgcov.a
@@ -1193,11 +1110,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/libgnarl.a
 %{_libdir}/gcc/*/*/adalib/libgnat.a
 %endif
-
-%files -n cpp
-%defattr(644,root,root,755)
-%attr(755,root,root) /lib/cpp
-%attr(755,root,root) %{_bindir}/cpp
-%{_mandir}/man1/cpp.1*
-%lang(ja) %{_mandir}/ja/man1/cpp.1*
-%{_infodir}/cpp*
