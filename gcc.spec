@@ -119,7 +119,7 @@ Summary:	GCC mudflap shared support library
 Group:		Libraries
 
 %description -n libmudflap
-The libmudflap libraries are used by GCC for instrumenting pointer and
+The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations.
 
 %package -n libmudflap-devel
@@ -128,7 +128,7 @@ Group:		Development/Libraries
 Requires:	libmudflap = %{epoch}:%{version}-%{release}
 
 %description -n libmudflap-devel
-The libmudflap libraries are used by GCC for instrumenting pointer and
+The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations. This package contains development
 files.
 
@@ -138,7 +138,7 @@ Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
 
 %description -n libmudflap-static
-The libmudflap libraries are used by GCC for instrumenting pointer and
+The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations. This package contains static
 libraries.
 
@@ -699,17 +699,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/libgcc_s*.so
 %{_libdir}/gcc/*/*/specs
 %if %{with multilib}
-%attr(644,root,root) %{_libdir}/gcc/*/*/32/crt*.o
+%{_libdir}/gcc/*/*/32/crt*.o
 %endif
-%attr(644,root,root) %{_libdir}/gcc/*/*/crt*.o
+%{_libdir}/gcc/*/*/crt*.o
 %ifarch sparc64
 %{_libdir}/gcc/*/*/*/libgcc.a
 %{_libdir}/gcc/*/*/*/libgcc_eh.a
-%attr(644,root,root) %{_libdir}/gcc/*/*/*/crt*.o
+%{_libdir}/gcc/*/*/*/crt*.o
 %endif
 %ifarch ppc
-%attr(644,root,root) %{_libdir}/gcc/*/*/ecrt*.o
-%attr(644,root,root) %{_libdir}/gcc/*/*/ncrt*.o
+%{_libdir}/gcc/*/*/ecrt*.o
+%{_libdir}/gcc/*/*/ncrt*.o
 %{_libdir}/gcc/*/*/nof
 %dir %{_libdir}/nof
 %endif
