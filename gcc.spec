@@ -4,9 +4,14 @@
 # _without_java - build without Java support
 # _without_objc - build without objc support
 #
+# TODO:
+#  - ksi
+#  - test with ada
+#  - fix %%files (separate package for libffi ?)
+#
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.2.3
+%define		GCC_VERSION	3.3
 %define		KSI_VERSION	1.0.1.1567
 
 Summary:	GNU C Compiler
@@ -14,7 +19,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	0.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -30,11 +35,6 @@ Patch5:		%{name}-gcc-page.c.patch
 Patch6:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
-Patch11:	gcc32-attr-visibility.patch
-Patch12:	gcc32-attr-visibility2.patch
-Patch13:	gcc32-attr-visibility3.patch
-Patch14:	gcc32-attr-visibility4.patch
-Patch15:	gcc32-attr-visibility5.patch
 Patch16:	gcc32-boehm-gc-libs.patch
 Patch17:	gcc32-bogus-inline.patch
 Patch18:	gcc32-c++-nrv-test.patch
@@ -47,25 +47,14 @@ Patch25:	gcc32-dwarf2-pr6381.patch
 Patch26:	gcc32-dwarf2-pr6436-test.patch
 Patch27:	gcc32-fde-merge-compat.patch
 
-Patch29:	gcc32-hard-reg-sharing.patch
-Patch30:	gcc32-hard-reg-sharing2.patch
 Patch31:	gcc32-i386-default-momit-leaf-frame-pointer.patch
 Patch32:	gcc32-i386-memtest-test.patch
 Patch33:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
 Patch34:	gcc32-i386-pic-label-thunk.patch
-Patch35:	gcc32-i386-profile-olfp.patch
 Patch36:	gcc32-inline-label.patch
 Patch37:	gcc32-java-no-rpath.patch
-Patch38:	gcc32-pr6842.patch
-Patch39:	gcc32-sparc-sll1.patch
 Patch40:	gcc32-test-rh65771.patch
 Patch41:	gcc32-test-rotate.patch
-Patch42:	gcc32-tls-dwarf2.patch
-Patch43:	gcc32-tls.patch
-Patch44:	gcc32-tls2.patch
-Patch45:	gcc32-tls3.patch
-Patch46:	gcc32-tls4.patch
-Patch47:	gcc32-tls5.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -577,48 +566,32 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
+##%%patch2 -p1
+##%%patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
+##%%patch5 -p1
+##%%patch6 -p1
 
-%patch10 -p1
-%patch11
-%patch12
-%patch13
-%patch14
-%patch15
+##%%patch10 -p1
 #%patch16
-%patch17
+##%%patch17
 %patch18
 %patch20
-%patch21
+##%%patch21
 %patch22
 
 %patch24
 %patch25
 %patch26
 %patch27
-%patch29
-%patch30
-%patch31
+##%%patch31
 %patch32
-%patch33
-%patch34
-%patch35
+##%%patch33
+##%%patch34
 %patch36
 %patch37
-%patch38
-%patch39
 %patch40
 %patch41
-%patch42
-%patch43
-%patch44
-%patch45
-%patch46
-%patch47
 
 perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
 
@@ -636,7 +609,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77,gcov%{?!_without_objc:,objc},ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
+	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -842,7 +815,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
-%attr(755,root,root) %{_bindir}/c++filt
+#%%attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %{_libdir}/libsupc++.la
 %ifarch ppc
@@ -977,7 +950,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_includedir}/java
 %{_includedir}/javax
-%{_includedir}/org
+#%%{_includedir}/org
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
@@ -1027,18 +1000,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgna*.a
 %endif
 
+%if 0
 %files ksi
 %defattr(644,root,root,755)
 %doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
+%endif
 
 %files -n cpp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/cpp
 %attr(755,root,root) %{_bindir}/cpp
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
+#%%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
+#%%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 %{_mandir}/man1/cpp.1*
 %lang(ja) %{_mandir}/ja/man1/cpp.1*
 %{_infodir}/cpp*
