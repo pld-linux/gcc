@@ -36,6 +36,8 @@ Patch21:	gcc-builtin-apply.patch
 Patch22:	gcc-ppc-ice.patch
 Patch23:	gcc-ppc-descriptions.patch
 Patch24:	gcc-ppc-andrew-dwarf-eh.patch
+
+Patch30:	gcc-glibc-2.2.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 Obsoletes:	egcs
@@ -347,6 +349,7 @@ mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch22 -p0
 %patch23 -p0
 %patch24 -p0
+#%patch30 -p1
 
 %build
 (cd gcc; autoconf)
