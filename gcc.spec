@@ -13,7 +13,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -647,6 +647,11 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
+
+# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
+for f in libstdc++.la %{!?_without_java:libgcj.la} ; do
+	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
+done
 
 bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
