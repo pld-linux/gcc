@@ -379,7 +379,7 @@ CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-%{__mak} bootstrap \
+%{__make} bootstrap \
 	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
