@@ -23,6 +23,7 @@ Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
+Patch3:		%{name}-nodebug.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -681,6 +682,7 @@ controle da numeração das linhas do programa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%{!?debug:%patch3 -p1}
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -726,6 +728,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
 %{__make} -C obj-%{_target_platform} profiledbootstrap \
+	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
@@ -765,7 +768,7 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 %if %{with ada}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
-	$RPM_BUILD_ROOT%{_libdir}/
+	$RPM_BUILD_ROOT%{_libdir}
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
