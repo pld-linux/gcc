@@ -117,8 +117,6 @@ diff -Nur gcc-3.2.2/gcc/ada/Makefile.in gcc-3.2.2-20030218/gcc/ada/Makefile.in
  	$(RM) rts/libgnat$(arext) rts/libgnarl$(arext)
  	$(AR) $(AR_FLAGS) rts/libgnat$(arext) \
  	   $(addprefix rts/,$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS))
---- Makefile.in	Fri May 16 15:02:23 2003
-+++ Makefile.in-new	Fri May 16 15:12:40 2003
 @@ -2041,6 +2041,7 @@
  	cd rts; ../../xgcc -B../../ -shared $(TARGET_LIBGCC2_CFLAGS) \
  		-o libgnarl-$(LIBRARY_VERSION)$(soext) \
