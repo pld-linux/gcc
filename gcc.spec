@@ -13,14 +13,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.2
-Release:	0.%{_snap}.1
+#Release:	0.%{_snap}.1
+Release:	0.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	2fada3a3effd2fd791df09df1f1534b3
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	1e5b519d340dd55e494533077fdd9f55
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
@@ -613,9 +614,9 @@ Adzie.
 # prerelease
 #setup -q -n %{name}-%{version}-%{_snap} -a1
 # snapshot
-%setup -q -n %{name}-3.4-%{_snap} -a1
+#setup -q -n %{name}-3.4-%{_snap} -a1
 # final
-#setup -q -n %{name}-%{version} -a1
+%setup -q -n %{name}-%{version} -a1
 
 %patch0 -p1
 %patch1 -p1
