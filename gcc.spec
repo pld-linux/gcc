@@ -43,6 +43,7 @@ BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
+Requires:	automake
 Requires:	binutils >= 2.15.90.0.3
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
@@ -756,7 +757,7 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/lib,%{_datadir},%{_infodir}}
+install -d $RPM_BUILD_ROOT{/lib,%{_aclocaldir},%{_datadir},%{_infodir}}
 
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
@@ -880,12 +881,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
+%{_aclocaldir}/gcc_stack_protect.m4
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
-%{_aclocaldir}/gcc_stack_protect.m4
 
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/cc.1*
