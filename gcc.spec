@@ -4,6 +4,7 @@
 %bcond_without	fortran		# build without Fortran support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
+%bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 
 %bcond_with	bootstrap
 
@@ -11,6 +12,10 @@
 %undefine	with_fortran
 %undefine	with_java
 %undefine	with_objc
+%endif
+
+%ifnarch amd64 ppc64 s390x sparc64
+%undefine	with_multilib
 %endif
 
 #
@@ -27,7 +32,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.2.1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -62,6 +67,7 @@ Requires:	binutils >= 2:2.15.94.0.1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
+%{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
@@ -70,7 +76,15 @@ Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%ifarch sparc64
+%define		rpmcflags	-O2 -mtune=ultrasparc
+%endif
 %define		_slibdir	/%{_lib}
+
+%if %{with multilib}
+%define		_slibdir32	/lib
+%define		_libdir32	/usr/lib
+%endif
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -492,11 +506,7 @@ TEXCONFIG=false \
 	--enable-languages="c,c++%{?with_fortran:,f95}%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
-%ifarch amd64
-	--disable-multilib \
-%else
-	--enable-multilib \
-%endif
+	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
 	--with-gnu-as \
 	--with-gnu-ld \
@@ -598,6 +608,11 @@ cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf	$gccdir/install-tools
 
+ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
+%if %{with multilib}
+ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/libgcc_s_32.so
+%endif
+
 %find_lang gcc
 %find_lang libstdc\+\+
 
@@ -672,10 +687,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}/lib*.so
+%if %{with multilib}
+%dir %{_libdir}/gcc/*/*/32
+%{_libdir}/gcc/*/*/32/libgcov.a
+%{_libdir}/gcc/*/*/32/libgcc.a
+%{_libdir}/gcc/*/*/32/libgcc_eh.a
+%endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
+%{_libdir}/gcc/*/*/libgcc_s*.so
 %{_libdir}/gcc/*/*/specs
+%if %{with multilib}
+%attr(644,root,root) %{_libdir}/gcc/*/*/32/crt*.o
+%endif
 %attr(644,root,root) %{_libdir}/gcc/*/*/crt*.o
 %ifarch sparc64
 %{_libdir}/gcc/*/*/*/libgcc.a
@@ -695,20 +720,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
+%if %{with multilib}
+%attr(755,root,root) %{_slibdir32}/lib*.so.*
+%endif
 %attr(755,root,root) %{_slibdir}/lib*.so.*
 
 %files -n libmudflap
 %defattr(644,root,root,755)
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libmudflap*.so.*.*.*
+%endif
 %attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
 
 %files -n libmudflap-devel
 %defattr(644,root,root,755)
 %{_includedir}/mf-runtime.h
+%if %{with multilib}
+%{_libdir32}/libmudflap*.la
+%attr(755,root,root) %{_libdir32}/libmudflap*.so
+%endif
 %{_libdir}/libmudflap*.la
 %attr(755,root,root) %{_libdir}/libmudflap*.so
 
 %files -n libmudflap-static
 %defattr(644,root,root,755)
+%if %{with multilib}
+%{_libdir32}/libmudflap*.a
+%endif
 %{_libdir}/libmudflap*.a
 
 %if %{with ada}
@@ -749,6 +787,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
+%if %{with multilib}
+%{_libdir32}/libsupc++.a
+%{_libdir32}/libsupc++.la
+%endif
 %{_libdir}/libsupc++.a
 %{_libdir}/libsupc++.la
 %{_mandir}/man1/g++.1*
@@ -756,6 +798,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
+%endif
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
@@ -770,11 +815,18 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/gnu
 %endif
 %exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
+%if %{with multilib}
+%{_libdir32}/libstdc++.la
+%attr(755,root,root) %{_libdir32}/libstdc++.so
+%endif
 %{_libdir}/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
+%if %{with multilib}
+%{_libdir32}/libstdc++.a
+%endif
 %{_libdir}/libstdc++.a
 
 %if %{with fortran}
