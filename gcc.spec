@@ -30,6 +30,7 @@ Patch5:		%{name}-gcc-page.c.patch
 Patch6:		%{name}-info.patch
 Patch7:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
+Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
 Patch12:	gcc32-attr-visibility2.patch
 Patch13:	gcc32-attr-visibility3.patch
@@ -60,6 +61,12 @@ Patch38:	gcc32-pr6842.patch
 Patch39:	gcc32-sparc-sll1.patch
 Patch40:	gcc32-test-rh65771.patch
 Patch41:	gcc32-test-rotate.patch
+Patch42:	gcc32-tls-dwarf2.patch
+Patch43:	gcc32-tls.patch
+Patch44:	gcc32-tls2.patch
+Patch45:	gcc32-tls3.patch
+Patch46:	gcc32-tls4.patch
+Patch47:	gcc32-tls5.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -577,6 +584,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch5 -p1
 %patch7 -p1
 
+%patch10 -p1
 %patch11
 %patch12
 %patch13
@@ -606,6 +614,12 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch39
 %patch40
 %patch41
+%patch42
+%patch43
+%patch44
+%patch45
+%patch46
+%patch47
 
 %patch6 -p1
 
