@@ -14,8 +14,7 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
-#		- http://gcc.gnu.org/PR18628 (miscompilation of switch statement in loop)
-#		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
+#		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
 #		- disable internal zlib usage
@@ -57,7 +56,7 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
-BuildRequires:	glibc-devel >= 6:2.3.4-1.5
+BuildRequires:	glibc-devel >= %{!?with_multilib:2.2.5-20}%{?with_multilib:6:2.3.4-1.5}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %{?with_java:BuildRequires:	pango-devel}
