@@ -58,6 +58,7 @@ Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
+Requires:	%{name} = %{version}
 
 %description c++
 This package adds C++ support to the GNU C compiler. It includes
@@ -98,6 +99,7 @@ Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
+Requires:	%{name} = %{version}
 
 %description objc
 This package adds Objective C support to the GNU C compiler. Objective
