@@ -410,7 +410,7 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1/
-tar xzvf %{SOURCE3} -C $RPM_BUILD_ROOT%{_mandir}/
+bzip2 -dc %{SOURCE6} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
