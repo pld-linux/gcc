@@ -601,10 +601,7 @@ rm -rf	$gccdir/install-tools
 
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
-#lang(ja) %{_mandir}/ja/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
-#lang(fr) %{_mandir}/fr/man1/gcc.1*
-#lang(ja) %{_mandir}/ja/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
 
 %{_infodir}/cpp*
@@ -633,7 +630,6 @@ rm -rf	$gccdir/install-tools
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
 %{_libdir}/gcc/*/*/include/*.h
-#exclude %{_libdir}/gcc/*/*/include/g2c.h
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -641,12 +637,17 @@ rm -rf	$gccdir/install-tools
 
 %files -n libmudflap
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
 
 %files -n libmudflap-devel
 %defattr(644,root,root,755)
+%{_includedir}/mf-runtime.h
+%{_libdir}/libmudflap*.la
+%attr(755,root,root) %{_libdir}/libmudflap*.so
 
 %files -n libmudflap-static
 %defattr(644,root,root,755)
+%{_libdir}/libmudflap*.a
 
 %files ada
 %defattr(644,root,root,755)
@@ -685,42 +686,31 @@ rm -rf	$gccdir/install-tools
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
-%{_libdir}*/libsupc++.la
-%ifarch ppc
-%{_libdir}/nof/libsupc++.la
-%{_libdir}/nof/libsupc++.a
-%endif
-%{_libdir}*/libsupc++.a
+%{_libdir}/libsupc++.a
+%{_libdir}/libsupc++.la
 %{_mandir}/man1/g++.1*
-#lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
-%attr(755,root,root) %{_libdir}*/libstdc++.so.*.*.*
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
-%endif
+%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
+%exclude %{_includedir}/c++/%{version}/java
+%exclude %{_includedir}/c++/%{version}/javax
+%exclude %{_includedir}/c++/%{version}/gcj
+%exclude %{_includedir}/c++/%{version}/gnu
 %exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
-%attr(755,root,root) %{_libdir}*/libstdc++.so
-%{_libdir}*/libstdc++.la
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libstdc++.so
-%{_libdir}/nof/libstdc++.la
-%endif
+%{_libdir}/libstdc++.la
+%attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%{_libdir}*/libstdc++.a
-%ifarch ppc
-%{_libdir}/nof/libstdc++.a
-%endif
+%{_libdir}/libstdc++.a
 
 %files fortran
 %defattr(644,root,root,755)
@@ -729,34 +719,21 @@ rm -rf	$gccdir/install-tools
 %attr(755,root,root) %{_bindir}/gfortran
 %{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
-%{_libdir}*/libgfortranbegin.a
-%{_libdir}*/libgfortran.la
-%attr(755,root,root) %{_libdir}*/libgfortran.so
-%ifarch ppc
-%{_libdir}/nof/libgfortranbegin.a
-%{_libdir}/nof/libgfortran.la
-%attr(755,root,root) %{_libdir}/nof/libgfortran.so
-%endif
-#{_libdir}/gcc/*/*/include/g2c.h
+%{_libdir}/libgfortranbegin.a
+%{_libdir}/libgfortranbegin.la
+%{_libdir}/libgfortran.la
+%attr(755,root,root) %{_libdir}/libgfortran.so
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
-#lang(ja) %{_mandir}/ja/man1/g77.1*
-#lang(ja) %{_mandir}/ja/man1/f77.1*
 
 %files -n libgfortran
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
-%attr(755,root,root) %{_libdir}*/libgfortran.so.*.*.*
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libgfortran.so.*.*.*
-%endif
+%attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
 
 %files -n libgfortran-static
 %defattr(644,root,root,755)
-%{_libdir}*/libgfortran.a
-%ifarch ppc
-%{_libdir}/nof/libgfortran.a
-%endif
+%{_libdir}/libgfortran.a
 
 %files java
 %defattr(644,root,root,755)
@@ -790,9 +767,6 @@ rm -rf	$gccdir/install-tools
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
-%endif
 %{_libdir}/logging.properties
 
 %files -n libgcj-devel
@@ -800,8 +774,7 @@ rm -rf	$gccdir/install-tools
 %{_includedir}/c++/%{version}/java
 %{_includedir}/c++/%{version}/javax
 %{_includedir}/c++/%{version}/gcj
-#{_includedir}/j*.h
-%{_includedir}/c++/%{version}/gnu/*
+%{_includedir}/c++/%{version}/gnu
 %{_libdir}/gcc/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
@@ -812,19 +785,12 @@ rm -rf	$gccdir/install-tools
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib-org-*.la
-%ifarch ppc
-%{_libdir}/nof/lib*cj*.la
-%attr(755,root,root) %{_libdir}/nof/lib*cj*.so
-%endif
 %{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
 %{_libdir}/lib-org-*.a
-%ifarch ppc
-%{_libdir}/nof/lib*cj*.a
-%endif
 
 %files -n libffi
 %defattr(644,root,root,755)
@@ -846,25 +812,15 @@ rm -rf	$gccdir/install-tools
 %defattr(644,root,root,755)
 %doc gcc/objc/README
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
-%attr(755,root,root) %{_libdir}*/libobjc.so
-%{_libdir}*/libobjc.la
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libobjc.so
-%{_libdir}/nof/libobjc.la
-%endif
+%attr(755,root,root) %{_libdir}/libobjc.so
+%{_libdir}/libobjc.la
 %{_libdir}/gcc/*/*/include/objc
 
 %files -n libobjc
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
-%attr(755,root,root) %{_libdir}*/libobjc.so.*.*.*
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
-%endif
+%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
-%{_libdir}*/libobjc.a
-%ifarch ppc
-%{_libdir}/nof/libobjc.a
-%endif
+%{_libdir}/libobjc.a
