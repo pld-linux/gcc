@@ -6,6 +6,7 @@ Version:	2.95.3
 Release:	1
 License:	GPL
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-2.95.2.tar.gz
 Source1:	gcov.1
@@ -60,6 +61,7 @@ Summary(fr):	Support C++ pour le compilateur gcc
 Summary(pl):	Wspomaganie C++ dla kompilatora gcc
 Summary(tr):	gcc için C++ desteði
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
@@ -99,6 +101,7 @@ Summary(fr):	Gestion d'Objective C pour gcc
 Summary(pl):	Wspomaganie obiektowego C dla kompilatora gcc
 Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
@@ -135,6 +138,7 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-g77
 
@@ -150,6 +154,7 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 Summary:	CHILL support for gcc
 Summary(pl):	Wspomoganie CHILL dla gcc
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
 
@@ -168,6 +173,7 @@ Europe, Brazil, Korea, and other places.
 Summary:	Java support for gcc
 Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 2.95.1
@@ -181,8 +187,9 @@ libgcj package.
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
+Group(de):	Libraries
+Group(fr):	Librairies
 Group(pl):	Biblioteki
-Group(fr):	Development/Librairies
 Version:	%{STDC_VERSION}
 Obsoletes:	libg++
 
@@ -216,8 +223,9 @@ Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
 Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Group(pl):	Programowanie/Biblioteki
+Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
 Requires:	%{name}-c++
@@ -237,8 +245,9 @@ programowaniu w jêzyku C++.
 Summary:	Static c++ standard library
 Summary(pl):	Biblioeka statyczna c++
 Group:		Development/Libraries
-Group(pl):	Programowanie/Biblioteki
+Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++-devel = %{STDC_VERSION}
 
@@ -252,6 +261,7 @@ Biblioteka statyczna C++.
 Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-cpp
 
@@ -348,7 +358,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
-CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
+CFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
+CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" 
 ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
@@ -365,7 +376,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-%{__make} LDFLAGS_FOR_TARGET="-s" \
+%{__make} LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
@@ -386,11 +397,6 @@ PATH=$PATH:/sbin:%{_sbindir}
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} -C texinfo
 
-strip $RPM_BUILD_ROOT%{_bindir}/* || :
-
-strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
-strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/lib*.so*
-
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
@@ -405,8 +411,7 @@ install -d $RPM_BUILD_ROOT/lib
 (cd $RPM_BUILD_ROOT; \
 ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
 
-gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
-	  ../READ* ../ChangeLog ../gcc/ch/chill.brochure
+gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
