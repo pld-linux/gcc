@@ -4,6 +4,16 @@
 %bcond_without	fortran		# build without Fortran support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
+
+%bcond_with	bootstrap
+
+%if %{with bootstrap}
+%define		rpmcflags	-O
+%undefine	with_fortran
+%undefine	with_java
+%undefine	with_objc
+%endif
+
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
@@ -497,7 +507,7 @@ TEXCONFIG=false \
 cd ..
 
 %{__make} -C obj-%{_target_platform} \
-	profiledbootstrap \
+	%{!?with_bootstrap:profiledbootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags}" \
