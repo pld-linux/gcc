@@ -9,7 +9,7 @@
 
 --- gcc/tree-inline.c.jj	Tue Oct  9 16:03:13 2001
 +++ gcc/tree-inline.c	Fri Oct 12 17:08:23 2001
-@@ -474,17 +474,25 @@ initialize_inlined_parameters (id, args,
+@@ -474,20 +474,28 @@ initialize_inlined_parameters (id, args,
  
    /* Loop through the parameter declarations, replacing each with an
       equivalent VAR_DECL, appropriately initialized.  */
@@ -17,10 +17,13 @@
 -       a = a ? TREE_CHAIN (a) : a, p = TREE_CHAIN (p))
 +  for (p = parms, a = args; p; a = TREE_CHAIN (a), p = TREE_CHAIN (p))
      {
+ #ifndef INLINER_FOR_JAVA
        tree init_stmt;
+       tree cleanup;
+ #endif /* not INLINER_FOR_JAVA */
        tree var;
        tree value;
-       tree cleanup;
+       tree var_sub;
  
 +      if (a == NULL_TREE)
 +	{
