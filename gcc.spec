@@ -416,7 +416,6 @@ Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
-Requires:	%{name}-java = %{epoch}:%{version}-%{release}
 Requires:	libgcj = %{epoch}:%{version}-%{release}
 Obsoletes:	libgcj3-devel
 
