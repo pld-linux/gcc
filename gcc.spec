@@ -39,7 +39,6 @@ Patch24:	gcc-ppc-andrew-dwarf-eh.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 Obsoletes:	egcs
-Prereq:		/usr/sbin/fix-info-dir
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -133,7 +132,6 @@ Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Prereq:		/usr/sbin/fix-info-dir
 Obsoletes:	egcs-g77
 
 %description g77
@@ -150,7 +148,6 @@ Summary(pl):	Wspomoganie CHILL dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
-Prereq:		/usr/sbin/fix-info-dir
 
 %description chill
 This package adds support for compiling CHILL programs with the GNU
@@ -268,7 +265,6 @@ Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Prereq:		/usr/sbin/fix-info-dir
 Obsoletes:	egcs-cpp
 
 %description -n cpp
@@ -412,28 +408,28 @@ gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
 	  ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post g77
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun g77
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post chill
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun chill
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post -n cpp
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun -n cpp
-/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+[ -x /usr/sbin/fix-info-dir ] && /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post libgcj  -p /sbin/ldconfig
 
