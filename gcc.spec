@@ -501,7 +501,7 @@ sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
 mv -f makefile.tmp gcc/ada/Makefile
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap \
+%{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
