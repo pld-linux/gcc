@@ -6,7 +6,7 @@
 
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.3
+%define		GCC_VERSION	3.3.1
 %define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU C Compiler
@@ -14,14 +14,14 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
-# Source0-md5:	39147717455d8dba4d43d1b058ea46e2
+# Source0-md5:	1135a104e9fa36fdf7c663598fab5c40
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-# Source1-md5: 66f07491b44f06928fd95b0e65bb8cd3
+# Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.kernel.pl/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source2-md5: 4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
@@ -603,7 +603,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %patch10 -p1
 %patch11
