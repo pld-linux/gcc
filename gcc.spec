@@ -103,7 +103,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755, root, root) /usr/bin/gcc
 %attr(755, root, root) /usr/bin/cc
 %attr(755, root, root) /usr/bin/*-gcc
-/usr/man/man1/gcc.1
 %dir /usr/lib/gcc-lib/*/*
 %dir /usr/lib/gcc-lib/*/*/include
 /usr/lib/gcc-lib/*/*/SYSCALLS.c.X
@@ -117,6 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [2.7.2.3-16]
+- removed gcc man page (this can be provided by egcs),
 - removed gcc info pages (this can be provided by egcs).
 
 * Sun Sep 27 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
