@@ -748,7 +748,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gnu/*
 %{_libdir}/lib*cj.spec
 %{_libdir}/security/*
-%{_datadir}/libgcj.jar
+%{_datadir}/libgcj*.jar
 %attr(755,root,root) %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 
