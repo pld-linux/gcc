@@ -1,42 +1,44 @@
---- gcc-3.2.2/gcc/ada/Makefile.in.orig	Fri Mar  7 11:02:33 2003
-+++ gcc-3.2.2/gcc/ada/Makefile.in	Fri Mar  7 13:13:08 2003
-@@ -2420,33 +2420,33 @@
- treeprs.ads : treeprs.adt sinfo.ads xtreeprs.adb
- 	-$(MKDIR) bldtools
- 	$(CP) $^ bldtools
--	(cd bldtools; gnatmake -q xtreeprs ; ./xtreeprs ../treeprs.ads )
-+	(cd bldtools; gnatmake -q xtreeprs -aO../rts ; ./xtreeprs ../treeprs.ads )
+--- gcc-3.3/gcc/ada/Make-lang.in~	Fri May 16 15:14:53 2003
++++ gcc-3.3/gcc/ada/Make-lang.in	Fri May 16 15:18:07 2003
+@@ -347,7 +347,7 @@
+ ada/doctools/xgnatug : ada/xgnatug.adb
+ 	-$(MKDIR) ada/doctools
+ 	cp $^ ada/doctools
+-	cd ada/doctools && gnatmake -q xgnatug
++	cd ada/doctools && gnatmake -q xgnatug -aO../rts
  
- einfo.h : einfo.ads einfo.adb xeinfo.adb
- 	-$(MKDIR) bldtools
- 	$(CP) $^ bldtools
--	(cd bldtools; gnatmake -q xeinfo ; ./xeinfo ../einfo.h )
-+	(cd bldtools; gnatmake -q xeinfo -aO../rts ; ./xeinfo ../einfo.h )
+ $(srcdir)/ada/gnat_ug_unx.texi : ada/doctools/xgnatug \
+ 	$(srcdir)/ada/gnat_ug.texi $(srcdir)/ada/ug_words
+@@ -871,27 +871,27 @@
+ ada/treeprs.ads : ada/treeprs.adt ada/sinfo.ads ada/xtreeprs.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xtreeprs ; ./xtreeprs ../treeprs.ads )
++	(cd ada/bldtools; gnatmake -q xtreeprs -aO../rts ; ./xtreeprs ../treeprs.ads )
  
- sinfo.h : sinfo.ads xsinfo.adb
- 	-$(MKDIR) bldtools
- 	$(CP) $^ bldtools
--	(cd bldtools; gnatmake -q xsinfo ; ./xsinfo ../sinfo.h )
-+	(cd bldtools; gnatmake -q xsinfo -aO../rts ; ./xsinfo ../sinfo.h )
+ ada/einfo.h : ada/einfo.ads ada/einfo.adb ada/xeinfo.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xeinfo ; ./xeinfo ../einfo.h )
++	(cd ada/bldtools; gnatmake -q xeinfo -aO../rts ; ./xeinfo ../einfo.h )
  
- nmake.adb : sinfo.ads nmake.adt xnmake.adb
- 	-$(MKDIR) bldtools
- 	$(CP) $^ bldtools
--	(cd bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
-+	(cd bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
+ ada/sinfo.h : ada/sinfo.ads ada/xsinfo.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xsinfo ; ./xsinfo ../sinfo.h )
++	(cd ada/bldtools; gnatmake -q xsinfo -aO../rts ; ./xsinfo ../sinfo.h )
  
- nmake.ads :  sinfo.ads nmake.adt xnmake.adb
- 	-$(MKDIR) bldtools
- 	$(CP) $^ bldtools
--	(cd bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
-+	(cd bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -s ../nmake.ads )
+ ada/nmake.adb : ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
++	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
  
- # We remove the generated .texi files to force regeneration.
- doctools/xgnatug : xgnatug.adb
- 	-$(MKDIR) doctools
- 	$(CP) $^ doctools
--	(cd doctools ; gnatmake -q xgnatug)
-+	(cd doctools ; gnatmake -q xgnatug -aO../rts)
- 	-rm gnat_ug_*.texi
+ ada/nmake.ads :  ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
++	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -s ../nmake.ads )
  
- # We cannot list the dependency on the xgnatug binary here because we
+ update-sources : ada/treeprs.ads ada/einfo.h ada/sinfo.h ada/nmake.adb \
+ 	ada/nmake.ads
