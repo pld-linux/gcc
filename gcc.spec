@@ -3,7 +3,7 @@
 # _without_ada	- build without ADA support
 # _without_java	- build without Java support
 #
-%define		DASHED_SNAP	20021111	
+%define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.1
 %define		KSI_VERSION	pre55
@@ -13,11 +13,11 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.pre.3
+Release:	0.9
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}-%{SNAP}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-slibdir.patch
@@ -494,7 +494,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}-%{SNAP}
+%setup -q -a1 -n %{name}-%{GCC_VERSION}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
