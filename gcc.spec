@@ -6,6 +6,7 @@
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- http://gcc.gnu.org/PR18910 (ICE: regression)
+#		- http://gcc.gnu.org/PR19030 (ICE: regression)
 #		- disable internal zlib usage
 #		- bconds
 #		- translations from gcc.spec:HEAD
