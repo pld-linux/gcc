@@ -6,7 +6,7 @@
 %bcond_with	ssp		# build with stack-smashing protector support
 #
 %define		GCC_VERSION	3.4.1
-%define		_snap		20040618
+%define		_snap		20040625
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -19,8 +19,9 @@ Epoch:		5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	6eb0e85c225250cc40b75496419d4250
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	4534f55e63e5c205231c519578780395
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
@@ -694,13 +695,13 @@ arquivos de cabeçalho; expansão de macros; compilação condicional; e
 controle da numeração das linhas do programa.
 
 %prep
-%setup -q -n %{name}-3.4-%{_snap} -a1
+%setup -q -n %{name}-%{version}-%{_snap} -a1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %{!?debug:%patch3 -p1}
 %{?with_ssp:%patch4 -p1}
-#patch5 -p1
+
 %patch6 -p1
 %patch7 -p0
 %ifarch alpha
