@@ -25,7 +25,7 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VER
 # Source0-md5:	65999f654102f5438ac8562d13a6eced
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
-Source2:	http://ep09.kernel.pl/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
+Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source2-md5:	4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
