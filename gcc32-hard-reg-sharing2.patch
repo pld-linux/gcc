@@ -1,0 +1,17 @@
+2002-06-11  Richard Henderson  <rth@redhat.com>
+
+	* caller-save.c (init_caller_save): Clear INSN_CODE each iteration.
+
+--- gcc/caller-save.c.jj	Fri Jun 21 01:16:13 2002
++++ gcc/caller-save.c	Thu Jul 11 10:27:57 2002
+@@ -206,6 +206,10 @@ init_caller_save ()
+ 	  PUT_MODE (test_reg, mode);
+ 	  PUT_MODE (test_mem, mode);
+ 
++	  /* Force re-recognition of the modified insns.  */
++	  INSN_CODE (saveinsn) = -1;
++	  INSN_CODE (restinsn) = -1;
++
+ 	  reg_save_code[i][mode] = recog_memoized (saveinsn);
+ 	  reg_restore_code[i][mode] = recog_memoized (restinsn);
+ 

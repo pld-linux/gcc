@@ -1,0 +1,215 @@
+2002-07-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* gcc.dg/20020729-1.c: New test.
+
+2002-05-17  Richard Sandiford  <rsandifo@redhat.com>
+
+	* expr.c (force_operand): Fix reversed move.
+
+Sat May  4 13:20:54 CEST 2002  Jan Hubicka  <jh@suse.cz>
+
+	* expr.c (force_operand): Use expand_simple_* to handle more
+	cases.
+
+--- gcc/expr.c.jj	2002-05-07 12:45:49.000000000 +0200
++++ gcc/expr.c	2002-08-03 01:08:28.000000000 +0200
+@@ -5434,16 +5434,13 @@ rtx
+ force_operand (value, target)
+      rtx value, target;
+ {
+-  optab binoptab = 0;
+-  /* Use a temporary to force order of execution of calls to
+-     `force_operand'.  */
+-  rtx tmp;
+-  rtx op2;
++  rtx op1, op2;
+   /* Use subtarget as the target for operand 0 of a binary operation.  */
+   rtx subtarget = get_subtarget (target);
++  enum rtx_code code = GET_CODE (value);
+ 
+   /* Check for a PIC address load.  */
+-  if ((GET_CODE (value) == PLUS || GET_CODE (value) == MINUS)
++  if ((code == PLUS || code == MINUS)
+       && XEXP (value, 0) == pic_offset_table_rtx
+       && (GET_CODE (XEXP (value, 1)) == SYMBOL_REF
+ 	  || GET_CODE (XEXP (value, 1)) == LABEL_REF
+@@ -5455,60 +5452,88 @@ force_operand (value, target)
+       return subtarget;
+     }
+ 
+-  if (GET_CODE (value) == PLUS)
+-    binoptab = add_optab;
+-  else if (GET_CODE (value) == MINUS)
+-    binoptab = sub_optab;
+-  else if (GET_CODE (value) == MULT)
++  if (code == ZERO_EXTEND || code == SIGN_EXTEND)
+     {
+-      op2 = XEXP (value, 1);
+-      if (!CONSTANT_P (op2)
+-	  && !(GET_CODE (op2) == REG && op2 != subtarget))
+-	subtarget = 0;
+-      tmp = force_operand (XEXP (value, 0), subtarget);
+-      return expand_mult (GET_MODE (value), tmp,
+-			  force_operand (op2, NULL_RTX),
+-			  target, 1);
++      if (!target)
++	target = gen_reg_rtx (GET_MODE (value));
++      convert_move (target, force_operand (XEXP (value, 0), NULL),
++		    code == ZERO_EXTEND);
++      return target;
+     }
+ 
+-  if (binoptab)
++  if (GET_RTX_CLASS (code) == '2' || GET_RTX_CLASS (code) == 'c')
+     {
+       op2 = XEXP (value, 1);
+-      if (!CONSTANT_P (op2)
+-	  && !(GET_CODE (op2) == REG && op2 != subtarget))
++      if (!CONSTANT_P (op2) && !(GET_CODE (op2) == REG && op2 != subtarget))
+ 	subtarget = 0;
+-      if (binoptab == sub_optab && GET_CODE (op2) == CONST_INT)
++      if (code == MINUS && GET_CODE (op2) == CONST_INT)
+ 	{
+-	  binoptab = add_optab;
++	  code = PLUS;
+ 	  op2 = negate_rtx (GET_MODE (value), op2);
+ 	}
+ 
+       /* Check for an addition with OP2 a constant integer and our first
+-	 operand a PLUS of a virtual register and something else.  In that
+-	 case, we want to emit the sum of the virtual register and the
+-	 constant first and then add the other value.  This allows virtual
+-	 register instantiation to simply modify the constant rather than
+-	 creating another one around this addition.  */
+-      if (binoptab == add_optab && GET_CODE (op2) == CONST_INT
++         operand a PLUS of a virtual register and something else.  In that
++         case, we want to emit the sum of the virtual register and the
++         constant first and then add the other value.  This allows virtual
++         register instantiation to simply modify the constant rather than
++         creating another one around this addition.  */
++      if (code == PLUS && GET_CODE (op2) == CONST_INT
+ 	  && GET_CODE (XEXP (value, 0)) == PLUS
+ 	  && GET_CODE (XEXP (XEXP (value, 0), 0)) == REG
+ 	  && REGNO (XEXP (XEXP (value, 0), 0)) >= FIRST_VIRTUAL_REGISTER
+ 	  && REGNO (XEXP (XEXP (value, 0), 0)) <= LAST_VIRTUAL_REGISTER)
+ 	{
+-	  rtx temp = expand_binop (GET_MODE (value), binoptab,
+-				   XEXP (XEXP (value, 0), 0), op2,
+-				   subtarget, 0, OPTAB_LIB_WIDEN);
+-	  return expand_binop (GET_MODE (value), binoptab, temp,
+-			       force_operand (XEXP (XEXP (value, 0), 1), 0),
+-			       target, 0, OPTAB_LIB_WIDEN);
++	  rtx temp = expand_simple_binop (GET_MODE (value), code,
++					  XEXP (XEXP (value, 0), 0), op2,
++					  subtarget, 0, OPTAB_LIB_WIDEN);
++	  return expand_simple_binop (GET_MODE (value), code, temp,
++				      force_operand (XEXP (XEXP (value,
++								 0), 1), 0),
++				      target, 0, OPTAB_LIB_WIDEN);
++	}
++
++      op1 = force_operand (XEXP (value, 0), subtarget);
++      op2 = force_operand (op2, NULL_RTX);
++      switch (code)
++	{
++	case MULT:
++	  return expand_mult (GET_MODE (value), op1, op2, target, 1);
++	case DIV:
++	  if (!INTEGRAL_MODE_P (GET_MODE (value)))
++	    return expand_simple_binop (GET_MODE (value), code, op1, op2,
++					target, 1, OPTAB_LIB_WIDEN);
++	  else
++	    return expand_divmod (0,
++				  FLOAT_MODE_P (GET_MODE (value))
++				  ? RDIV_EXPR : TRUNC_DIV_EXPR,
++				  GET_MODE (value), op1, op2, target, 0);
++	  break;
++	case MOD:
++	  return expand_divmod (1, TRUNC_MOD_EXPR, GET_MODE (value), op1, op2,
++				target, 0);
++	  break;
++	case UDIV:
++	  return expand_divmod (0, TRUNC_DIV_EXPR, GET_MODE (value), op1, op2,
++				target, 1);
++	  break;
++	case UMOD:
++	  return expand_divmod (1, TRUNC_MOD_EXPR, GET_MODE (value), op1, op2,
++				target, 1);
++	  break;
++	case ASHIFTRT:
++	  return expand_simple_binop (GET_MODE (value), code, op1, op2,
++				      target, 0, OPTAB_LIB_WIDEN);
++	  break;
++	default:
++	  return expand_simple_binop (GET_MODE (value), code, op1, op2,
++				      target, 1, OPTAB_LIB_WIDEN);
+ 	}
+-
+-      tmp = force_operand (XEXP (value, 0), subtarget);
+-      return expand_binop (GET_MODE (value), binoptab, tmp,
+-			   force_operand (op2, NULL_RTX),
+-			   target, 0, OPTAB_LIB_WIDEN);
+-      /* We give UNSIGNEDP = 0 to expand_binop
+-	 because the only operations we are expanding here are signed ones.  */
++    }
++  if (GET_RTX_CLASS (code) == '1')
++    {
++      op1 = force_operand (XEXP (value, 0), NULL_RTX);
++      return expand_simple_unop (GET_MODE (value), code, op1, target, 0);
+     }
+ 
+ #ifdef INSN_SCHEDULING
+--- gcc/testsuite/gcc.dg/20020729-1.c.jj	2002-08-03 01:08:28.000000000 +0200
++++ gcc/testsuite/gcc.dg/20020729-1.c	2002-08-03 01:08:28.000000000 +0200
+@@ -0,0 +1,51 @@
++/* { dg-do compile { target i?86-*-* } } */
++/* { dg-options "-O2 -march=k6" } */
++
++static inline void *
++baz (void *s, unsigned long c, unsigned int count)
++{
++  int d0, d1;
++  __asm__ __volatile__ (""
++			: "=&c" (d0), "=&D" (d1)
++			:"a" (c), "q" (count), "0" (count / 4), "1" ((long) s)
++			:"memory");
++  return s;
++}
++
++struct A
++{
++  unsigned long *a;
++};
++
++inline static void *
++bar (struct A *x, int y)
++{
++  char *ptr;
++
++  ptr = (void *) x->a[y >> 12];
++  ptr += y % (1UL << 12);
++  return (void *) ptr;
++}
++
++int
++foo (struct A *x, unsigned int *y, int z, int u)
++{
++  int a, b, c, d, e;
++
++  z += *y;
++  c = z + u;
++  a = (z >> 12) + 1;
++  do
++    {
++      b = (a << 12);
++      d = b - z;
++      e = c - z;
++      if (e < d)
++	d = e;
++      baz (bar (x, z), 0, d);
++      z = b;
++      a++;
++    }
++  while (z < c);
++  return 0;
++}

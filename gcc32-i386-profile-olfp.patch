@@ -1,0 +1,102 @@
+2002-05-30  Richard Henderson  <rth@redhat.com>
+
+	* defaults.h (TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER): Kill.
+	* toplev.c (process_options): Don't check it.
+	* doc/tm.texi: Don't document it.
+	* config/i386/linux.h (SUBTARGET_FRAME_POINTER_REQUIRED): New.
+	(TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER): Kill.
+	* config/i386/i386.c (ix86_frame_pointer_required): Suppress leaf
+	frame pointer optimization if current_function_profile.
+
+--- gcc/doc/tm.texi.jj	Fri May  3 19:25:59 2002
++++ gcc/doc/tm.texi	Tue Jun  4 23:18:43 2002
+@@ -4077,22 +4077,6 @@ must not use the @var{labelno} argument 
+ @item PROFILE_BEFORE_PROLOGUE
+ Define this macro if the code for function profiling should come before
+ the function prologue.  Normally, the profiling code comes after.
+-
+-
+-@findex TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+-@item TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+-On some targets, it is impossible to use profiling when the frame
+-pointer has been omitted.  For example, on x86 GNU/Linux systems,
+-the @code{mcount} routine provided by the GNU C Library finds the
+-address of the routine that called the routine that called @code{mcount}
+-by looking in the immediate caller's stack frame.  If the immediate
+-caller has no frame pointer, this lookup will fail.
+-
+-By default, GCC assumes that the target does allow profiling when the
+-frame pointer is omitted.  This macro should be defined to a C
+-expression that evaluates to @code{false} if the target does not allow
+-profiling when the frame pointer is omitted.
+-
+ @end table
+ 
+ @node Tail Calls
+--- gcc/config/i386/i386.c.jj	Tue Jun  4 21:13:34 2002
++++ gcc/config/i386/i386.c	Tue Jun  4 23:18:43 2002
+@@ -3827,7 +3827,8 @@ ix86_frame_pointer_required ()
+   /* In override_options, TARGET_OMIT_LEAF_FRAME_POINTER turns off
+      the frame pointer by default.  Turn it back on now if we've not
+      got a leaf function.  */
+-  if (TARGET_OMIT_LEAF_FRAME_POINTER && ! leaf_function_p ())
++  if (TARGET_OMIT_LEAF_FRAME_POINTER
++      && (!current_function_is_leaf || current_function_profile))
+     return 1;
+ 
+   return 0;
+--- gcc/config/i386/linux.h.jj	Tue Apr 16 08:15:02 2002
++++ gcc/config/i386/linux.h	Tue Jun  4 23:18:43 2002
+@@ -63,14 +63,11 @@ Boston, MA 02111-1307, USA.  */
+     fprintf (FILE, "\tcall\tmcount\n");					\
+ }
+ 
+-/* True if it is possible to profile code that does not have a frame
+-   pointer.  
+-
+-   The GLIBC version of mcount for the x86 assumes that there is a
++/* The GLIBC version of mcount for the x86 assumes that there is a
+    frame, so we cannot allow profiling without a frame pointer.  */
+ 
+-#undef TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+-#define TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER false
++#undef SUBTARGET_FRAME_POINTER_REQUIRED
++#define SUBTARGET_FRAME_POINTER_REQUIRED current_function_profile
+ 
+ #undef SIZE_TYPE
+ #define SIZE_TYPE "unsigned int"
+--- gcc/defaults.h.jj	Fri May  3 19:24:51 2002
++++ gcc/defaults.h	Tue Jun  4 23:18:43 2002
+@@ -398,13 +398,6 @@ do {								\
+    ? ptrmemfunc_vbit_in_pfn : ptrmemfunc_vbit_in_delta)
+ #endif
+ 
+-/* True if it is possible to profile code that does not have a frame
+-   pointer.  */
+-
+-#ifndef TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+-#define TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER true
+-#endif
+-
+ #ifndef DEFAULT_GDB_EXTENSIONS
+ #define DEFAULT_GDB_EXTENSIONS 1
+ #endif
+--- gcc/toplev.c.jj	Thu May 30 11:08:44 2002
++++ gcc/toplev.c	Tue Jun  4 23:19:11 2002
+@@ -4908,16 +4908,6 @@ process_options ()
+     warning ("this target machine does not have delayed branches");
+ #endif
+ 
+-  /* Some operating systems do not allow profiling without a frame
+-     pointer.  */
+-  if (!TARGET_ALLOWS_PROFILING_WITHOUT_FRAME_POINTER
+-      && profile_flag
+-      && flag_omit_frame_pointer)
+-    {
+-      error ("profiling does not work without a frame pointer");
+-      flag_omit_frame_pointer = 0;
+-    }
+-    
+   user_label_prefix = USER_LABEL_PREFIX;
+   if (flag_leading_underscore != -1)
+     {

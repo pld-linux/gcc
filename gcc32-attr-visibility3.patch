@@ -1,0 +1,35 @@
+2002-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* varasm.c (assemble_visibility): Strip name encoding.
+
+	* gcc.dg/ia64-visibility-2.c: New test.
+
+--- gcc/testsuite/gcc.dg/ia64-visibility-2.c.jj	2002-07-31 16:31:50.000000000 +0200
++++ gcc/testsuite/gcc.dg/ia64-visibility-2.c	2002-07-31 16:32:36.000000000 +0200
+@@ -0,0 +1,15 @@
++/* Test visibility attribute.  */
++/* { dg-do link { target ia64*-*-linux* } } */
++/* { dg-options "-O2 -fpic" } */
++
++int foo (int x);
++int bar (int x) __asm__ ("foo") __attribute__ ((visibility ("hidden")));
++int bar (int x)
++{
++  return x;
++}
++
++int main ()
++{
++  return 0;
++}
+--- gcc/varasm.c.jj	2002-07-30 12:49:45.000000000 +0200
++++ gcc/varasm.c	2002-07-31 16:20:22.000000000 +0200
+@@ -5227,7 +5227,7 @@ assemble_visibility (decl, visibility_ty
+ {
+   const char *name;
+ 
+-  name = IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (decl));
++  STRIP_NAME_ENCODING (name, IDENTIFIER_POINTER (DECL_ASSEMBLER_NAME (decl)));
+ 
+ #ifdef HAVE_GAS_HIDDEN
+   fprintf (asm_out_file, "\t.%s\t%s\n", visibility_type, name);

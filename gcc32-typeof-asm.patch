@@ -1,0 +1,100 @@
+2002-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* g++.dg/ext/typeof2.C: New test.
+	* gcc.dg/typeof-1.c: New test.
+	* gcc.dg/typeof-2.c: New test.
+
+--- gcc/testsuite/g++.dg/ext/typeof2.C.jj	2002-08-08 14:24:56.000000000 +0200
++++ gcc/testsuite/g++.dg/ext/typeof2.C	2002-08-08 14:24:39.000000000 +0200
+@@ -0,0 +1,29 @@
++// Test typeof with __asm redirection
++// { dg-do compile }
++// { dg-options "-O2" }
++
++extern "C" {
++  extern int foo1;
++  extern int foo1 __asm ("bar1");
++  int foo1 = 1;
++
++  extern int foo2 (int);
++  extern int foo2 (int) __asm ("bar2");
++  int foo2 (int x)
++  {
++    return x;
++  }
++
++  extern int foo3;
++  extern __typeof (foo3) foo3 __asm ("bar3");
++  int foo3 = 1;
++
++  extern int foo4 (int);
++  extern __typeof (foo4) foo4 __asm ("bar4");
++  int foo4 (int x)
++  {
++    return x;
++  }
++}
++
++// { dg-final { scan-assembler-not "foo" } }
+--- gcc/testsuite/gcc.dg/typeof-1.c.jj	2002-08-08 14:26:18.000000000 +0200
++++ gcc/testsuite/gcc.dg/typeof-1.c	2002-08-08 14:26:06.000000000 +0200
+@@ -0,0 +1,27 @@
++/* Test typeof with __asm redirection. */
++/* { dg-do compile } */
++/* { dg-options "-O2" } */
++
++extern int foo1;
++extern int foo1 __asm ("bar1");
++int foo1 = 1;
++
++extern int foo2 (int);
++extern int foo2 (int) __asm ("bar2");
++int foo2 (int x)
++{
++  return x;
++}
++
++extern int foo3;
++extern __typeof (foo3) foo3 __asm ("bar3");
++int foo3 = 1;
++
++extern int foo4 (int);
++extern __typeof (foo4) foo4 __asm ("bar4");
++int foo4 (int x)
++{
++  return x;
++}
++
++// { dg-final { scan-assembler-not "foo" } }
+--- gcc/testsuite/gcc.dg/typeof-2.c.jj	2002-08-08 20:42:33.000000000 +0200
++++ gcc/testsuite/gcc.dg/typeof-2.c	2002-08-08 20:47:53.000000000 +0200
+@@ -0,0 +1,29 @@
++/* Test typeof with __asm redirection. */
++/* { dg-do compile } */
++/* { dg-options "-O2" } */
++
++extern int foo1 (int x) __asm ("baz1");
++int bar1 (int x) { return x; }
++extern __typeof (bar1) foo1 __attribute ((weak, alias ("bar1")));
++
++extern int foo2 (int x) __attribute__ ((const));
++extern __typeof (foo2) foo2 __asm ("baz2");
++int bar2 (int x)
++{
++  return foo2 (x) + foo2 (x) + foo2 (x) + foo2 (x) + foo2 (x) + foo2 (x);
++}
++
++extern int foo3 (int x);
++extern __typeof (foo3) foo3 __asm ("baz3");
++int bar3 (int x)
++{
++  return foo3 (x) + foo3 (x) + foo3 (x) + foo3 (x) + foo3 (x) + foo3 (x);
++}
++
++// { dg-final { scan-assembler-not "foo1" } }
++// { dg-final { scan-assembler "baz1" } }
++// { dg-final { scan-assembler-not "foo2" } }
++// { dg-final { scan-assembler "baz2" } }
++// { dg-final { scan-assembler-not "baz2.*baz2.*baz2.*baz2.*baz2.*baz2" } }
++// { dg-final { scan-assembler-not "foo3" } }
++// { dg-final { scan-assembler "baz3.*baz3.*baz3.*baz3.*baz3.*baz3" } }

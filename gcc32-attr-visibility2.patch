@@ -1,0 +1,109 @@
+2002-03-06  Jakub Jelinek  <jakub@redhat.com>
+
+	* config/i386/i386.h (REDO_SECTION_INFO_P): Define.
+
+2002-03-02  Richard Henderson  <rth@redhat.com>
+
+	* config/i386/i386.h (ENCODE_SECTION_INFO): MODULE_LOCAL_P applies
+	to functions as well.
+
+2002-03-02  Richard Henderson  <rth@redhat.com>
+
+	* attribs.c (handle_visibility_attribute): Don't call
+	assemble_visibility.
+	* varasm.c (maybe_assemble_visibility): New.
+	(assemble_start_function, assemble_variable, assemble_alias): Use it.
+
+--- gcc/config/i386/i386.h.jj	Tue Jun  4 18:54:32 2002
++++ gcc/config/i386/i386.h	Tue Jun  4 18:54:42 2002
+@@ -2268,12 +2268,13 @@ do {								\
+ 	    SYMBOL_REF_FLAG (XEXP (rtl, 0))			\
+ 	      = (TREE_CODE_CLASS (TREE_CODE (DECL)) != 'd'	\
+ 		 || ! TREE_PUBLIC (DECL)			\
+-		 || (TREE_CODE (DECL) == VAR_DECL		\
+-		     && MODULE_LOCAL_P (DECL)));		\
++		 || MODULE_LOCAL_P (DECL));			\
+ 	  }							\
+       }								\
+ } while (0)
+ 
++#define REDO_SECTION_INFO_P(DECL) 1
++
+ /* The `FINALIZE_PIC' macro serves as a hook to emit these special
+    codes once the function is being compiled into assembly code, but
+    not before.  (It is not done before, because in the case of
+--- gcc/varasm.c.jj	Tue Jun  4 18:54:32 2002
++++ gcc/varasm.c	Tue Jun  4 18:54:42 2002
+@@ -167,6 +167,7 @@ static unsigned min_align		PARAMS ((unsi
+ static void output_constructor		PARAMS ((tree, HOST_WIDE_INT,
+ 						 unsigned int));
+ static void globalize_decl		PARAMS ((tree));
++static void maybe_assemble_visibility	PARAMS ((tree));
+ static int in_named_entry_eq		PARAMS ((const PTR, const PTR));
+ static hashval_t in_named_entry_hash	PARAMS ((const PTR));
+ #ifdef ASM_OUTPUT_BSS
+@@ -1238,6 +1239,8 @@ assemble_start_function (decl, fnname)
+ 	}
+ 
+       globalize_decl (decl);
++
++      maybe_assemble_visibility (decl);
+     }
+ 
+   /* Do any machine/system dependent processing of the function name */
+@@ -1591,6 +1594,9 @@ assemble_variable (decl, top_level, at_e
+   DECL_ALIGN (decl) = align;
+   set_mem_align (decl_rtl, align);
+ 
++  if (TREE_PUBLIC (decl))
++    maybe_assemble_visibility (decl);
++
+   /* Handle uninitialized definitions.  */
+ 
+   if ((DECL_INITIAL (decl) == 0 || DECL_INITIAL (decl) == error_mark_node)
+@@ -5167,7 +5173,11 @@ assemble_alias (decl, target)
+ #ifdef ASM_OUTPUT_DEF
+   /* Make name accessible from other files, if appropriate.  */
+   if (TREE_PUBLIC (decl))
+-    globalize_decl (decl);
++    {
++      globalize_decl (decl);
++
++      maybe_assemble_visibility (decl);
++    }
+ 
+ #ifdef ASM_OUTPUT_DEF_FROM_DECLS
+   ASM_OUTPUT_DEF_FROM_DECLS (asm_out_file, decl, target);
+@@ -5213,6 +5223,21 @@ assemble_visibility (decl, visibility_ty
+ #endif
+ }
+ 
++/* A helper function to call assemble_visibility when needed for a decl.  */
++
++static void
++maybe_assemble_visibility (decl)
++     tree decl;
++{
++  tree visibility = lookup_attribute ("visibility", DECL_ATTRIBUTES (decl));
++  if (visibility)
++    {
++      const char *type
++	= TREE_STRING_POINTER (TREE_VALUE (TREE_VALUE (visibility)));
++      assemble_visibility (decl, type);
++    }
++}
++
+ /* Returns 1 if the target configuration supports defining public symbols
+    so that one of them will be chosen at link time instead of generating a
+    multiply-defined symbol error, whether through the use of weak symbols or
+--- gcc/attribs.c.jj	Tue Jun  4 18:54:32 2002
++++ gcc/attribs.c	Tue Jun  4 18:54:42 2002
+@@ -1101,8 +1101,6 @@ handle_visibility_attribute (node, name,
+ 	  *no_add_attrs = true;
+ 	  return NULL_TREE;
+ 	}
+-
+-      assemble_visibility (decl, TREE_STRING_POINTER (id));
+     }
+ 
+   return NULL_TREE;
