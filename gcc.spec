@@ -1,16 +1,14 @@
 %define		STDC_VERSION 2.10.0
-%define		GCJ_VERSION 2.95.1
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	6.2
+Release:	7
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
-Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
-Source2:	gcov.1
+Source1:	gcov.1
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
 Patch2:		%{name}-libstdc++.patch
@@ -172,36 +170,12 @@ Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
-Requires:	%{name}-libgcj = %{version}
+Requires:	libgcj = %{version}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
 and bytecode into native code. To use this you will also need the
-gcc-libgcj package.
-
-%package libgcj
-Summary:	Java runtime library for gcc
-Group:		Libraries
-Group(pl):	Biblioteki
-Group(fr):	Librairies
-URL:		http://sourceware.cygnus.com/java/
-Requires:	zip >= 2.1
-
-%description libgcj
-The Java runtime library. You will need this package to compile your
-Java programs using the gcc Java compiler (gcj).
-
-%package libgcj-static
-Summary:	Static java runtime library for gcc
-Group:		Development/Libraries
-Group(pl):	Programowanie/Biblioteki
-Group(fr):	Development/Librairies
-URL:		http://sourceware.cygnus.com/java/
-Requires:	%{name}-libgcj = %{version}
-
-%description libgcj-static
-The static java runtime library. You will need this package to
-staticly compile your Java programs using the gcc Java compiler (gcj).
+libgcj package.
 
 %package -n libstdc++
 Summary:	GNU c++ library
@@ -327,9 +301,6 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q
-#%setup -q -a1 -D -T
-#mv -f libgcj-%{GCJ_VERSION} libgcj
-#mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -423,7 +394,7 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
-install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1/
+install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
@@ -459,8 +430,6 @@ gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
 
 %postun -n cpp
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%post libgcj  -p /sbin/ldconfig
 
 %post   -p /sbin/ldconfig -n libstdc++
 %postun -p /sbin/ldconfig -n libstdc++
@@ -568,25 +537,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcj
 %attr(755,root,root) %{_bindir}/gcjh
 %attr(755,root,root) %{_bindir}/jcf-dump
-#%attr(755,root,root) %{_bindir}/jv-convert
 %attr(755,root,root) %{_bindir}/jv-scan
-
-#%{_libdir}/*.spec
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
-
-#%files libgcj
-#%defattr(644,root,root,755)
-#
-#%attr(755,root,root) %{_libdir}/lib*gcj*.so
-#%attr(755,root,root) %{_libdir}/lib*gcj*.so.*.*.*
-
-#%files libgcj-static
-#%defattr(644,root,root,755)
-#
-#%{_libdir}/lib*gcj*.a
-#%{_libdir}/lib*gcj*.la
 
 %files -n libstdc++
 %defattr(644,root,root,755)
