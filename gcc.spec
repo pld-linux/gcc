@@ -915,7 +915,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %ifarch ppc
-%{_libdir}/nof/lib*cj.spec
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
