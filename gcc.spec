@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.1
+Release:	0.2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
