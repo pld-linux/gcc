@@ -899,6 +899,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/gcj
+%dir %{_libdir}/security
 %{_libdir}/security/*
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
