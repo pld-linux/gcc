@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.1
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -855,7 +855,7 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 %if %{with ada}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/adalib/*.so.1 \
-	$RPM_BUILD_ROOT%{_libdir}/
+	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
 test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
 ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
