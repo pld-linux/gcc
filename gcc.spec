@@ -759,9 +759,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
-%attr(755,root,root) %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.la
 %ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libsupc++.la
+%{_libdir}/nof/libsupc++.la
 %{_libdir}/nof/libsupc++.a
 %endif
 %{_libdir}/libsupc++.a
@@ -782,10 +782,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{GCC_VERSION}
 %attr(755,root,root) %{_libdir}/libstdc++.so
-%attr(755,root,root) %{_libdir}/libstdc++.la
+%{_libdir}/libstdc++.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
-%attr(755,root,root) %{_libdir}/nof/libstdc++.la
+%{_libdir}/nof/libstdc++.la
 %endif
 
 %files -n libstdc++-static
@@ -800,10 +800,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc gcc/objc/READ*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
 %attr(755,root,root) %{_libdir}/libobjc.so
-%attr(755,root,root) %{_libdir}/libobjc.la
+%{_libdir}/libobjc.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
-%attr(755,root,root) %{_libdir}/nof/libobjc.la
+%{_libdir}/nof/libobjc.la
 %endif
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
 
@@ -828,11 +828,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/g77*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
 %{_libdir}/libfrtbegin.a
-%attr(755,root,root) %{_libdir}/libg2c.la
+%{_libdir}/libg2c.la
 %attr(755,root,root) %{_libdir}/libg2c.so
 %ifarch ppc
 %{_libdir}/nof/libfrtbegin.a
-%attr(755,root,root) %{_libdir}/nof/libg2c.la
+%{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
 %endif
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
@@ -896,11 +896,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
 %{_libdir}/lib*cj.spec
-%attr(755,root,root) %{_libdir}/lib*cj*.la
+%{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %ifarch ppc
 %{_libdir}/nof/lib*cj.spec
-%attr(755,root,root) %{_libdir}/nof/lib*cj*.la
+%{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
 
