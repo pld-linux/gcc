@@ -32,8 +32,7 @@ License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-Source0:	http://pld-nptl.ds14.agh.edu.pl/gcc-4.0-%{_snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
 # Source0-md5:	5040ba840d0367c378f73c739418b3e2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
