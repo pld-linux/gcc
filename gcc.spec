@@ -391,7 +391,7 @@ make install \
 strip $RPM_BUILD_ROOT%{_bindir}/* || :
 
 strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
-strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*.*.*
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/lib*.so*
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
