@@ -647,8 +647,10 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
-# check if symlink made is valid
-test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
+# check if symlink to be made is valid
+test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
+ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
+ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
 ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
