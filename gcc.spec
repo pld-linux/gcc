@@ -144,7 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 - better yet, ExclusiveArch: i386 is in effect
 
 * Tue Apr 14 1998 Cristian Gafton <gafton@redhat.com>
-- removed the c++ package as we are switching to egcs-c++
+- removed the c++ package as we are swhiching to egcs-c++
 - idem for objc
 - added buildroot
 - alpha is exlcuded from the build. I don't know about sparc yet, so I leave
