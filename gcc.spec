@@ -23,10 +23,6 @@ Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-march-i686-fix.patch
-Patch6:		%{name}-loop-ice.patch
-Patch7:		%{name}-mmx-ice.patch
-Patch8:		%{name}-mmx-sse-defines.patch
-Patch9:		%{name}-athlon-move-costs.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -38,51 +34,35 @@ Patch16:	gcc32-boehm-gc-libs.patch
 Patch17:	gcc32-bogus-inline.patch
 Patch18:	gcc32-c++-nrv-test.patch
 Patch19:	gcc32-c++-pretty_function.patch
-# evil? introduced ICE at cp/cp-lang.c:130
-Patch20:	gcc32-c++-tail-pad.patch
-Patch21:	gcc32-c++-tail-pad2.patch
-Patch22:	gcc32-c++-tsubst-asm.patch
-Patch23:	gcc32-cfg-eh.patch
-Patch24:	gcc32-debug-pr7241.patch
-Patch25:	gcc32-doc-gcov.patch 
-Patch26:	gcc32-duplicate-decl.patch
-Patch27:	gcc32-dwarf2-pr6381.patch 
-Patch28:	gcc32-dwarf2-pr6436-test.patch
-Patch29:	gcc32-fde-merge-compat.patch 
-Patch30:	gcc32-fold-const-associate.patch
-Patch31:	gcc32-fold-const2.patch
-Patch32:	gcc32-hard-reg-sharing.patch
-Patch33:	gcc32-hard-reg-sharing2.patch 
-Patch34:	gcc32-i386-default-momit-leaf-frame-pointer.patch
-Patch35:	gcc32-i386-memtest-test.patch 
-Patch36:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
-Patch37:	gcc32-i386-pic-label-thunk.patch
-# included in gcc-mmx-sse-defines.patch
-#Patch38:	gcc32-i386-pr7242.patch
-Patch39:	gcc32-i386-profile-olfp.patch
-Patch40:	gcc32-inline-label.patch 
-Patch41:	gcc32-java-no-rpath.patch
-Patch42:	gcc32-loop-prefetch.patch 
-Patch43:	gcc32-pr6842.patch 
-Patch44:	gcc32-rh69989.patch
-Patch45:	gcc32-sparc-sll1.patch
-Patch46:	gcc32-test-rh65771.patch 
-Patch47:	gcc32-test-rotate.patch  
-Patch48:	gcc32-tls-dwarf2.patch 
-Patch49:	gcc32-tls.patch      
-Patch50:	gcc32-tls2.patch 
-Patch51:	gcc32-tls3.patch
-Patch52:	gcc32-tls4.patch 
-Patch53:	gcc32-tls5.patch    
-#Patch54:	gcc32-tree-code.patch      
-#Patch55:	gcc32-trunc_int_for_mode.patch 
-Patch56:	gcc32-typeof-asm.patch  
-Patch57:	gcc32-typeof-skip-eval.patch 
-
-Patch58:	gcc32-locale_in_monetary_members.patch
-Patch59:	gcc32-locale_in_ctype_members.patch
-Patch60:	gcc32-locale_in_ctype_members_header.patch
-Patch61:	gcc32-libstdc++-glibc.patch
+Patch20:	gcc32-c++-tsubst-asm.patch
+Patch21:	gcc32-cfg-eh.patch
+Patch22:	gcc32-debug-pr7241.patch
+Patch23:	gcc32-doc-gcov.patch 
+Patch24:	gcc32-duplicate-decl.patch
+Patch25:	gcc32-dwarf2-pr6381.patch 
+Patch26:	gcc32-dwarf2-pr6436-test.patch
+Patch27:	gcc32-fde-merge-compat.patch 
+Patch28:	gcc32-fold-const-associate.patch
+Patch29:	gcc32-hard-reg-sharing.patch
+Patch30:	gcc32-hard-reg-sharing2.patch 
+Patch31:	gcc32-i386-default-momit-leaf-frame-pointer.patch
+Patch32:	gcc32-i386-memtest-test.patch 
+Patch33:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
+Patch34:	gcc32-i386-pic-label-thunk.patch
+Patch35:	gcc32-i386-profile-olfp.patch
+Patch36:	gcc32-inline-label.patch 
+Patch37:	gcc32-java-no-rpath.patch
+Patch38:	gcc32-pr6842.patch 
+Patch39:	gcc32-sparc-sll1.patch
+Patch40:	gcc32-test-rh65771.patch 
+Patch41:	gcc32-test-rotate.patch  
+Patch42:	gcc32-tls-dwarf2.patch 
+Patch43:	gcc32-tls.patch      
+Patch44:	gcc32-tls2.patch 
+Patch45:	gcc32-tls3.patch
+Patch46:	gcc32-tls4.patch 
+Patch47:	gcc32-tls5.patch    
+Patch48:	gcc32-typeof-asm.patch  
 
 Patch100:	gcc-pre-3.2.1.patch.gz
 
@@ -533,10 +513,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %ifarch %{ix86}
 %patch5 -p0
 %endif
-#%patch6 -p1
-%patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
 %patch10 
 %patch11 
 %patch12 
@@ -547,7 +523,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch17 
 %patch18 
 %patch19 
-#%patch20 	# introduced ICE at cp/cp-lang.c:130
+%patch20 
 %patch21 
 %patch22 
 %patch23 
@@ -565,30 +541,17 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch35 
 %patch36 
 %patch37 
-#%patch38 	# included in gcc-mmx-sse-defines.patch
+%patch38 
 %patch39 
 %patch40 
 %patch41 
 %patch42 
-%patch43 
+%patch43
 %patch44 
 %patch45 
-%patch46 
-%patch47 
+%patch46
+%patch47
 %patch48 
-%patch49 
-%patch50 
-%patch51 
-%patch52 
-%patch53 
-#%patch54 
-#%patch55 
-%patch56 
-%patch57 
-%patch58
-%patch59 
-%patch60
-%patch61
 
 %build
 # cd gcc && autoconf; cd ..
