@@ -18,6 +18,7 @@ Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-march-i686-fix.patch
+Patch6:		%{name}-loop-ice.patch
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -461,6 +462,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %ifarch %{ix86}
 %patch5 -p0
 %endif
+%patch6 -p1
 
 %build
 # cd gcc && autoconf; cd ..
