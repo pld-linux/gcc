@@ -1,16 +1,16 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	1.0.0
-%define		ver 3.0
+%define		snap		20010305
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	%{ver}
-Release:	0.20010305
+Version:	3.0
+Release:	0.%{snap}
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{release}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{snap}.tar.gz
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
