@@ -340,7 +340,6 @@ PATH=$PATH:/sbin:%{_sbindir}
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
-echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
@@ -393,8 +392,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
-%attr(755,root,root) %{_bindir}/protoize
-%attr(755,root,root) %{_bindir}/unprotoize
 %attr(755,root,root) %{_bindir}/cc
 
 %{_mandir}/man1/gcc.1*
@@ -410,7 +407,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
-%attr(755,root,root) %{_libdir}/gcc-lib/libgcc_s.so.*
+%attr(755,root,root) %{_libdir}/libgcc_s.so*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
@@ -459,6 +456,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
+%ifarch xyz
 %files chill
 %defattr(644,root,root,755)
 %doc gcc/ch/chill.brochure.gz
@@ -481,6 +479,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
+%endif
 
 %files -n libstdc++
 %defattr(644,root,root,755)
@@ -503,5 +502,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 
 %{_mandir}/man1/cpp.1*
-%{_mandir}/man1/cccp.1*
 %{_infodir}/cpp.info*.gz
