@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.0.2
+Release:	0.%{_snap}.0.3
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -31,6 +31,7 @@ Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-pr18910.patch
 Patch6:		%{name}-pr19030.patch
+Patch7:		%{name}-pr18241.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -448,6 +449,7 @@ Statyczne biblioteki Obiektowego C.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
