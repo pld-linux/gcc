@@ -5,7 +5,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{ver}
-Release:	20010305
+Release:	0.20010305
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
