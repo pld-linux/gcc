@@ -20,7 +20,7 @@ Patch8:      gcc-2.7.2.3-glibc2.patch
 Patch9:      gcc-2.7.2-alpha-ra.patch
 Requires:    binutils
 Prereq:      /sbin/install-info
-Buildroot:   /tmp/%{name}-%{version}-root
+BuildRoot:	/tmp/%{name}-%{version}-root
 Exclusivearch: i386
 
 %description
