@@ -1,0 +1,24 @@
+2002-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* g++.dg/debug/typedef1.C: New test.
+
+--- gcc/testsuite/g++.dg/debug/typedef1.C.jj	Thu Aug 30 22:30:55 2001
++++ gcc/testsuite/g++.dg/debug/typedef1.C	Tue Apr 30 19:50:12 2002
+@@ -0,0 +1,17 @@
++// PR debug/6436
++// { dg-do compile }
++
++typedef struct 
++{
++  unsigned int a0, a1;
++} A __attribute__ ((aligned(8)));
++
++typedef struct
++{
++  A a;
++} B;
++
++struct C
++{
++  B *bp;
++};

@@ -1,0 +1,61 @@
+Index: loop.c
+===================================================================
+RCS file: /cvsroot/gcc/gcc/gcc/loop.c,v
+retrieving revision 1.389.2.7
+diff -c -r1.389.2.7 loop.c
+*** gcc-3.2/gcc/loop.c	15 Jun 2002 01:12:04 -0000	1.389.2.7
+--- gcc-3.2/gcc/loop.c	9 Sep 2002 20:23:19 -0000
+***************
+*** 9264,9270 ****
+  	{
+  	case LE:
+  	  if ((unsigned HOST_WIDE_INT) const_val != max_val >> 1)
+! 	    code = LT, op1 = GEN_INT (const_val + 1);
+  	  break;
+  
+  	/* When cross-compiling, const_val might be sign-extended from
+--- 9264,9270 ----
+  	{
+  	case LE:
+  	  if ((unsigned HOST_WIDE_INT) const_val != max_val >> 1)
+! 	    code = LT, op1 = gen_int_mode (const_val + 1, GET_MODE (op0));
+  	  break;
+  
+  	/* When cross-compiling, const_val might be sign-extended from
+***************
+*** 9273,9289 ****
+  	  if ((HOST_WIDE_INT) (const_val & max_val)
+  	      != (((HOST_WIDE_INT) 1
+  		   << (GET_MODE_BITSIZE (GET_MODE (op0)) - 1))))
+! 	    code = GT, op1 = GEN_INT (const_val - 1);
+  	  break;
+  
+  	case LEU:
+  	  if (uconst_val < max_val)
+! 	    code = LTU, op1 = GEN_INT (uconst_val + 1);
+  	  break;
+  
+  	case GEU:
+  	  if (uconst_val != 0)
+! 	    code = GTU, op1 = GEN_INT (uconst_val - 1);
+  	  break;
+  
+  	default:
+--- 9273,9289 ----
+  	  if ((HOST_WIDE_INT) (const_val & max_val)
+  	      != (((HOST_WIDE_INT) 1
+  		   << (GET_MODE_BITSIZE (GET_MODE (op0)) - 1))))
+! 	    code = GT, op1 = gen_int_mode (const_val - 1, GET_MODE (op0));
+  	  break;
+  
+  	case LEU:
+  	  if (uconst_val < max_val)
+! 	    code = LTU, op1 = gen_int_mode (uconst_val + 1, GET_MODE (op0));
+  	  break;
+  
+  	case GEU:
+  	  if (uconst_val != 0)
+! 	    code = GTU, op1 = gen_int_mode (uconst_val - 1, GET_MODE (op0));
+  	  break;
+  
+  	default:

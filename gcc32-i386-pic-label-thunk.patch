@@ -1,0 +1,91 @@
+2002-06-04  Richard Henderson  <rth@redhat.com>
+	    Jakub Jelinek  <jakub@redhat.com>
+
+	* config/i386/i386.c (USE_HIDDEN_LINKONCE): New.
+	(ix86_asm_file_end): If USE_HIDDEN_LINKONCE, emit get_pc thunks
+	into linkonce sections.
+	(load_pic_register): Set up pic_label_name for it.
+
+--- gcc/config/i386/i386.c.jj	Mon Jun  3 17:24:13 2002
++++ gcc/config/i386/i386.c	Tue Jun  4 15:49:17 2002
+@@ -3786,6 +3786,12 @@ ix86_setup_frame_addresses ()
+   cfun->machine->accesses_prev_frame = 1;
+ }
+ 
++#if defined(HAVE_GAS_HIDDEN) && defined(SUPPORTS_ONE_ONLY)
++# define USE_HIDDEN_LINKONCE 1
++#else
++# define USE_HIDDEN_LINKONCE 0
++#endif
++
+ static char pic_label_name[32];
+ 
+ /* This function generates code for -fpic that loads %ebx with
+@@ -3800,10 +3806,6 @@ ix86_asm_file_end (file)
+   if (! TARGET_DEEP_BRANCH_PREDICTION || pic_label_name[0] == 0)
+     return;
+ 
+-  /* ??? Binutils 2.10 and earlier has a linkonce elimination bug related
+-     to updating relocations to a section being discarded such that this
+-     doesn't work.  Ought to detect this at configure time.  */
+-#if 0
+   /* The trick here is to create a linkonce section containing the
+      pic label thunk, but to refer to it with an internal label.
+      Because the label is internal, we don't have inter-dso name
+@@ -3811,28 +3813,27 @@ ix86_asm_file_end (file)
+ 
+      In order to use these macros, however, we must create a fake
+      function decl.  */
+-  if (targetm.have_named_sections)
++  if (USE_HIDDEN_LINKONCE && targetm.have_named_sections)
+     {
+       tree decl = build_decl (FUNCTION_DECL,
+-			      get_identifier ("i686.get_pc_thunk"),
++			      get_identifier (pic_label_name),
+ 			      error_mark_node);
++      TREE_PUBLIC (decl) = 1;
++      TREE_STATIC (decl) = 1;
+       DECL_ONE_ONLY (decl) = 1;
+       UNIQUE_SECTION (decl, 0);
+-      named_section (decl, NULL);
++      named_section (decl, NULL, 0);
++      ASM_GLOBALIZE_LABEL (file, pic_label_name);
++      fputs ("\t.hidden\t", file);
++      assemble_name (file, pic_label_name);
++      fputc ('\n', file);
++      ASM_DECLARE_FUNCTION_NAME (file, pic_label_name, decl);
+     }
+   else
+-#else
+-    text_section ();
+-#endif
+-
+-  /* This used to call ASM_DECLARE_FUNCTION_NAME() but since it's an
+-     internal (non-global) label that's being emitted, it didn't make
+-     sense to have .type information for local labels.   This caused
+-     the SCO OpenServer 5.0.4 ELF assembler grief (why are you giving
+-     me debug info for a label that you're declaring non-global?) this
+-     was changed to call ASM_OUTPUT_LABEL() instead.  */
+-
+-  ASM_OUTPUT_LABEL (file, pic_label_name);
++    {
++      text_section ();
++      ASM_OUTPUT_LABEL (file, pic_label_name);
++    }
+ 
+   xops[0] = pic_offset_table_rtx;
+   xops[1] = gen_rtx_MEM (SImode, stack_pointer_rtx);
+@@ -3853,7 +3854,12 @@ load_pic_register ()
+   if (TARGET_DEEP_BRANCH_PREDICTION)
+     {
+       if (! pic_label_name[0])
+-	ASM_GENERATE_INTERNAL_LABEL (pic_label_name, "LPR", 0);
++	{
++	  if (USE_HIDDEN_LINKONCE && targetm.have_named_sections)
++	    strcpy (pic_label_name, "__i686.get_pc_thunk.bx");
++	  else
++	    ASM_GENERATE_INTERNAL_LABEL (pic_label_name, "LPR", 0);
++	}
+       pclab = gen_rtx_MEM (QImode, gen_rtx_SYMBOL_REF (Pmode, pic_label_name));
+     }
+   else
