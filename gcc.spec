@@ -367,7 +367,8 @@ TEXCONFIG=false ../configure \
 	--with-gnu-ld \
 	--with-gxx-include-dir="\$\{prefix\}/include/g++" \
 	--disable-nls \
-	%{_target_platform}
+	--build=%{_target_platform} \
+	--host=%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
