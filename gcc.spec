@@ -1,14 +1,17 @@
+%define 	rver		2.95.3
+%define		snap		20010823
 %define		STDC_VERSION 2.10.0
+%define		STDC_RELEASE 30
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	2.95.3
-Release:	29
+Version:	2.95.4
+Release:	0.%{snap}.0
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{rver}/%{name}-%{rver}.tar.gz
 Source1:	gcov.1
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
@@ -30,9 +33,8 @@ Patch16:	%{name}-ppc-descriptions.patch
 Patch17:	%{name}-alpha-complex-float.patch
 Patch18:	%{name}-gcj-vs-iconv.patch
 Patch19:	%{name}-libobjc.patch
-Patch20:	%{name}-pointer-arith.patch
-Patch21:	%{name}-crtendS.patch
-
+#Patch20:	%{name}-pointer-arith.patch
+Patch50:	%{name}-%{rver}-%{snap}.patch.bz2
 BuildRequires:	bison
 BuildRequires:	texinfo
 Requires:	binutils >= 2.9.1.0.25
@@ -195,6 +197,7 @@ Group(de):	Libraries
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Version:	%{STDC_VERSION}
+Release:	%{STDC_RELEASE}
 Obsoletes:	libg++
 
 %description -n libstdc++
@@ -232,6 +235,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
+Release:	%{STDC_RELEASE}
 Requires:	libstdc++ = %{STDC_VERSION}
 Requires:	%{name}-c++
 Obsoletes:	libg++-devel
@@ -254,6 +258,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
+Release:	%{STDC_RELEASE}
 Requires:	libstdc++-devel = %{STDC_VERSION}
 
 %description -n libstdc++-static
@@ -316,7 +321,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{rver}
+%patch50 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -345,8 +351,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %endif
 %patch18 -p0
 %patch19 -p0
-%patch20 -p0
-%patch21 -p1
+#%patch20 -p0
 
 %build
 (cd gcc; autoconf)
