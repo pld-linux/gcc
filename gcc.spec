@@ -4,7 +4,7 @@ Summary:	GNU C Compiler
 Summary(pl):	Kompilator GNU
 Name:		gcc
 Version:	2.95.1
-Release:	1
+Release:	2
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
