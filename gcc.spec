@@ -1,9 +1,9 @@
-%define		SNAP		20020218
-%define		DASHED_SNAP	2002-02-18
+%define		SNAP		20020225
+%define		DASHED_SNAP	2002-02-25
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	3.1
 %define		GCJ_VERSION	3.1
-%define		KSI_VERSION	pre47
+%define		KSI_VERSION	pre48
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
