@@ -6,7 +6,7 @@
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.2.1
+%define		GCC_VERSION	3.2.2
 %define		KSI_VERSION	pre55
 %define		EPOCH		5
 
@@ -14,7 +14,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	0.1
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -504,16 +504,16 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#%patch3 -p1
 %patch4 -p1
 
-%patch10
+#%patch10
 %patch11
 %patch12
 %patch13
 %patch14
 %patch15
-%patch16
+#%patch16
 %patch17
 %patch18
 %patch19
@@ -525,7 +525,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch25
 %patch26
 %patch27
-%patch28
+#%patch28
 %patch29
 %patch30
 %patch31
@@ -545,9 +545,10 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45
 %patch46
 %patch47
-%patch48
+#%patch48
 
-%patch6 -p1
+# fixme
+#%patch6 -p1
 
 perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
 
