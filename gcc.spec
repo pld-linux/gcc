@@ -757,6 +757,8 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
 %{__make} -C obj-%{_target_platform} profiledbootstrap \
+	BOOT_CFLAGS="%{rpmcflags}" \
+	STAGE1_CFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
@@ -898,7 +900,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc READ* ChangeLog
+%doc READ* ChangeLog BUGS FAQ LAST_UPDATED MAINTAINERS gcc/README.Portability
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
