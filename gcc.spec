@@ -1,5 +1,5 @@
-%define		SNAP		20020304
-%define		DASHED_SNAP	2002-03-04
+%define		DASHED_SNAP	2002-03-11
+%define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	3.1
 %define		GCJ_VERSION	3.1
@@ -22,6 +22,8 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	autoconf
+BuildRequires:	gcc
+BuildRequires:	gcc-ada
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
