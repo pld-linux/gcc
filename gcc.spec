@@ -10,7 +10,6 @@ Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.bz2
 Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
-Source2:	libstdc++-compat.tar.gz
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
 Patch2:		gcc-pld-linux.patch
@@ -201,22 +200,6 @@ aplikacji C++.
 Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
 uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
 
-%package -n libstdc++-compat
-Summary:	Old GNU c++ library
-Summary(pl):	Biblioteki GNU C++ 
-Group:		Libraries
-Group(pl):	Biblioteki
-Version:	%{STDC_VERSION}
-
-%description -n libstdc++-compat
-This is the GNU implementation of the standard C++ libraries, This package
-includes the old shared libraries necessary to run C++ applications.
-
-%description -l pl -n libstdc++-compat
-Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
-C++, znajduj± siê w nim poprzednie wersje bibliotek dynamicznych niezbêdnych
-do uruchomienia aplikacji C++.
-
 %package -n libstdc++-devel
 Summary:	Header files and libraries for C++ development
 Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
@@ -311,8 +294,6 @@ mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-mkdir compat
-tar xzf %{SOURCE2} -C compat
 
 %build
 rm -rf obj-%{_target_platform}
@@ -375,9 +356,6 @@ mv -f $RPM_BUILD_ROOT%{_includedir}/g++-3 $RPM_BUILD_ROOT%{_includedir}/g++
 install -d $RPM_BUILD_ROOT/lib
 (cd $RPM_BUILD_ROOT; \
 ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
-
-#install the compatibility libstdc++ library
-[ -d ../compat/$RPM_ARCH ] && install -s ../compat/$RPM_ARCH/* $RPM_BUILD_ROOT%{_libdir}/
 
 gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
 	  ../READ* ../ChangeLog ../gcc/ch/chill.brochure
@@ -543,13 +521,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++
 %attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.so
-
-%files -n libstdc++-compat
-%defattr(644,root,root,755) 
-%attr(755,root,root) %{_libdir}/libstdc++.so.2.*
-%ifnarch sparc
-%attr(755,root,root) %{_libdir}/libg++.so.*
-%endif
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
