@@ -166,6 +166,7 @@ Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
 Version:	%{GCJ_VERSION}
+Requires:	zlib
 
 %description -n libgcj
 Java Class Libraries
