@@ -826,6 +826,8 @@ cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
 %{__make} install \
+        mandir=%{_mandir} \
+        infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %ifarch sparc64
@@ -854,6 +856,14 @@ ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
+
+# dual archs
+%ifarch x86_64
+mv -f $RPM_BUILD_ROOT%{_prefix}/lib/32/* $RPM_BUILD_ROOT%{_prefix}/lib
+rm -rf $RPM_BUILD_ROOT%{_prefix}/lib/32
+ln -s ../lib $RPM_BUILD_ROOT%{_prefix}/lib/32
+ln -s ../lib $RPM_BUILD_ROOT/lib/32
+%endif
 
 %if %{!?_without_java:1}%{?_without_java:0}
 install -d java-doc
@@ -986,9 +996,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/*.h
 %exclude %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
+%ifarch x86_64
+/%{_lib}/32
+%{_libdir}/32
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/32
+%endif
+
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}*/lib*.so.*
+%ifarch x86_64
+%attr(755,root,root) /lib/lib*.so.*
+%endif
 
 %files c++
 %defattr(644,root,root,755)
@@ -1129,6 +1148,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %endif
+%ifarch x86_64
+%attr(755,root,root) %{_prefix}/%{_lib}/lib*cj*.so.*.*.*
+%endif
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
@@ -1152,6 +1174,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
+%ifarch x86_64
+%{_prefix}/%{_lib}/lib*cj*.la
+%attr(755,root,root) %{_prefix}/%{_lib}/lib*cj*.so
+%endif
+
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
@@ -1164,16 +1191,25 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi-*.so
+%ifarch x86_64
+%attr(755,root,root) %{_prefix}/%{_lib}/libffi-*.so
+%endif
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%ifarch x86_64
+%{_prefix}/%{_lib}/libffi.la
+%endif
 %{_includedir}/ffi*
 
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
+%ifarch x86_64
+%{_prefix}/%{_lib}/libffi.a
+%endif
 %endif
 
 %if 0%{!?_without_ada:1}
@@ -1210,6 +1246,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n cpp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/cpp
+%ifarch x86_64
+%attr(755,root,root) /lib/cpp
+%endif
 %attr(755,root,root) %{_bindir}/cpp
 %{_mandir}/man1/cpp.1*
 %lang(ja) %{_mandir}/ja/man1/cpp.1*
