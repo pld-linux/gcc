@@ -5,7 +5,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -602,5 +602,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir}/cpp
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 %{_mandir}/man1/cpp.1*
 %{_infodir}/cpp*
