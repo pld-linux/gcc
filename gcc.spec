@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.3
-Release:	12
+Release:	13
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -42,6 +42,7 @@ Patch27:	%{name}-libobjc.patch
 Patch28:	%{name}-pointer-arith.patch
 
 Patch29:	%{name}-glibc-2.2.patch
+Patch30:	%{name}-O2-bug.patch
 
 BuildRequires:	bison
 Requires:	binutils >= 2.9.1.0.25
@@ -353,6 +354,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch27 -p0
 %patch28 -p0
 %patch29 -p1
+%patch30 -p1
 
 %build
 (cd gcc; autoconf)
