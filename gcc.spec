@@ -340,7 +340,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch0 -p1
 
 %build
-cd gcc && autoconf && cd ..
+cd gcc && autoconf; cd ..
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
 CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
