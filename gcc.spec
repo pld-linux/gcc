@@ -153,7 +153,7 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
-Requires:	libgcj >= 2.95.1
+Requires:	libgcj >= 3.0.0
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
@@ -174,6 +174,7 @@ Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Version:	%{GCJ_VERSION}
+Epoch:		2
 Requires:	zlib
 
 %description -n libgcj
@@ -190,6 +191,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{GCJ_VERSION}
+Epoch:		2
 Requires:	libgcj = %{GCJ_VERSION}
 Requires:	%{name}-java
 
@@ -207,6 +209,7 @@ Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{GCJ_VERSION}
+Epoch:		2
 Requires:	libstdc++-devel = %{GCJ_VERSION}
 
 %description -n libgcj-static
