@@ -11,11 +11,6 @@
 %undefine	with_multilib
 %endif
 
-%if %{with multilib}
-# PR/20349
-%undefine	with_java
-%endif
-
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
@@ -27,7 +22,7 @@
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
-%define		_snap		20050319
+%define		_snap		20050326
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
@@ -40,7 +35,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-# Source0-md5:	981afe4856b3c23db52c515aecc9ead8
+# Source0-md5:	95b3c35a3ab09dbebad56bdff8f5173b
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -50,7 +45,7 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch100:	%{name}-pr19317.patch
-Patch101:	%{name}-pr20249.patch
+Patch101:	%{name}-pr20635.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -64,7 +59,7 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
-BuildRequires:	glibc-devel >= 2.2.5-20
+BuildRequires:	glibc-devel >= 6:2.3.4-1.5
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %{?with_java:BuildRequires:	pango-devel}
