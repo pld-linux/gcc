@@ -25,29 +25,27 @@
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
-%define		_snap		20050213
+%define		_snap		20050220
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.4
+Release:	0.%{_snap}.1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-# Source0-md5:	56c68edf4047dc42aeda22186cedb40b
+# Source0-md5:	b6eb6758dcedec9d18c04c1c43740cce
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
-Patch5:		%{name}-pr19942.patch
-Patch6:		%{name}-pr19865.patch
-Patch7:		%{name}-pr19937.patch
+Patch5:		%{name}-pr19937.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -477,8 +475,6 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch5 -p1
-%patch6 -p1
-%patch7 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
