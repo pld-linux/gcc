@@ -421,8 +421,8 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
 (cd $RPM_BUILD_ROOT%{_libdir} ; LIBSTDC=$(ls libstdc++.so.*.*.*) ; \
- cd $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/* ; \
- ln -sf %{_libdir}/${LIBSTDC} libstdc++.so)
+ cd $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/ ; \
+ ln -sf ../../../${LIBSTDC} libstdc++.so)
 
 mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
         $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
