@@ -28,7 +28,6 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
-Patch4:		%{name}-PR10849.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -45,7 +44,7 @@ Patch21:	gcc32-inline-label.patch
 Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
-Patch25:	%{name}-unwind.patch
+#Patch25:	%{name}-unwind.patch	-- obsolete?
 BuildRequires:	autoconf
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
@@ -620,9 +619,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch22
 %patch23
 %patch24
-%ifarch alpha
-%patch25
-%endif
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
