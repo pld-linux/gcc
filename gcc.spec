@@ -7,6 +7,10 @@
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 
+%ifarch ppc # needed until 20249 is resolved
+%undefine with_profiling
+%endif
+
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
@@ -24,6 +28,7 @@
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
 #		- http://gcc.gnu.org/PR20225 (regression] / ice during gc)
+#		- http://gcc.gnu.org/PR20249 (ICE with -fprofile-arcs on ppc)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
