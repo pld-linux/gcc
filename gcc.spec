@@ -477,7 +477,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libsupc++.la
 %{_libdir}/libsupc++.a
 %{_infodir}/c-tree*
-%{_infodir}/g++int*
 
 %files objc
 %defattr(644,root,root,755)
