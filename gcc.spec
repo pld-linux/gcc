@@ -1,4 +1,4 @@
-%define		DASHED_SNAP	2002-05-10
+%define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	4.0.0
@@ -9,10 +9,10 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{SNAP}.0
+Release:	1
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{name}-%{GCC_VERSION}-%{SNAP}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
@@ -26,7 +26,7 @@ BuildRequires:	autoconf
 BuildRequires:	gcc
 BuildRequires:	gcc-ada
 BuildRequires:	perl-devel
-Requires:	binutils >= 2.12.90.0.1
+Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -441,7 +441,7 @@ Ten pakiet zawiera biblioteki statyczne potrzebne do uruchamiania
 programów napisanych w Adzie.
 
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}-%{SNAP}
+%setup -q -a1 -n %{name}-%{GCC_VERSION}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
