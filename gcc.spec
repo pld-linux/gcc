@@ -1,5 +1,5 @@
-%define		SNAP		20020225
-%define		DASHED_SNAP	2002-02-25
+%define		SNAP		20020304
+%define		DASHED_SNAP	2002-03-04
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	3.1
 %define		GCJ_VERSION	3.1
@@ -11,14 +11,14 @@ Version:	%{GCC_VERSION}
 Release:	0.%{SNAP}.1
 License:	GPL
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-Patch0:		gcc-slibdir.patch
-Patch1:		gcc-paths.patch
+Patch0:		%{name}-slibdir.patch
+Patch1:		%{name}-paths.patch
+Patch2:		%{name}-ada-no-addr2line.patch
+Patch3:		%{name}-ada-no-prefix.o.patch
 BuildRequires:	bison
-BuildRequires:	texinfo
+BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	autoconf
@@ -39,14 +39,10 @@ wyprodukowania szybkiego i stablinego kodu wynikowego.
 
 %package c++
 Summary:	C++ support for gcc
-Summary(fr):	Support C++ pour le compilateur gcc
-Summary(pl):	Wspomaganie C++ dla kompilatora gcc
-Summary(tr):	gcc için C++ desteði
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
+Requires:	gcc = %{GCC_VERSION}
 
 %description c++
 This package adds C++ support to the GNU C compiler. It includes
@@ -83,8 +79,6 @@ Summary(fr):	Gestion d'Objective C pour gcc
 Summary(pl):	Wspomaganie obiektowego C dla kompilatora gcc
 Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
 Requires:	libobjc = %{GCC_VERSION}
@@ -122,10 +116,6 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
 
 %description -n libobjc
 Objective C Libraries
@@ -137,9 +127,6 @@ Biblioteki Obiektowego C
 Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Epoch:		2
 Requires:	libobjc = %{GCC_VERSION}
 
@@ -153,8 +140,6 @@ Statyczne Obiektowego C
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-g77
 Requires:	libg2c = %{GCC_VERSION}
 
@@ -170,10 +155,6 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 Summary:	Fortran 77 Libraries
 Summary(pl):	Biblioteki Fortranu 77
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
 
 %description -n libg2c
 Fortran 77 Libraries
@@ -185,9 +166,6 @@ Biblioteki Fortranu 77
 Summary:	Static Fortran 77 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Epoch:		2
 Requires:	libg2c = %{GCC_VERSION}
 
@@ -201,8 +179,6 @@ Statyczne Fortranu 77
 Summary:	CHILL support for gcc
 Summary(pl):	Wspomoganie CHILL dla gcc
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
 
 %description chill
@@ -220,8 +196,6 @@ Europe, Brazil, Korea, and other places.
 Summary:	Java support for gcc
 Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 
@@ -239,10 +213,6 @@ przeprowadziæ kompilacjê.
 Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
 Version:	%{GCJ_VERSION}
 Epoch:		2
 Requires:	zlib
@@ -257,9 +227,6 @@ Biblioteki Klass Javy
 Summary:	Development files for Java Class Libraries
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klass Javy
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Version:	%{GCJ_VERSION}
 Epoch:		2
 Requires:	libgcj = %{GCJ_VERSION}
@@ -275,9 +242,6 @@ Pliki nag³ówkowe dla Bibliotek Klass Javy
 Summary:	Static Java Class Libraries
 Summary(pl):	Statyczne Biblioteki Klass Javy
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Version:	%{GCJ_VERSION}
 Epoch:		2
 Requires:	libstdc++-devel = %{GCJ_VERSION}
@@ -292,10 +256,6 @@ Statyczne Biblioteki Klass Javy
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
-Group(de):	Libraries
-Group(es):	Bibliotecas
-Group(fr):	Librairies
-Group(pl):	Biblioteki
 Version:	%{STDC_VERSION}
 Obsoletes:	libg++
 
@@ -329,9 +289,6 @@ Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
 Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
 Requires:	%{name}-c++
@@ -351,9 +308,6 @@ programowaniu w jêzyku C++.
 Summary:	Static c++ standard library
 Summary(pl):	Biblioteka statyczna c++
 Group:		Development/Libraries
-Group(de):	Entwicklung/Libraries
-Group(fr):	Development/Librairies
-Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++-devel = %{STDC_VERSION}
 
@@ -367,9 +321,6 @@ Biblioteka statyczna C++.
 Summary:	Shared gcc library
 Summary(pl):	Biblioteka gcc
 Group:		Libraries
-Group(de):	Libraries
-Group(fr):	Librairies
-Group(pl):	Biblioteki
 Version:	%{version}
 
 %description -n libgcc
@@ -382,8 +333,6 @@ Biblioteka dynamiczna gcc.
 Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Version:	%{version}
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
@@ -437,8 +386,6 @@ Summary:	Ksi support for gcc
 Summary(pl):	Wspomoganie Ksi dla gcc
 Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
-Group(de):	Entwicklung/Sprachen
-Group(pl):	Programowanie/Jêzyki
 Requires:	gcc = %{GCC_VERSION}
 
 %description ksi
@@ -453,12 +400,56 @@ w Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba
 ¿e zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jakos reprezentacji
 po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 
+%package ada
+Summary:	Ada support for gcc
+Summary(pl):	Wsparcie dla Ady do gcc
+Group:		Development/Languages
+Requires:	libgnat = %{GCC_VERSION}
+Requires:	gcc = %{GCC_VERSION}
+Obsoletes:	gnat-devel
+
+%description ada
+This package adds experimental support for compiling Ada programs.
+
+%description -l pl ada
+Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów
+w Adzie.
+
+%package -n libgnat
+Summary:	Ada standard libraries
+Summary(pl):	Biblioteki standardowe dla Ady
+Group:		Libraries
+Obsoletes:	gnat
+
+%description -n libgnat
+This package contains shared libraries needed to run programs written
+in Ada.
+
+%description -l pl -n libgnat
+Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów napisanych
+w Adzie.
+
+%package -n libgnat-static
+Summary:	Static Ada standard libraries
+Summary(pl):	Statyczne biblioteki standardowe dla Ady
+Group:		Libraries
+Obsoletes:	gnat-static
+
+%description -n libgnat
+This package contains static libraries needed to run programs written
+in Ada.
+
+%description -l pl -n libgnat-static
+Ten pakiet zawiera biblioteki statyczne potrzebne do uruchamiania
+programów napisanych w Adzie.
 
 %prep
 %setup -q -a1 -n %{name}-%{SNAP}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 # cd gcc && autoconf; cd ..
@@ -473,7 +464,7 @@ TEXCONFIG=false ../configure \
 	--mandir=%{_mandir} \
 	--enable-shared \
 	--enable-threads=posix \
-        --enable-languages="c,c++,f77,gcov,java,objc,ksi" \
+        --enable-languages="c,c++,f77,gcov,java,objc,ksi,ada" \
 	--enable-long-long \
 	--enable-multilib \
 	--with-gnu-as \
@@ -485,11 +476,27 @@ TEXCONFIG=false ../configure \
 
 PATH=$PATH:/sbin:%{_sbindir}
 
+# this dircty hack is relict of setting, where objdir is subdir of srcdir
+sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
+	obj-%{_target_platform}/gcc/ada/Makefile > makefile.tmp
+mv -f makefile.tmp obj-%{_target_platform}/gcc/ada/Makefile
+
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
+
+%{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
+	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
+	mandir=%{_mandir} \
+	infodir=%{_infodir}
+
+# make Gnat Reference Manual
+cd gcc/ada
+ln -s ../doc/include/fdl.texi gfdl.texi
+makeinfo gnat_rm.texi
+cd ../..
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -517,9 +524,21 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
         $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
 
+# move ada shared libraries to proper place...
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so \
+	$RPM_BUILD_ROOT%{_libdir}
+rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so
+(cd $RPM_BUILD_ROOT%{_libdir} && \
+ ln -s libgnat-*so libgnat.so && \
+ ln -s libgnarl-*so libgnarl.so)
+
+/$RPM_BUILD_ROOT%{_libdir}
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
+
+install gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
+
 gzip -9nf READ* ChangeLog
 gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 
@@ -581,6 +600,8 @@ gzip -9nf gcc/objc/READ*
 %postun -p /sbin/ldconfig -n libg2c
 %post   -p /sbin/ldconfig -n libobjc
 %postun -p /sbin/ldconfig -n libobjc
+%post   -p /sbin/ldconfig -n libgnat
+%postun -p /sbin/ldconfig -n libgnat
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -674,6 +695,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
+
+%files ada
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/gnat1
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/adainclude
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.ali
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgmem.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
+%attr(755,root,root) %{_bindir}/gnat*
+%{_infodir}/gnat*
+%{_libdir}/libgnat.so
+%{_libdir}/libgnarl.so
+
+%files -n libgnat-static
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgna*.a
+
+%files -n libgnat
+%{_libdir}/libgna*-*so
 
 %ifarch no_longer_supported_by_gcc_team
 %files chill
