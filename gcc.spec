@@ -47,7 +47,7 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-pr19937.patch
-Patch6:		%{name}-alpha-ada__fix.patch
+Patch6:		%{name}-alpha-ada_fix.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
