@@ -24,3 +24,16 @@ diff -ur gcc-2.95.1.orig/libstdc++/configure.in gcc-2.95.1/libstdc++/configure.i
    fi
  fi
  
+--- gcc-2.95.1/libstdc++/Makefile.in~	Thu Aug  5 10:00:40 1999
++++ gcc-2.95.1/libstdc++/Makefile.in	Fri Aug 20 15:22:06 1999
+@@ -30,8 +30,8 @@
+ 	 memory numeric pthread_alloc queue rope set slist stack utility \
+ 	 vector fstream iomanip iostream strstream iosfwd bitset valarray
+ 
+-ARLIB   = libstdc++.a.$(VERSION)
+-ARLINK  = libstdc++.a
++ARLIB   = libstdc++.a
++ARLINK  = libstdc++.a.$(VERSION)
+ MARLINK = libstdc++.a.`echo $(VERSION) | sed 's/\([0-9]*[.][0-9]*\).*/\1/'`
+ SHLIB   = libstdc++.so.$(VERSION)
+ SHARLIB = libstdc++-sh.a
