@@ -402,7 +402,7 @@ Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	libstdc++ = %{GCC_VERSION}
-Requires:	%{name}-c++
+Requires:	%{name}-c++ = %{GCC_VERSION}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
