@@ -32,6 +32,7 @@ Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
 # Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
+Source3:	gcc_visibility.m4
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
@@ -829,6 +830,7 @@ rm -rf $gccdir/install-tools
 %if %{with ssp}
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 %endif
+install %{SOURCE3} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -875,6 +877,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
 %{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
+%{_aclocaldir}/gcc_visibility.m4
 
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
