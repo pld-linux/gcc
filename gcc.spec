@@ -22,6 +22,7 @@
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
+#		- http://gcc.gnu.org/PR20188 (middle-end / regression / glibc-2.3.4 misscompilation)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
