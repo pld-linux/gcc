@@ -1,4 +1,7 @@
 #
+# Conditional build:
+%bcond_with	bootstrap	# exclude gij/libgij.so
+#
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
@@ -437,7 +440,7 @@ Statyczne biblioteki Obiektowego C.
 # final
 #setup -q -n gcc-%{version}
 
-%patch0 -p1
+#patch0 -p1	NEEDS UPDATE
 %patch1 -p1
 %{!?debug:%patch2 -p1}
 %patch3 -p1
@@ -771,19 +774,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
-#attr(755,root,root) %{_bindir}/gij		see PR18909
+%{!?with_bootstrap:%attr(755,root,root) %{_bindir}/gij}
+%attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
+%{_mandir}/man1/gcj*
+%{!?with_bootstrap:%{_mandir}/man1/gij*}
+%{_mandir}/man1/grepjar*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
-#{_mandir}/man1/gij*
-%{_mandir}/man1/gcj*
-%{_mandir}/man1/grepjar*
 
 %files java-tools
 %defattr(644,root,root,755)
@@ -798,6 +801,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
+%{!?with_bootstrap:%attr(755,root,root) %{_libdir}/libgij.so.*.*.*}
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %{_libdir}/logging.properties
 
@@ -815,6 +819,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
+%{!?with_bootstrap:%attr(755,root,root) %{_libdir}/libgij.so}
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib-org-*.la
 %{_pkgconfigdir}/libgcj.pc
