@@ -534,7 +534,7 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
 
-install gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
+install  obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
 
 gzip -9nf READ* ChangeLog
 gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
