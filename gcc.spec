@@ -720,7 +720,7 @@ TEXCONFIG=false ../configure \
 %if %{with multilib}
 	--enable-multilib \
 %else
-	-disable-multilib \
+	--disable-multilib \
 %endif
 	--enable-nls \
 	--with-gnu-as \
