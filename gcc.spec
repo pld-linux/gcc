@@ -45,6 +45,7 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-relink.patch
 Patch7:		%{name}-pr18628.patch
+Patch8:		%{name}-pr19317.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -476,6 +477,7 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch7 -p1
+%patch8 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
