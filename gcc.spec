@@ -63,7 +63,10 @@ BuildRequires:	libmpfr-devel
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2:2.15.94.0.1
+# AS_NEEDED directive for dynamic linker
+# http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
+# http://sources.redhat.com/ml/binutils/2005-01/msg00288.html
+Requires:	binutils >= 2:2.15.96
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
