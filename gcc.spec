@@ -50,7 +50,7 @@ Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2.14
+BuildRequires:	binutils >= 2.15.90.0.3
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 %{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
@@ -60,7 +60,7 @@ BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2.14
+Requires:	binutils >= 2.15.90.0.3
 Requires:	cpp = %{epoch}:%{GCC_VERSION}
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}
 %{?with_ada:Provides: gcc(ada)}
