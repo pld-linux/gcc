@@ -40,6 +40,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
 # Source0-md5:	56c68edf4047dc42aeda22186cedb40b
+Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -582,17 +583,18 @@ cp -f	libobjc/README gcc/objc/README.libobjc
 %endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
-for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la};
-do
-	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
-done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libstdc++.la libsupc++.la \
+for f in libmudflap.la libmudflapth.la libstdc++.la libsupc++.la \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
 	%{?with_java:libgcj.la libffi.la} \
 	%{?with_objc:libobjc.la};
 do
-	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
+	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/$f %{_libdir} > $RPM_BUILD_ROOT%{_libdir}/$f.fixed
+	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
+%if %{with multilib}
+	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
+	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
+%endif
 done
 
 # include/ contains install-tools/include/* and headers that were fixed up
