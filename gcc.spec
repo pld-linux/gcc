@@ -704,7 +704,8 @@ controle da numeração das linhas do programa.
 %patch6 -p0
 %patch7 -p0
 %ifarch alpha ia64
-# only for bootstrap using gcc 3.3.x
+# needed for bootstrap using gcc 3.3.x on alpha
+# and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
 %patch8 -p2
 %endif
 
@@ -719,8 +720,6 @@ mv ChangeLog ChangeLog.general
 cd gcc
 %{__autoconf}
 cd ..
-# cd gcc && autoconf; cd ..
-# autoconf is not needed!
 cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
