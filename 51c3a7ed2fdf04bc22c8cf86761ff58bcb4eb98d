@@ -1,0 +1,4 @@
+- multilib support added.
+  tested on amd64 with c,c++ (ada has only native version,
+                              java, fortran and objc not tested yet).
+- release 2.1.
