@@ -78,8 +78,8 @@ uygulayabilir.
 	--prefix=/usr \
 	--local-prefix=/usr/local \
 	--gxx-include-dir=/usr/include/g++ \
-	--host=i386-linux \
-	--target=i386-linux
+	--host=%{_target_cpu}-linux \
+	--target=%{_target_cpu}-linux
 
 make LANGUAGES=c CFLAGS="-O2"
 make stage1
