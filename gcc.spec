@@ -12,17 +12,19 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.1
+Release:	0.pre.1
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-3.2.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
+Source2:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-march-i686-fix.patch
+Patch6:		%{name}-info.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -62,7 +64,6 @@ Patch44:	gcc32-tls2.patch
 Patch45:	gcc32-tls3.patch
 Patch46:	gcc32-tls4.patch 
 Patch47:	gcc32-tls5.patch    
-Patch48:	gcc32-typeof-asm.patch  
 Patch100:	gcc-pre-3.2.1.patch.gz
 BuildRequires:	autoconf
 BuildRequires:	bison
@@ -512,6 +513,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %ifarch %{ix86}
 %patch5 -p0
 %endif
+
 %patch10 
 %patch11 
 %patch12 
@@ -550,7 +552,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45 
 %patch46
 %patch47
-%patch48 
+
+%patch6 -p1
 
 %build
 # cd gcc && autoconf; cd ..
@@ -650,7 +653,8 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 cd ..
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
-install  obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
+install obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
+install obj-%{_target_platform}/gcc/ada/gnat_ug_unx.info* $RPM_BUILD_ROOT%{_infodir}
 %endif
 
 %if %{!?_without_java:1}%{?_without_java:0}
@@ -662,6 +666,9 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
+
+bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
 %find_lang %{name}
 %find_lang libstdc\+\+
@@ -728,6 +735,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/gcov.1*
+%lang(fr) %{_mandir}/fr/man1/gcc.1*
+%lang(ja) %{_mandir}/ja/man1/gcc.1*
 %{_infodir}/gcc*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
@@ -779,6 +788,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
+%lang(es) %{_mandir}/es/man1/c++filt.1*
+%lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
@@ -847,9 +858,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
 %endif
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
+%lang(ja) %{_mandir}/ja/man1/g77.1*
+%lang(ja) %{_mandir}/ja/man1/f77.1*
 
 %files -n libg2c
 %defattr(644,root,root,755)
@@ -959,4 +972,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 %{_mandir}/man1/cpp.1*
+%lang(ja) %{_mandir}/ja/man1/cpp.1*
 %{_infodir}/cpp*
