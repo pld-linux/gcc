@@ -583,7 +583,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
   odpowiada fragment pliku wynikowego.
 
-%description  -n cpp -l pt_BR
+%description -n cpp -l pt_BR
 O preprocessador C é um "processador de macros", que é utilizado pelo
 compilador C para fazer algumas modificações no seu programa, antes da
 compilação em si. Ele é chamado de "processador de macros" porque
