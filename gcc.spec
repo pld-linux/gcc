@@ -170,7 +170,7 @@ Version:	%{GCJ_VERSION}
 %description -n libgcj
 Java Class Libraries
 
-%description -n libcj -l pl
+%description -n libgcj -l pl
 Biblioteki Klass Javy
 
 %package -n libgcj-devel
