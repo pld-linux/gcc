@@ -22,7 +22,7 @@ Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 # Source1-md5:	9e4bdd6492a7d7b650599e572169ff7a
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-# Source2-md5:	4736f3422ddfb808423b745629acc321
+# Source2-md5:	112bb4ff756394c99285131a2c43c344
 Source2:	http://ep09.kernel.pl/~djrzulf/%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
