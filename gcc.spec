@@ -496,6 +496,7 @@ TEXCONFIG=false \
 	--enable-nls \
 	--with-gnu-as \
 	--with-gnu-ld \
+	--with-demangler-in-ld \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
