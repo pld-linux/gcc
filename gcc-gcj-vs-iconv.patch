@@ -1,0 +1,733 @@
+#! /bin/sh -e
+
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch $pdir -f --no-backup-if-mismatch -p0 -l < $0;;
+    -unpatch) patch $pdir -f --no-backup-if-mismatch -R -p0 -l < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+Patch: gcj -vs- iconv
+
+To: Gcc Patch List <gcc-patches at gcc dot gnu dot org> 
+Subject: Patch: gcj -vs- iconv
+From: Tom Tromey <tromey at cygnus dot com>
+Date: 06 Mar 2000 14:39:01 -0700
+Reply-To: tromey at cygnus dot com
+
+# DP: This patch changes gcj to use iconv(), when available, to read Java
+# DP: source files.  It adds a new `--encoding' option that lets the user
+# DP: choose what encoding to use.  For systems without iconv(), gcj still
+# DP: assumes that the input is UTF-8, but it no longer ignores encoding
+# DP: errors.
+# DP: 
+# DP: This patch does have one minor problem, which is that if --encoding is
+# DP: not specified we default to UTF-8 instead of the encoding the user has
+# DP: chosen (as part of his locale).  I don't know how to find that
+# DP: information.  Anyway, that is an addition which shouldn't affect
+# DP: whether or not this patch goes in, since this patch doesn't make the
+# DP: situation any worse than it is right now.
+
+Alex, I'm not sure I really understand how the parser context stack
+works, so it is possible that some of my changes there are wrong.
+Could you look at it?  Is this ok to check in?
+# DP: 
+# DP: This fixes PR gcj/33; I can now compile a Latin-1 encoded file on my
+# DP: PPC Linux box with `gcj --encoding=Latin1 ...'.
+
+2000-03-06  Tom Tromey  <tromey@cygnus.com>
+
+	Fix for PR gcj/33:
+	* jv-scan.c (help): Document --encoding.
+	(options): Added `encoding' entry.
+	(OPT_ENCODING): New define.
+	(main): Handle --encoding.
+	* lang-options.h: Document --classpath, --CLASSPATH, --main, and
+	--encoding.
+	* jcf-parse.c (parse_source_file): Correctly call java_init_lex.
+	Added `finput' argument.
+	* java-tree.h (current_encoding): Declare.
+	* parse.y (java_parser_context_restore_global): Don't restore
+	`finput'.
+	(java_parser_context_save_global): Don't set `finput' field.
+	(java_pop_parser_context): Don't restore `finput'.  Free old lexer
+	if required.
+	* lang.c (current_encoding): New global.
+	(lang_decode_option): Recognize `-fencoding='.
+	(finish_parse): Don't close finput.
+	* parse.h (struct parser_ctxt): Removed `finput' and
+	`unget_utf8_value' fields.  Added `lexer' field.
+	(java_init_lex): Fixed declaration.
+	* lex.c (java_new_lexer): New function.
+	(java_destroy_lexer): Likewise.
+	(java_read_char): Added `lex' argument.  Handle iconv case.
+	(java_read_unicode): Added `lex' argument.  Count backslashes in
+	lexer structure.
+	(java_init_lex): Added `finput' and `encoding' arguments.  Set
+	`lexer' field in ctxp.
+	(BAD_UTF8_VALUE): Removed.
+	* lex.h: Include <iconv.h> if HAVE_ICONV defined.
+	(java_lexer): New structure.
+	(UNGETC): Removed.
+	(GETC): Removed.
+	(DEFAULT_ENCODING): New define.
+	(java_destroy_lexer): Declare.
+
+Tom
+
+--- gcc/java/java-tree.h.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/java-tree.h	Sat Apr  8 23:03:56 2000
+@@ -141,6 +141,9 @@
+ extern int flag_not_overriding;
+ extern int flag_static_local_jdk1_1;
+ 
++/* Encoding used for source files.  */
++extern char *current_encoding;
++
+ /* The Java .class file that provides main_class;  the main input file. */
+ extern struct JCF *current_jcf;
+ 
+--- gcc/java/jcf-parse.c.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/jcf-parse.c	Sat Apr  8 23:05:39 2000
+@@ -84,7 +84,7 @@
+ static tree give_name_to_class PROTO ((JCF *jcf, int index));
+ static void parse_zip_file_entries PROTO ((void));
+ static void process_zip_dir PROTO ((void));
+-static void parse_source_file PROTO ((tree));
++static void parse_source_file PARAMS ((tree, FILE *));
+ static void jcf_parse_source PROTO ((void));
+ static int jcf_figure_file_type PROTO ((JCF *));
+ static int find_in_current_zip PROTO ((char *, struct JCF **));
+@@ -570,6 +570,7 @@
+ jcf_parse_source ()
+ {
+   tree file;
++  FILE *finput;
+ 
+   java_parser_context_save_global ();
+   java_push_parser_context ();
+@@ -580,7 +581,7 @@
+       if (!(finput = fopen (input_filename, "r")))
+ 	fatal ("input file `%s' just disappeared - jcf_parse_source",
+ 	       input_filename);
+-      parse_source_file (file);
++      parse_source_file (file, finput);
+       if (fclose (finput))
+ 	fatal ("can't close input file `%s' stream - jcf_parse_source",
+ 	       input_filename);
+@@ -741,8 +742,9 @@
+ /* Parse a source file, as pointed by the current value of INPUT_FILENAME. */
+ 
+ static void
+-parse_source_file (file)
++parse_source_file (file, finput)
+      tree file;
++     FILE *finput;
+ {
+   int save_error_count = java_error_count;
+   /* Mark the file as parsed */
+@@ -750,7 +752,9 @@
+ 
+   lang_init_source (1);		    /* Error msgs have no method prototypes */
+ 
+-  java_init_lex ();		    /* Initialize the parser */
++  /* Initialize the parser */
++  java_init_lex (finput,
++		 current_encoding ? current_encoding : DEFAULT_ENCODING);
+   java_parse_abort_on_error ();
+ 
+   java_parse ();		    /* Parse and build partial tree nodes. */
+@@ -778,6 +782,7 @@
+   int several_files = 0;
+   char *list = strdup (input_filename), *next;
+   tree node, current_file_list = NULL_TREE;
++  FILE *finput;
+ 
+   do 
+     {
+@@ -888,7 +893,7 @@
+ 	case JCF_SOURCE:
+ 	  java_push_parser_context ();
+ 	  java_parser_context_save_global ();
+-	  parse_source_file (name);
++	  parse_source_file (name, finput);
+ 	  java_parser_context_restore_global ();
+ 	  java_pop_parser_context (1);
+ 	  break;
+--- gcc/java/jv-scan.c.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/jv-scan.c	Sat Apr  8 23:11:41 2000
+@@ -53,6 +53,7 @@
+ {
+   int i = 1;
+   char *output_file = NULL;
++  char *encoding = NULL;
+   long ft;
+ 
+   exec_name = argv[0];
+@@ -73,6 +74,14 @@
+ 	      argv [i] = NULL;
+ 	    }
+ 
++	  /* file encoding */
++	  else if (!strcmp (argv [i], "--encoding") && i+1 < argc)
++	    {
++	      argv [i] = NULL;
++	      encoding = argv [++i];
++	      argv [i] = NULL;
++	    }
++
+ 	  /* Print the name of the class that contains main */
+ 	  else if (!strcmp (argv [i], "--print-main"))
+ 	    flag_find_main = 1;
+@@ -116,7 +125,7 @@
+ 	input_filename = argv [i];
+ 	if ( (finput = fopen (argv [i], "r")) )
+ 	  {
+-	    java_init_lex ();
++	    java_init_lex (finput, encoding ? encoding : DEFAULT_ENCODING);
+ 	    yyparse ();
+ 	    if (ftell (out) != ft)
+ 	      fputc ('\n', out);
+--- gcc/java/lang-options.h.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/lang-options.h	Sat Apr  8 23:03:56 2000
+@@ -39,8 +39,10 @@
+   { "-M", "Print dependencies to stdout" },
+   { "-MM", "Print dependencies to stdout" },
+ #endif /* ! USE_CPPLIB */
+-  { "-fclasspath", "Set class path and suppress system path" },
+-  { "-fCLASSPATH", "Set class path" },
++  { "--classpath", "Set class path and suppress system path" },
++  { "--CLASSPATH", "Set class path" },
++  { "--main", "Choose class whose main method should be used" },
++  { "--encoding", "Choose input encoding (default is UTF-8)" },
+   { "-I", "Add directory to class path" },
+   { "-foutput-class-dir", "Directory where class files should be written" },
+   { "-Wredundant-modifiers", 
+--- gcc/java/lang.c.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/lang.c	Sat Apr  8 23:03:56 2000
+@@ -105,6 +105,9 @@
+ /* When non zero, warns that final local are treated as non final.  */
+ int flag_static_local_jdk1_1 = 0;
+ 
++/* The encoding of the source file.  */
++char *current_encoding = NULL;
++
+ /* From gcc/flags.h, and indicates if exceptions are turned on or not.  */
+ 
+ extern int flag_new_exceptions;
+@@ -172,6 +175,13 @@
+       return 1;
+     }
+ #undef ARG
++#define ARG "-fencoding="
++  if (strncmp (p, ARG, sizeof (ARG) - 1) == 0)
++    {
++      current_encoding = p + sizeof (ARG) - 1;
++      return 1;
++    }
++#undef ARG
+ 
+   if (p[0] == '-' && p[1] == 'f')
+     {
+@@ -252,7 +262,9 @@
+   return 0;
+ }
+ 
++/* Global open file.  */
+ FILE *finput;
++
+ char *
+ init_parse (filename)
+      char *filename;
+@@ -313,7 +326,6 @@
+ void
+ finish_parse ()
+ {
+-  fclose (finput);
+   jcf_dependency_write ();
+ }
+ 
+--- gcc/java/lex.c.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/lex.c	Sat Apr  8 23:14:41 2000
+@@ -24,15 +24,15 @@
+ The Free Software Foundation is independent of Sun Microsystems, Inc.  */
+ 
+ /* It defines java_lex (yylex) that reads a Java ASCII source file
+-possibly containing Unicode escape sequence or utf8 encoded characters
+-and returns a token for everything found but comments, white spaces
+-and line terminators. When necessary, it also fills the java_lval
+-(yylval) union. It's implemented to be called by a re-entrant parser
+-generated by Bison.
+-
+-The lexical analysis conforms to the Java grammar described in "The
+-Java(TM) Language Specification. J. Gosling, B. Joy, G. Steele.
+-Addison Wesley 1996" (http://java.sun.com/docs/books/jls/html/3.doc.html)  */
++   possibly containing Unicode escape sequence or utf8 encoded
++   characters and returns a token for everything found but comments,
++   white spaces and line terminators. When necessary, it also fills
++   the java_lval (yylval) union. It's implemented to be called by a
++   re-entrant parser generated by Bison.
++
++   The lexical analysis conforms to the Java grammar described in "The
++   Java(TM) Language Specification. J. Gosling, B. Joy, G. Steele.
++   Addison Wesley 1996" (http://java.sun.com/docs/books/jls/html/3.doc.html) */
+ 
+ #include "keyword.h"
+ 
+@@ -55,15 +55,18 @@
+ static int java_parse_doc_section PROTO ((unicode_t));
+ static void java_parse_end_comment PROTO ((unicode_t));
+ static unicode_t java_get_unicode PROTO (());
+-static unicode_t java_read_unicode PROTO ((int, int *));
+-static void java_store_unicode PROTO ((struct java_line *, unicode_t, int));
+-static unicode_t java_read_char PROTO (());
++static unicode_t java_read_unicode PARAMS ((java_lexer *, int, int *));
++static void java_store_unicode PARAMS ((struct java_line *, unicode_t, int));
++static unicode_t java_read_char PARAMS ((java_lexer *));
+ static void java_allocate_new_line PROTO (());
+ static void java_unget_unicode PROTO (());
+ static unicode_t java_sneak_unicode PROTO (());
++java_lexer *java_new_lexer PARAMS ((FILE *, const char *));
+ 
+ void
+-java_init_lex ()
++java_init_lex (finput, encoding)
++     FILE *finput;
++     const char *encoding;
+ {
+ #ifndef JC1_LITE
+   int java_lang_imported = 0;
+@@ -108,9 +111,9 @@
+   ctxp->lineno = lineno = 0;
+   ctxp->p_line = NULL;
+   ctxp->c_line = NULL;
+-  ctxp->unget_utf8_value = 0;
+   ctxp->minus_seen = 0;
+   ctxp->java_error_flag = 0;
++  ctxp->lexer = java_new_lexer (finput, encoding);
+ }
+ 
+ static char *
+@@ -188,22 +191,142 @@
+   ctxp->c_line->white_space_only = 1;
+ }
+ 
+-#define BAD_UTF8_VALUE 0xFFFE
++/* Create a new lexer object.  */
++java_lexer *
++java_new_lexer (finput, encoding)
++     FILE *finput;
++     const char *encoding;
++{
++  java_lexer *lex = (java_lexer *) xmalloc (sizeof (java_lexer));
++  int enc_error = 0;
++
++  lex->finput = finput;
++  lex->bs_count = 0;
++  lex->unget_value = 0;
++
++#ifdef HAVE_ICONV
++  lex->handle = iconv_open ("UCS-2", encoding);
++  if (lex->handle == (iconv_t) -1)
++    {
++      /* FIXME: we should give a nice error based on errno here.  */
++      enc_error = 1;
++    }
++  lex->first = -1;
++  lex->last = -1;
++#else /* HAVE_ICONV */
++  if (strcmp (encoding, DEFAULT_ENCODING))
++    enc_error = 1;
++#endif /* HAVE_ICONV */
++
++  if (enc_error)
++    fatal ("unknown encoding: `%s'", encoding);
++
++  return lex;
++}
++
++void
++java_destroy_lexer (lex)
++     java_lexer *lex;
++{
++  fclose (lex->finput);
++#ifdef HAVE_ICONV
++  iconv_close (lex->handle);
++#endif
++  free (lex);
++}
+ 
+ static unicode_t
+-java_read_char ()
++java_read_char (lex)
++     java_lexer *lex;
+ {
+-  int c;
+-  int c1, c2;
++  if (lex->unget_value)
++    {
++      unicode_t r = lex->unget_value;
++      lex->unget_value = 0;
++      return r;
++    }
++
++#ifdef HAVE_ICONV
++  {
++    char out[2];
++    size_t ir, inbytesleft, in_save, out_count;
++    char *inp, *outp;
+ 
+-  if (ctxp->unget_utf8_value)
++    while (1)
+     {
+-      int to_return = ctxp->unget_utf8_value;
+-      ctxp->unget_utf8_value = 0;
+-      return (to_return);
++	/* See if we need to read more data.  If FIRST == 0 then the
++	   previous conversion attempt ended in the middle of a
++	   character at the end of the buffer.  Otherwise we only have
++	   to read if the buffer is empty.  */
++	if (lex->first == 0 || lex->first >= lex->last)
++	  {
++	    int r;
++
++	    if (lex->first >= lex->last)
++	      {
++		lex->first = 0;
++		lex->last = 0;
++	      }
++	    if (feof (lex->finput))
++	      return UEOF;
++	    r = fread (&lex->buffer[lex->last], 1,
++		       sizeof (lex->buffer) - lex->last,
++		       lex->finput);
++	    lex->last += r;
+     }
+ 
+-  c = GETC ();
++	inbytesleft = lex->last - lex->first;
++
++	if (inbytesleft == 0)
++	  {
++	    /* We've tried to read and there is nothing left.  */
++	    return UEOF;
++	  }
++
++	in_save = inbytesleft;
++	out_count = 2;
++	inp = &lex->buffer[lex->first];
++	outp = out;
++	ir = iconv (lex->handle, (const char **) &inp, &inbytesleft,
++		    &outp, &out_count);
++	lex->first += in_save - inbytesleft;
++
++	if (out_count == 0)
++	  {
++	    /* Success.  We assume that UCS-2 is big-endian.  This
++	       appears to be an ok assumption.  */
++	    unicode_t result;
++	    result = (((unsigned char) out[0]) << 8) | (unsigned char) out[1];
++	    return result;
++	  }
++
++	if (ir == (size_t) -1)
++	  {
++	    if (errno == EINVAL)
++	      {
++		/* This is ok.  This means that the end of our buffer
++		   is in the middle of a character sequence.  We just
++		   move the valid part of the buffer to the beginning
++		   to force a read.  */
++		/* We use bcopy() because it should work for
++		   overlapping strings.  Use memmove() instead... */
++		bcopy (&lex->buffer[lex->first], &lex->buffer[0],
++		       lex->last - lex->first);
++		lex->last -= lex->first;
++		lex->first = 0;
++	      }
++	    else
++	      {
++		/* A more serious error.  */
++		java_lex_error ("unrecognized character in input stream", 0);
++	      }
++	  }
++      }
++  }
++#else /* HAVE_ICONV */
++  {
++    int c, c1, c2;
++    c = getc (lex->finput);
+ 
+   if (c < 128)
+     return (unicode_t)c;
+@@ -213,17 +336,17 @@
+     {
+       if ((c & 0xe0) == 0xc0)
+         {
+-          c1 = GETC ();
++	    c1 = getc (lex->finput);
+ 	  if ((c1 & 0xc0) == 0x80)
+ 	    return (unicode_t)(((c &0x1f) << 6) + (c1 & 0x3f));
+ 	  c = c1;
+ 	}
+       else if ((c & 0xf0) == 0xe0)
+         {
+-          c1 = GETC ();
++	    c1 = getc (lex->finput);
+ 	  if ((c1 & 0xc0) == 0x80)
+ 	    {
+-	      c2 = GETC ();
++		c2 = getc (lex->finput);
+ 	      if ((c2 & 0xc0) == 0x80)
+ 	        return (unicode_t)(((c & 0xf) << 12) + 
+ 				   (( c1 & 0x3f) << 6) + (c2 & 0x3f));
+@@ -233,14 +356,15 @@
+ 	  else
+ 	    c = c1;
+ 	}
+-      /* We looked for a UTF8 multi-byte sequence (since we saw an initial
+-	 byte with the high bit set), but found invalid bytes instead.
+-	 If the most recent byte was Ascii (and not EOF), we should
+-	 unget it, in case it was a comment terminator or other delimitor. */
+-      if ((c & 0x80) == 0)
+-	UNGETC (c);
+-      return BAD_UTF8_VALUE;
++
++	/* We simply don't support invalid characters.  */
++	java_lex_error ("malformed UTF-8 character", 0);
++      }
+     }
++#endif /* HAVE_ICONV */
++
++  /* We only get here on error.  */
++  return UEOF;
+ }
+ 
+ static void
+@@ -261,56 +385,54 @@
+ }
+ 
+ static unicode_t
+-java_read_unicode (term_context, unicode_escape_p)
++java_read_unicode (lex, term_context, unicode_escape_p)
++     java_lexer *lex;
+     int term_context;
+     int *unicode_escape_p;
+ {
+   unicode_t c;
+-  long i, base;
+ 
+-  c = java_read_char ();
++  c = java_read_char (lex);
+   *unicode_escape_p = 0;
+ 
+   if (c != '\\')
+-    return ((term_context ? c : 
+-	     java_lineterminator (c) ? '\n' : (unicode_t)c));
+-
+-  /* Count the number of preceeding '\' */
+-  for (base = ftell (finput), i = base-2; c == '\\';)
+     { 
+-      fseek (finput, i--, SEEK_SET);
+-      c = java_read_char ();	/* Will fail if reading utf8 stream. FIXME */
++      lex->bs_count = 0;
++      return (term_context ? c : (java_lineterminator (c)
++				  ? '\n'
++				  : (unicode_t) c));
+     }
+-  fseek (finput, base, SEEK_SET);
+-  if ((base-i-3)%2 == 0)	/* If odd number of \ seen */
++
++  ++lex->bs_count;
++  if ((lex->bs_count) % 2 == 1)
+     {
+-      c = java_read_char ();
++      /* Odd number of \ seen.  */
++      c = java_read_char (lex);
+       if (c == 'u')
+         {
+-	  unsigned short unicode = 0;
++	  unicode_t unicode = 0;
+ 	  int shift = 12;
+ 	  /* Next should be 4 hex digits, otherwise it's an error.
+ 	     The hex value is converted into the unicode, pushed into
+ 	     the Unicode stream.  */
+ 	  for (shift = 12; shift >= 0; shift -= 4)
+ 	    {
+-	      if ((c = java_read_char ()) == UEOF)
++	      if ((c = java_read_char (lex)) == UEOF)
+ 	        return UEOF;
+ 	      if (c >= '0' && c <= '9')
+ 		unicode |= (unicode_t)((c-'0') << shift);
+ 	      else if ((c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))
+ 	        unicode |= (unicode_t)((10+(c | 0x20)-'a') << shift);
+ 	      else
+-		  java_lex_error 
+-		    ("Non hex digit in Unicode escape sequence", 0);
++		java_lex_error ("Non hex digit in Unicode escape sequence", 0);
+ 	    }
+ 	  *unicode_escape_p = 1;
+-	  return (term_context ? unicode :
+-		  (java_lineterminator (c) ? '\n' : unicode));
++	  return (term_context
++		  ? unicode : (java_lineterminator (c) ? '\n' : unicode));
+ 	}
+-      ctxp->unget_utf8_value = c;
++      lex->unget_value = c;
+     }
+-  return (unicode_t)'\\';
++  return (unicode_t) '\\';
+ }
+ 
+ static unicode_t
+@@ -325,7 +447,7 @@
+ 	for (;;)
+ 	  {
+ 	    int unicode_escape_p;
+-	    c = java_read_unicode (0, &unicode_escape_p);
++	    c = java_read_unicode (ctxp->lexer, 0, &unicode_escape_p);
+ 	    java_store_unicode (ctxp->c_line, c, unicode_escape_p);
+ 	    if (ctxp->c_line->white_space_only 
+ 		&& !JAVA_WHITE_SPACE_P (c) && c!='\n')
+@@ -346,7 +468,7 @@
+   int unicode_escape_p;
+   if (c == '\n')		/* CR */
+     {
+-      if ((c = java_read_unicode (1, &unicode_escape_p)) != '\r')
++      if ((c = java_read_unicode (ctxp->lexer, 1, &unicode_escape_p)) != '\r')
+ 	{
+ 	  ctxp->c_line->ahead [0] = c;
+ 	  ctxp->c_line->unicode_escape_ahead_p = unicode_escape_p;
+@@ -355,7 +477,7 @@
+     }
+   else if (c == '\r')		/* LF */
+     {
+-      if ((c = java_read_unicode (1, &unicode_escape_p)) != '\n')
++      if ((c = java_read_unicode (ctxp->lexer, 1, &unicode_escape_p)) != '\n')
+ 	{
+ 	  ctxp->c_line->ahead [0] = c;
+ 	  ctxp->c_line->unicode_escape_ahead_p = unicode_escape_p;
+--- gcc/java/lex.h.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/lex.h	Sat Apr  8 23:03:56 2000
+@@ -35,6 +35,13 @@
+ /* A Unicode character, as read from the input file  */
+ typedef unsigned short unicode_t;
+ 
++#ifdef HAVE_ICONV
++#include <iconv.h>
++#endif /* HAVE_ICONV */
++
++/* Default encoding to use if no encoding is specified.  */
++#define DEFAULT_ENCODING "UTF-8"
++
+ /* Debug macro to print-out what we match  */
+ #ifdef JAVA_LEX_DEBUG
+ #ifdef JAVA_LEX_DEBUG_CHAR
+@@ -96,12 +103,38 @@
+   int col;
+ } java_lc;
+ 
++typedef struct java_lexer
++{
++  /* The file from which we're reading.  */
++  FILE *finput;
++
++  /* Number of consecutive backslashes we've read.  */
++  int bs_count;
++
++  /* If nonzero, a value that was pushed back.  */
++  unicode_t unget_value;
++
++#ifdef HAVE_ICONV
++  /* The handle for the iconv converter we're using.  */
++  iconv_t handle;
++
++  /* Bytes we've read from the file but have not sent to iconv.  */
++  char buffer[1024];
++
++  /* Index of first valid character in buffer, -1 if no valid
++     characters.  */
++  int first;
++
++  /* Index of last valid character in buffer, plus one.  -1 if no
++     valid characters in buffer.  */
++  int last;
++#endif /* HAVE_ICONV */
++} java_lexer;
+ 
+-#define JAVA_LINE_MAX 80
++/* Destroy a lexer object.  */
++extern void java_destroy_lexer PARAMS ((java_lexer *));
+ 
+-/* Macro to read and unread bytes */
+-#define UNGETC(c) ungetc(c, finput)
+-#define GETC()    getc(finput)
++#define JAVA_LINE_MAX 80
+ 
+ /* Build a location compound integer */
+ #define BUILD_LOCATION() ((ctxp->elc.line << 12) | (ctxp->elc.col & 0xfff))
+--- gcc/java/parse.h.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/parse.h	Sat Apr  8 23:15:36 2000
+@@ -586,12 +586,11 @@
+ struct parser_ctxt {
+ 
+   char *filename;		    /* Current filename */
+-  FILE *finput;			    /* Current file input stream */
+   struct parser_ctxt *next;
+ 
++  java_lexer *lexer;		     /* Current lexer state */
+   struct java_line *p_line, *c_line; /* Previous and current line */
+   java_lc elc;			     /* Error's line column info */
+-  unicode_t unget_utf8_value;        /* An unget utf8 value */
+   int ccb_indent;		     /* Keep track of {} indent, lexer */
+   int first_ccb_indent1;	     /* First { at ident level 1 */
+   int last_ccb_indent1;		     /* Last } at ident level 1 */
+@@ -668,7 +667,7 @@
+ /* Always in use, no matter what you compile */
+ void java_push_parser_context PROTO ((void));
+ void java_pop_parser_context PROTO ((int));
+-void java_init_lex PROTO ((void));
++void java_init_lex PARAMS ((FILE *, const char *));
+ extern void java_parser_context_save_global PROTO ((void));
+ extern void java_parser_context_restore_global PROTO ((void));
+ int yyparse PROTO ((void));
+--- gcc/java/parse.y.orig	Sat Apr  8 23:03:03 2000
++++ gcc/java/parse.y	Sat Apr  8 23:03:56 2000
+@@ -2347,7 +2347,6 @@
+       java_push_parser_context ();
+       extra_ctxp_pushed_p = 1;
+     }
+-  ctxp->finput = finput;
+   ctxp->lineno = lineno;
+   ctxp->current_class = current_class;
+   ctxp->filename = input_filename;
+@@ -2357,7 +2356,6 @@
+ void
+ java_parser_context_restore_global ()
+ {
+-  finput = ctxp->finput;
+   lineno = ctxp->lineno;
+   current_class = ctxp->current_class;
+   input_filename = ctxp->filename;
+@@ -2386,9 +2384,12 @@
+       next->incomplete_class = ctxp->incomplete_class;
+       next->gclass_list = ctxp->gclass_list;
+       lineno = ctxp->lineno;
+-      finput = ctxp->finput;
+       current_class = ctxp->current_class;
+     }
++
++  /* If the old and new lexers differ, then free the old one.  */
++  if (ctxp->lexer && next && ctxp->lexer != next->lexer)
++    java_destroy_lexer (ctxp->lexer);
+ 
+   /* Set the single import class file flag to 0 for the current list
+      of imported things */

@@ -1,0 +1,124 @@
+#! /bin/sh -e
+
+if [ $# -eq 3 -a "$2" = '-d' ]; then
+    pdir="-d $3"
+elif [ $# -ne 1 ]; then
+    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+    exit 1
+fi
+case "$1" in
+    -patch) patch $pdir -f --no-backup-if-mismatch -p0 < $0;;
+    -unpatch) patch $pdir -f --no-backup-if-mismatch -R -p0 < $0;;
+    *)
+	echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
+	exit 1
+esac
+exit 0
+
+# append the patch here and adjust the -p? flag in the patch calls.
+
+From: Jim Kingdon <kingdon@redhat.com>
+To: rth@cygnus.com
+CC: gcc-patches@gcc.gnu.org
+Subject: Re: patch to make -Wpointer-arith work with glibc 2.1.2pre3
+Date: Tue, 21 Sep 1999 15:50:20 -0400
+
+Richard Henderson writes:
+
+> This could all be tidied a bit by creating a couple of macros near
+> the beginning of c-parse.in to do the encoding and decoding.  Also,
+> setting the type of `extension' means $<itype>1 can be written $1.
+
+Here you go (sorry for the delay, I plead hurricanes and other
+causes).
+
+Let me know if you still aren't happy :-).
+
+# DP: Wed Sep  1 09:12:02 1999  Jim Kingdon  <http://developer.redhat.com>
+# DP: 
+# DP: 	* c-parse.in: save and restore warn_pointer_arith on __extension__
+# DP: 	along with pedantic.
+# DP: 	(SAVE_WARN_FLAGS, RESTORE_WARN_FLAGS): Added.
+# DP: 	Set the type of extension to itype rather than $<itype>1 kludge.
+# DP: 	* extend.texi (Alternate Keywords): Adjust documentation.
+
+Index: c-parse.in
+===================================================================
+RCS file: /cvs/egcs/egcs/gcc/c-parse.in,v
+retrieving revision 1.23
+diff -u -r1.23 c-parse.in
+--- gcc/c-parse.in	1999/09/07 05:47:29	1.23
++++ gcc/c-parse.in	1999/09/21 19:05:43
+@@ -185,6 +185,8 @@
+ %type <ttype> parmlist_or_identifiers parmlist_or_identifiers_1
+ %type <ttype> identifiers_or_typenames
+ 
++%type <itype> extension
++
+ %type <itype> setspecs
+ 
+ %type <ends_in_label> lineno_stmt_or_label lineno_stmt_or_labels stmt_or_label
+@@ -227,6 +229,15 @@
+ /* 1 if we explained undeclared var errors.  */
+ static int undeclared_variable_notice;
+ 
++/* For __extension__, save/restore the warning flags which are
++   controlled by __extension__.  */
++#define SAVE_WARN_FLAGS() (pedantic | (warn_pointer_arith << 1))
++#define RESTORE_WARN_FLAGS(val) \
++  do {                                     \
++    pedantic = val & 1;                    \
++    warn_pointer_arith = (val >> 1) & 1;   \
++  } while (0)
++
+ ifobjc
+ /* Objective-C specific information */
+ 
+@@ -297,7 +308,7 @@
+ 		  else
+ 		    error ("argument of `asm' is not a constant string"); }
+ 	| extension extdef
+-		{ pedantic = $<itype>1; }
++		{ RESTORE_WARN_FLAGS ($1); }
+ 	;
+ 
+ datadef:
+@@ -438,7 +449,7 @@
+ 	/* __extension__ turns off -pedantic for following primary.  */
+ 	| extension cast_expr	  %prec UNARY
+ 		{ $$ = $2;
+-		  pedantic = $<itype>1; }
++		  RESTORE_WARN_FLAGS ($1); }
+ 	| unop cast_expr  %prec UNARY
+ 		{ $$ = build_unary_op ($1, $2, 0);
+ 		  overflow_warning ($$); }
+@@ -1002,7 +1013,7 @@
+ 	| declmods ';'
+ 		{ pedwarn ("empty declaration"); }
+ 	| extension decl
+-		{ pedantic = $<itype>1; }
++		{ RESTORE_WARN_FLAGS ($1); }
+ 	;
+ 
+ /* Declspecs which contain at least one type specifier or typedef name.
+@@ -1607,7 +1618,7 @@
+ 		{ $$ = NULL_TREE; }
+ 	| extension component_decl
+ 		{ $$ = $2;
+-		  pedantic = $<itype>1; }
++		  RESTORE_WARN_FLAGS ($1); }
+ 	;
+ 
+ components:
+@@ -2441,8 +2452,9 @@
+ 
+ extension:
+ 	EXTENSION
+-		{ $<itype>$ = pedantic;
+-		  pedantic = 0; }
++		{ $$ = SAVE_WARN_FLAGS();
++		  pedantic = 0;
++		  warn_pointer_arith = 0; }
+ 	;
+ 
+ ifobjc
