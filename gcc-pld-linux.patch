@@ -1,79 +1,6 @@
---- gcc-2.95/gcc/config/i386/i386.md.old	Mon Aug  2 16:36:42 1999
-+++ gcc-2.95/gcc/config/i386/i386.md	Mon Aug  2 16:33:43 1999
-@@ -1345,7 +1345,8 @@
-   else if ((reload_in_progress | reload_completed) == 0
- 	   && GET_CODE (operands[0]) != MEM
- 	   && GET_CODE (operands[1]) == CONST_DOUBLE
--	   && !standard_80387_constant_p (operands[1]))
-+           && ((flag_pic && flag_omit_frame_pointer)
-+               || ! standard_80387_constant_p (operands[1])))
-     {
-       operands[1] = validize_mem (force_const_mem (SFmode, operands[1]));
-     }
-@@ -1473,7 +1474,8 @@
-   else if ((reload_in_progress | reload_completed) == 0
- 	   && GET_CODE (operands[0]) != MEM
- 	   && GET_CODE (operands[1]) == CONST_DOUBLE
--	   && !standard_80387_constant_p (operands[1]))
-+           && ((flag_pic && flag_omit_frame_pointer)
-+              || ! standard_80387_constant_p (operands[1])))
-     {
-       operands[1] = validize_mem (force_const_mem (DFmode, operands[1]));
-     }
-@@ -1601,7 +1603,8 @@
-   else if ((reload_in_progress | reload_completed) == 0
- 	   && GET_CODE (operands[0]) != MEM
- 	   && GET_CODE (operands[1]) == CONST_DOUBLE
--	   && !standard_80387_constant_p (operands[1]))
-+           && ((flag_pic && flag_omit_frame_pointer)
-+               || ! standard_80387_constant_p (operands[1])))
-     {
-       operands[1] = validize_mem (force_const_mem (XFmode, operands[1]));
-     }
---- gcc-2.95/gcc/config/linux.h.old	Mon Aug  2 16:39:44 1999
-+++ gcc-2.95/gcc/config/linux.h	Mon Aug  2 16:40:57 1999
-@@ -103,7 +103,7 @@
-      %{!profile:%{!ggdb:-lc} %{ggdb:-lg}}}"
- #else
- #define LIB_SPEC \
--  "%{shared: -lc} \
-+  "%{shared: -lc --version-script libgcc.map%s} \
-    %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \
- 	%{profile:-lc_p} %{!profile: -lc}}"
- #endif
---- gcc-2.95/gcc/config/t-linux.old	Mon Aug  2 16:44:14 1999
-+++ gcc-2.95/gcc/config/t-linux	Mon Aug  2 16:44:54 1999
-@@ -14,3 +14,17 @@
- LIBGCC1 = 
- CROSS_LIBGCC1 =
- LIBGCC1_TEST =
-+
-+# Make glocal functions in libgcc.a local to the shared library with
-+# symbol versioning.
-+LIBGCC_MAP=libgcc.map
-+# This list has to be maintained manually. It should cover the libgcc
-+# functions, which can be safely made local to a shared library, on
-+# all Linux platforms.
-+LIBGCC_MAP_LIST=__ashldi3 __ashrdi3 __builtin_saveregs __clear_cache \
-+  __cmpdi2 __divdi3 __dummy __eprintf __ffsdi2 __fixdfdi __fixsfdi \
-+  __fixunsdfdi __fixunsdfsi __fixunssfdi __fixunssfsi __fixunsxfdi \
-+  __fixunsxfsi __fixxfdi __floatdidf __floatdisf __floatdixf \
-+  __gcc_bcmp __lshrdi3 __moddi3 __muldi3 __negdi2 __pure_virtual \
-+  __ucmpdi2 __udiv_w_sdiv __udivdi3 __udivmoddi4 __umoddi3
-+EXTRACT_LIBGCC=for s in $(LIBGCC_MAP_LIST); do echo "    $$s;"; done
---- gcc-2.95/gcc/f/Make-lang.in.old	Mon Aug  2 16:46:54 1999
-+++ gcc-2.95/gcc/f/Make-lang.in	Mon Aug  2 16:48:20 1999
-@@ -212,7 +212,7 @@
- 
- f77.all.build: g77$(exeext)
- f77.all.cross: g77-cross$(exeext)
--f77.start.encap: g77$(exeext)
-+f77.start.encap: g77$(exeext)  $(srcdir)/f/intdoc.texi
- f77.rest.encap:
- 
- f77.info: f/g77.info
---- gcc-2.95/gcc/Makefile.in.old	Mon Aug  2 16:49:20 1999
-+++ gcc-2.95/gcc/Makefile.in	Mon Aug  2 17:00:08 1999
+diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
+--- gcc-2.95.1.orig/gcc/Makefile.in	Fri Aug 13 09:46:55 1999
++++ gcc-2.95.1/gcc/Makefile.in	Thu Aug 19 13:25:21 1999
 @@ -368,6 +368,9 @@
  # libgcc1-test target (must also be overridable for a target)
  LIBGCC1_TEST = libgcc1-test
@@ -187,9 +114,88 @@
 +	echo "  local:" >> $@
 +	$(EXTRACT_LIBGCC) >> $@
 +	echo "};" >> $@
---- gcc-2.95/libf2c/Makefile.in.old	Mon Aug  2 17:12:22 1999
-+++ gcc-2.95/libf2c/Makefile.in	Mon Aug  2 17:13:22 1999
-@@ -61,13 +61,13 @@
+diff -urN gcc-2.95.1.orig/gcc/config/i386/i386.md gcc-2.95.1/gcc/config/i386/i386.md
+--- gcc-2.95.1.orig/gcc/config/i386/i386.md	Sun Apr 25 13:43:46 1999
++++ gcc-2.95.1/gcc/config/i386/i386.md	Thu Aug 19 13:25:21 1999
+@@ -1345,7 +1345,8 @@
+   else if ((reload_in_progress | reload_completed) == 0
+ 	   && GET_CODE (operands[0]) != MEM
+ 	   && GET_CODE (operands[1]) == CONST_DOUBLE
+-	   && !standard_80387_constant_p (operands[1]))
++           && ((flag_pic && flag_omit_frame_pointer)
++               || ! standard_80387_constant_p (operands[1])))
+     {
+       operands[1] = validize_mem (force_const_mem (SFmode, operands[1]));
+     }
+@@ -1473,7 +1474,8 @@
+   else if ((reload_in_progress | reload_completed) == 0
+ 	   && GET_CODE (operands[0]) != MEM
+ 	   && GET_CODE (operands[1]) == CONST_DOUBLE
+-	   && !standard_80387_constant_p (operands[1]))
++           && ((flag_pic && flag_omit_frame_pointer)
++              || ! standard_80387_constant_p (operands[1])))
+     {
+       operands[1] = validize_mem (force_const_mem (DFmode, operands[1]));
+     }
+@@ -1601,7 +1603,8 @@
+   else if ((reload_in_progress | reload_completed) == 0
+ 	   && GET_CODE (operands[0]) != MEM
+ 	   && GET_CODE (operands[1]) == CONST_DOUBLE
+-	   && !standard_80387_constant_p (operands[1]))
++           && ((flag_pic && flag_omit_frame_pointer)
++               || ! standard_80387_constant_p (operands[1])))
+     {
+       operands[1] = validize_mem (force_const_mem (XFmode, operands[1]));
+     }
+diff -urN gcc-2.95.1.orig/gcc/config/linux.h gcc-2.95.1/gcc/config/linux.h
+--- gcc-2.95.1.orig/gcc/config/linux.h	Wed Dec 16 21:59:55 1998
++++ gcc-2.95.1/gcc/config/linux.h	Thu Aug 19 13:25:21 1999
+@@ -103,7 +103,7 @@
+      %{!profile:%{!ggdb:-lc} %{ggdb:-lg}}}"
+ #else
+ #define LIB_SPEC \
+-  "%{shared: -lc} \
++  "%{shared: -lc --version-script libgcc.map%s} \
+    %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \
+ 	%{profile:-lc_p} %{!profile: -lc}}"
+ #endif
+diff -urN gcc-2.95.1.orig/gcc/config/t-linux gcc-2.95.1/gcc/config/t-linux
+--- gcc-2.95.1.orig/gcc/config/t-linux	Wed Dec 16 22:00:09 1998
++++ gcc-2.95.1/gcc/config/t-linux	Thu Aug 19 13:25:21 1999
+@@ -14,3 +14,17 @@
+ LIBGCC1 = 
+ CROSS_LIBGCC1 =
+ LIBGCC1_TEST =
++
++# Make glocal functions in libgcc.a local to the shared library with
++# symbol versioning.
++LIBGCC_MAP=libgcc.map
++# This list has to be maintained manually. It should cover the libgcc
++# functions, which can be safely made local to a shared library, on
++# all Linux platforms.
++LIBGCC_MAP_LIST=__ashldi3 __ashrdi3 __builtin_saveregs __clear_cache \
++  __cmpdi2 __divdi3 __dummy __eprintf __ffsdi2 __fixdfdi __fixsfdi \
++  __fixunsdfdi __fixunsdfsi __fixunssfdi __fixunssfsi __fixunsxfdi \
++  __fixunsxfsi __fixxfdi __floatdidf __floatdisf __floatdixf \
++  __gcc_bcmp __lshrdi3 __moddi3 __muldi3 __negdi2 __pure_virtual \
++  __ucmpdi2 __udiv_w_sdiv __udivdi3 __udivmoddi4 __umoddi3
++EXTRACT_LIBGCC=for s in $(LIBGCC_MAP_LIST); do echo "    $$s;"; done
+diff -urN gcc-2.95.1.orig/gcc/f/Make-lang.in gcc-2.95.1/gcc/f/Make-lang.in
+--- gcc-2.95.1.orig/gcc/f/Make-lang.in	Mon Jun  7 08:44:57 1999
++++ gcc-2.95.1/gcc/f/Make-lang.in	Thu Aug 19 13:25:21 1999
+@@ -212,7 +212,7 @@
+ 
+ f77.all.build: g77$(exeext)
+ f77.all.cross: g77-cross$(exeext)
+-f77.start.encap: g77$(exeext)
++f77.start.encap: g77$(exeext)  $(srcdir)/f/intdoc.texi
+ f77.rest.encap:
+ 
+ f77.info: f/g77.info
+diff -urN gcc-2.95.1.orig/libf2c/Makefile.in gcc-2.95.1/libf2c/Makefile.in
+--- gcc-2.95.1.orig/libf2c/Makefile.in	Sat Aug  7 07:36:10 1999
++++ gcc-2.95.1/libf2c/Makefile.in	Thu Aug 19 13:27:12 1999
+@@ -61,18 +61,18 @@
  # Quote this way so that it can be used to set shell variables too.
  # Currently no use for PICFLAG, RUNTESTFLAGS -- check usage.
  FLAGS_TO_PASS= \
@@ -199,14 +205,24 @@
 -	AR='$(AR)' \
 -	RANLIB='$(RANLIB)' \
 -	PICFLAG='$(PICFLAG)' \
--	RUNTESTFLAGS='$(RUNTESTFLAGS)'
+-	RUNTESTFLAGS='$(RUNTESTFLAGS)' \
+-	prefix='$(prefix)' \
+-	exec_prefix='$(exec_prefix)' \
+-	libdir='$(libdir)' \
+-	libsubdir='$(libsubdir)' \
+-	tooldir='$(tooldir)'
 +	"CC=$(CC)" \
 +	"CFLAGS=$(CFLAGS)" \
 +	"CPPFLAGS=$(CPPFLAGS)" \
 +	"AR=$(AR)" \
 +	"RANLIB=$(RANLIB)" \
 +	"PICFLAG=$(PICFLAG)" \
-+	"RUNTESTFLAGS=$(RUNTESTFLAGS)"
++	"RUNTESTFLAGS=$(RUNTESTFLAGS)" \
++	"prefix=$(prefix)" \
++	"exec_prefix=$(exec_prefix)" \
++	"libdir=$(libdir)" \
++	"libsubdir=$(libsubdir)" \
++	"tooldir=$(tooldir)"
  
  LIBG2C = libg2c.a
  
