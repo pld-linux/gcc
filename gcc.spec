@@ -887,7 +887,7 @@ done
 for f in libstdc++.la libsupc++.la libg2c.la \
 	%{!?_without_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
 	%{!?_without_objc:libobjc.la}; do
-	perl -pi -e "s@^libdir='.*@libdir='/usr/lib'@" $RPM_BUILD_ROOT%{_libdir}/$f
+	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
 bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
