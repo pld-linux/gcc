@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 #
-%define		snap		20040303
+%define		snap		20040310
 %define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 
