@@ -69,7 +69,7 @@ Patch9:		%{name}-visibility.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2.15.91.0.2
+BuildRequires:	binutils >= 2:2.15.91.0.2
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -79,11 +79,10 @@ BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
-BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2.15.91.0.2
+Requires:	binutils >= 2:2.15.91.0.2
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
