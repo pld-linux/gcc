@@ -108,16 +108,16 @@ fi
 %files
 %defattr(644, root, root, 755)
 %doc NEWS PROBLEMS
-/usr/bin/gcc
-/usr/bin/cc
-/usr/bin/*-gcc
+%attr(755, root, root) /usr/bin/gcc
+%attr(755, root, root) /usr/bin/cc
+%attr(755, root, root) /usr/bin/*-gcc
 /usr/man/man1/gcc.1
 /usr/info/gcc.info*
 %dir /usr/lib/gcc-lib/*/*
 %dir /usr/lib/gcc-lib/*/*/include
 /usr/lib/gcc-lib/*/*/SYSCALLS.c.X
-/usr/lib/gcc-lib/*/*/cc1
-/usr/lib/gcc-lib/*/*/cpp
+%attr(755, root, root) /usr/lib/gcc-lib/*/*/cc1
+%attr(755, root, root) /usr/lib/gcc-lib/*/*/cpp
 /usr/lib/gcc-lib/*/*/libgcc.a
 /usr/lib/gcc-lib/*/*/specs
 /usr/lib/gcc-lib/*/*/include/*
