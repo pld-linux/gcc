@@ -751,12 +751,14 @@ cd ..
 	infodir=%{_infodir}
 
 %if %{with ada}
-%{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
-	CFLAGS="%{rpmcflags}" \
-	CXXFLAGS="%{rpmcflags}" \
+# cannot build it in parallel
+for tgt in gnatlib-shared gnattools gnatlib; do
+%{__make} -C obj-%{_target_platform}/gcc $tgt \
+	BOOT_CFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
+done
 %endif
 
 %install
@@ -1135,9 +1137,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/*.ali
 %{_libdir}/gcc/*/*/adalib/g-trasym.o
 %{_libdir}/gcc/*/*/adalib/libgccprefix.a
-%ifnarch ppc
-%{_libdir}/gcc/*/*/adalib/libgmem.a
-%endif
+#%ifnarch ppc
+#%{_libdir}/gcc/*/*/adalib/libgmem.a
+#%endif
 %{_datadir}/gnat
 %{_infodir}/gnat*
 
