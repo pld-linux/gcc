@@ -68,7 +68,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch sparc64
 %define		_slibdir64	/lib64
 %define		_libdir		/usr/lib
-%define		rpmcflags	-mtune=ultrasparc
+%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
 %description
@@ -636,7 +636,6 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
@@ -682,6 +681,11 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%ifarch sparc64
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
+%endif
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
