@@ -2,7 +2,7 @@ Summary:	GNU C Compiler
 Summary(pl):	Kompilator GNU
 Name:		gcc
 Version:	2.95
-Release:	1
+Release:	0.1
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -11,6 +11,7 @@ Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{version}.tar.gz
 Source2:	libstdc++-compat.tar.gz
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
+Patch2:		gcc-pld-linux.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
 URL:		http://www.gnu.org/
@@ -141,6 +142,7 @@ Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
+Requires:	%{name}-libgcj = %{version}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs and
@@ -156,6 +158,16 @@ Requires:	zip >= 2.1
 %description libgcj
 The Java runtime library. You will need this package to compile your Java
 programs using the gcc Java compiler (gcj).
+
+%package libgcj-static
+Summary:	Static java runtime library for gcc
+Group:		Development/Libraries
+URL:		http://sourceware.cygnus.com/java/
+Requires:	%{name}-libgcj = %{version}
+
+%description libgcj-static
+The static java runtime library. You will need this package to staticly
+compile your Java programs using the gcc Java compiler (gcj).
 
 %package -n libstdc++
 Summary:	GNU c++ library
@@ -298,8 +310,9 @@ mv libgcj-%{GCJ_VERSION} libgcj
 mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 mkdir compat
-tar xzf %{SOURCE1} -C compat
+tar xzf %{SOURCE2} -C compat
 
 %build
 rm -rf obj-%{_target_platform}
@@ -353,6 +366,10 @@ echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
+(cd $RPM_BUILD_ROOT%{_libdir} ; \
+ln -sf libstdc++-3-*.*.*.*.so $RPM_BUILD_ROOT%{_libdir}/libstdc++.so; \
+ln -sf libstdc++-3-*.*.*.*.a $RPM_BUILD_ROOT%{_libdir}/libstdc++.a)
+
 mv -f $RPM_BUILD_ROOT%{_includedir}/g++-3 $RPM_BUILD_ROOT%{_includedir}/g++
 
 install -d $RPM_BUILD_ROOT/lib
@@ -397,6 +414,8 @@ if [ "$1" = "0" ]; then
 	/sbin/install-info %{_infodir}/cpp.info.gz /etc/info-dir
 fi
 
+%post libgcj  -p /sbin/ldconfig
+
 %post   -p /sbin/ldconfig -n libstdc++
 %postun -p /sbin/ldconfig -n libstdc++
 
@@ -425,10 +444,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/SYSCALLS.c.X
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/lib*.map
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 
 %ifnarch alpha
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/*.o
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
 %endif
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
@@ -492,7 +512,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/chill*
 
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1chill
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/chill*.o
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/chill*.o
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libchill.a
 
 %files java
@@ -504,28 +524,36 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jv-convert
 %attr(755,root,root) %{_bindir}/jv-scan
 
+%{_libdir}/*.spec
+
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 
 %files libgcj
 %defattr(644,root,root,755)
 
-%attr(755,root,root) %{_bindir}/jv-convert
+%attr(755,root,root) %{_libdir}/lib*gcj*.so
+%attr(755,root,root) %{_libdir}/lib*gcj*.so.*.*.*
 
-%attr(755,root,root) %{_libdir}/lib*gcj*
+%files libgcj-static
+%defattr(644,root,root,755)
 
-%{_datadir}/libgcj.zip
+%{_libdir}/lib*gcj*.a
+%{_libdir}/lib*gcj*.la
 
 %files -n libstdc++
 %attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.so
 
+%files -n libstdc++-compat
+%defattr(644,root,root,755) 
+
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
 %{_includedir}/g++
-%attr(755,root,root) %{_libdir}/libst*.so
+%attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
-%attr(644,root,root) %{_libdir}/libstdc*.a
+%attr(644,root,root) %{_libdir}/libstdc++.a
 
 %files -n cpp
 %defattr(644,root,root,755)
