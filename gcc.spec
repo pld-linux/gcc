@@ -67,6 +67,7 @@ Patch44:	gcc32-tls2.patch
 Patch45:	gcc32-tls3.patch
 Patch46:	gcc32-tls4.patch
 Patch47:	gcc32-tls5.patch
+Patch48:	gcc32-bison_expect.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -544,6 +545,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45
 %patch46
 %patch47
+%patch48
 
 %patch6 -p1
 
