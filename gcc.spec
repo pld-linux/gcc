@@ -1,16 +1,17 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
-%define		snap		20010320
+%define		snap		2001-05-07
+%define		rsnap		%(echo %{snap} | sed -e "s#-##g")
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	3.0
-Release:	0.%{snap}
+Release:	0.%{rsnap}
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{snap}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{snap}/%{name}-%{rsnap}.tar.gz
 Patch0:		%{name}-disableshared.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -336,15 +337,15 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{snap}
+%setup -q -n %{name}-%{rsnap}
 %patch0 -p1
 
 %build
 cd gcc && autoconf; cd ..
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
-CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
-CXXFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
+CFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
@@ -373,7 +374,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
-	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
+	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
