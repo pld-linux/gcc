@@ -1025,7 +1025,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{prefix}/lib*/libstdc++.so.*.*.*
+%attr(755,root,root) %{_prefix}/lib*/libstdc++.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
 %endif
