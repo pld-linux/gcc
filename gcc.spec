@@ -14,7 +14,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	3.4.2
 #Release:	0.%{_snap}.1
-Release:	0.1
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
