@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.3
-Release:	15
+Release:	16
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -361,8 +361,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
-CFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
-CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" 
+CFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" \
+CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
