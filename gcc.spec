@@ -741,6 +741,8 @@ cd ..
 
 %if %{with ada}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
+	CFLAGS="%{rpmcflags} -fPIC" \
+	CXXFLAGS="%{rpmcflags} -fPIC" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
