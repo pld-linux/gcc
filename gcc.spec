@@ -307,15 +307,15 @@ TEXCONFIG=false ../configure \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-gxx-include-dir="%{_includedir}/g++" \
-	--disable-objc-gc \
-	--enable-java-gc \
-	--enable-chill-gc \
+	--enable-languages="c,gcov,c++,java,f77" \
 	--enable-long-long \
 	--enable-cshadow-headers \
 	--enable-namespaces \
 	--without-x \
 	--disable-nls \
 	%{_target_platform}
+# --enable-languages=objc
+# temporary disabled (objc doesn't build right now)
 
 PATH=$PATH:/sbin:%{_sbindir}
 
