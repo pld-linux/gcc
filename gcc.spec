@@ -101,14 +101,14 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/gcc-lib/${RPM_ARCH}/*/include/objc
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %doc NEWS PROBLEMS
-%attr(755, root, root) %{_bindir}/*-linux-gcc
+%attr(755,root,root) %{_bindir}/*-linux-gcc
 %dir %{_libdir}/gcc-lib/*/*
 %dir %{_libdir}/gcc-lib/*/*/include
 %{_libdir}/gcc-lib/*/*/SYSCALLS.c.X
-%attr(755, root, root) %{_libdir}/gcc-lib/*/*/cc1
-%attr(755, root, root) %{_libdir}/gcc-lib/*/*/cpp
+%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1
+%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cpp
 %{_libdir}/gcc-lib/*/*/libgcc.a
 %{_libdir}/gcc-lib/*/*/specs
 %{_libdir}/gcc-lib/*/*/include/*
