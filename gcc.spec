@@ -3,8 +3,8 @@
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	3.0
-Release:	0.8
+Version:	3.0.0
+Release:	0.85
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -311,6 +311,7 @@ Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Version:	%{version}
 Obsoletes:	egcs-cpp
+Obsoletes:	gcc-cpp
 
 %description -n cpp
 The C preprocessor is a "macro processor" that is used automatically
@@ -413,7 +414,6 @@ mv -f gcc/Makfefile. gcc/Makefile
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
-#	slibdir=$RPM_BUILD_ROOT%{_slibdir}
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
