@@ -1,0 +1,71 @@
+> On Thu, Jun 19, 2003 at 08:31:03AM +0200, Jan Hubicka wrote:
+> > > Nathan Myers <ncm-nospam@cantrip.org> writes:
+> > > 
+> > > > gnu/include/c++/3.4/x86_64-unknown-linux-gnu/bits/atomicity.h: In 
+> > > >    function `int main()':
+> > > > /amd/ncm/gnu/include/c++/3.4/x86_64-unknown-linux-gnu/bits/atomicity.h:43: error: inconsistent
+> > > >       operand constraints in an `asm'
+> > > 
+> > > Honza, isn't this the bug in gcse that you're hunting down?
+> > Yes, that looks like the same CSE problem.  I will try to give it
+> > priority this afternoon so it gets fixed.
+> 
+> I take it, then, that this is a core compiler bug and not a std headers bug?
+This patch should fix the problem.  (at least it fixes it for the
+similar testcase that comes from proprietary program.  Do you think you
+can simplify your code into small enought testcase for testsuite?)
+
+Bootstrap passed on x86-64, regtest in progress, OK if it suceeds?
+
+Honza
+
+Sat Jun 21 14:51:44 CEST 2003  Jan Hubicka  <jh@suse.cz>
+	* cse.c (find_best_addr):  Fold the best address discovered.
+Index: cse.c
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cse.c,v
+retrieving revision 1.243.2.4
+diff -c -3 -p -r1.243.2.4 cse.c
+*** gcc/gcc/cse.c	6 Jun 2003 10:09:09 -0000	1.243.2.4
+--- gcc/gcc/cse.c	21 Jun 2003 12:49:18 -0000
+*************** find_best_addr (insn, loc, mode)
+*** 3021,3029 ****
+  
+  	  if (found_better)
+  	    {
+! 	      if (validate_change (insn, loc,
+! 				   canon_reg (copy_rtx (best_elt->exp),
+! 					      NULL_RTX), 0))
+  		return;
+  	      else
+  		best_elt->flag = 1;
+--- 3021,3049 ----
+  
+  	  if (found_better)
+  	    {
+! 	      /*  Avoid find_best_addr from touching this address again:
+! 		  at the beggining of this function we attempt to fold
+! 		  the address.  Do it now as well.  Not doing so would mean
+! 		  that we will create multiple versions of the address in the
+! 		  insn chain that may result in "+m" ASM constraint from not
+! 		  being matched.  */
+! 		  
+! 	      rtx best = canon_reg (copy_rtx (best_elt->exp), NULL_RTX);
+! 	      rtx folded = fold_rtx (copy_rtx (best), NULL_RTX);
+! 	      int addr_folded_cost = address_cost (folded, mode);
+! 	      int addr_cost = address_cost (best, mode);
+! 
+! 	      if ((addr_folded_cost < addr_cost
+! 		   || (addr_folded_cost == addr_cost
+! 		       /* ??? The rtx_cost comparison is left over from an
+! 			  older version of this code.  It is probably no
+! 			  longer helpful.  */
+! 		       && (rtx_cost (folded, MEM) > rtx_cost (addr, MEM)
+! 			   || (approx_reg_cost (folded)
+! 			       < approx_reg_cost (addr)))))
+! 		       && validate_change (insn, loc, folded, 0))
+! 		return;
+! 	      if (validate_change (insn, loc, best, 0))
+  		return;
+  	      else
+  		best_elt->flag = 1;
