@@ -344,7 +344,7 @@ uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
 %package -n libstdc++-devel
 Summary:	Header files and documentatino for C++ development
 Summary(de):	Header-Dateien zur Entwicklung mit C++
-Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
+Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
