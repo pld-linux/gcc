@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -36,7 +36,7 @@ Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
-Patch8:		%{name}-ada-bootstrap.patch
+Patch8:		%{name}-pr18185.patch
 #
 # -fvisibility={default|internal|hidden|protected}
 #
@@ -63,6 +63,7 @@ Patch8:		%{name}-ada-bootstrap.patch
 #
 Patch9:		%{name}-visibility.patch
 #
+Patch20:	%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -649,12 +650,14 @@ Adzie.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p0
+%patch8 -p1
+%patch9 -p1
+
 %ifarch alpha ia64
 # needed for bootstrap using gcc 3.3.x on alpha
 # and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
-%patch8 -p2
+%patch20 -p2
 %endif
-%patch9 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
