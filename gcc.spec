@@ -22,6 +22,7 @@
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
+#		- http://gcc.gnu.org/PR19937 (tree-optimization / wrong loop exit (causes binutils to fail))
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
