@@ -826,8 +826,8 @@ cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
 %{__make} install \
-        mandir=%{_mandir} \
-        infodir=%{_infodir} \
+	mandir=%{_mandir} \
+	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %ifarch sparc64
