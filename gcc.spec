@@ -44,7 +44,6 @@ Patch21:	gcc32-inline-label.patch
 Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
-#Patch25:	%{name}-unwind.patch	-- obsolete?
 BuildRequires:	autoconf
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
