@@ -93,7 +93,7 @@ install -d $RPM_BUILD_ROOT/usr/{bin,lib,info,man}
 make CC="stage2/xgcc -Bstage2/" CFLAGS="-O2" LDFLAGS="-s" install \
 	prefix=$RPM_BUILD_ROOT/usr
 
-gzip -n -9f $RPM_BUILD_ROOT/usr/info/gcc.info*
+gzip -n -9f $RPM_BUILD_ROOT%{_infodir}/gcc.info*
 ln -sf gcc $RPM_BUILD_ROOT/usr/bin/cc
 rm -rf $RPM_BUILD_ROOT/usr/lib/gcc-lib/${RPM_ARCH}/*/include/objc
 
