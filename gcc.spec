@@ -620,8 +620,8 @@ mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
 (cd $RPM_BUILD_ROOT%{_libdir} && \
- ln -s libgnat-*so.1 libgnat.so.1 && \
- ln -s libgnarl-*so.1 libgnarl.so.1)
+ ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
+ ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -923,8 +923,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat.so.1
-%attr(755,root,root) %{_libdir}/libgnarl.so.1
+%attr(755,root,root) %{_libdir}/libgnat.so*
+%attr(755,root,root) %{_libdir}/libgnarl.so*
 
 %files -n libgnat
 %defattr(644,root,root,755)
