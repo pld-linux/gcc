@@ -1,17 +1,16 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
 %define		rver		3.0
-%define		snap		20010614
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{rver}
-Release:	0.%{snap}
+Release:	0.1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{snap}/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-disableshared.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -343,7 +342,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{version}-%{snap}
+%setup -q
 %patch0 -p1
 
 %build
@@ -365,7 +364,7 @@ TEXCONFIG=false ../configure \
 %endif
 	--enable-threads=posix \
 	--enable-haifa \
-	--enable-languages="c,gcov,c++,objc,java,f77" \
+	--enable-languages="c,gcov,c++,objc,f77" \
 	--enable-long-long \
 	--enable-namespaces \
 	--enable-multilib \
@@ -481,7 +480,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %attr(755,root,root) %{_libdir}/libsupc++.la
 %{_libdir}/libsupc++.a
-%{_infodir}/c-tree*
+#%{_infodir}/c-tree*
 
 %files objc
 %defattr(644,root,root,755)
@@ -516,33 +515,33 @@ rm -rf $RPM_BUILD_ROOT
 
 %files java
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/gcj*
-%attr(755,root,root) %{_bindir}/gij
-%attr(755,root,root) %{_bindir}/jcf-dump
-%attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/fastjar
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
-%{_infodir}/gcj*
+#%attr(755,root,root) %{_bindir}/gcj*
+#%attr(755,root,root) %{_bindir}/gij
+#%attr(755,root,root) %{_bindir}/jcf-dump
+#%attr(755,root,root) %{_bindir}/jv-*
+#%attr(755,root,root) %{_bindir}/fastjar
+#%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
+#%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
+#%{_infodir}/gcj*
 
 %files -n libgcj
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/lib*cj*.so.*
+#%attr(755,root,root) %{_libdir}/lib*cj*.so.*
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-%{_includedir}/java
-%{_includedir}/gcj
-%{_includedir}/j*.h
-%{_includedir}/gnu/*
-%{_libdir}/lib*cj.spec
-%{_datadir}/libgcj.jar
-%attr(755,root,root) %{_libdir}/lib*cj*.la
-%attr(755,root,root) %{_libdir}/lib*cj*.so
+#%{_includedir}/java
+#%{_includedir}/gcj
+#%{_includedir}/j*.h
+#%{_includedir}/gnu/*
+#%{_libdir}/lib*cj.spec
+#%{_datadir}/libgcj.jar
+#%attr(755,root,root) %{_libdir}/lib*cj*.la
+#%attr(755,root,root) %{_libdir}/lib*cj*.so
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-%{_libdir}/lib*cj*.a
+#%{_libdir}/lib*cj*.a
 
 %files -n libstdc++
 %defattr(644,root,root,755)
@@ -551,7 +550,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %{_includedir}/g++*
-%{_prefix}/%{_target_cpu}*
+#%{_prefix}/%{_target_cpu}*
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
