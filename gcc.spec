@@ -79,7 +79,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir64	/lib64
 %define		_slibdir32	/lib
 %define		_libdir		/usr/lib
+%define		_libdir64	/usr/lib64
 %define		rpmcflags	-O2 -mtune=ultrasparc
+%define		_noautochrpath	".*/lib/libgcc_s.so.1 .*/usr/lib/lib.*"
 %endif
 
 %description
@@ -1162,6 +1164,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
+%ifarch sparc64
+%attr(755,root,root) %{_libdir64}/lib*cj*.so.*.*.*
+%attr(755,root,root) %{_libdir64}/lib-org*.so.*.*.*
+%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
@@ -1185,6 +1191,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib*cj*.la
 %{_libdir}/lib-org-*.la
+%ifarch sparc64
+%attr(755,root,root) %{_libdir64}/lib*cj*.so
+%attr(755,root,root) %{_libdir64}/lib-org-*.so
+%{_libdir64}/lib*cj*.la
+%{_libdir64}/lib-org-*.la
+%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %attr(755,root,root) %{_libdir}/nof/lib-org-*.so
@@ -1196,6 +1208,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
 %{_libdir}/lib-org-*.a
+%ifarch sparc64
+%{_libdir64}/lib*cj*.a
+%{_libdir64}/lib-org-*.a
+%endif
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %{_libdir}/nof/lib-org-*.a
@@ -1204,6 +1220,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi-*.so
+%ifarch sparc64
+%attr(755,root,root) %{_libdir64}/libffi-*.so
+%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libffi-*.so
 %endif
@@ -1212,6 +1231,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%ifarch sparc64
+%attr(755,root,root) %{_libdir64}/libffi.so
+%{_libdir64}/libffi.la
+%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libffi.so
 %{_libdir}/nof/libffi.la
@@ -1221,6 +1244,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
+%ifarch sparc64
+%{_libdir64}/libffi.a
+%endif
 %ifarch ppc
 %{_libdir}/nof/libffi.a
 %endif
