@@ -10,6 +10,9 @@
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 %bcond_with	multilib	# build with multilib support
+%ifnarch amd64 ppc64 s390x sparc64
+%undefine	with_multilib
+%endif
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -100,7 +103,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch amd64 ppc64 s390x sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
-# XXX: don't use "%{_libdir}*" - specify both paths separately
 %endif
 %ifarch sparc64
 %define		rpmcflags	-O2 -mtune=ultrasparc
@@ -683,21 +685,19 @@ rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%
 CC="%{__cc}"
 
 %if %{with multilib}
-# or better don't allow with_multilib for single ABI archs?
-%ifarch amd64 ppc64 s390x sparc64 
 cat > gcc64 <<"EOF"
 #!/bin/sh
 exec /usr/bin/gcc -m64 "$@"
 EOF
 chmod +x gcc64
 CC=`pwd`/gcc64
-%endif 
 %endif
 
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 CC="$CC" \
-TEXCONFIG=false ../configure \
+TEXCONFIG=false \
+../configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--libexecdir=%{_libdir} \
@@ -833,10 +833,8 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 rm -rf $gccdir/install-tools
 
 %if %{with multilib}
-%ifarch amd64 ppc64 s390x sparc64 
 ln -sf %{_slibdir}/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
-%endif 
 %endif
 
 %find_lang %{name}
@@ -912,25 +910,25 @@ rm -rf $RPM_BUILD_ROOT
 
 %attr(755,root,root) /lib/cpp
 
-%attr(755,root,root) %{_slibdir}*/lib*.so
+%attr(755,root,root) %{_slibdir}/lib*.so
 %ifarch ia64
-%{_slibdir}*/libunwind.a
+%{_slibdir}/libunwind.a
 %endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
 %{_libdir}/gcc/*/*/specs
-%attr(644,root,root) %{_libdir}*/gcc/*/*/crt*.o
-%ifarch sparc64
-%{_libdir}/gcc/*/*/*/libgcc.a
-%{_libdir}/gcc/*/*/*/libgcc_eh.a
-%{_libdir}/gcc/*/*/*/libgcov.a
-%{_libdir}/gcc/*/*/libgcc*so
-%attr(644,root,root) %{_libdir}*/gcc/*/*/*/crt*.o
+%{_libdir}/gcc/*/*/crt*.o
+%if %{with multilib}
+%attr(755,root,root) %{_libdir}/gcc/*/*/libgcc_s*.so
+%{_libdir}/gcc/*/*/32/libgcc.a
+%{_libdir}/gcc/*/*/32/libgcc_eh.a
+%{_libdir}/gcc/*/*/32/libgcov.a
+%{_libdir}/gcc/*/*/32/crt*.o
 %endif
 %ifarch ppc
-%attr(644,root,root) %{_libdir}/gcc/*/*/ecrt*.o
-%attr(644,root,root) %{_libdir}/gcc/*/*/ncrt*.o
+%{_libdir}/gcc/*/*/ecrt*.o
+%{_libdir}/gcc/*/*/ncrt*.o
 %{_libdir}/gcc/*/*/nof
 %dir %{_libdir}/nof
 %endif
@@ -943,7 +941,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}*/lib*.so.*
-%ifarch sparc64
+%if %{with multilib}
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 %endif
 
@@ -955,21 +953,28 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
-%{_libdir}*/libsupc++.la
+%{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
 %ifarch ppc
 %{_libdir}/nof/libsupc++.la
 %{_libdir}/nof/libsupc++.a
 %endif
-%{_libdir}*/libsupc++.a
+%if %{with multilib}
+%{_libdir32}/libsupc++.la
+%{_libdir32}/libsupc++.a
+%endif
 %{_mandir}/man1/g++.1*
 %lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
-%attr(755,root,root) %{_libdir}*/libstdc++.so.*.*.*
+%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %endif
 
 %files -n libstdc++-devel
@@ -978,18 +983,25 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
 %exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
-%attr(755,root,root) %{_libdir}*/libstdc++.so
-%{_libdir}*/libstdc++.la
+%attr(755,root,root) %{_libdir}/libstdc++.so
+%{_libdir}/libstdc++.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
 %{_libdir}/nof/libstdc++.la
 %endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libstdc++.so
+%{_libdir32}/libstdc++.la
+%endif
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%{_libdir}*/libstdc++.a
+%{_libdir}/libstdc++.a
 %ifarch ppc
 %{_libdir}/nof/libstdc++.a
+%endif
+%if %{with multilib}
+%{_libdir32}/libstdc++.a
 %endif
 
 %if %{with objc}
@@ -997,27 +1009,37 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/objc/README
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
-%attr(755,root,root) %{_libdir}*/libobjc.so
-%{_libdir}*/libobjc.la
+%attr(755,root,root) %{_libdir}/libobjc.so
+%{_libdir}/libobjc.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
 %{_libdir}/nof/libobjc.la
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libobjc.so
+%{_libdir32}/libobjc.la
 %endif
 %{_libdir}/gcc/*/*/include/objc
 
 %files -n libobjc
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
-%attr(755,root,root) %{_libdir}*/libobjc.so.*.*.*
+%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %endif
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
-%{_libdir}*/libobjc.a
+%{_libdir}/libobjc.a
 %ifarch ppc
 %{_libdir}/nof/libobjc.a
+%endif
+%if %{with multilib}
+%{_libdir32}/libobjc.a
 %endif
 %endif
 
@@ -1028,13 +1050,18 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f771
-%{_libdir}*/libfrtbegin.a
-%{_libdir}*/libg2c.la
-%attr(755,root,root) %{_libdir}*/libg2c.so
+%{_libdir}/libfrtbegin.a
+%{_libdir}/libg2c.la
+%attr(755,root,root) %{_libdir}/libg2c.so
 %ifarch ppc
 %{_libdir}/nof/libfrtbegin.a
 %{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
+%endif
+%if %{with multilib}
+%{_libdir32}/libfrtbegin.a
+%{_libdir32}/libg2c.la
+%attr(755,root,root) %{_libdir32}/libg2c.so
 %endif
 %{_libdir}/gcc/*/*/include/g2c.h
 %{_mandir}/man1/g77.1*
@@ -1045,16 +1072,22 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libg2c
 %defattr(644,root,root,755)
 %doc libf2c/{ChangeLog,README,TODO}
-%attr(755,root,root) %{_libdir}*/libg2c.so.*.*.*
+%attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libg2c.so.*.*.*
 %endif
 
 %files -n libg2c-static
 %defattr(644,root,root,755)
-%{_libdir}*/libg2c.a
+%{_libdir}/libg2c.a
 %ifarch ppc
 %{_libdir}/nof/libg2c.a
+%endif
+%if %{with multilib}
+%{_libdir32}/libg2c.a
 %endif
 
 %if %{with java}
