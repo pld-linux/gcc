@@ -669,6 +669,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
 
 %files -n libobjc-static
+%defattr(644,root,root,755)
 %{_libdir}/libobjc.a
 
 %files g77
@@ -684,14 +685,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
 %files -n libg2c
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
 
 %files -n libg2c-static
 %{_libdir}/libg2c.a
 
 %files ksi
-%doc gcc/ksi/*.gz gcc/ksi/t/*.gz
 %defattr(644,root,root,755)
+%doc gcc/ksi/*.gz gcc/ksi/t/*.gz
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
 
@@ -705,14 +707,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%{_libdir}/libgnat.so
-%{_libdir}/libgnarl.so
+%attr(755,root,root) %{_libdir}/libgnat.so
+%attr(755,root,root) %{_libdir}/libgnarl.so
 
 %files -n libgnat-static
+%defattr(644,root,root,755)
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgna*.a
 
 %files -n libgnat
-%{_libdir}/libgna*-*so
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgna*-*so
 
 %ifarch no_longer_supported_by_gcc_team
 %files chill
