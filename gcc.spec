@@ -61,22 +61,22 @@ Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
 
 %description c++
-This package adds C++ support to the GNU C compiler. It includes support
-for most of the current C++ specification, including templates and
-exception handling. It does not include a standard C++ library, which is
-available separately.
+This package adds C++ support to the GNU C compiler. It includes
+support for most of the current C++ specification, including templates
+and exception handling. It does not include a standard C++ library,
+which is available separately.
 
 %description -l de c++
 Dieses Paket enthält die C++-Unterstützung für den GNU-C-Compiler. Es
 unterstützt die aktuelle C++-Spezifikation, inkl. Templates und
-Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten - sie
-ist getrennt erhältlich.
+Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten -
+sie ist getrennt erhältlich.
 
 %description -l fr c++
 Ce package ajoute un support C++ au compilateur c GNU. Il comprend un
 support pour la plupart des spécifications actuelles de C++, dont les
-modéles et la gestion des exceptions. Il ne comprend pas une bibliothéque
-C++ standard, qui est disponible séparément.
+modéles et la gestion des exceptions. Il ne comprend pas une
+bibliothéque C++ standard, qui est disponible séparément.
 
 %description -l pl c++
 Programy z tego pakietu zapewniaj± wsparcie dla C++ do gcc. Posiada
@@ -84,9 +84,9 @@ wspomaganie dla du¿ej ilo¶ci obecnych specyfikacji C++, nie posiada
 natomiast standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 
 %description -l tr c++
-Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve aykýrý
-durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart C++ kitaplýðý
-bu pakette yer almaz.
+Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve
+aykýrý durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart
+C++ kitaplýðý bu pakette yer almaz.
 
 %package objc
 Summary:	Objective C support for gcc
@@ -100,32 +100,32 @@ Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
 
 %description objc
-This package adds Objective C support to the GNU C compiler. Objective C is
-a object oriented derivative of the C language, mainly used on systems
-running NeXTSTEP. This package does not include the standard objective C
-object library.
+This package adds Objective C support to the GNU C compiler. Objective
+C is a object oriented derivative of the C language, mainly used on
+systems running NeXTSTEP. This package does not include the standard
+objective C object library.
 
 %description -l de objc
 Dieses Paket ergänzt den GNU-C-Compiler durch Objective-C-Support.
-Objective C ist ein objektorientiertes Derivat von C, das zur Hauptsache
-auf Systemen mit NeXTSTEP zum Einsatz kommt. Die
+Objective C ist ein objektorientiertes Derivat von C, das zur
+Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt. Die
 Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
 
 %description -l fr objc
-Ce package ajoute un support Objective C au compilateur C GNU. L'Objective C
-est un langage orienté objetdérivé du langage C, principalement utilisé sur
-les systèmes NeXTSTEP. Ce package n'inclue pas la bibliothéque Objective C
-standard.
+Ce package ajoute un support Objective C au compilateur C GNU.
+L'Objective C est un langage orienté objetdérivé du langage C,
+principalement utilisé sur les systèmes NeXTSTEP. Ce package n'inclue
+pas la bibliothéque Objective C standard.
 
 %description -l pl objc
-Ten pakiet jest wsparciem obiektowego C dla kompilatora gcc.  W pakiecie nie
-ma jeszcze bibliotek C-obj.
+Ten pakiet jest wsparciem obiektowego C dla kompilatora gcc. W
+pakiecie nie ma jeszcze bibliotek C-obj.
 
 %description -l tr objc
-Bu paket, GNU C derleyicisine Objective C desteði ekler. Objective C, C
-dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan sistemlerde
-yaygýn olarak kullanýlýr. Standart Objective C nesne kitaplýðý bu pakette
-yer almaz.
+Bu paket, GNU C derleyicisine Objective C desteði ekler. Objective C,
+C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
+sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
+kitaplýðý bu pakette yer almaz.
 
 %package g77
 Summary:	Fortran 77 support for gcc
@@ -135,12 +135,12 @@ Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-g77
 
 %description g77
-This apckage adds support for compiling Fortran 77 programs with the GNU
-compiler.
+This apckage adds support for compiling Fortran 77 programs with the
+GNU compiler.
 
 %description -l pl g77
-Ten pakiet jest wsparciem Fortran 77 dla kompilatora gcc.
-Jest potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
+Ten pakiet jest wsparciem Fortran 77 dla kompilatora gcc. Jest
+potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 
 %package chill
 Summary:	CHILL support for gcc
@@ -153,12 +153,12 @@ Requires:	%{name} = %{version}
 This package adds support for compiling CHILL programs with the GNU
 compiler.
 
-Chill is the "CCITT High-Level Language", where CCITT is the old
-name for what is now ITU, the International Telecommunications Union.
-It is is language in the Modula2 family, and targets many of the
-same applications as Ada (especially large embedded systems).
-Chill was never used much in the United States, but is still
-being used in Europe, Brazil, Korea, and other places.
+Chill is the "CCITT High-Level Language", where CCITT is the old name
+for what is now ITU, the International Telecommunications Union. It is
+is language in the Modula2 family, and targets many of the same
+applications as Ada (especially large embedded systems). Chill was
+never used much in the United States, but is still being used in
+Europe, Brazil, Korea, and other places.
 
 %package java
 Summary:	Java support for gcc
@@ -169,57 +169,60 @@ Requires:	%{name} = %{version}
 Requires:	%{name}-libgcj = %{version}
 
 %description java
-This package adds experimental support for compiling Java(tm) programs and
-bytecode into native code. To use this you will also need the gcc-libgcj
-package.
+This package adds experimental support for compiling Java(tm) programs
+and bytecode into native code. To use this you will also need the
+gcc-libgcj package.
 
 %package libgcj
 Summary:	Java runtime library for gcc
 Group:		Libraries
+Group(fr):	Librairies
 URL:		http://sourceware.cygnus.com/java/
 Requires:	zip >= 2.1
 
 %description libgcj
-The Java runtime library. You will need this package to compile your Java
-programs using the gcc Java compiler (gcj).
+The Java runtime library. You will need this package to compile your
+Java programs using the gcc Java compiler (gcj).
 
 %package libgcj-static
 Summary:	Static java runtime library for gcc
 Group:		Development/Libraries
+Group(fr):	Development/Librairies
 URL:		http://sourceware.cygnus.com/java/
 Requires:	%{name}-libgcj = %{version}
 
 %description libgcj-static
-The static java runtime library. You will need this package to staticly
-compile your Java programs using the gcc Java compiler (gcj).
+The static java runtime library. You will need this package to
+staticly compile your Java programs using the gcc Java compiler (gcj).
 
 %package -n libstdc++
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
+Group(fr):	Librairies
 Group(pl):	Biblioteki
 Version:	%{STDC_VERSION}
 Obsoletes:	libg++
 
 %description -n libstdc++
-This is the GNU implementation of the standard C++ libraries, along with
-additional GNU tools. This package includes the shared libraries
+This is the GNU implementation of the standard C++ libraries, along
+with additional GNU tools. This package includes the shared libraries
 necessary to run C++ applications.
 
 %description -l de -n libstdc++
-Dies ist die GNU-Implementierung der Standard-C++-Libraries mit weiteren
-GNU-Tools. Dieses Paket enthält die zum Ausführen von C++-Anwendungen
-erforderlichen gemeinsam genutzten Libraries.
+Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
+weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
+C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
 
 %description -l fr -n libstdc++
-Ceci est l'implémentation GNU des librairies C++ standard, ainsi que des
-outils GNU supplémentaires. Ce package comprend les librairies partagées
-nécessaires à l'exécution d'application C++.
+Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
+des outils GNU supplémentaires. Ce package comprend les librairies
+partagées nécessaires à l'exécution d'application C++.
 
 %description -l pl -n libstdc++  
-Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych bibliotek
-C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do uruchomienia
-aplikacji napisanych w C++.
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
+bibliotek C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do
+uruchomienia aplikacji napisanych w C++.
 
 %description -l tr -n libstdc++
 Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
@@ -231,6 +234,7 @@ Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
 Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
+Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
@@ -238,18 +242,20 @@ Requires:	%{name}-c++
 Obsoletes:	libg++-devel
 
 %description -n libstdc++-devel
-This is the GNU implementation of the standard C++ libraries.  This package
-includes the header files and libraries needed for C++ development.
+This is the GNU implementation of the standard C++ libraries. This
+package includes the header files and libraries needed for C++
+development.
 
 %description -l pl -n libstdc++-devel
-Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych bibliotek
-C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy programowaniu
-w jêzyku C++.
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
+bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
+programowaniu w jêzyku C++.
 
 %package -n libstdc++-static
 Summary:	Static c++ standard library
 Summary(pl):	Biblioeka statyczna c++
 Group:		Development/Libraries
+Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++-devel = %{STDC_VERSION}
@@ -268,47 +274,47 @@ Group(pl):	Programowanie/Jêzyki
 Obsoletes:	egcs-cpp
 
 %description -n cpp
-The C preprocessor is a "macro processor" that is used automatically by the
-C compiler to transform your program before actual compilation. It is called
-a macro processor because it allows you to define "macros", which are brief
-abbreviations for longer constructs.
+The C preprocessor is a "macro processor" that is used automatically
+by the C compiler to transform your program before actual compilation.
+It is called a macro processor because it allows you to define
+"macros", which are brief abbreviations for longer constructs.
 
-The C preprocessor provides four separate facilities that you can use as you
-see fit:
+The C preprocessor provides four separate facilities that you can use
+as you see fit:
 
-* Inclusion of header files.  These are files of declarations that
-  can be substituted into your program.
-* Macro expansion.  You can define "macros", which are abbreviations for
-  arbitrary fragments of C code, and then the C preprocessor will replace
-  the macros with their definitions throughout the program.
-* Conditional compilation.  Using special preprocessing directives,
-  you can include or exclude parts of the program according to various
+- Inclusion of header files. These are files of declarations that can
+  be substituted into your program.
+- Macro expansion. You can define "macros", which are abbreviations
+  for arbitrary fragments of C code, and then the C preprocessor will
+  replace the macros with their definitions throughout the program.
+- Conditional compilation. Using special preprocessing directives, you
+  can include or exclude parts of the program according to various
   conditions.
-* Line control.  If you use a program to combine or rearrange source
-  files into an intermediate file which is then compiled, you can use line
-  control to inform the compiler of where each source line originally came
-  from.
+- Line control. If you use a program to combine or rearrange source
+  files into an intermediate file which is then compiled, you can use
+  line control to inform the compiler of where each source line
+  originally came from.
 
 %description -l pl -n cpp
-Przeprocesor C jest "makro procesorem" który jest automatycznie u¿ywany
-przez kompilator C do obróbki kompilowanego programu przed w³a¶ciw±
-kompilacj±. Jest on nazywany makroprocesorem, poniewa¿ umo¿liwia
-definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie d³ugich konstrukcji
-w jêzyku C.
+Przeprocesor C jest "makro procesorem" który jest automatycznie
+u¿ywany przez kompilator C do obróbki kompilowanego programu przed
+w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
+umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
+d³ugich konstrukcji w jêzyku C.
 
 Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
-* Do³±czanie plików (np. nag³ówkowych). Wstawia pliki w miejscu
+- Do³±czanie plików (np. nag³ówkowych). Wstawia pliki w miejscu
   deklaracji polecenia do³±czenia innego pliku.
-* Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
+- Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
   których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
   indentyfikatora deklarowan± wcze¶niej warto¶ci±.
-* Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
-  ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne fragmenty
-  obrabianego strumienia tekstów.
-* Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom podlega
-  wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania s±
-  zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
+- Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
+  ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne
+  fragmenty obrabianego strumienia tekstów.
+- Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom
+  podlega wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania
+  s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
   odpowiada fragment pliku wynikowego.
 
 %prep
@@ -560,14 +566,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*gcj*.la
 
 %files -n libstdc++
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
-%defattr(644,root,root,755) 
+%defattr(644,root,root,755)
 %{_includedir}/g++
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
+%defattr(644,root,root,755)
 %attr(644,root,root) %{_libdir}/libstdc++.a
 
 %files -n cpp
