@@ -197,8 +197,12 @@ Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
+Group(pt_BR):	Bibliotecas
+Group(ru):	‚…¬Ã…œ‘≈À…
+Group(uk):	‚¶¬Ã¶œ‘≈À…
 Version:	%{STDC_VERSION}
 Release:	%{STDC_RELEASE}
 Obsoletes:	libg++
@@ -235,6 +239,7 @@ Summary(pl):	Pliki nag≥Ûwkowe do programowania z uøyciem bibliotek C++
 Summary(tr):	C++ ile program geli˛tirmek iÁin gerekli dosyalar
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
@@ -258,6 +263,7 @@ Summary:	Static c++ standard library
 Summary(pl):	Biblioteka statyczna c++
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
+Group(es):	Desarrollo/Bibliotecas
 Group(fr):	Development/Librairies
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
