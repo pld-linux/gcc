@@ -8,14 +8,14 @@
 %define		snap		20040324
 %define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
-
+#
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
-Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
+Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -796,14 +796,14 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
 	$RPM_BUILD_ROOT%{_libdir}/
 # check if symlink to be made is valid
-test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
-ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
-ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
-ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+#test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
+#ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
+#ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
+#ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+#ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -1136,6 +1136,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with ada}
 %files ada
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gnat*
 %attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
 %{_libdir}/gcc/*/*/adainclude
 %dir %{_libdir}/gcc/*/*/adalib
@@ -1143,19 +1144,17 @@ rm -rf $RPM_BUILD_ROOT
 %ifnarch ppc
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
-%{_libdir}/gcc/*/*/adalib/Makefile.adalib
-%attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat*.so
-%attr(755,root,root) %{_libdir}/libgnarl*.so
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*.so.1
+%attr(755,root,root) %{_libdir}/libgnarl*.so
+%attr(755,root,root) %{_libdir}/libgnat*.so
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/adalib/libgna*.a
+%{_libdir}/gcc/*/*/adalib/libgnarl.a
+%{_libdir}/gcc/*/*/adalib/libgnat.a
 %endif
 
 %if 0
