@@ -408,7 +408,7 @@ echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
-ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
+(cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so))
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT%{_libdir}/cpp
 
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
