@@ -271,7 +271,7 @@ This package adds experimental support for compiling Java(tm) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
-%description -l pl java
+%description java -l pl
 Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
 do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
 by³o przeprowadziæ kompilacjê.
@@ -482,7 +482,7 @@ Obsoletes:	gnat-devel
 %description ada
 This package adds experimental support for compiling Ada programs.
 
-%description -l pl ada
+%description ada -l pl
 Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów
 w Adzie.
 
