@@ -13,6 +13,7 @@ Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
 Patch2:		gcc-pld-linux.patch
+Patch3:		gcc-libstdc++.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
 URL:		http://www.gnu.org/
@@ -294,6 +295,7 @@ mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 rm -rf obj-%{_target_platform}
@@ -338,7 +340,7 @@ make install \
 strip $RPM_BUILD_ROOT%{_bindir}/* || :
 
 strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
-strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++-3-*.*.*.*.so
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*.*.*
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
@@ -346,10 +348,6 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
-
-(cd $RPM_BUILD_ROOT%{_libdir} ; \
-ln -sf libstdc++-3-*.*.*.*.so $RPM_BUILD_ROOT%{_libdir}/libstdc++.so; \
-ln -sf libstdc++-3-*.*.*.*.a $RPM_BUILD_ROOT%{_libdir}/libstdc++.a)
 
 mv -f $RPM_BUILD_ROOT%{_includedir}/g++-3 $RPM_BUILD_ROOT%{_includedir}/g++
 
@@ -520,15 +518,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*gcj*.la
 
 %files -n libstdc++
-%attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.so
+%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
 %{_includedir}/g++
-%attr(755,root,root) %{_libdir}/libstdc++.so
+%attr(755,root,root) %{_libdir}/libst.so
 
 %files -n libstdc++-static
-%attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.a
 %attr(644,root,root) %{_libdir}/libstdc++.a
 
 %files -n cpp
