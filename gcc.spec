@@ -924,6 +924,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/grepjar
+%attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcj
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 %{_infodir}/gcj*
