@@ -31,6 +31,7 @@ Patch17:	%{name}-alpha-complex-float.patch
 Patch18:	%{name}-gcj-vs-iconv.patch
 Patch19:	%{name}-libobjc.patch
 Patch20:	%{name}-pointer-arith.patch
+Patch21:	%{name}-crtendS.patch
 
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -332,6 +333,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch18 -p0
 %patch19 -p0
 %patch20 -p0
+%patch21 -p1
 
 %build
 (cd gcc; autoconf)
