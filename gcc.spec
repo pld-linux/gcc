@@ -19,6 +19,7 @@
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
 #		- http://gcc.gnu.org/PR20349 (multilib, libjava32 doesn't build)
+#		- http://gcc.gnu.org/PR20225 (regression] / ice during gc)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
@@ -29,7 +30,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -884,8 +885,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
-%dir %{_libdir}/gcj-%{version}
-%{_libdir}/gcj-%{version}/classmap.db
 %{_infodir}/gcj*
 %{_mandir}/man1/gcj*
 %{_mandir}/man1/gij*
@@ -905,6 +904,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
+%dir %{_libdir}/gcj-%{version}
+%{_libdir}/gcj-%{version}/classmap.db
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %{_libdir}/logging.properties
