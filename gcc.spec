@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	5
+Release:	6
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -64,6 +64,7 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.90.0.3
 Requires:	cpp = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	gcc-dirs
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
@@ -970,8 +971,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc READ* ChangeLog
-%dir %{_libdir}/gcc-lib
-%dir %{_libdir}/gcc-lib/*
 %dir %{_libdir}/gcc-lib/*/*
 %dir %{_libdir}/gcc-lib/*/*/include
 %attr(755,root,root) %{_bindir}/*-gcc*
