@@ -392,6 +392,10 @@ TEXCONFIG=false ../configure \
 
 PATH=$PATH:/sbin:%{_sbindir}
 
+# workaround
+sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' Makefile > Makfefile.
+mv -f Makfefile. Makefile
+
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
@@ -404,10 +408,6 @@ install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
 
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
-
-# workaround
-cat gcc/Makefile | sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' > gcc/Makfefile.
-mv -f gcc/Makfefile. gcc/Makefile
 
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
