@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	3.1
+Release:	4
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -649,7 +649,7 @@ Adzie.
 %{?with_ssp:%patch4 -p1}
 %patch5 -p1
 %patch6 -p0
-%patch7 -p0
+#%patch7 -p0
 %patch8 -p1
 %patch9 -p1
 
