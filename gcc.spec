@@ -333,7 +333,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{release}
+%setup -q -n %{name}-%{snap}
 
 %build
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
@@ -454,9 +454,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 %attr(755,root,root) %{_libdir}/libgcc_s.so*
 
-%attr(755,root,root) %{_libdir}/libsupc++.la
-%{_libdir}/libsupc++.a
-
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
@@ -474,6 +471,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
+%attr(755,root,root) %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
 %{_infodir}/c-tree*
 %{_infodir}/g++int*
 
