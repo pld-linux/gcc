@@ -1,8 +1,8 @@
 #
 # Conditional build:
-# _without_ada  - build without ADA support
-# _without_java - build without Java support
-# _without_objc - build without objc support
+# _with_ada	- build without ADA support
+# _without_java	- build without Java support
+# _without_objc	- build without objc support
 
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.4
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -23,31 +23,29 @@ Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
-Patch4:		%{name}-nolocalefiles.patch
-Patch6:		%{name}-ada-link-new-libgnat.patch
+Patch2:		%{name}-nolocalefiles.patch
+Patch3:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
-Patch16:	gcc32-boehm-gc-libs.patch
-Patch17:	gcc32-bogus-inline.patch
-Patch18:	gcc32-c++-nrv-test.patch
-Patch20:	gcc32-c++-tsubst-asm.patch
-Patch22:	gcc32-debug-pr7241.patch
-
-Patch24:	gcc32-duplicate-decl.patch
-Patch25:	gcc32-dwarf2-pr6381.patch
-Patch26:	gcc32-dwarf2-pr6436-test.patch
-Patch27:	gcc32-fde-merge-compat.patch
-
-Patch32:	gcc32-i386-memtest-test.patch
-Patch36:	gcc32-inline-label.patch
-Patch37:	gcc32-java-no-rpath.patch
-Patch40:	gcc32-test-rh65771.patch
-Patch41:	gcc32-test-rotate.patch
+Patch11:	gcc32-boehm-gc-libs.patch
+Patch12:	gcc32-bogus-inline.patch
+Patch13:	gcc32-c++-nrv-test.patch
+Patch14:	gcc32-c++-tsubst-asm.patch
+Patch15:	gcc32-debug-pr7241.patch
+Patch16:	gcc32-duplicate-decl.patch
+Patch17:	gcc32-dwarf2-pr6381.patch
+Patch18:	gcc32-dwarf2-pr6436-test.patch
+Patch19:	gcc32-fde-merge-compat.patch
+Patch20:	gcc32-i386-memtest-test.patch
+Patch21:	gcc32-inline-label.patch
+Patch22:	gcc32-java-no-rpath.patch
+Patch23:	gcc32-test-rh65771.patch
+Patch24:	gcc32-test-rotate.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
-%{!?_without_ada:BuildRequires:	gcc-ada}
+%{?_with_ada:BuildRequires:	gcc-ada}
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
@@ -597,25 +595,25 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
-%patch4 -p1
-%patch6 -p1
+%patch2 -p1
+%patch3 -p1
 
 %patch10 -p1
-#%patch16
-##%%patch17
-%patch18
-%patch20
-%patch22
+#%patch11
+#%patch12
+%patch13
+%patch14
+%patch15
 
+%patch16
+%patch17
+%patch18
+%patch19
+%patch20
+%patch21
+%patch22
+%patch23
 %patch24
-%patch25
-%patch26
-%patch27
-%patch32
-%patch36
-%patch37
-%patch40
-%patch41
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -635,7 +633,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{?_with_ada:,ada}%{!?_without_java:,java},ksi" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -650,7 +648,7 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 # this dirty hack is relict of setting, where objdir is subdir of srcdir
-%if %{!?_without_ada:1}%{?_without_ada:0}
+%if 0%{?_with_ada:1}
 sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
 	gcc/ada/Makefile > makefile.tmp
 mv -f makefile.tmp gcc/ada/Makefile
@@ -662,7 +660,7 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%if %{!?_without_ada:1}%{?_without_ada:0}
+%if 0%{?_with_ada:0}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
@@ -685,7 +683,7 @@ echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
-%if %{!?_without_ada:1}%{?_without_ada:0}
+%if 0%{?_with_ada:1}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
@@ -1017,7 +1015,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.a
 %endif
 
-%if %{!?_without_ada:1}%{?_without_ada:0}
+%if 0%{?_with_ada:1}
 %files ada
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/gnat1
