@@ -24,7 +24,6 @@
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
-#		- review ppc's nof files
 #
 %define		_snap		20050213
 #
@@ -711,12 +710,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/*/libgcc.a
 %{_libdir}/gcc/*/*/*/libgcc_eh.a
 %{_libdir}/gcc/*/*/*/crt*.o
-%endif
-%ifarch ppc
-%{_libdir}/gcc/*/*/ecrt*.o
-%{_libdir}/gcc/*/*/ncrt*.o
-%{_libdir}/gcc/*/*/nof
-%dir %{_libdir}/nof
 %endif
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
