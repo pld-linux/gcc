@@ -1,0 +1,62 @@
+
+	PR middle-end/18628
+	* cse.c (fold_rtx_mem): Instead of returning the label extracted
+	from a tablejump, add it as an REG_EQUAL note, if the insn loaded
+	from the table to a register.
+	(cse_insn): Don't use it as src_eqv.
+
+--- gcc-4.0-20050305/gcc/cse.c.orig	2005-02-25 04:45:37.000000000 +0100
++++ gcc-4.0-20050305/gcc/cse.c	2005-03-09 22:41:29.945553688 +0100
+@@ -3564,8 +3564,36 @@
+ 		if (offset >= 0
+ 		    && (offset / GET_MODE_SIZE (GET_MODE (table))
+ 			< XVECLEN (table, 0)))
+-		  return XVECEXP (table, 0,
+-				  offset / GET_MODE_SIZE (GET_MODE (table)));
++	          {
++		    rtx label = XVECEXP
++		      (table, 0, offset / GET_MODE_SIZE (GET_MODE (table)));
++		    rtx set;
++
++		    /* If we have an insn that loads the label from the
++		       jumptable into a reg, we don't want to set the reg
++		       to the label, because this may cause a reference to
++		       the label to remain after the label is removed in
++		       some very obscure cases (PR middle-end/18628).  So
++		       we just set a REG_EQUAL note for this case, and
++		       return the original MEM.  */
++		    if (!insn)
++		      return label;
++
++		    set = single_set (insn);		
++
++		    if (! set || SET_SRC (set) != x)
++		      return x;
++
++		    /* If it's a jump, it's safe to reference the label.  */
++		    if (SET_DEST (set) == pc_rtx)
++		      return label;
++
++		    /* If it's not a REG, the REG_EQUAL note is inappropriate.  */
++		    if (REG_P (SET_DEST (set)))
++		      set_unique_reg_note (insn, REG_EQUAL, label);
++
++		    return x;
++	          }
+ 	      }
+ 	    if (table_insn && JUMP_P (table_insn)
+ 		&& GET_CODE (PATTERN (table_insn)) == ADDR_DIFF_VEC)
+@@ -4830,6 +4858,13 @@
+     {
+       src_eqv = fold_rtx (canon_reg (XEXP (tem, 0), NULL_RTX), insn);
+       XEXP (tem, 0) = src_eqv;
++
++      /* We don't want to use the labels in REG_EQUAL notes that
++	 fold_rtx may have added in an earlier pass.  If it's
++	 something as simple as a LABEL_REF and we didn't set to it
++	 directly, there was a reason not to do so.  */
++      if (GET_CODE (src_eqv) == LABEL_REF)
++	src_eqv = NULL;
+     }
+ 
+   /* Canonicalize sources and addresses of destinations.
