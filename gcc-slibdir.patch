@@ -1,0 +1,11 @@
+diff -ur gcc-20020218/Makefile.in gcc-20020218-/Makefile.in
+--- gcc-20020218/Makefile.in	Tue Feb 12 17:32:00 2002
++++ gcc-20020218-/Makefile.in	Fri Feb 22 01:36:31 2002
+@@ -392,6 +392,7 @@
+ 	"includedir=$(includedir)" \
+ 	"infodir=$(infodir)" \
+ 	"libdir=$(libdir)" \
++	"slibdir=$(slibdir)" \
+ 	"libexecdir=$(libexecdir)" \
+ 	"lispdir=$(lispdir)" \
+ 	"libstdcxx_incdir=$(libstdcxx_incdir)" \

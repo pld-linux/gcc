@@ -1,0 +1,12 @@
+diff -ur gcc-20020304/gcc/ada/Makefile.in gcc-20020304-/gcc/ada/Makefile.in
+--- gcc-20020304/gcc/ada/Makefile.in	Fri Jan  4 19:29:52 2002
++++ gcc-20020304-/gcc/ada/Makefile.in	Thu Mar  7 21:45:54 2002
+@@ -1509,7 +1509,7 @@
+ 
+ LIBGNAT_OBJS = adaint.o argv.o cio.o cstreams.o errno.o exit.o \
+   raise.o sysdep.o io-aux.o init.o cal.o final.o \
+-  tracebak.o expect.o ../../prefix.o $(EXTRA_LIBGNAT_OBJS)
++  tracebak.o expect.o $(EXTRA_LIBGNAT_OBJS)
+ 
+ # NOTE ??? - when the -I option for compiling Ada code is made to work,
+ #  the library installation will change and there will be a
