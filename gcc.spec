@@ -782,7 +782,7 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{libffi/ffitarget.h,%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
+mv -f $gccdir/include/{%{?with_java:libffi/ffitarget.h,}%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
