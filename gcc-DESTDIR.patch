@@ -1,0 +1,12 @@
+diff -urN gcc-3.0.org/gcc/Makefile.in gcc-3.0/gcc/Makefile.in
+--- gcc-3.0.org/gcc/Makefile.in	Tue Jun 26 09:22:05 2001
++++ gcc-3.0/gcc/Makefile.in	Tue Jun 26 13:58:42 2001
+@@ -323,7 +323,7 @@
+ # Used in install-cross.
+ gcc_tooldir = @gcc_tooldir@
+ # Used to install the shared libgcc.
+-slibdir = @slibdir@
++slibdir = $(DESTDIR)@slibdir@
+ # Since tooldir does not exist at build-time, use -B$(build_tooldir)/bin/
+ build_tooldir = $(exec_prefix)/$(target_alias)
+ # Directory in which the compiler finds target-independent g++ includes.
