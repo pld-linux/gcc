@@ -1,0 +1,24 @@
+2004-01-16  Segher Boessenkool  <boessen@de.ibm.com>
+
+        PR target/11793
+	* config/rs6000/rs6000.h (LEGITIMATE_CONSTANT_P): Handle
+	vectors.
+
+diff -u -r1.237.2.8 -r1.237.2.9
+--- gcc/gcc/config/rs6000/rs6000.h	2003/06/18 06:21:37	1.237.2.8
++++ gcc/gcc/config/rs6000/rs6000.h	2004/01/16 15:05:37	1.237.2.9
+@@ -1993,9 +1993,11 @@
+    acceptable.  */
+ 
+ #define LEGITIMATE_CONSTANT_P(X)				\
+-  (GET_CODE (X) != CONST_DOUBLE || GET_MODE (X) == VOIDmode	\
+-   || (TARGET_POWERPC64 && GET_MODE (X) == DImode)		\
+-   || easy_fp_constant (X, GET_MODE (X)))
++  ((GET_CODE (X) != CONST_VECTOR				\
++    || zero_constant (X, GET_MODE (X)))				\
++   && (GET_CODE (X) != CONST_DOUBLE || GET_MODE (X) == VOIDmode	\
++       || (TARGET_POWERPC64 && GET_MODE (X) == DImode)		\
++       || easy_fp_constant (X, GET_MODE (X))))
+ 
+ /* The macros REG_OK_FOR..._P assume that the arg is a REG rtx
+    and check its validity for a certain class.
