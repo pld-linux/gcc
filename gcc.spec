@@ -256,6 +256,7 @@ Group:		Development/Languages
 Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
+Requires:	libgcj-devel >= 3.0.0
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
 Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	fastjar
