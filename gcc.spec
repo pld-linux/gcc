@@ -786,10 +786,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %{!?debug:%patch4 -p1}
 %patch5 -p1
-%ifarch amd64
-# not sure if it wouldn't break x86 (it shouldn't, but better safe than sorry)
 %patch6 -p1
-%endif
 %patch7 -p1
 
 %patch10 -p1
@@ -1025,7 +1022,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/*/*/specs
 %{_libdir}/gcc-lib/*/*/crt*.o
 %if %{with multilib}
-%attr(755,root,root) %{_libdir}/gcc/*/*/libgcc_s*.so
+%attr(755,root,root) %{_libdir}/gcc-lib/*/*/libgcc_s*.so
 %dir %{_libdir}/gcc-lib/*/*/32
 %{_libdir}/gcc-lib/*/*/32/libgcc.a
 %{_libdir}/gcc-lib/*/*/32/libgcc_eh.a
@@ -1084,8 +1081,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
-%dir %{_includedir}/c++
-%{_includedir}/c++/%{GCC_VERSION}
 %attr(755,root,root) %{_libdir}/libstdc++.so
 %{_libdir}/libstdc++.la
 %ifarch ppc
@@ -1096,6 +1091,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
 %endif
+%dir %{_includedir}/c++
+%{_includedir}/c++/%{GCC_VERSION}
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
@@ -1223,23 +1220,17 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
-%ifarch sparc64
-%attr(755,root,root) %{_libdir64}/lib*cj*.so.*.*.*
-%attr(755,root,root) %{_libdir64}/lib-org*.so.*.*.*
-%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
 %endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/lib*cj*.so.*.*.*
+%attr(755,root,root) %{_libdir32}/lib-org*.so.*.*.*
+%endif
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-%{_includedir}/java
-%{_includedir}/javax
-#%%{_includedir}/org
-%{_includedir}/gcj
-%{_includedir}/j*.h
-%{_includedir}/gnu/*
 %{_libdir}/gcc-lib/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
@@ -1250,65 +1241,70 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib-org-*.so
 %{_libdir}/lib*cj*.la
 %{_libdir}/lib-org-*.la
-%ifarch sparc64
-%attr(755,root,root) %{_libdir64}/lib*cj*.so
-%attr(755,root,root) %{_libdir64}/lib-org-*.so
-%{_libdir64}/lib*cj*.la
-%{_libdir64}/lib-org-*.la
-%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %attr(755,root,root) %{_libdir}/nof/lib-org-*.so
 %{_libdir}/nof/lib*cj*.la
 %{_libdir}/nof/lib-org-*.la
 %endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/lib*cj*.so
+%attr(755,root,root) %{_libdir32}/lib-org-*.so
+%{_libdir32}/lib*cj*.la
+%{_libdir32}/lib-org-*.la
+%endif
+%{_includedir}/java
+%{_includedir}/javax
+%{_includedir}/gcj
+%{_includedir}/j*.h
+%{_includedir}/gnu/*
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
 %{_libdir}/lib-org-*.a
-%ifarch sparc64
-%{_libdir64}/lib*cj*.a
-%{_libdir64}/lib-org-*.a
-%endif
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %{_libdir}/nof/lib-org-*.a
+%endif
+%if %{with multilib}
+%{_libdir32}/lib*cj*.a
+%{_libdir32}/lib-org-*.a
 %endif
 
 %files -n libffi
 %defattr(644,root,root,755)
 %doc libffi/LICENSE
 %attr(755,root,root) %{_libdir}/libffi-*.so
-%ifarch sparc64
-%attr(755,root,root) %{_libdir64}/libffi-*.so
-%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libffi-*.so
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libffi-*.so
 %endif
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
-%ifarch sparc64
-%attr(755,root,root) %{_libdir64}/libffi.so
-%{_libdir64}/libffi.la
-%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libffi.so
 %{_libdir}/nof/libffi.la
+%endif
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libffi.so
+%{_libdir32}/libffi.la
 %endif
 %{_includedir}/ffi*
 
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
-%ifarch sparc64
-%{_libdir64}/libffi.a
-%endif
 %ifarch ppc
 %{_libdir}/nof/libffi.a
+%endif
+%if %{with multilib}
+%{_libdir32}/libffi.a
 %endif
 %endif
 
