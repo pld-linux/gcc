@@ -310,7 +310,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q
+%setup -q -n %{name}-2.95.2
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
