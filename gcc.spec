@@ -73,6 +73,7 @@ Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
+Obsoletes:	gcc-chill
 Obsoletes:	gcc-cpp
 Obsoletes:	gcc-ksi
 Obsoletes:	gont
@@ -165,6 +166,7 @@ Adzie.
 %package -n libgnat
 Summary:	Ada standard libraries
 Summary(pl):	Biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Obsoletes:	gnat
 Obsoletes:	libgnat1
@@ -180,6 +182,7 @@ napisanych w Adzie.
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Obsoletes:	gnat-static
 
