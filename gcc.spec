@@ -317,7 +317,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+# bootstrap patch is broken
+#%patch3 -p1
 %patch4 -p0
 %patch5 -p0
 %patch6 -p1
@@ -363,7 +364,7 @@ install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
 CFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
 CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}" 
-../configure \
+TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
 	--enable-shared \
