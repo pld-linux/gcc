@@ -7,7 +7,7 @@
 
 --- gcc-4.0-20050305/gcc/cse.c.orig	2005-02-25 04:45:37.000000000 +0100
 +++ gcc-4.0-20050305/gcc/cse.c	2005-03-09 22:41:29.945553688 +0100
-@@ -3564,8 +3564,36 @@
+@@ -3564,8 +3564,32 @@
  		if (offset >= 0
  		    && (offset / GET_MODE_SIZE (GET_MODE (table))
  			< XVECLEN (table, 0)))
@@ -37,26 +37,8 @@
 +		    if (SET_DEST (set) == pc_rtx)
 +		      return label;
 +
-+		    /* If it's not a REG, the REG_EQUAL note is inappropriate.  */
-+		    if (REG_P (SET_DEST (set)))
-+		      set_unique_reg_note (insn, REG_EQUAL, label);
-+
 +		    return x;
 +	          }
  	      }
  	    if (table_insn && JUMP_P (table_insn)
  		&& GET_CODE (PATTERN (table_insn)) == ADDR_DIFF_VEC)
-@@ -4830,6 +4858,13 @@
-     {
-       src_eqv = fold_rtx (canon_reg (XEXP (tem, 0), NULL_RTX), insn);
-       XEXP (tem, 0) = src_eqv;
-+
-+      /* We don't want to use the labels in REG_EQUAL notes that
-+	 fold_rtx may have added in an earlier pass.  If it's
-+	 something as simple as a LABEL_REF and we didn't set to it
-+	 directly, there was a reason not to do so.  */
-+      if (GET_CODE (src_eqv) == LABEL_REF)
-+	src_eqv = NULL;
-     }
- 
-   /* Canonicalize sources and addresses of destinations.
