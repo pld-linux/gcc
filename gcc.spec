@@ -1,5 +1,8 @@
-# _without_ada	- build without ADA support.
-# _without_java	- don't build Java support
+#
+# Conditional build:
+# _without_ada	- build without ADA support
+# _without_java	- build without Java support
+#
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2
@@ -259,7 +262,6 @@ Static Fortran 77 Libraries.
 %description -n libg2c-static -l pl
 Statyczne biblioteki Fortranu 77.
 
-%if %{!?_without_java:1}%{?_without_java:0}
 %package java
 Summary:	Java support for gcc
 Summary(pl):	Obs³uga Javy dla gcc
@@ -323,7 +325,6 @@ Static Java Class Libraries.
 
 %description -n libgcj-static -l pl
 Statyczne Biblioteki Klas Javy.
-%endif
 
 %package -n libstdc++
 Summary:	GNU c++ library
@@ -394,7 +395,6 @@ Static C++ standard library.
 %description -n libstdc++-static -l pl
 Statycza biblioteka standardowa C++.
 
-%if %{!?_without_ada:1}%{?_without_ada:0}
 %package ada
 Summary:	Ada support for gcc
 Summary(pl):	Obs³uga Ady do gcc
@@ -439,7 +439,6 @@ This package contains static libraries for programs written in Ada.
 %description -n libgnat-static -l pl
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
-%endif
 
 %package ksi
 Summary:	Ksi support for gcc
@@ -706,13 +705,11 @@ rm -rf $RPM_BUILD_ROOT
 %postun g77
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%if %{!?_without_java:1}%{?_without_java:0}
 %post java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-%endif
 
 %post ksi
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -734,14 +731,10 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig -n libobjc
 %post   -p /sbin/ldconfig -n libg2c
 %postun -p /sbin/ldconfig -n libg2c
-%if %{!?_without_java:1}%{?_without_java:0}
 %post   -p /sbin/ldconfig -n libgcj
 %postun -p /sbin/ldconfig -n libgcj
-%endif
-%if %{!?_without_ada:1}%{?_without_ada:0}
 %post   -p /sbin/ldconfig -n libgnat
 %postun -p /sbin/ldconfig -n libgnat
-%endif
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
