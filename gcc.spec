@@ -1,4 +1,4 @@
-%define		DASHED_SNAP	2002-03-11
+%define		DASHED_SNAP	2002-03-18
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.1
 %define		STDC_VERSION	4.0.0
@@ -9,7 +9,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{SNAP}.2
+Release:	0.%{SNAP}.0
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.bz2
