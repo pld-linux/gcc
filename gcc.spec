@@ -4,7 +4,6 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 #
-%define		snap		20040416
 %define		GCC_VERSION	3.4.0
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
@@ -13,14 +12,12 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{snap}.1
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	d6e215ce39a302c643f3ea8994ef6b68
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	85c6fc83d51be0fbb4f8205accbaff59
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
@@ -679,7 +676,7 @@ arquivos de cabeçalho; expansão de macros; compilação condicional; e
 controle da numeração das linhas do programa.
 
 %prep
-%setup -q -a1 -n %{name}-%{version}-%{snap}
+%setup -q -a1
 
 %patch0 -p1
 %patch1 -p1
