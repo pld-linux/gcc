@@ -12,7 +12,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	8
+Release:	9
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -95,6 +95,7 @@ BuildRequires:	perl-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{GCC_VERSION}
 Requires:	libgcc = %{GCC_VERSION}
+Conflicts:	glibc-devel <= 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
