@@ -396,6 +396,10 @@ ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
+cp -a	$RPM_BUILD_ROOT%{_includedir}/g++*/%{_target_cpu}-*/bits/* \
+	$RPM_BUILD_ROOT%{_includedir}/g++*/bits/
+rm -rf	$RPM_BUILD_ROOT%{_includedir}/g++/%{_target_cpu}-*
+
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
@@ -469,7 +473,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %{_infodir}/c-tree*
-%{_indodir}/g++int*
+%{_infodir}/g++int*
 
 %ifarch temporary_disabled_does_not_compile
 %files objc
@@ -546,6 +550,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-static
 %defattr(644,root,root,755)
 %attr(644,root,root) %{_libdir}/libstdc++.a
+%attr(755,root,root) %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
+
 
 %files -n cpp
 %defattr(644,root,root,755)
