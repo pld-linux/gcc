@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{ver}
-Release:	17
+Release:	18
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -386,7 +386,7 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_datadir}
+install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
 
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
@@ -409,7 +409,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
-ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT%{_libdir}/cpp
+ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
@@ -563,8 +563,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n cpp
 %defattr(644,root,root,755)
+%attr(755,root,root) /lib/cpp
 %attr(755,root,root) %{_bindir}/cpp
-%attr(755,root,root) %{_libdir}/cpp
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
 
 %{_mandir}/man1/cpp.1*
