@@ -310,7 +310,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 	--enable-haifa \
 	--with-gnu-as \
 	--with-gnu-ld \
-	--with-gxx-include-dir="\$\{prefix\}/include/g++"
+	--with-gxx-include-dir="\$\{prefix\}/include/g++" \
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
