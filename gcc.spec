@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	1.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -63,6 +63,10 @@ URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/lib
+%ifarch sparc64
+%define		_slibdir64	/lib64
+%define		_libdir		/usr/lib
+%endif
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -628,6 +632,10 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+%ifarch sparc64
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-m64//g' -e 's/-m32//g' -e 's/-mcpu=ultrasparc/-mtune=ultrasparc/g'`
+%endif
+
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
@@ -792,7 +800,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*/*
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*/*/include
-%attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcc
+%attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
@@ -805,11 +813,16 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ja) %{_mandir}/ja/man1/gcc.1*
 %{_infodir}/gcc*
 
-%attr(755,root,root) %{_slibdir}/lib*.so
+%attr(755,root,root) %{_slibdir}*/lib*.so
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
-%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
+%attr(644,root,root) %{_libdir}*/gcc-lib/%{_target_cpu}*/*/crt*.o
+%ifarch sparc64
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/*/libgcc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/*/libgcc_eh.a
+%attr(644,root,root) %{_libdir}*/gcc-lib/%{_target_cpu}*/*/*/crt*.o
+%endif
 %ifarch ppc
 %attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ecrt*.o
 %attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ncrt*.o
@@ -824,7 +837,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/lib*.so.*
+%attr(755,root,root) %{_slibdir}*/lib*.so.*
 
 %files c++
 %defattr(644,root,root,755)
@@ -833,18 +846,18 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
-%{_libdir}/libsupc++.la
+%{_libdir}*/libsupc++.la
 %ifarch ppc
 %{_libdir}/nof/libsupc++.la
 %{_libdir}/nof/libsupc++.a
 %endif
-%{_libdir}/libsupc++.a
+%{_libdir}*/libsupc++.a
 %{_mandir}/man1/g++.1*
 %lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+%attr(755,root,root) %{_libdir}*/libstdc++.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
 %endif
@@ -854,8 +867,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{GCC_VERSION}
-%attr(755,root,root) %{_libdir}/libstdc++.so
-%{_libdir}/libstdc++.la
+%attr(755,root,root) %{_libdir}*/libstdc++.so
+%{_libdir}*/libstdc++.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
 %{_libdir}/nof/libstdc++.la
@@ -863,7 +876,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%{_libdir}/libstdc++.a
+%{_libdir}*/libstdc++.a
 %ifarch ppc
 %{_libdir}/nof/libstdc++.a
 %endif
@@ -873,8 +886,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/objc/READ*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
-%attr(755,root,root) %{_libdir}/libobjc.so
-%{_libdir}/libobjc.la
+%attr(755,root,root) %{_libdir}*/libobjc.so
+%{_libdir}*/libobjc.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
 %{_libdir}/nof/libobjc.la
@@ -883,14 +896,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libobjc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+%attr(755,root,root) %{_libdir}*/libobjc.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
 %endif
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
-%{_libdir}/libobjc.a
+%{_libdir}*/libobjc.a
 %ifarch ppc
 %{_libdir}/nof/libobjc.a
 %endif
@@ -902,9 +915,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
-%{_libdir}/libfrtbegin.a
-%{_libdir}/libg2c.la
-%attr(755,root,root) %{_libdir}/libg2c.so
+%{_libdir}*/libfrtbegin.a
+%{_libdir}*/libg2c.la
+%attr(755,root,root) %{_libdir}*/libg2c.so
 %ifarch ppc
 %{_libdir}/nof/libfrtbegin.a
 %{_libdir}/nof/libg2c.la
@@ -918,14 +931,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libg2c
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
+%attr(755,root,root) %{_libdir}*/libg2c.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
 %endif
 
 %files -n libg2c-static
 %defattr(644,root,root,755)
-%{_libdir}/libg2c.a
+%{_libdir}*/libg2c.a
 %ifarch ppc
 %{_libdir}/nof/libg2c.a
 %endif
