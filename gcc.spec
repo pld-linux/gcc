@@ -43,7 +43,7 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
-Patch6:		%{name}-relink.patch
+#Patch6:		%{name}-relink.patch		NEEDS FIX
 Patch7:		%{name}-pr18628.patch
 Patch8:		%{name}-pr19317.patch
 URL:		http://gcc.gnu.org/
@@ -473,7 +473,7 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
+#patch6 -p1	NEEDS FIX
 
 # PRs
 %patch7 -p1
