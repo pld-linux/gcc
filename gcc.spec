@@ -574,7 +574,7 @@ done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libstdc++.la libsupc++.la \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
-	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
+	%{?with_java:libgcj.la libffi.la} \
 	%{?with_objc:libobjc.la};
 do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
@@ -832,7 +832,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
-%attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %{_libdir}/logging.properties
 
 %files -n libgcj-devel
@@ -850,15 +849,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %{_libdir}/libgij.la
 %attr(755,root,root) %{_libdir}/libgij.so
-%attr(755,root,root) %{_libdir}/lib-org-*.so
-%{_libdir}/lib-org-*.la
 %{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
 %{_libdir}/libgij.a
-%{_libdir}/lib-org-*.a
 
 %files -n libffi
 %defattr(644,root,root,755)
