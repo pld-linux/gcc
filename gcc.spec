@@ -20,7 +20,9 @@ License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
+# Source1-md5: 66f07491b44f06928fd95b0e65bb8cd3
 Source2:	%{name}-non-english-man-pages.tar.bz2
+# Source2-md5: 4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
