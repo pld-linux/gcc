@@ -12,7 +12,7 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.3
-%define		KSI_VERSION	1.0.1.1567
+%define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU C Compiler
 Summary(pl):	Kompilator C GNU
@@ -609,7 +609,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java}" \
+	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java},ksi" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -1001,13 +1001,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgna*.a
 %endif
 
-%if 0
 %files ksi
 %defattr(644,root,root,755)
 %doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
-%endif
 
 %files -n cpp
 %defattr(644,root,root,755)
