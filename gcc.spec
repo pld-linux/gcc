@@ -553,6 +553,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
+%attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.a
 %attr(644,root,root) %{_libdir}/libstdc++.a
 
 %files -n cpp
