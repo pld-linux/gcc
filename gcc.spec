@@ -1,9 +1,8 @@
 #
 # TODO:
-#		- http://gcc.gnu.org/PR11203
-#		- http://gcc.gnu.org/PR14776
-#		- http://gcc.gnu.org/PR18648
-#		- http://gcc.gnu.org/PR18676
+#		- http://gcc.gnu.org/PR11203 (inline-asm)
+#		- http://gcc.gnu.org/PR14776 (target / wrong SSE-code)
+#		- http://gcc.gnu.org/PR18378 (regression)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
