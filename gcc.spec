@@ -16,6 +16,7 @@ Patch2:		gcc-pld-linux.patch
 Patch3:		gcc-libstdc++.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
+Prereq:		/usr/sbin/fix-info-dir
 URL:		http://www.gnu.org/
 BuildRoot:	/tmp/%{name}-%{version}-root
 
@@ -360,36 +361,28 @@ gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
 	  ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
-/sbin/install-info %{_infodir}/gcc.info.gz /etc/info-dir
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %preun
-if [ "$1" = "0" ]; then
-	/sbin/install-info %{_infodir}/gcc.info.gz /etc/info-dir
-fi
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post g77
-/sbin/install-info %{_infodir}/g77.info.gz /etc/info-dir
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %preun g77
-if [ "$1" = "0" ]; then
-	/sbin/install-info %{_infodir}/g77.info.gz /etc/info-dir
-fi
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post chill
-/sbin/install-info %{_infodir}/chill.info.gz /etc/info-dir
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %preun chill
-if [ "$1" = "0" ]; then
-	/sbin/install-info %{_infodir}/chill.info.gz /etc/info-dir
-fi
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post -n cpp
-/sbin/install-info %{_infodir}/cpp.info.gz /etc/info-dir
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %preun -n cpp
-if [ "$1" = "0" ]; then
-	/sbin/install-info %{_infodir}/cpp.info.gz /etc/info-dir
-fi
+/usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post libgcj  -p /sbin/ldconfig
 
