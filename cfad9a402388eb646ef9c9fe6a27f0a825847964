@@ -1,0 +1,4 @@
+- readded ada-link patch (based on gcc34 from fedora-devel)
+- BR binutils with --as-needed support, no R for automake/pkgconfig, cleanups
+- Obsoletes gcc-ksi,gont for now (no ksi available for gcc 3.4)
+- testing build now
