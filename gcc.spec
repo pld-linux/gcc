@@ -7,10 +7,6 @@
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 
-# %ifarch ppc # needed until 20249 is resolved
-# %undefine with_profiling
-# %endif
-
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
@@ -39,7 +35,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.4
+Release:	0.%{_snap}.5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
