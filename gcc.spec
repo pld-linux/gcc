@@ -32,6 +32,7 @@ Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-nodebug.patch
 Patch5:		%{name}-cse-find_best_addr.patch
+Patch6:		%{name}-alpha-regno-mode.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -756,6 +757,9 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %{!?debug:%patch4 -p1}
 %patch5 -p1
+%ifarch alpha
+%patch6 -p1
+%endif
 
 %patch10 -p1
 %patch11
