@@ -99,8 +99,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir	/%{_lib}
 %ifarch amd64 ppc64 s390x sparc64
 %define		_slibdir32	/lib
-# XXX: avoid using "%{_libdir}*" - specify both paths separately
-%define		_libdir		/usr/lib
+%define		_libdir32	/usr/lib
+# XXX: don't use "%{_libdir}*" - specify both paths separately
 %endif
 %ifarch sparc64
 %define		rpmcflags	-O2 -mtune=ultrasparc
