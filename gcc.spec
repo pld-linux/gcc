@@ -478,8 +478,8 @@ PATH=$PATH:/sbin:%{_sbindir}
 
 # this dircty hack is relict of setting, where objdir is subdir of srcdir
 sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
-	obj-%{_target_platform}/gcc/ada/Makefile > makefile.tmp
-mv -f makefile.tmp obj-%{_target_platform}/gcc/ada/Makefile
+	gcc/ada/Makefile > makefile.tmp
+mv -f makefile.tmp gcc/ada/Makefile
 
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
@@ -532,7 +532,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so
  ln -s libgnat-*so libgnat.so && \
  ln -s libgnarl-*so libgnarl.so)
 
-/$RPM_BUILD_ROOT%{_libdir}
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
