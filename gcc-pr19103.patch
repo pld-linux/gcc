@@ -1,0 +1,11 @@
+--- gcc/loop-iv.c	2004/12/18 20:14:24	2.25
++++ gcc/loop-iv.c	2004/12/28 10:33:39	2.26
+@@ -2132,7 +2132,7 @@
+       if (iv0.step == const0_rtx)
+ 	step_val = -INTVAL (iv1.step);
+       else
+-	step_val = INTVAL (iv1.step);
++	step_val = INTVAL (iv0.step);
+ 
+       /* Ignore loops of while (i-- < 10) type.  */
+       if (step_val < 0)
