@@ -1,13 +1,13 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2
-%define		KSI_VERSION	pre48
+%define		KSI_VERSION	pre55
 
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3.4
+Release:	4
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -458,8 +458,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%ifarch %{x86}
-%patch5 -p1
+%ifarch %{ix86}
+%patch5 -p0
 %endif
 
 %build
