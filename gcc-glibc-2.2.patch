@@ -1,6 +1,60 @@
-diff -ur gcc-2.95.2/libio/libio.h gcc-2.95.2.new/libio/libio.h
---- gcc-2.95.2/libio/libio.h	Mon Jun 29 20:06:26 1998
-+++ gcc-2.95.2.new/libio/libio.h	Mon Jul 17 20:59:17 2000
+diff -urN gcc-2.95.2.org/libio/iolibio.h gcc-2.95.2/libio/iolibio.h
+--- gcc-2.95.2.org/libio/iolibio.h	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/iolibio.h	Mon Oct 30 18:09:42 2000
+@@ -1,4 +1,4 @@
+-#include "libio.h"
++#include <libio.h>
+ 
+ /* These emulate stdio functionality, but with a different name
+    (_IO_ungetc instead of ungetc), and using _IO_FILE instead of FILE. */
+@@ -38,7 +38,11 @@
+                                     _IO_va_list));
+ extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
+ #ifndef _IO_pos_BAD
+-#define _IO_pos_BAD ((_IO_fpos_t)(-1))
++# if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
++#  define _IO_pos_BAD ((_IO_off64_t) -1)
++# else
++#  define _IO_pos_BAD ((_IO_off_t) -1)
++# endif
+ #endif
+ #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
+ #define _IO_fseek(__fp, __offset, __whence) \
+diff -urN gcc-2.95.2.org/libio/iostream.cc gcc-2.95.2/libio/iostream.cc
+--- gcc-2.95.2.org/libio/iostream.cc	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/iostream.cc	Mon Oct 30 18:13:18 2000
+@@ -1,5 +1,5 @@
+ /* This is part of libio/iostream, providing -*- C++ -*- input/output.
+-   Copyright (C) 1993, 1997 Free Software Foundation, Inc.
++   Copyright (C) 1993, 1997, 2000 Free Software Foundation, Inc.
+ 
+    This file is part of the GNU IO Library.  This library is free
+    software; you can redistribute it and/or modify it under the
+@@ -687,6 +687,10 @@
+ 				      /* extra: */ 0,
+ #if __GLIBC_MINOR__ >= 1
+ 				      /* is_char: */ 0,
++#if __GLIBC_MINOR__ >= 2
++				      /* wide: */ 0,
++				      /* i18n: */ 0,
++#endif
+ #endif
+ #endif
+ 				      /* pad: */ fill()
+@@ -793,6 +797,10 @@
+ 				  /* extra: */ 0,
+ #if __GLIBC_MINOR__ >= 1
+ 				  /* is_char: */ 0,
++#if __GLIBC_MINOR__ >= 2
++				  /* wide: */ 0,
++				  /* i18n: */ 0,
++#endif
+ #endif
+ #endif
+ 				  /* pad: */ fill()
+diff -urN gcc-2.95.2.org/libio/libio.h gcc-2.95.2/libio/libio.h
+--- gcc-2.95.2.org/libio/libio.h	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/libio.h	Mon Oct 30 18:10:14 2000
 @@ -136,6 +136,7 @@
  #define _IO_IS_APPENDING 0x1000
  #define _IO_IS_FILEBUF 0x2000
@@ -9,7 +63,16 @@ diff -ur gcc-2.95.2/libio/libio.h gcc-2.95.2.new/libio/libio.h
  
  /* These are "formatting flags" matching the iostream fmtflags enum values. */
  #define _IO_SKIPWS 01
-@@ -348,11 +348,11 @@
+@@ -277,7 +278,7 @@
+ {
+   _IO_ssize_t (*read) __PMT ((struct _IO_FILE *, void *, _IO_ssize_t));
+   _IO_ssize_t (*write) __PMT ((struct _IO_FILE *, const void *, _IO_ssize_t));
+-  _IO_fpos_t (*seek) __PMT ((struct _IO_FILE *, _IO_off_t, int));
++  _IO_off_t (*seek) __PMT ((struct _IO_FILE *, _IO_off_t, int));
+   int (*close) __PMT ((struct _IO_FILE *));
+ } _IO_cookie_io_functions_t;
+ 
+@@ -348,11 +349,11 @@
  extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
  
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
@@ -25,18 +88,10 @@ diff -ur gcc-2.95.2/libio/libio.h gcc-2.95.2.new/libio/libio.h
  #endif
  
  extern void _IO_free_backup_area __P ((_IO_FILE *));
-diff -ur gcc-2.95.2/libio/libioP.h gcc-2.95.2.new/libio/libioP.h
---- gcc-2.95.2/libio/libioP.h	Tue May 18 00:58:56 1999
-+++ gcc-2.95.2.new/libio/libioP.h	Mon Jul 17 21:02:46 2000
-@@ -35,6 +35,7 @@
- #ifdef _IO_MTSAFE_IO
- # if defined __GLIBC__ && __GLIBC__ >= 2
- #  if __GLIBC_MINOR__ > 0
-+#   define __NO_WEAK_PTHREAD_ALIASES
- #   include <bits/libc-lock.h>
- #  else
- #   include <libc-lock.h>
-@@ -146,10 +147,10 @@
+diff -urN gcc-2.95.2.org/libio/libioP.h gcc-2.95.2/libio/libioP.h
+--- gcc-2.95.2.org/libio/libioP.h	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/libioP.h	Mon Oct 30 18:25:49 2000
+@@ -146,10 +146,10 @@
     It matches the streambuf::seekoff virtual function.
     It is also used for the ANSI fseek function. */
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
@@ -49,19 +104,31 @@ diff -ur gcc-2.95.2/libio/libioP.h gcc-2.95.2.new/libio/libioP.h
  					  int DIR, int MODE));
  #endif
  #define _IO_SEEKOFF(FP, OFF, DIR, MODE) JUMP3 (__seekoff, FP, OFF, DIR, MODE)
-@@ -160,9 +161,9 @@
+@@ -160,9 +160,9 @@
     It is also used for the ANSI fgetpos and fsetpos functions.  */
  /* The _IO_seek_cur and _IO_seek_end options are not allowed. */
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
 -typedef _IO_fpos64_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_fpos64_t, int));
-+typedef _IO_off64_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_fpos64_t, int));
++typedef _IO_off64_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_off64_t, int));
  #else
 -typedef _IO_fpos_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_fpos_t, int));
-+typedef _IO_off_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_fpos_t, int));
++typedef _IO_off_t (*_IO_seekpos_t) __PMT ((_IO_FILE *, _IO_off_t, int));
  #endif
  #define _IO_SEEKPOS(FP, POS, FLAGS) JUMP2 (__seekpos, FP, POS, FLAGS)
  
-@@ -298,11 +299,11 @@
+@@ -213,9 +213,9 @@
+    It matches the streambuf::sys_seek virtual function, which is
+    specific to this implementation. */
+ #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
+-typedef _IO_fpos64_t (*_IO_seek_t) __PMT ((_IO_FILE *, _IO_off64_t, int));
++typedef _IO_off64_t (*_IO_seek_t) __PMT ((_IO_FILE *, _IO_off64_t, int));
+ #else
+-typedef _IO_fpos_t (*_IO_seek_t) __PMT ((_IO_FILE *, _IO_off_t, int));
++typedef _IO_off_t (*_IO_seek_t) __PMT ((_IO_FILE *, _IO_off_t, int));
+ #endif
+ #define _IO_SYSSEEK(FP, OFFSET, MODE) JUMP2 (__seek, FP, OFFSET, MODE)
+ 
+@@ -298,11 +298,11 @@
  /* Generic functions */
  
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
@@ -77,7 +144,37 @@ diff -ur gcc-2.95.2/libio/libioP.h gcc-2.95.2.new/libio/libioP.h
  #endif
  
  extern void _IO_switch_to_main_get_area __P ((_IO_FILE *));
-@@ -389,11 +390,11 @@
+@@ -340,22 +340,22 @@
+ 					   _IO_size_t));
+ extern _IO_size_t _IO_default_xsgetn __P ((_IO_FILE *, void *, _IO_size_t));
+ #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
+-extern _IO_fpos64_t _IO_default_seekoff __P ((_IO_FILE *,
++extern _IO_off64_t _IO_default_seekoff __P ((_IO_FILE *,
+ 					      _IO_off64_t, int, int));
+-extern _IO_fpos64_t _IO_default_seekpos __P ((_IO_FILE *,
+-					      _IO_fpos64_t, int));
++extern _IO_off64_t _IO_default_seekpos __P ((_IO_FILE *,
++					      _IO_off64_t, int));
+ #else
+-extern _IO_fpos_t _IO_default_seekoff __P ((_IO_FILE *, _IO_off_t, int, int));
+-extern _IO_fpos_t _IO_default_seekpos __P ((_IO_FILE *, _IO_fpos_t, int));
++extern _IO_off_t _IO_default_seekoff __P ((_IO_FILE *, _IO_off_t, int, int));
++extern _IO_off_t _IO_default_seekpos __P ((_IO_FILE *, _IO_off_t, int));
+ #endif
+ extern _IO_ssize_t _IO_default_write __P ((_IO_FILE *, const void *,
+ 					   _IO_ssize_t));
+ extern _IO_ssize_t _IO_default_read __P ((_IO_FILE *, void *, _IO_ssize_t));
+ extern int _IO_default_stat __P ((_IO_FILE *, void *));
+ #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
+-extern _IO_fpos64_t _IO_default_seek __P ((_IO_FILE *, _IO_off64_t, int));
++extern _IO_off64_t _IO_default_seek __P ((_IO_FILE *, _IO_off64_t, int));
+ #else
+-extern _IO_fpos_t _IO_default_seek __P ((_IO_FILE *, _IO_off_t, int));
++extern _IO_off_t _IO_default_seek __P ((_IO_FILE *, _IO_off_t, int));
+ #endif
+ extern int _IO_default_sync __P ((_IO_FILE *));
+ #define _IO_default_close ((_IO_close_t) _IO_default_sync)
+@@ -389,11 +389,11 @@
  extern int _IO_file_doallocate __P ((_IO_FILE *));
  extern _IO_FILE* _IO_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
@@ -93,7 +190,7 @@ diff -ur gcc-2.95.2/libio/libioP.h gcc-2.95.2.new/libio/libioP.h
  #endif
  extern _IO_size_t _IO_file_xsputn __P ((_IO_FILE *, const void *, _IO_size_t));
  extern int _IO_file_stat __P ((_IO_FILE *, void *));
-@@ -427,9 +428,9 @@
+@@ -427,9 +427,9 @@
  extern int _IO_str_overflow __P ((_IO_FILE *, int));
  extern int _IO_str_pbackfail __P ((_IO_FILE *, int));
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
@@ -105,9 +202,37 @@ diff -ur gcc-2.95.2/libio/libioP.h gcc-2.95.2.new/libio/libioP.h
  #endif
  extern void _IO_str_finish __P ((_IO_FILE *, int));
  
-diff -ur gcc-2.95.2/libio/parsestream.h gcc-2.95.2.new/libio/parsestream.h
---- gcc-2.95.2/libio/parsestream.h	Fri Aug 22 00:58:20 1997
-+++ gcc-2.95.2.new/libio/parsestream.h	Mon Jul 17 21:04:48 2000
+@@ -544,12 +544,12 @@
+    where an _IO_fpos_t is a struct.
+    Note that _IO_off_t must be an integral type. */
+ 
+-/* _IO_pos_BAD is an _IO_fpos_t value indicating error, unknown, or EOF. */
++/* _IO_pos_BAD is an _IO_off_t value indicating error, unknown, or EOF. */
+ #ifndef _IO_pos_BAD
+ # if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
+-#  define _IO_pos_BAD ((_IO_fpos64_t) -1)
++#  define _IO_pos_BAD ((_IO_off64_t) -1)
+ # else
+-#  define _IO_pos_BAD ((_IO_fpos_t) -1)
++#  define _IO_pos_BAD ((_IO_off_t) -1)
+ # endif
+ #endif
+ /* _IO_pos_as_off converts an _IO_fpos_t value to an _IO_off_t value. */
+@@ -567,9 +567,9 @@
+ /* _IO_pos_0 is an _IO_fpos_t value indicating beginning of file. */
+ #ifndef _IO_pos_0
+ # if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
+-#  define _IO_pos_0 ((_IO_fpos64_t) 0)
++#  define _IO_pos_0 ((_IO_off64_t) 0)
+ # else
+-#  define _IO_pos_0 ((_IO_fpos_t) 0)
++#  define _IO_pos_0 ((_IO_off_t) 0)
+ # endif
+ #endif
+ 
+diff -urN gcc-2.95.2.org/libio/parsestream.h gcc-2.95.2/libio/parsestream.h
+--- gcc-2.95.2.org/libio/parsestream.h	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/parsestream.h	Mon Oct 30 18:10:34 2000
 @@ -42,7 +42,7 @@
  
  class parsebuf : public streambuf {
@@ -117,39 +242,31 @@ diff -ur gcc-2.95.2/libio/parsestream.h gcc-2.95.2.new/libio/parsestream.h
      long _line_length;
      unsigned long __line_number;
      char *buf_start;
-diff -ur gcc-2.95.2/libio/streambuf.h gcc-2.95.2.new/libio/streambuf.h
---- gcc-2.95.2/libio/streambuf.h	Mon Aug  9 02:07:01 1999
-+++ gcc-2.95.2.new/libio/streambuf.h	Mon Jul 17 20:51:49 2000
-@@ -72,10 +72,12 @@
+diff -urN gcc-2.95.2.org/libio/stdstreams.cc gcc-2.95.2/libio/stdstreams.cc
+--- gcc-2.95.2.org/libio/stdstreams.cc	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/stdstreams.cc	Mon Oct 30 18:10:01 2000
+@@ -36,7 +36,7 @@
+ // then we don't need to, since in that case stdin/stdout/stderr
+ // are identical to _IO_stdin/_IO_stdout/_IO_stderr.
+ 
+-#include "libio.h"
++#include <libio.h>
+ 
+ #ifdef _STDIO_USES_IOSTREAM
+ #define CIN_SBUF _IO_stdin_
+diff -urN gcc-2.95.2.org/libio/streambuf.h gcc-2.95.2/libio/streambuf.h
+--- gcc-2.95.2.org/libio/streambuf.h	Mon Oct 30 18:04:49 2000
++++ gcc-2.95.2/libio/streambuf.h	Mon Oct 30 18:10:29 2000
+@@ -72,10 +72,10 @@
  
  #if defined(_G_IO_IO_FILE_VERSION) && _G_IO_IO_FILE_VERSION == 0x20001
  typedef _IO_off64_t streamoff;
 -typedef _IO_fpos64_t streampos;
 +typedef _IO_off64_t streampos;
-+/*typedef _IO_fpos64_t streampos;*/
  #else
  typedef _IO_off_t streamoff;
 -typedef _IO_fpos_t streampos;
 +typedef _IO_off_t streampos;
-+/*typedef _IO_fpos_t streampos;*/
  #endif
  typedef _IO_ssize_t streamsize;
  
-@@ -292,7 +294,7 @@
-     const void *&_vtable() { return *(const void**)((_IO_FILE*)this + 1); }
-   protected:
-     static streambuf* _list_all; /* List of open streambufs. */
--    _IO_FILE*& xchain() { return _chain; }
-+    _IO_FILE*& xchain() { return (_IO_FILE*&)_chain; }
-     void _un_link();
-     void _link_in();
-     char* gptr() const
---- gcc-2.95.2/libstdc++/config/linux.ml~	Tue Jul 18 00:32:47 2000
-+++ gcc-2.95.2/libstdc++/config/linux.ml	Tue Jul 18 00:59:50 2000
-@@ -2,5 +2,5 @@
- 
- LIBS    = $(ARLIB) marlink $(ARLINK) $(SHLIB) mshlink $(SHLINK)
- SHFLAGS = -Wl,-soname,$(MSHLINK)
--SHDEPS  = -lm
-+SHDEPS  = -lm -lpthread
- DEPLIBS = ../$(SHLIB)
