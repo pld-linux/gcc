@@ -31,6 +31,7 @@ Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-pr14668.patch
 Patch6:		%{name}-ada-link.patch
 Patch7:		%{name}-pr15666.patch
+Patch8:		%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -700,6 +701,10 @@ controle da numeração das linhas do programa.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p0
+%ifarch alpha
+# only for bootstrap using gcc 3.3.x
+%patch8 -p2
+%endif
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
