@@ -697,6 +697,18 @@ done
 bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
+# include/ contains install-tools/include/* and headers that were fixed up
+# by fixincludes, we don't want former
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/)
+mkdir $gccdir/tmp
+# we have to save these however
+mv -f $gccdir/include/{objc,g2c.h,syslimits.h,gcj} $gccdir/tmp
+rm -rf $gccdir/include
+mv -f $gccdir/tmp $gccdir/include
+cp $gccdir/install-tools/include/*.h $gccdir/include
+# but we don't want anything more from install-tools
+rm -rf $gccdir/install-tools/
+
 %find_lang %{name}
 %find_lang libstdc\+\+
 
@@ -779,22 +791,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdarg.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdbool.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stddef.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/syslimits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/varargs.h
-%ifarch %{ix86}
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/mmintrin.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/xmmintrin.h
-%endif
-%ifarch ppc
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/altivec.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/ppc-asm.h
-%endif
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/*.h
+%exclude %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -959,6 +957,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
+%attr(755,root,root) %{_libdir}/lib-org-*.la
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
