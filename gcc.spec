@@ -93,6 +93,7 @@ Provides:	cpp = %{epoch}:%{version}-%{release}
 # ksi for gcc > 3.3.x not ready yet
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
+Obsoletes:	gcc-chill
 Obsoletes:	gcc-cpp
 Obsoletes:	gcc-ksi
 Obsoletes:	gont
