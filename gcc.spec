@@ -442,7 +442,7 @@ Ten pakiet zawiera biblioteki statyczne potrzebne do uruchamiania
 programów napisanych w Adzie.
 
 %prep
-%setup -q -a1 -n %{name}-%{SNAP}
+%setup -q -a1 -n %{name}-%{GCC_VERSION}-%{SNAP}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
