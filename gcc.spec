@@ -40,6 +40,7 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
+Patch5:		%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -503,15 +504,8 @@ TEXCONFIG=false \
 	--enable-cmath \
 	%{_target_platform}
 
+%{?with_bootstrap:patch -p0 < %{PATCH5}}
 cd ..
-
-%if %{with bootstrap}
-touch gcc/ada/treeprs.ads
-touch gcc/ada/einfo.h
-touch gcc/ada/sinfo.h
-touch gcc/ada/nmake.ads
-touch gcc/ada/nmake.adb
-%endif
 
 %{__make} -C obj-%{_target_platform} \
 	%{!?with_bootstrap:profiledbootstrap} \
