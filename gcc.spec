@@ -1,7 +1,8 @@
 #
 # Conditional build:
-# _without_ada	- build without ADA support
-# _without_java	- build without Java support
+# _without_ada  - build without ADA support
+# _without_java - build without Java support
+# _without_objc - build without objc support
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -562,7 +563,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-        --enable-languages="c,c++,f77,gcov,objc,ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
+        --enable-languages="c,c++,f77,gcov%{?!_without_objc:,objc},ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -643,7 +644,9 @@ cp -f libjava/doc/cni.sgml libjava/READ* java-doc
 cp -f fastjar/README java-doc/README.fastjar
 cp -f libffi/README java-doc/README.libffi
 cp -f libffi/LICENSE java-doc/LICENSE.libffi
+%endif
 
+%if %{?!_without_objc:1}0
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
@@ -802,6 +805,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libstdc++.a
 %endif
 
+%if %{?!_without_objc:1}0
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/READ*
@@ -826,6 +830,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libobjc.a
 %ifarch ppc
 %{_libdir}/nof/libobjc.a
+%endif
 %endif
 
 %files g77
