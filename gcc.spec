@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	5
+Release:	6
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -40,7 +40,6 @@ Patch24:	gcc-ppc-andrew-dwarf-eh.patch
 Patch30:	gcc-glibc-2.2.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
-Obsoletes:	egcs
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
