@@ -7,7 +7,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	5
+Release:	6
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -532,7 +532,8 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 (cd $RPM_BUILD_ROOT%{_libdir} ; LIBSTDC=$(ls libstdc++.so.*.*.*) ; \
  cd $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/ ; \
- ln -sf ../../../${LIBSTDC} libstdc++.so)
+ ln -sf ../../../${LIBSTDC} libstdc++.so ; \
+ ln -sf ../../../libstdc++.la libstdc++.la)
 
 mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
         $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
@@ -696,6 +697,7 @@ rm -rf $RPM_BUILD_ROOT
 # Bohem-GC - it should be here? I think not but...
 %{_includedir}/gc*.h
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
