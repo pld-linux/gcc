@@ -3,7 +3,7 @@
 # _without_ada	- build without ADA support
 # _without_java	- build without Java support
 #
-%define		DASHED_SNAP	%{nil}
+%define		DASHED_SNAP	20021111	
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.1
 %define		KSI_VERSION	pre55
@@ -12,10 +12,10 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.pre.1
+Release:	0.pre.2
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-3.2.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}-%{SNAP}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-slibdir.patch
@@ -23,7 +23,7 @@ Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
-Patch5:		%{name}-march-i686-fix.patch
+
 Patch6:		%{name}-info.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
@@ -39,7 +39,7 @@ Patch19:	gcc32-c++-pretty_function.patch
 Patch20:	gcc32-c++-tsubst-asm.patch
 Patch21:	gcc32-cfg-eh.patch
 Patch22:	gcc32-debug-pr7241.patch
-Patch23:	gcc32-doc-gcov.patch 
+
 Patch24:	gcc32-duplicate-decl.patch
 Patch25:	gcc32-dwarf2-pr6381.patch 
 Patch26:	gcc32-dwarf2-pr6436-test.patch
@@ -64,7 +64,6 @@ Patch44:	gcc32-tls2.patch
 Patch45:	gcc32-tls3.patch
 Patch46:	gcc32-tls4.patch 
 Patch47:	gcc32-tls5.patch    
-Patch100:	gcc-pre-3.2.1.patch.gz
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -502,18 +501,14 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -a1 -n %{name}-3.2
+%setup -q -a1 -n %{name}-%{GCC_VERSION}-%{SNAP}
 mv ksi-%{KSI_VERSION} gcc/ksi
-%patch100 -p1
 
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%ifarch %{ix86}
-%patch5 -p0
-%endif
 
 %patch10 
 %patch11 
@@ -528,7 +523,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch20 
 %patch21 
 %patch22 
-%patch23 
+
 %patch24 
 %patch25 
 %patch26 
@@ -625,19 +620,6 @@ echo .so gcc.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
-
-(cd $RPM_BUILD_ROOT%{_libdir} ; LIBSTDC=$(ls libstdc++.so.*.*.*) ; \
- cd $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/ ; \
- ln -sf ../../../${LIBSTDC} libstdc++.so ; \
- ln -sf ../../../libstdc++.la libstdc++.la)
-
-mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
-        $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
-
-LIBSTDC=$(ls -d $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/* | sed -e "s#$RPM_BUILD_ROOT##g")
-mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.la $RPM_BUILD_ROOT%{_libdir}/libstdc++.la.old
-sed -e "s#^libdir='/usr/lib'#libdir='$LIBSTDC'#g" $RPM_BUILD_ROOT%{_libdir}/libstdc++.la.old \
- > $RPM_BUILD_ROOT%{_libdir}/libstdc++.la
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
