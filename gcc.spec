@@ -1,3 +1,4 @@
+%define		GCC_VERSION	3.0
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
 Summary:	GNU Compiler Collection
@@ -9,7 +10,7 @@ License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{snap}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
@@ -358,7 +359,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{GCC_VERSION}
 
 %build
 cd gcc && autoconf; cd ..
