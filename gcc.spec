@@ -775,7 +775,10 @@ for tgt in gnatlib-shared gnattools gnatlib; do
 done
 %endif
 
+# snapshot doesn't contain these files...
 [ -r "NEWS" ] || touch NEWS
+[ -r "gcc/f/BUGS" ] || touch gcc/f/BUGS
+[ -r "gcc/f/NEWS" ] || touch gcc/f/NEWS
 
 %install
 rm -rf $RPM_BUILD_ROOT
