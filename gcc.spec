@@ -1,3 +1,5 @@
+# _without_ada	- build without ADA support.
+# _without_java	- don't build Java support
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2
@@ -80,7 +82,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	autoconf
 BuildRequires:	gcc
-BuildRequires:	gcc-ada
+%{!?_without_ada:BuildRequires:	gcc-ada}
 BuildRequires:	perl-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{GCC_VERSION}
@@ -257,6 +259,7 @@ Static Fortran 77 Libraries.
 %description -n libg2c-static -l pl
 Statyczne biblioteki Fortranu 77.
 
+%if %{!?_without_java:1}%{?_without_java:0}
 %package java
 Summary:	Java support for gcc
 Summary(pl):	Obs³uga Javy dla gcc
@@ -320,6 +323,7 @@ Static Java Class Libraries.
 
 %description -n libgcj-static -l pl
 Statyczne Biblioteki Klas Javy.
+%endif
 
 %package -n libstdc++
 Summary:	GNU c++ library
@@ -390,6 +394,7 @@ Static C++ standard library.
 %description -n libstdc++-static -l pl
 Statycza biblioteka standardowa C++.
 
+%if %{!?_without_ada:1}%{?_without_ada:0}
 %package ada
 Summary:	Ada support for gcc
 Summary(pl):	Obs³uga Ady do gcc
@@ -434,6 +439,7 @@ This package contains static libraries for programs written in Ada.
 %description -n libgnat-static -l pl
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
+%endif
 
 %package ksi
 Summary:	Ksi support for gcc
@@ -576,6 +582,15 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+#%if %{!?_without_ada:1}%{?_without_ada:0}
+#    BUILD_LANG="c,c++,f77,gcov,java,objc,ksi,ada";export BUILD_LANG
+#%else
+#    BUILD_LANG="c,c++,f77,gcov,java,objc,ksi";export BUILD_LANG
+#%endif
+BUILD_LANG="c,c++,f77,gcov,objc,ksi"
+%{!?_without_ada:BUILD_LANG=$BUILD_LANG+",ada";export BUILD_LANG}
+%{!?_without_java:BUILD_LANG=$BUILD_LANG+",java";export BUILD_LANG}
+
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
@@ -585,7 +600,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-        --enable-languages="c,c++,f77,gcov,java,objc,ksi,ada" \
+        --enable-languages="$BUILD_LANG" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -600,9 +615,11 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 # this dirty hack is relict of setting, where objdir is subdir of srcdir
+%if %{!?_without_ada:1}%{?_without_ada:0}
 sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
 	gcc/ada/Makefile > makefile.tmp
 mv -f makefile.tmp gcc/ada/Makefile
+%endif
 
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
@@ -610,6 +627,7 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
+%if %{!?_without_ada:1}%{?_without_ada:0}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
@@ -617,6 +635,7 @@ cd ..
 
 # make Gnat Reference Manual
 %{__make} -C obj-%{_target_platform}/gcc/ada doc
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -650,6 +669,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.la $RPM_BUILD_ROOT%{_libdir}/libstdc++.la
 sed -e "s#^libdir='/usr/lib'#libdir='$LIBSTDC'#g" $RPM_BUILD_ROOT%{_libdir}/libstdc++.la.old \
  > $RPM_BUILD_ROOT%{_libdir}/libstdc++.la
 
+%if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
@@ -657,13 +677,17 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
 (cd $RPM_BUILD_ROOT%{_libdir} && \
  ln -s libgnat-*so.1 libgnat.so.1 && \
  ln -s libgnarl-*so.1 libgnarl.so.1)
+%endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
 
+%if %{!?_without_ada:1}%{?_without_ada:0}
 install  obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
+%endif
 
+%if %{!?_without_java:1}%{?_without_java:0}
 install -d java-doc
 cp -f libjava/doc/cni.sgml libjava/READ* java-doc
 cp -f fastjar/README java-doc/README.fastjar
@@ -671,6 +695,7 @@ cp -f libffi/README java-doc/README.libffi
 cp -f libffi/LICENSE java-doc/LICENSE.libffi
 
 cp -f libobjc/README gcc/objc/README.libobjc
+%endif
 
 %find_lang %{name}
 %find_lang libstdc\+\+
@@ -690,11 +715,13 @@ rm -rf $RPM_BUILD_ROOT
 %postun g77
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
+%if %{!?_without_java:1}%{?_without_java:0}
 %post java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%endif
 
 %post ksi
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -716,10 +743,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig -n libobjc
 %post   -p /sbin/ldconfig -n libg2c
 %postun -p /sbin/ldconfig -n libg2c
+%if %{!?_without_java:1}%{?_without_java:0}
 %post   -p /sbin/ldconfig -n libgcj
 %postun -p /sbin/ldconfig -n libgcj
+%endif
+%if %{!?_without_ada:1}%{?_without_ada:0}
 %post   -p /sbin/ldconfig -n libgnat
 %postun -p /sbin/ldconfig -n libgnat
+%endif
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -802,7 +833,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{GCC_VERSION}
 # Bohem-GC - it should be here? I think not but...
-%{_includedir}/gc*.h
+#%{_includedir}/gc*.h
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.la
@@ -875,6 +906,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libg2c.a
 %endif
 
+%if %{!?_without_java:1}%{?_without_java:0}
 %files java
 %defattr(644,root,root,755)
 %doc java-doc/*
@@ -929,7 +961,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %endif
+%endif
 
+%if %{!?_without_ada:1}%{?_without_ada:0}
 %files ada
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/gnat1
@@ -952,6 +986,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgnat-static
 %defattr(644,root,root,755)
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgna*.a
+%endif
 
 %files ksi
 %defattr(644,root,root,755)
