@@ -108,7 +108,7 @@ Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Prereq:		/sbin/install-info
+Prereq:		/usr/sbin/fix-info-dir
 
 %description g77
 This apckage adds support for compiling Fortran 77 programs with the GNU
@@ -124,7 +124,7 @@ Summary(pl):	Wspomoganie CHILL dla gcc
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Requires:	%{name} = %{version}
-Prereq:		/sbin/install-info
+Prereq:		/usr/sbin/fix-info-dir
 
 %description chill
 This package adds support for compiling CHILL programs with the GNU
@@ -241,7 +241,7 @@ Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Prereq:		/sbin/install-info
+Prereq:		/usr/sbin/fix-info-dir
 Obsoletes:	egcs-cpp
 
 %description -n cpp
