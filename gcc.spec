@@ -5,17 +5,17 @@
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.2
+%define		GCC_VERSION	3.2.1
 %define		KSI_VERSION	pre55
 
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	9
+Release:	0.1
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-3.2.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
@@ -83,6 +83,9 @@ Patch58:	gcc32-locale_in_monetary_members.patch
 Patch59:	gcc32-locale_in_ctype_members.patch
 Patch60:	gcc32-locale_in_ctype_members_header.patch
 Patch61:	gcc32-libstdc++-glibc.patch
+
+Patch100:	gcc-pre-3.2.1.patch.gz
+
 
 BuildRequires:	bison
 BuildRequires:	texinfo >= 4.1
@@ -518,8 +521,10 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}
+%setup -q -a1 -n %{name}-3.2
 mv ksi-%{KSI_VERSION} gcc/ksi
+%patch100 -p1
+
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -528,10 +533,10 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %ifarch %{ix86}
 %patch5 -p0
 %endif
-%patch6 -p1
+#%patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
+#%patch8 -p1
+#%patch9 -p1
 %patch10 
 %patch11 
 %patch12 
