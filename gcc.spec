@@ -638,7 +638,7 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
+install -d $RPM_BUILD_ROOT{/lib,%{_datadir},%{_infodir}}
 
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
