@@ -5,7 +5,7 @@ Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
 Release:	4
-Copyright:	GPL
+License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
@@ -39,7 +39,7 @@ Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
 Obsoletes:	egcs
 Prereq:		/usr/sbin/fix-info-dir
-URL:		http://www.gnu.org/
+URL:		http://gcc.gnu.org/
 BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -63,30 +63,30 @@ Obsoletes:	egcs-c++
 %description c++
 This package adds C++ support to the GNU C compiler. It includes support
 for most of the current C++ specification, including templates and
-exception handling. It does not include a standard C++ library, which
-is available separately.
+exception handling. It does not include a standard C++ library, which is
+available separately.
 
 %description -l de c++
 Dieses Paket enthält die C++-Unterstützung für den GNU-C-Compiler. Es
 unterstützt die aktuelle C++-Spezifikation, inkl. Templates und
-Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten - sie ist
-getrennt erhältlich.
+Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten - sie
+ist getrennt erhältlich.
 
 %description -l fr c++
 Ce package ajoute un support C++ au compilateur c GNU. Il comprend un
-support pour la plupart des spécifications actuelles de C++, dont les 
+support pour la plupart des spécifications actuelles de C++, dont les
 modéles et la gestion des exceptions. Il ne comprend pas une bibliothéque
 C++ standard, qui est disponible séparément.
 
 %description -l pl c++
-Programy z tego pakietu zapewniaj± wsparcie dla C++ do gcc.
-Posiada wspomaganie dla du¿ej ilo¶ci obecnych specyfikacji C++, nie posiada
+Programy z tego pakietu zapewniaj± wsparcie dla C++ do gcc. Posiada
+wspomaganie dla du¿ej ilo¶ci obecnych specyfikacji C++, nie posiada
 natomiast standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 
 %description -l tr c++
-Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve aykýrý durum
-iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart C++ kitaplýðý bu
-pakette yer almaz.
+Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve aykýrý
+durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart C++ kitaplýðý
+bu pakette yer almaz.
 
 %package objc
 Summary:	Objective C support for gcc
@@ -106,10 +106,10 @@ running NeXTSTEP. This package does not include the standard objective C
 object library.
 
 %description -l de objc
-Dieses Paket ergänzt den GNU-C-Compiler durch Objective-C-Support. Objective
-C ist ein objektorientiertes Derivat von C, das zur Hauptsache auf Systemen
-mit NeXTSTEP zum Einsatz kommt. Die Standard-Objective-C-Objekt-Library ist
-nicht Teil des Pakets.
+Dieses Paket ergänzt den GNU-C-Compiler durch Objective-C-Support.
+Objective C ist ein objektorientiertes Derivat von C, das zur Hauptsache
+auf Systemen mit NeXTSTEP zum Einsatz kommt. Die
+Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
 
 %description -l fr objc
 Ce package ajoute un support Objective C au compilateur C GNU. L'Objective C
