@@ -5,8 +5,6 @@
 # _without_objc - build without objc support
 #
 # TODO:
-#  - ksi
-#  - test with ada
 #  - fix %%files (separate package for libffi ?)
 #
 %define		DASHED_SNAP	%{nil}
@@ -641,9 +639,6 @@ cd ..
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
-
-# make Gnat Reference Manual
-%{__make} -C obj-%{_target_platform}/gcc/ada doc
 %endif
 
 %install
@@ -664,22 +659,18 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
-	$RPM_BUILD_ROOT%{_libdir}
-rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
-(cd $RPM_BUILD_ROOT%{_libdir} && \
-	ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
-	ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-3.15.so \
+	$RPM_BUILD_ROOT%{_libdir}/
+# these shouldn't be needed i guess
+#ln -sf %{_libdir}/libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/
+#ln -sf %{_libdir}/libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/
+ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 cd ..
-
-%if %{!?_without_ada:1}%{?_without_ada:0}
-install obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir}
-install obj-%{_target_platform}/gcc/ada/gnat_ug_unx.info* $RPM_BUILD_ROOT%{_infodir}
-%endif
 
 %if %{!?_without_java:1}%{?_without_java:0}
 install -d java-doc
@@ -989,12 +980,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat.so*
-%attr(755,root,root) %{_libdir}/libgnarl.so*
+%attr(755,root,root) %{_libdir}/libgnat.so
+%attr(755,root,root) %{_libdir}/libgnarl.so
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*-*so.1
+%attr(755,root,root) %{_libdir}/libgna*-3*.so
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
