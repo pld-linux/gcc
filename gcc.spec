@@ -1,17 +1,17 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
-%define		snap		2001-05-07
-%define		rsnap		%(echo %{snap} | sed -e "s#-##g")
+%define		rver		3.0
+%define		snap		20010614
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	3.0
-Release:	0.%{rsnap}
+Version:	%{rver}
+Release:	0.%{snap}
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{snap}/%{name}-%{rsnap}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{snap}/%{name}-%{version}-%{snap}.tar.bz2
 Patch0:		%{name}-disableshared.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
@@ -160,14 +160,18 @@ and bytecode into native code. To use this you will also need the
 libgcj package.
 
 %description -l pl java
-Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak
-i do natywnego kodu. Bêdziesz potrzebowa³ pakietu libgcj by móc przeprowadziæ
-kompilacjê.
+Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
+do natywnego kodu. Bêdziesz potrzebowa³ pakietu libgcj by móc
+przeprowadziæ kompilacjê.
 
 %package -n libgcj
 Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
+Group(de):	Libraries
+Group(es):	Bibliotecas
+Group(fr):	Librairies
+Group(pl):	Biblioteki
 Version:	%{GCJ_VERSION}
 Requires:	zlib
 
@@ -215,6 +219,7 @@ Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
 Group(de):	Libraries
+Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
 Version:	%{STDC_VERSION}
@@ -290,6 +295,7 @@ Summary(pl):	Preprocesor C
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
+Version:	%{rver}
 Obsoletes:	egcs-cpp
 
 %description -n cpp
@@ -337,7 +343,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{rsnap}
+%setup -q -n %{name}-%{version}-%{snap}
 %patch0 -p1
 
 %build
@@ -367,7 +373,6 @@ TEXCONFIG=false ../configure \
 	--with-gnu-ld \
 	--with-system-zlib \
 	--without-x \
-	--disable-nls \
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
