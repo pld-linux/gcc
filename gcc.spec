@@ -3,9 +3,6 @@
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR14776 (target / wrong SSE-code)
 #		- http://gcc.gnu.org/PR18378 (regression)
-# - fix build on ac-i586: (it`s strange because other builders are OK) 
-# (File not found by glob: /tmp/B.e501ff/gcc-3.4.3-root-builder/usr/include/c++/3.4.3/*/bits/stdc++.h.gch)
-# 
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
