@@ -751,8 +751,14 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
-# stage1 needs -O0 on alpha for 3.3->3.4 bootstrap (gnat from 3.3 is seriously broken)
-%{__make} -C obj-%{_target_platform} profiledbootstrap \
+# - on alpha stage1 needs -O0 for 3.3->3.4 bootstrap (gnat from 3.3 is seriously broken)
+# - on ia64 use bootstrap-lean as profiledbootstrap is broken (PR 13882, 15836, 16108)
+%{__make} -C obj-%{_target_platform} \
+%ifarch ia64
+	bootstrap-lean \
+%else
+	profiledbootstrap \
+%endif
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 %ifarch alpha
