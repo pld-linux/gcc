@@ -1014,7 +1014,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.a
 %endif
 
-
 %if %{!?_without_ada:1}%{?_without_ada:0}
 %files ada
 %defattr(644,root,root,755)
