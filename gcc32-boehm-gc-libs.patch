@@ -1,46 +1,33 @@
---- boehm-gc/configure.in.jj	Tue Dec 18 01:27:56 2001
-+++ boehm-gc/configure.in	Fri Jan 25 14:10:17 2002
-@@ -57,11 +57,18 @@ AC_ARG_ENABLE(parallel-mark,
-     esac]
- )
+diff -urN boehm-gc.org/Makefile.am boehm-gc/Makefile.am
+--- boehm-gc.org/Makefile.am	Sat Oct 18 12:32:07 2003
++++ boehm-gc/Makefile.am	Sat Oct 18 12:32:55 2003
+@@ -39,7 +39,8 @@
+ # linuxthread semaphore functions get linked:
+ libgcjgc_la_LIBADD = @addobjs@ $(THREADLIBS)
+ libgcjgc_la_DEPENDENCIES = @addobjs@
+-libgcjgc_la_LDFLAGS = -version-info 1:1:0 -rpath $(toolexeclibdir)
++libgcjgc_la_LDFLAGS = @LIBGCJGC_EXTRA_LDFLAGS@ -version-info 1:1:0 \
++		      -rpath $(toolexeclibdir)
  
-+AC_CHECK_LIB(dl, dlopen, [
-+EXTRA_TEST_LIBS="$EXTRA_TEST_LIBS -ldl"
-+LIBGCJGC_EXTRA_LDFLAGS="-ldl"
-+])
-+AC_SUBST(EXTRA_TEST_LIBS)
-+
- INCLUDES=-I${srcdir}/include
- THREADLIBS=
- case "$THREADS" in
-  no | none | single)
-     THREADS=none
-+    LIBGCJGC_EXTRA_LDFLAGS=
-     ;;
-  posix | pthreads)
-     THREADS=posix
-@@ -105,6 +112,7 @@ case "$THREADS" in
- 	;;
-      *-*-cygwin*)
- 	THREADLIBS=
-+	LIBGCJGC_EXTRA_LDFLAGS=
- 	;;
-     esac
-     ;;
-@@ -116,9 +124,7 @@ case "$THREADS" in
-     ;;
- esac
- AC_SUBST(THREADLIBS)
--
--AC_CHECK_LIB(dl, dlopen, EXTRA_TEST_LIBS="$EXTRA_TEST_LIBS -ldl")
--AC_SUBST(EXTRA_TEST_LIBS)
-+AC_SUBST(LIBGCJGC_EXTRA_LDFLAGS)
+ libgcjgc_convenience_la_LIBADD = @addobjs@
+ libgcjgc_convenience_la_DEPENDENCIES = @addobjs@
+diff -urN boehm-gc.org/Makefile.in boehm-gc/Makefile.in
+--- boehm-gc.org/Makefile.in	Thu Oct 16 22:10:48 2003
++++ boehm-gc/Makefile.in	Sat Oct 18 12:32:55 2003
+@@ -133,7 +133,8 @@
+ # linuxthread semaphore functions get linked:
+ libgcjgc_la_LIBADD = @addobjs@ $(THREADLIBS)
+ libgcjgc_la_DEPENDENCIES = @addobjs@
+-libgcjgc_la_LDFLAGS = -version-info 1:1:0 -rpath $(toolexeclibdir)
++libgcjgc_la_LDFLAGS = @LIBGCJGC_EXTRA_LDFLAGS@ -version-info 1:1:0 \
++		      -rpath $(toolexeclibdir)
  
- target_all=libgcjgc.la
- AC_SUBST(target_all)
---- boehm-gc/configure.jj	Thu Jan  3 14:25:13 2002
-+++ boehm-gc/configure	Fri Jan 25 14:10:36 2002
-@@ -2647,11 +2647,57 @@ if test "${enable_parallel_mark+set}" = 
+ libgcjgc_convenience_la_LIBADD = @addobjs@
+ libgcjgc_convenience_la_DEPENDENCIES = @addobjs@
+diff -urN boehm-gc.org/configure boehm-gc/configure
+--- boehm-gc.org/configure	Sat Oct 18 12:32:07 2003
++++ boehm-gc/configure	Sat Oct 18 12:33:48 2003
+@@ -2717,11 +2717,57 @@
  fi
  
  
@@ -98,7 +85,7 @@
      ;;
   posix | pthreads)
      THREADS=posix
-@@ -2736,6 +2782,7 @@ EOF
+@@ -2806,6 +2852,7 @@
  	;;
       *-*-cygwin*)
  	THREADLIBS=
@@ -106,12 +93,12 @@
  	;;
      esac
      ;;
-@@ -2758,48 +2805,6 @@ EOF
+@@ -2834,48 +2881,6 @@
  esac
  
  
 -echo $ac_n "checking for dlopen in -ldl""... $ac_c" 1>&6
--echo "configure:2850: checking for dlopen in -ldl" >&5
+-echo "configure:2839: checking for dlopen in -ldl" >&5
 -ac_lib_var=`echo dl'_'dlopen | sed 'y%./+-%__p_%'`
 -if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
 -  echo $ac_n "(cached) $ac_c" 1>&6
@@ -119,7 +106,7 @@
 -  ac_save_LIBS="$LIBS"
 -LIBS="-ldl  $LIBS"
 -cat > conftest.$ac_ext <<EOF
--#line 2858 "configure"
+-#line 2847 "configure"
 -#include "confdefs.h"
 -/* Override any gcc2 internal prototype to avoid an error.  */
 -/* We use char because int might match the return type of a gcc2
@@ -130,7 +117,7 @@
 -dlopen()
 -; return 0; }
 -EOF
--if { (eval echo configure:2869: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+-if { (eval echo configure:2858: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
 -  rm -rf conftest*
 -  eval "ac_cv_lib_$ac_lib_var=yes"
 -else
@@ -155,7 +142,7 @@
  target_all=libgcjgc.la
  
  
-@@ -3215,8 +3220,9 @@ s%@OBJEXT@%$OBJEXT%g
+@@ -3295,8 +3300,9 @@
  s%@STRIP@%$STRIP%g
  s%@LIBTOOL@%$LIBTOOL%g
  s%@CXXCPP@%$CXXCPP%g
@@ -166,27 +153,44 @@
  s%@target_all@%$target_all%g
  s%@INCLUDES@%$INCLUDES%g
  s%@CXXINCLUDES@%$CXXINCLUDES%g
---- boehm-gc/Makefile.am.jj	Mon Oct 22 11:06:57 2001
-+++ boehm-gc/Makefile.am	Fri Jan 25 14:11:35 2002
-@@ -37,7 +37,8 @@ solaris_pthreads.c solaris_threads.c spe
- # linuxthread semaphore functions get linked:
- libgcjgc_la_LIBADD = @addobjs@ $(THREADLIBS)
- libgcjgc_la_DEPENDENCIES = @addobjs@
--libgcjgc_la_LDFLAGS = -version-info 1:1:0 -rpath $(toolexeclibdir)
-+libgcjgc_la_LDFLAGS = @LIBGCJGC_EXTRA_LDFLAGS@ -version-info 1:1:0 \
-+		      -rpath $(toolexeclibdir)
+diff -urN boehm-gc.org/configure.in boehm-gc/configure.in
+--- boehm-gc.org/configure.in	Sat Oct 18 12:32:07 2003
++++ boehm-gc/configure.in	Sat Oct 18 12:32:55 2003
+@@ -63,11 +63,18 @@
+     esac]
+ )
  
- EXTRA_libgcjgc_la_SOURCES = alpha_mach_dep.s \
- mips_sgi_mach_dep.s mips_ultrix_mach_dep.s powerpc_macosx_mach_dep.s \
---- boehm-gc/Makefile.in.jj	Thu Jan  3 14:25:13 2002
-+++ boehm-gc/Makefile.in	Fri Jan 25 14:12:03 2002
-@@ -118,7 +118,8 @@ libgcjgc_la_SOURCES = allchblk.c alloc.c
- # linuxthread semaphore functions get linked:
- libgcjgc_la_LIBADD = @addobjs@ $(THREADLIBS)
- libgcjgc_la_DEPENDENCIES = @addobjs@
--libgcjgc_la_LDFLAGS = -version-info 1:1:0 -rpath $(toolexeclibdir)
-+libgcjgc_la_LDFLAGS = @LIBGCJGC_EXTRA_LDFLAGS@ -version-info 1:1:0 \
-+		      -rpath $(toolexeclibdir)
++AC_CHECK_LIB(dl, dlopen, [
++EXTRA_TEST_LIBS="$EXTRA_TEST_LIBS -ldl"
++LIBGCJGC_EXTRA_LDFLAGS="-ldl"
++])
++AC_SUBST(EXTRA_TEST_LIBS)
++
+ INCLUDES=-I${srcdir}/include
+ THREADLIBS=
+ case "$THREADS" in
+  no | none | single)
+     THREADS=none
++    LIBGCJGC_EXTRA_LDFLAGS=
+     ;;
+  posix | pthreads)
+     THREADS=posix
+@@ -110,6 +117,7 @@
+ 	;;
+      *-*-cygwin*)
+ 	THREADLIBS=
++	LIBGCJGC_EXTRA_LDFLAGS=
+ 	;;
+     esac
+     ;;
+@@ -128,9 +136,7 @@
+     ;;
+ esac
+ AC_SUBST(THREADLIBS)
+-
+-AC_CHECK_LIB(dl, dlopen, EXTRA_TEST_LIBS="$EXTRA_TEST_LIBS -ldl")
+-AC_SUBST(EXTRA_TEST_LIBS)
++AC_SUBST(LIBGCJGC_EXTRA_LDFLAGS)
  
- EXTRA_libgcjgc_la_SOURCES = alpha_mach_dep.s mips_sgi_mach_dep.s mips_ultrix_mach_dep.s powerpc_macosx_mach_dep.s rs6000_mach_dep.s sparc_mach_dep.s sparc_netbsd_mach_dep.s sparc_sunos4_mach_dep.s ia64_save_regs_in_stack.s
- 
+ target_all=libgcjgc.la
+ AC_SUBST(target_all)
