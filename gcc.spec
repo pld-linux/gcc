@@ -4,9 +4,10 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 #
-%define		snap		20040406
+%define		snap		20040407
 %define		GCC_VERSION	3.4.0
 %define		KSI_VERSION	1.1.0.1567
+%define		_version	3.4
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -19,8 +20,9 @@ Epoch:		5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-# Source0-md5:	e656a834d15b557ddf6f467fd5fb3d09
+#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_version}-%{snap}/%{name}-%{_version}-%{snap}.tar.bz2
+# Source0-md5:	3e70d72c685f31e544eabee9bdffc3cf
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -707,7 +709,7 @@ arquivos de cabeçalho; expansão de macros; compilação condicional; e
 controle da numeração das linhas do programa.
 
 %prep
-%setup -q -a1 -n %{name}-%{version}-%{snap}
+%setup -q -a1 -n %{name}-%{_version}-%{snap}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
@@ -721,40 +723,40 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 %build
 # cd gcc && autoconf; cd ..
 # autoconf is not needed!
-cp /usr/share/automake/config.sub .
+##cp /usr/share/automake/config.sub .
 
-rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
+##rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcflags}" \
-TEXCONFIG=false ../configure \
-	--prefix=%{_prefix} \
-	--libdir=%{_libdir} \
-	--libexecdir=%{_libexecdir} \
-	--infodir=%{_infodir} \
-	--mandir=%{_mandir} \
-	--enable-shared \
-	--enable-threads=posix \
-	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
-	--enable-c99 \
-	--enable-long-long \
-%ifarch amd64
-	--disable-multilib \
-%else
-	--enable-multilib \
-%endif
-	--enable-nls \
-	--with-gnu-as \
-	--with-gnu-ld \
-	--with-system-zlib \
-	--with-slibdir=%{_slibdir} \
-	--without-x \
-	%{_target_platform}
+##CFLAGS="%{rpmcflags}" \
+##CXXFLAGS="%{rpmcflags}" \
+##TEXCONFIG=false ../configure \
+##	--prefix=%{_prefix} \
+##	--libdir=%{_libdir} \
+##	--libexecdir=%{_libexecdir} \
+##	--infodir=%{_infodir} \
+##	--mandir=%{_mandir} \
+##	--enable-shared \
+##	--enable-threads=posix \
+##	--enable-__cxa_atexit \
+##	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
+##	--enable-c99 \
+##	--enable-long-long \
+##%ifarch amd64
+##	--disable-multilib \
+##%else
+##	--enable-multilib \
+##%endif
+##	--enable-nls \
+##	--with-gnu-as \
+##	--with-gnu-ld \
+##	--with-system-zlib \
+##	--with-slibdir=%{_slibdir} \
+##	--without-x \
+##	%{_target_platform}
 
-PATH=$PATH:/sbin:%{_sbindir}
+##PATH=$PATH:/sbin:%{_sbindir}
 
-cd ..
+##cd ..
 %{__make} -C obj-%{_target_platform} profiledbootstrap \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags}" \
