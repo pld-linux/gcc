@@ -30,7 +30,7 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
 Patch3:		%{name}-nodebug.patch
 Patch4:		%{name}-ssp.patch
-#Patch5:		%{name}-pr14668.patch
+
 Patch6:		%{name}-ada-link.patch
 Patch7:		%{name}-pr15666.patch
 Patch8:		%{name}-ada-bootstrap.patch
@@ -896,10 +896,10 @@ rm -rf $RPM_BUILD_ROOT
 %post   -p /sbin/ldconfig -n libffi
 %postun -p /sbin/ldconfig -n libffi
 
-%files -f %{name}.lang
+%files -f gcc.lang
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS bugs.html faq.html
-%doc gcc/{README.Portability,NEWS,ChangeLog}
+%doc gcc/{README.Portability,ONEWS,ChangeLog}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
