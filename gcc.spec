@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	4.1
+Release:	4.2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -62,6 +62,7 @@ Patch8:		%{name}-pr18185.patch
 # How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
 #
 Patch9:		%{name}-visibility.patch
+Patch10:	%{name}-pr13470.patch
 #
 Patch20:	%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
@@ -657,6 +658,7 @@ Adzie.
 #%patch7 -p0
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %ifarch alpha ia64
 # needed for bootstrap using gcc 3.3.x on alpha
