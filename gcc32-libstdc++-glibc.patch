@@ -1,0 +1,504 @@
+From gcc-patches-return-67062-listarch-gcc-patches=gcc dot gnu dot org at gcc dot gnu dot org Fri Aug 30 10:39:38 2002
+Return-Path: <gcc-patches-return-67062-listarch-gcc-patches=gcc dot gnu dot org at gcc dot gnu dot org>
+Delivered-To: listarch-gcc-patches at gcc dot gnu dot org
+Received: (qmail 32272 invoked by alias); 30 Aug 2002 10:39:36 -0000
+Mailing-List: contact gcc-patches-help at gcc dot gnu dot org; run by ezmlm
+Precedence: bulk
+List-Archive: <http://gcc.gnu.org/ml/gcc-patches/>
+List-Post: <mailto:gcc-patches at gcc dot gnu dot org>
+List-Help: <mailto:gcc-patches-help at gcc dot gnu dot org>
+Sender: gcc-patches-owner at gcc dot gnu dot org
+Delivered-To: mailing list gcc-patches at gcc dot gnu dot org
+Received: (qmail 32195 invoked from network); 30 Aug 2002 10:39:32 -0000
+Received: from unknown (HELO sunsite.mff.cuni.cz) (195.113.19.66)
+  by sources dot redhat dot com with SMTP; 30 Aug 2002 10:39:32 -0000
+Received: (from jakub@localhost)
+	by sunsite dot mff dot cuni dot cz (8 dot 11 dot 6/8 dot 11 dot 6) id g7UAcS700895;
+	Fri, 30 Aug 2002 12:38:28 +0200
+Date: Fri, 30 Aug 2002 12:38:28 +0200
+From: Jakub Jelinek <jakub at redhat dot com>
+To: bkoz at redhat dot com, mark at codesourcery dot com
+Cc: libstdc++ at gcc dot gnu dot org, gcc-patches at gcc dot gnu dot org, drepper at redhat dot com,
+   roland at redhat dot com
+Subject: [PATCH] Fix libstdc++-v3 on GLIBC 2.3+
+Message-ID: <20020830123828.Y1013@sunsite.ms.mff.cuni.cz>
+Reply-To: Jakub Jelinek <jakub at redhat dot com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.2.5.1i
+
+Hi!
+
+The following patch fixes libstdc++-v3 compilation and use on GLIBC 2.2.9x+.
+It passed libstdc++-v3 make check with 24 XPASSes and 1 FAIL - the remaining
+2 missing XPASSes (ie. the only 2 XFAILs) are:
+XFAIL: 22_locale/messages_byname.cc execution test
+XFAIL: 22_locale/messages_members_char.cc execution test
+which fail because of a glibc bug Roland is working on.
+
+The only difference on libstdc++.so symbols this has is that
+_ZNKSt8messagesIwE6do_getEiiiRKSbIwSt11char_traitsIwESaIwEE
+symbol is no longer weak (ie. T instead of W in nm output),
+which doesn't change anything for binary compatibility IMHO.
+
+Ok to commit? 3.2 branch too?
+
+2002-08-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* config/locale/generic/c++locale_internal.h: New header.
+	* config/locale/gnu/c++locale_internal.h: New header.
+	* config/locale/gnu/c_locale.cc: Include it.
+	* config/locale/gnu/collate_members.cc: Include it.
+	* config/locale/gnu/ctype_members.cc: Include it.
+	* config/locale/gnu/messages_members.cc: Include it.
+	* config/locale/gnu/monetary_members.cc: Include it.
+	* config/locale/gnu/numeric_members.cc: Include it.
+	* config/locale/gnu/time_members.cc: Include it.
+	(_M_put): Reorder __strftime_l and __wcsftime_l arguments to match
+	glibc.
+	(_M_initialize_timepunct): Initialize _M_c_locale_timepunct for
+	C locale.
+	* acinclude.m4: Include string.h when testing strcoll_l.
+	For glibc 2.3 provide __-prefixed prototypes.
+	(CLOCALE_INTERNAL_H): Set, add AC_LINK_FILES line.
+	* aclocal.m4, configure: Rebuilt.
+
+2002-08-29  Benjamin Kosnik  <bkoz@redhat.com>
+
+	* include/bits/locale_facets.h: Add declaration of specialization
+	here.
+	* config/locale/gnu/messages_members.cc: Add specialization for
+	messages<wchar_t>.
+	* config/locale/gnu/messages_members.h: Remove generic definition
+	of do_get.
+
+--- libstdc++-v3/config/locale/generic/c++locale_internal.h.jj	2002-08-29 14:57:21.000000000 +0200
++++ libstdc++-v3/config/locale/generic/c++locale_internal.h	2002-08-30 12:05:10.000000000 +0200
+@@ -0,0 +1,30 @@
++// Locale internal implementation header -*- C++ -*-
++
++// Copyright (C) 2002 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++// The generic locale code doesn't need to do anything here (yet)
+--- libstdc++-v3/config/locale/gnu/c_locale.cc.jj	2002-04-23 20:30:31.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/c_locale.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -36,6 +36,7 @@
+ #include <locale>
+ #include <stdexcept>
+ #include <langinfo.h>
++#include "c++locale_internal.h"
+ 
+ namespace std 
+ {
+--- libstdc++-v3/config/locale/gnu/collate_members.cc.jj	2002-04-23 20:30:31.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/collate_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -1,6 +1,6 @@
+ // std::collate implementation details, GNU version -*- C++ -*-
+ 
+-// Copyright (C) 2001 Free Software Foundation, Inc.
++// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+ //
+ // This file is part of the GNU ISO C++ Library.  This library is free
+ // software; you can redistribute it and/or modify it under the
+@@ -34,6 +34,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+--- libstdc++-v3/config/locale/gnu/ctype_members.cc.jj	2002-05-25 00:18:17.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/ctype_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -34,6 +34,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+--- libstdc++-v3/config/locale/gnu/messages_members.cc.jj	2002-05-22 15:38:28.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/messages_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -34,6 +34,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+@@ -56,4 +57,25 @@ namespace std
+       return string(__msg);
+ #endif
+     }
++
++#ifdef _GLIBCPP_USE_WCHAR_T
++  template<>
++    wstring
++    messages<wchar_t>::do_get(catalog, int, int, const wstring& __dfault) const
++    {
++# if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
++      __c_locale __old = __uselocale(_M_c_locale_messages);
++      char* __msg = gettext(_M_convert_to_char(__dfault));
++      __uselocale(__old);
++      return _M_convert_from_char(__msg);
++# else
++      char* __old = strdup(setlocale(LC_ALL, NULL));
++      setlocale(LC_ALL, _M_name_messages);
++      char* __msg = gettext(_M_convert_to_char(__dfault));
++      setlocale(LC_ALL, __old);
++      free(__old);
++      return _M_convert_from_char(__msg);
++# endif
++    }
++#endif
+ }
+--- libstdc++-v3/config/locale/gnu/monetary_members.cc.jj	2002-07-27 01:31:05.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/monetary_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -34,6 +34,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+--- libstdc++-v3/config/locale/gnu/numeric_members.cc.jj	2002-04-23 20:30:31.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/numeric_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -34,6 +34,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+--- libstdc++-v3/config/locale/gnu/time_members.cc.jj	2002-05-22 15:38:30.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/time_members.cc	2002-08-30 12:09:12.000000000 +0200
+@@ -35,6 +35,7 @@
+ // Written by Benjamin Kosnik <bkoz@redhat.com>
+ 
+ #include <locale>
++#include "c++locale_internal.h"
+ 
+ namespace std
+ {
+@@ -52,7 +53,7 @@ namespace std
+ 	   const tm* __tm) const
+     {
+ #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
+-      __strftime_l(__s, __maxlen, _M_c_locale_timepunct, __format, __tm);
++      __strftime_l(__s, __maxlen, __format, __tm, _M_c_locale_timepunct);
+ #else
+       char* __old = strdup(setlocale(LC_ALL, NULL));
+       setlocale(LC_ALL, _M_name_timepunct);
+@@ -69,6 +70,9 @@ namespace std
+       if (__cloc == _S_c_locale)
+ 	{
+ 	  // "C" locale
++
++	  _M_c_locale_timepunct = _S_c_locale; 
++
+ 	  _M_date_format = "%m/%d/%y";
+ 	  _M_date_era_format = "%m/%d/%y";
+ 	  _M_time_format = "%H:%M:%S";
+@@ -202,7 +206,7 @@ namespace std
+ 	   const tm* __tm) const
+     {
+ #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
+-      __wcsftime_l(__s, __maxlen, _M_c_locale_timepunct, __format, __tm);
++      __wcsftime_l(__s, __maxlen, __format, __tm, _M_c_locale_timepunct);
+ #else
+       char* __old = strdup(setlocale(LC_ALL, NULL));
+       setlocale(LC_ALL, _M_name_timepunct);
+@@ -219,6 +223,9 @@ namespace std
+       if (__cloc == _S_c_locale)
+ 	{
+ 	  // "C" locale
++
++	  _M_c_locale_timepunct = _S_c_locale; 
++
+ 	  _M_date_format = L"%m/%d/%y";
+ 	  _M_date_era_format = L"%m/%d/%y";
+ 	  _M_time_format = L"%H:%M:%S";
+--- libstdc++-v3/config/locale/gnu/messages_members.h.jj	2002-05-22 15:38:28.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/messages_members.h	2002-08-29 17:50:14.000000000 +0200
+@@ -55,26 +55,6 @@
+     }
+ 
+   template<typename _CharT>
+-    typename messages<_CharT>::string_type  
+-    messages<_CharT>::do_get(catalog, int, int, 
+-			     const string_type& __dfault) const
+-    { 
+-#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
+-      __c_locale __old = __uselocale(_M_c_locale_messages);
+-      char* __msg = gettext(_M_convert_to_char(__dfault));
+-      __uselocale(__old);
+-      return _M_convert_from_char(__msg);
+-#else
+-      char* __old = strdup(setlocale(LC_ALL, NULL));
+-      setlocale(LC_ALL, _M_name_messages);
+-      char* __msg = gettext(_M_convert_to_char(__dfault));
+-      setlocale(LC_ALL, __old);
+-      free(__old);
+-      return _M_convert_from_char(__msg);
+-#endif
+-    }
+-
+-  template<typename _CharT>
+     void    
+     messages<_CharT>::do_close(catalog) const 
+     { }
+--- libstdc++-v3/config/locale/gnu/c++locale_internal.h.jj	2002-08-29 14:57:21.000000000 +0200
++++ libstdc++-v3/config/locale/gnu/c++locale_internal.h	2002-08-29 15:21:59.000000000 +0200
+@@ -0,0 +1,59 @@
++// Prototypes for GLIBC thread locale __-prefixed functions -*- C++ -*-
++
++// Copyright (C) 2002 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 2, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING.  If not, write to the Free
++// Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307,
++// USA.
++
++// As a special exception, you may use this file as part of a free software
++// library without restriction.  Specifically, if other files instantiate
++// templates or use macros or inline functions from this file, or you compile
++// this file and link it with other files to produce an executable, this
++// file does not by itself cause the resulting executable to be covered by
++// the GNU General Public License.  This exception does not however
++// invalidate any other reasons why the executable file might be covered by
++// the GNU General Public License.
++
++// Written by Jakub Jelinek <jakub@redhat.com>
++
++#include <clocale>
++
++#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
++                                                  
++extern "C" __typeof(iswctype_l) __iswctype_l;
++extern "C" __typeof(nl_langinfo_l) __nl_langinfo_l;
++extern "C" __typeof(strcoll_l) __strcoll_l;
++extern "C" __typeof(strftime_l) __strftime_l;
++extern "C" __typeof(strtod_l) __strtod_l;
++extern "C" __typeof(strtof_l) __strtof_l;
++extern "C" __typeof(strtold_l) __strtold_l;
++extern "C" __typeof(strtol_l) __strtol_l;
++extern "C" __typeof(strtoll_l) __strtoll_l;
++extern "C" __typeof(strtoul_l) __strtoul_l;
++extern "C" __typeof(strtoull_l) __strtoull_l;
++extern "C" __typeof(strxfrm_l) __strxfrm_l;
++extern "C" __typeof(towlower_l) __towlower_l;
++extern "C" __typeof(towupper_l) __towupper_l;
++extern "C" __typeof(wcscoll_l) __wcscoll_l;
++extern "C" __typeof(wcsftime_l) __wcsftime_l;
++extern "C" __typeof(wcsxfrm_l) __wcsxfrm_l;
++extern "C" __typeof(wctype_l) __wctype_l;
++extern "C" __typeof(newlocale) __newlocale;
++extern "C" __typeof(freelocale) __freelocale;
++extern "C" __typeof(duplocale) __duplocale;
++extern "C" __typeof(uselocale) __uselocale;
++
++#endif // GLIBC 2.3 and later
+--- libstdc++-v3/include/bits/locale_facets.h.jj	2002-08-01 23:43:48.000000000 +0200
++++ libstdc++-v3/include/bits/locale_facets.h	2002-08-29 17:49:53.000000000 +0200
+@@ -1739,6 +1739,12 @@ namespace std
+     string
+     messages<char>::do_get(catalog, int, int, const string&) const;
+ 
++#ifdef _GLIBCPP_USE_WCHAR_T
++  template<>
++    wstring
++    messages<wchar_t>::do_get(catalog, int, int, const wstring&) const;
++#endif
++
+   // Include host and configuration specific messages virtual functions.
+   #include <bits/messages_members.h>
+ 
+--- libstdc++-v3/acinclude.m4.jj	2002-08-29 13:51:58.000000000 +0200
++++ libstdc++-v3/acinclude.m4	2002-08-30 11:58:42.000000000 +0200
+@@ -1131,6 +1131,12 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+     	  AC_TRY_RUN([
+ 	  #define _GNU_SOURCE 1
+ 	  #include <locale.h>
++	  #include <string.h>
++	  #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
++	  extern __typeof(newlocale) __newlocale;
++	  extern __typeof(duplocale) __duplocale;
++	  extern __typeof(strcoll_l) __strcoll_l;
++	  #endif
+ 	  int main()
+ 	  {
+   	    const char __one[] = "Äuglein Augmen";
+@@ -1179,6 +1185,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     xgnu)
+       AC_MSG_RESULT(gnu)
+@@ -1211,6 +1218,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/gnu/monetary_members.cc
+       CNUMERIC_CC=config/locale/gnu/numeric_members.cc
+       CTIME_CC=config/locale/gnu/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/gnu/c++locale_internal.h
+       ;;
+     xieee_1003.1-2001)
+       AC_MSG_RESULT(generic)
+@@ -1225,6 +1233,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     *)
+       echo "$enable_clocale is an unknown locale package" 1>&2
+@@ -1248,6 +1257,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+   AC_LINK_FILES($CMONEY_CC, src/monetary.cc)
+   AC_LINK_FILES($CNUMERIC_CC, src/numeric.cc)
+   AC_LINK_FILES($CTIME_CC, src/time.cc)
++  AC_LINK_FILES($CLOCALE_INTERNAL_H, src/c++locale_internal.h)
+ ])
+ 
+ 
+--- libstdc++-v3/aclocal.m4.jj	2002-08-29 13:51:58.000000000 +0200
++++ libstdc++-v3/aclocal.m4	2002-08-30 11:58:46.000000000 +0200
+@@ -1143,6 +1143,12 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+     	  AC_TRY_RUN([
+ 	  #define _GNU_SOURCE 1
+ 	  #include <locale.h>
++	  #include <string.h>
++	  #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
++	  extern __typeof(newlocale) __newlocale;
++	  extern __typeof(duplocale) __duplocale;
++	  extern __typeof(strcoll_l) __strcoll_l;
++	  #endif
+ 	  int main()
+ 	  {
+   	    const char __one[] = "Äuglein Augmen";
+@@ -1191,6 +1197,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     xgnu)
+       AC_MSG_RESULT(gnu)
+@@ -1223,6 +1230,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/gnu/monetary_members.cc
+       CNUMERIC_CC=config/locale/gnu/numeric_members.cc
+       CTIME_CC=config/locale/gnu/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/gnu/c++locale_internal.h
+       ;;
+     xieee_1003.1-2001)
+       AC_MSG_RESULT(generic)
+@@ -1237,6 +1245,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     *)
+       echo "$enable_clocale is an unknown locale package" 1>&2
+@@ -1260,6 +1269,7 @@ AC_DEFUN(GLIBCPP_ENABLE_CLOCALE, [
+   AC_LINK_FILES($CMONEY_CC, src/monetary.cc)
+   AC_LINK_FILES($CNUMERIC_CC, src/numeric.cc)
+   AC_LINK_FILES($CTIME_CC, src/time.cc)
++  AC_LINK_FILES($CLOCALE_INTERNAL_H, src/c++locale_internal.h)
+ ])
+ 
+ 
+--- libstdc++-v3/configure.jj	2002-08-29 13:52:46.000000000 +0200
++++ libstdc++-v3/configure	2002-08-30 12:00:07.000000000 +0200
+@@ -2961,6 +2961,12 @@ else
+ 
+ 	  #define _GNU_SOURCE 1
+ 	  #include <locale.h>
++	  #include <string.h>
++	  #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ > 2)
++	  extern __typeof(newlocale) __newlocale;
++	  extern __typeof(duplocale) __duplocale;
++	  extern __typeof(strcoll_l) __strcoll_l;
++	  #endif
+ 	  int main()
+ 	  {
+   	    const char __one[] = "Äuglein Augmen";
+@@ -3023,6 +3029,7 @@ fi
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     xgnu)
+       echo "$ac_t""gnu" 1>&6
+@@ -3084,6 +3091,7 @@ fi
+       CMONEY_CC=config/locale/gnu/monetary_members.cc
+       CNUMERIC_CC=config/locale/gnu/numeric_members.cc
+       CTIME_CC=config/locale/gnu/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/gnu/c++locale_internal.h
+       ;;
+     xieee_1003.1-2001)
+       echo "$ac_t""generic" 1>&6
+@@ -3098,6 +3106,7 @@ fi
+       CMONEY_CC=config/locale/generic/monetary_members.cc
+       CNUMERIC_CC=config/locale/generic/numeric_members.cc
+       CTIME_CC=config/locale/generic/time_members.cc
++      CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
+       ;;
+     *)
+       echo "$enable_clocale is an unknown locale package" 1>&2
+@@ -22689,8 +22698,8 @@ fi; done
+ EOF
+ 
+ cat >> $CONFIG_STATUS <<EOF
+-ac_sources="$BASIC_FILE_CC $CLOCALE_CC $CCOLLATE_CC $CCTYPE_CC $CMESSAGES_CC $CMONEY_CC $CNUMERIC_CC $CTIME_CC $LINKER_MAP"
+-ac_dests="src/basic_file.cc src/c++locale.cc src/collate.cc src/ctype.cc src/messages.cc src/monetary.cc src/numeric.cc src/time.cc src/linker.map"
++ac_sources="$BASIC_FILE_CC $CLOCALE_CC $CCOLLATE_CC $CCTYPE_CC $CMESSAGES_CC $CMONEY_CC $CNUMERIC_CC $CTIME_CC $CLOCALE_INTERNAL_H $LINKER_MAP"
++ac_dests="src/basic_file.cc src/c++locale.cc src/collate.cc src/ctype.cc src/messages.cc src/monetary.cc src/numeric.cc src/time.cc src/c++locale_internal.h src/linker.map"
+ EOF
+ 
+ cat >> $CONFIG_STATUS <<\EOF
+
+	Jakub
+
