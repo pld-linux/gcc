@@ -1,5 +1,5 @@
 %define		STDC_VERSION	3.0.0
-%define		GCJ_VERSION	1.0.0
+%define		GCJ_VERSION	3.0.0
 %define		snap		20010305
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
