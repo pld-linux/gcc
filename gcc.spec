@@ -146,6 +146,7 @@ Statyczne Obiektowego C
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Wspomaganie Fortran 77 dla gcc
 Group:		Development/Languages
+Version:	%{GCC_VERSION}
 Obsoletes:	egcs-g77
 Requires:	libg2c = %{GCC_VERSION}
 
@@ -161,6 +162,7 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 Summary:	Fortran 77 Libraries
 Summary(pl):	Biblioteki Fortranu 77
 Group:		Libraries
+Version:        %{GCC_VERSION}
 
 %description -n libg2c
 Fortran 77 Libraries
@@ -172,6 +174,7 @@ Biblioteki Fortranu 77
 Summary:	Static Fortran 77 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
+Version:        %{GCC_VERSION}
 Epoch:		2
 Requires:	libg2c = %{GCC_VERSION}
 
@@ -185,6 +188,7 @@ Statyczne Fortranu 77
 Summary:	CHILL support for gcc
 Summary(pl):	Wspomoganie CHILL dla gcc
 Group:		Development/Languages
+Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 
 %description chill
@@ -202,6 +206,7 @@ Europe, Brazil, Korea, and other places.
 Summary:	Java support for gcc
 Summary(pl):	Wspomoganie Java dla gcc
 Group:		Development/Languages
+Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 
@@ -327,7 +332,7 @@ Biblioteka statyczna C++.
 Summary:	Shared gcc library
 Summary(pl):	Biblioteka gcc
 Group:		Libraries
-Version:	%{version}
+Version:        %{GCC_VERSION}
 
 %description -n libgcc
 Shared gcc library.
@@ -410,6 +415,7 @@ po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 Summary:	Ada support for gcc
 Summary(pl):	Wsparcie dla Ady do gcc
 Group:		Development/Languages
+Version:        %{GCC_VERSION}
 Requires:	libgnat = %{GCC_VERSION}
 Requires:	gcc = %{GCC_VERSION}
 Obsoletes:	gnat-devel
@@ -425,6 +431,7 @@ w Adzie.
 Summary:	Ada standard libraries
 Summary(pl):	Biblioteki standardowe dla Ady
 Group:		Libraries
+Version:        %{GCC_VERSION}
 Obsoletes:	gnat
 
 %description -n libgnat
@@ -439,6 +446,7 @@ w Adzie.
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Group:		Libraries
+Version:        %{GCC_VERSION}
 Obsoletes:	gnat-static
 
 %description -n libgnat
