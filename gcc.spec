@@ -6,7 +6,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -597,7 +597,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/jar
-%attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 %{_infodir}/gcj*
@@ -610,13 +609,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj-devel
 %defattr(644,root,root,755)
 %{_includedir}/java
-%{_includedir}/javax
-%{_includedir}/org
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
 %{_libdir}/lib*cj.spec
-%{_libdir}/security/*
 %{_datadir}/libgcj.jar
 %attr(755,root,root) %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
