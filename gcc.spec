@@ -83,6 +83,7 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
+Requires:	%{name} = %{version}
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
 
@@ -372,7 +373,7 @@ Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{GCC_VERSION}
 
 %description ksi
 This package adds experimental support for compiling Ksi programs
@@ -388,8 +389,7 @@ po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 
 
 %prep
-%setup -q -n %{name}-%{GCC_VERSION}
-%setup -q -a1
+%setup -q -a1 -n %{name}-%{SNAP}
 mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
@@ -407,10 +407,8 @@ TEXCONFIG=false ../configure \
 	--mandir=%{_mandir} \
 	--enable-shared \
 	--enable-threads=posix \
-	--enable-haifa \
         --enable-languages="c,c++,f77,gcov,java,objc,ksi" \
 	--enable-long-long \
-	--enable-namespaces \
 	--enable-multilib \
 	--with-gnu-as \
 	--with-gnu-ld \
@@ -441,10 +439,10 @@ PATH=$PATH:/sbin:%{_sbindir}
 	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
-
-echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
+echo .so gcc.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
+echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 (cd $RPM_BUILD_ROOT%{_libdir} ; LIBSTDC=$(ls libstdc++.so.*.*.*) ; \
  cd $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/ ; \
@@ -455,8 +453,10 @@ mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
-gzip -9nf ../READ* ../ChangeLog
-gzip -9nf ../gcc/ksi/README ../gcc/ksi/NEWS ../gcc/ksi/t/*.{ksi,c,foo}
+cd ..
+gzip -9nf READ* ChangeLog
+gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
+gzip -9nf libjava/doc/cni.sgml
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -474,6 +474,12 @@ gzip -9nf ../gcc/ksi/README ../gcc/ksi/NEWS ../gcc/ksi/t/*.{ksi,c,foo}
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun chill
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
+%post java
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
+%postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post -n cpp
@@ -512,6 +518,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cc
 
 %{_mandir}/man1/gcc.1*
+%{_mandir}/man1/cc.1*
 %{_mandir}/man1/gcov.1*
 %{_infodir}/gcc*
 
@@ -584,11 +591,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files java
 %defattr(644,root,root,755)
+%doc libjava/doc/*gz
 %attr(755,root,root) %{_bindir}/gcj*
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/jar
+%attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 %{_infodir}/gcj*
@@ -601,10 +610,13 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj-devel
 %defattr(644,root,root,755)
 %{_includedir}/java
+%{_includedir}/javax
+%{_includedir}/org
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
 %{_libdir}/lib*cj.spec
+%{_libdir}/security/*
 %{_datadir}/libgcj.jar
 %attr(755,root,root) %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
@@ -619,6 +631,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
+%doc libstdc++-v3/docs/html
 %{_includedir}/g++*
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
 
