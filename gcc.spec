@@ -940,6 +940,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/crt*.o
 %if %{with multilib}
 %attr(755,root,root) %{_libdir}/gcc/*/*/libgcc_s*.so
+%dir %{_libdir}/gcc/*/*/32
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
 %{_libdir}/gcc/*/*/32/libgcov.a
