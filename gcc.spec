@@ -539,7 +539,7 @@ install  obj-%{_target_platform}/gcc/ada/gnat_rm.info* $RPM_BUILD_ROOT%{_infodir
 gzip -9nf READ* ChangeLog
 gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 
-mkdir java-doc
+install -d java-doc
 mv -f libjava/doc/cni.sgml libjava/READ* java-doc
 mv -f fastjar/README java-doc/README.fastjar
 mv -f libffi/README java-doc/README.libffi
@@ -743,7 +743,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gnu/*
 %{_libdir}/lib*cj.spec
 %{_libdir}/security/*
-%doc %{_datadir}/java
+%dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
 %attr(755,root,root) %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
