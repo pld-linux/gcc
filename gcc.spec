@@ -546,6 +546,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-compat
 %defattr(644,root,root,755) 
+%attr(755,root,root) %{_libdir}/libstdc++.so.2.*
+%ifnarch sparc
+%attr(755,root,root) %{_libdir}/libg++.so.*
+%endif
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
