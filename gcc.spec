@@ -14,7 +14,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.4
+Release:	0.5
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
