@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	4.2
+Release:	4.3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -681,9 +681,10 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+CC=%__cc
+
 %if %{with multilib}
 
-CC=%__cc
 %ifarch sparc64 
 cat > gcc64 <<"EOF"
 #!/bin/sh
