@@ -1,6 +1,6 @@
 #
 # Conditional build:
-# _with_ada	- build with ADA support
+# _without_ada	- build without ADA support
 # _without_java	- build without Java support
 # _without_objc	- build without objc support
 
@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -48,7 +48,7 @@ BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
-%{?_with_ada:BuildRequires:	gcc-ada}
+%{!?_without_ada:BuildRequires:	gcc-ada}
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
@@ -602,8 +602,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 
 %patch10 -p1
-#%patch11
-#%patch12
+%patch11
+%patch12
 %patch13
 %patch14
 %patch15
@@ -636,7 +636,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?!_without_objc:,objc}%{?_with_ada:,ada}%{!?_without_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{!?_without_objc:,objc}%{!?_without_ada:,ada}%{!?_without_java:,java},ksi" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -650,20 +650,13 @@ TEXCONFIG=false ../configure \
 
 PATH=$PATH:/sbin:%{_sbindir}
 
-# this dirty hack is relict of setting, where objdir is subdir of srcdir
-%if 0%{?_with_ada:1}
-sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
-	gcc/ada/Makefile > makefile.tmp
-mv -f makefile.tmp gcc/ada/Makefile
-%endif
-
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap-lean \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%if 0%{?_with_ada:1}
+%if 0%{!?_without_ada:1}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
@@ -686,7 +679,7 @@ echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
-%if 0%{?_with_ada:1}
+%if 0%{!?_without_ada:1}
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
@@ -710,7 +703,7 @@ cp -f libffi/README java-doc/README.libffi
 cp -f libffi/LICENSE java-doc/LICENSE.libffi
 %endif
 
-%if %{?!_without_objc:1}0
+%if %{!?_without_objc:1}0
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
@@ -733,7 +726,7 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{%{?!_without_objc:objc,}g2c.h,syslimits.h%{?!_without_java:,gcj}} $gccdir/tmp
+mv -f $gccdir/include/{%{!?_without_objc:objc,}g2c.h,syslimits.h%{!?_without_java:,gcj}} $gccdir/tmp
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
@@ -874,7 +867,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libstdc++.a
 %endif
 
-%if %{?!_without_objc:1}0
+%if %{!?_without_objc:1}0
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/READ*
@@ -1018,7 +1011,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.a
 %endif
 
-%if 0%{?_with_ada:1}
+%if 0%{!?_without_ada:1}
 %files ada
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/gnat1
