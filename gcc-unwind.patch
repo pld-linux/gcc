@@ -1,0 +1,11 @@
+--- libstdc++-v3/libsupc++/eh_throw.cc~	Fri May  2 21:01:25 2003
++++ libstdc++-v3/libsupc++/eh_throw.cc	Sat Jun 21 19:57:18 2003
+@@ -98,7 +98,7 @@
+ #ifdef _GLIBCPP_SJLJ_EXCEPTIONS
+       _Unwind_SjLj_Resume_or_Rethrow (&header->unwindHeader);
+ #else
+-      _Unwind_Resume_or_Rethrow (&header->unwindHeader);
++      _Unwind_RaiseException (&header->unwindHeader);
+ #endif
+   
+       // Some sort of unwinding error.  Note that terminate is a handler.
