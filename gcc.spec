@@ -25,6 +25,7 @@ BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	autoconf
 BuildRequires:	gcc
 BuildRequires:	gcc-ada
+BuildRequires:	perl-devel
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -496,7 +497,7 @@ sed -e 's/srcdir=\$(fsrcdir)/srcdir=\$(fsrcdir) VPATH=\$(fsrcdir)/' \
 mv -f makefile.tmp gcc/ada/Makefile
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap-lean \
+%{__make} -C obj-%{_target_platform} bootstrap \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
