@@ -21,7 +21,6 @@ Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
-Patch0:		%{name}-slibdir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-ada-no-addr2line.patch
 Patch3:		%{name}-ada-no-prefix.o.patch
@@ -576,7 +575,6 @@ e controle da numeração das linhas do programa.
 %setup -q -a1 -n %{name}-%{GCC_VERSION}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -684,10 +682,7 @@ cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
 %{__make} install \
-	prefix=$RPM_BUILD_ROOT%{_prefix} \
-	mandir=$RPM_BUILD_ROOT%{_mandir} \
-	infodir=$RPM_BUILD_ROOT%{_infodir} \
-	slibdir=$RPM_BUILD_ROOT/lib
+	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
