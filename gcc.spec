@@ -1,7 +1,7 @@
 %define		STDC_VERSION 2.10.0
 %define		GCJ_VERSION 2.95.1
-Summary:	GNU C Compiler
-Summary(pl):	Kompilator GNU
+Summary:	GNU Compiler Collection
+Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
 Release:	1
@@ -31,7 +31,7 @@ wyprodukowania szybkiego i stablinego kodu wynikowego.
 
 %package c++
 Summary:	C++ support for gcc
-Summary(fr):	Support C++ pour le compilateur gcc.
+Summary(fr):	Support C++ pour le compilateur gcc
 Summary(pl):	Wspomaganie C++ dla kompilatora gcc
 Summary(tr):	gcc için C++ desteði
 Group:		Development/Languages
@@ -58,7 +58,7 @@ modéles et la gestion des exceptions. Il ne comprend pas une bibliothéque
 C++ standard, qui est disponible séparément.
 
 %description -l pl c++
-Programy z tego pakietu zapewniaj± wsparcie do C++ do GNU C kompilatora.
+Programy z tego pakietu zapewniaj± wsparcie dla C++ do gcc.
 Posiada wspomaganie dla du¿ej ilo¶ci obecnych specyfikacji C++, nie posiada
 natomiast standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 
@@ -119,8 +119,8 @@ This apckage adds support for compiling Fortran 77 programs with the GNU
 compiler.
 
 %description -l pl g77
-Ten pakiet jest wspomaganiem Fortran 77 dla kompilatora gcc.
-Jest u¿yteczny kompilowania programów pisanych w jêzyku Fortran 77.
+Ten pakiet jest wsparciem Fortran 77 dla kompilatora gcc.
+Jest potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 
 %package chill
 Summary:	CHILL support for gcc
@@ -198,9 +198,9 @@ outils GNU supplémentaires. Ce package comprend les librairies partagées
 nécessaires à l'exécution d'application C++.
 
 %description -l pl -n libstdc++  
-Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
-C++, znajduj± siê w nim biblioteki dynamiczne niezbêdne do uruchomienia
-aplikacji C++.
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych bibliotek
+C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do uruchomienia
+aplikacji napisanych w C++.
 
 %description -l tr -n libstdc++
 Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
@@ -222,9 +222,9 @@ This is the GNU implementation of the standard C++ libraries.  This package
 includes the header files and libraries needed for C++ development.
 
 %description -l pl -n libstdc++-devel
-Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
-C++, znajduj± siê w nim biblioteki i pliki nag³ówków wykorzystywane do
-programowania w jêzyku C++.
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych bibliotek
+C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy programowaniu
+w jêzyku C++.
 
 %package -n libstdc++-static
 Summary:	Static c++ standard library
@@ -238,7 +238,7 @@ Requires:	libstdc++-devel = %{STDC_VERSION}
 Static c++ standard library.
 
 %description -l pl -n libstdc++-static
-Biblioeka statyczna c++.
+Biblioteka statyczna C++.
 
 %package -n cpp
 Summary:	The C Pre Processor
@@ -271,26 +271,26 @@ see fit:
   from.
 
 %description -l pl -n cpp
-Przeprocesor C jest "makro procesorem" który jest automatycznie u¿ywaney
+Przeprocesor C jest "makro procesorem" który jest automatycznie u¿ywany
 przez kompilator C do obróbki kompilowanego programu przed w³a¶ciw±
-kompilacj±. Jest on nazywany makroprocesorem poniewa¿ poniewa¿ umo¿liwia
-definiowanie i rozwijanie makr umo¿liwiaj±cych kracanie d³ugich konstrukcji
+kompilacj±. Jest on nazywany makroprocesorem, poniewa¿ umo¿liwia
+definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie d³ugich konstrukcji
 w jêzyku C.
 
-Preprocesor C umo¿liwia wykonywanie czterech róznych typow operacji:
+Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
-* Inkluzja (do³aczenie) plików (np. nag³ówkowych). W³±cza pliki w miejscu
-  deklaracji polecenia do³±czenia inefgo pliku.
+* Do³±czanie plików (np. nag³ówkowych). Wstawia pliki w miejscu
+  deklaracji polecenia do³±czenia innego pliku.
 * Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
   których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
   indentyfikatora deklarowan± wcze¶niej warto¶ci±.
 * Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
-  ¶rodowisku preprocesora s± w³±czane warunkowo b±æ nie pewne fragmenty
+  ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne fragmenty
   obrabianego strumienia tekstów.
 * Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom podlega
-  wynikowy strumieñ danych w wyniku rozwijania makr i inkluzji s±
-  zapamiêtywane informacje o tym z której linii pliku ¼ród³owego
-  odpowiada fragment czy liniia pliku wynikowego.
+  wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania s±
+  zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
+  odpowiada fragment pliku wynikowego.
 
 %prep
 %setup -q
