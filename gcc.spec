@@ -12,7 +12,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	7
+Release:	8
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -38,6 +38,7 @@ Patch16:	gcc32-boehm-gc-libs.patch
 Patch17:	gcc32-bogus-inline.patch
 Patch18:	gcc32-c++-nrv-test.patch
 Patch19:	gcc32-c++-pretty_function.patch
+# evil? introduced ICE at cp/cp-lang.c:130
 Patch20:	gcc32-c++-tail-pad.patch
 Patch21:	gcc32-c++-tail-pad2.patch
 Patch22:	gcc32-c++-tsubst-asm.patch
@@ -56,7 +57,8 @@ Patch34:	gcc32-i386-default-momit-leaf-frame-pointer.patch
 Patch35:	gcc32-i386-memtest-test.patch 
 Patch36:	gcc32-i386-no-default-momit-leaf-frame-pointer.patch
 Patch37:	gcc32-i386-pic-label-thunk.patch
-Patch38:	gcc32-i386-pr7242.patch
+# included in gcc-mmx-sse-defines.patch
+#Patch38:	gcc32-i386-pr7242.patch
 Patch39:	gcc32-i386-profile-olfp.patch
 Patch40:	gcc32-inline-label.patch 
 Patch41:	gcc32-java-no-rpath.patch
@@ -539,7 +541,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch17 
 %patch18 
 %patch19 
-%patch20 
+#%patch20 	# introduced ICE at cp/cp-lang.c:130
 %patch21 
 %patch22 
 %patch23 
@@ -557,7 +559,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch35 
 %patch36 
 %patch37 
-%patch38 
+#%patch38 	# included in gcc-mmx-sse-defines.patch
 %patch39 
 %patch40 
 %patch41 
