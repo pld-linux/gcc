@@ -4,12 +4,12 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{ver}
-Release:	22
+Release:	25
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}-prerelease/%{name}-%{version}.test4.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}-prerelease/%{name}-%{version}-test5.tar.gz
 Source1:	gcov.1
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
@@ -303,7 +303,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-%{ver}.test4
+%setup -q -n %{name}-%{ver}-test5
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
