@@ -10,7 +10,6 @@
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- disable internal zlib usage
-#		- bconds (ada, objc, fortran)
 #		- translations from gcc.spec:HEAD
 #
 %define		_snap		20050102
@@ -583,13 +582,12 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-mv -f	$gccdir/include/{%{?with_java:gcj,libffi/ffitarget.h,}%{?with_objc:objc,}syslimits.h} \
-	$gccdir/tmp
+%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
+%{?with_objc:mv -f $gccdir/include/objc	$gccdir/tmp}
+mv -f	$gccdir/include/syslimits.h $gccdir/tmp
 rm -rf	$gccdir/include
-mv -f	$gccdir/tmp \
-	$gccdir/include
-cp -f	$gccdir/install-tools/include/*.h \
-	$gccdir/include
+ mv -f	$gccdir/tmp $gccdir/include
+cp -f	$gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf	$gccdir/install-tools
 
