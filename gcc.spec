@@ -4,7 +4,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 #
-%define		snap		20040414
+%define		snap		20040416
 %define		GCC_VERSION	3.4.0
 %define		KSI_VERSION	1.1.0.1567
 %define		_version	3.4
@@ -20,9 +20,9 @@ Epoch:		5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_version}-%{snap}/%{name}-%{_version}-%{snap}.tar.bz2
-# Source0-md5:	f127b4db10dd30f97466487148734a90
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	d6e215ce39a302c643f3ea8994ef6b68
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_version}-%{snap}/%{name}-%{_version}-%{snap}.tar.bz2
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -709,7 +709,7 @@ arquivos de cabeçalho; expansão de macros; compilação condicional; e
 controle da numeração das linhas do programa.
 
 %prep
-%setup -q -a1 -n %{name}-%{_version}-%{snap}
+%setup -q -a1 -n %{name}-%{version}-%{snap}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
