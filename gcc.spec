@@ -6,7 +6,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.4
-Release:	0.%{snap}.1
+Release:	0.%{snap}.2
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -408,15 +408,18 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
-install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
-install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1/
-bzip2 -dc %{SOURCE6} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}/
+install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1
+install %{SOURCE2} $RPM_BUILD_ROOT%{_mandir}/man1
+bzip2 -dc %{SOURCE3} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -444,9 +447,6 @@ gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post   -p /sbin/ldconfig -n libstdc++
 %postun -p /sbin/ldconfig -n libstdc++
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
