@@ -13,7 +13,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.pre.2
+Release:	0.pre.3
 Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
@@ -847,6 +847,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %files -n libg2c-static
+%defattr(644,root,root,755)
 %{_libdir}/libg2c.a
 %ifarch ppc
 %{_libdir}/nof/libg2c.a
