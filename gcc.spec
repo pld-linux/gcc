@@ -822,7 +822,7 @@ cd ..
 	infodir=%{_infodir}
 
 %if %{with ada}
-for tgt in gnatlib gnattools gnetlib-shared; do
+for tgt in gnatlib gnattools gnatlib-shared; do
 %{__make} -C obj-%{_target_platform}/gcc $tgt \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
