@@ -1,10 +1,10 @@
 %define		STDC_VERSION 2.10.0
-%define		GCJ_VERSION 2.95
+%define		GCJ_VERSION 2.95.1
 Summary:	GNU C Compiler
 Summary(pl):	Kompilator GNU
 Name:		gcc
-Version:	2.95.1
-Release:	3
+Version:	2.95.2
+Release:	1
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
