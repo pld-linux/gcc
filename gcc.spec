@@ -3,7 +3,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.3
-Release:	13
+Release:	14
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -379,7 +379,8 @@ CXXFLAGS="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-%{__make} LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
+%{__mak} bootstrap \
+	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
