@@ -23,25 +23,24 @@
 #		- http://gcc.gnu.org/PR18648 (missed tree-optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
-#		- http://gcc.gnu.org/PR20225 (regression] / ice during gc)
 #		- http://gcc.gnu.org/PR20249 (ICE with -fprofile-arcs on ppc)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
-%define		_snap		20050312
+%define		_snap		20050319
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.6
+Release:	0.%{_snap}.1
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-# Source0-md5:	38b8f2d145741881898c26a64ee9fc2e
+# Source0-md5:	981afe4856b3c23db52c515aecc9ead8
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -50,9 +49,9 @@ Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-relink.patch
-Patch100:	%{name}-pr18628.patch
-Patch101:	%{name}-pr19317.patch
-Patch102:	%{name}-pr20249.patch
+# PRs
+Patch100:	%{name}-pr19317.patch
+Patch101:	%{name}-pr20249.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -487,7 +486,6 @@ Statyczne biblioteki Obiektowego C.
 # PRs
 %patch100 -p1
 %patch101 -p1
-%patch102 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
