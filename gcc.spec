@@ -406,6 +406,10 @@ install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
+# workaround
+sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' gcc/Makefile > gcc/Makfefile.
+mv -f gcc/Makfefile. gcc/Makefile
+
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
