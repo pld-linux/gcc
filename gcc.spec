@@ -370,7 +370,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-make LDFLAGS_FOR_TARGET="-s" \
+%{__make} LDFLAGS_FOR_TARGET="-s" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
@@ -381,12 +381,12 @@ install -d $RPM_BUILD_ROOT%{_datadir}
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
-make install \
+%{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir}
 
-make install \
+%{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} -C texinfo
