@@ -18,7 +18,7 @@ Name:		gcc
 Version:	%{GCC_VERSION}
 Release:	2.1
 Epoch:		5
-License:	GPL
+License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 # Source0-md5:	70ee088b498741bb08c779f9617df3a5
@@ -119,8 +119,9 @@ Summary:	Shared gcc library
 Summary(es):	Biblioteca compartida de gcc
 Summary(pl):	Biblioteka gcc
 Summary(pt_BR):	Biblioteca runtime para o GCC
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	GPL with unlimited link permission
+Group:		Libraries
 Obsoletes:	libgcc1
 
 %description -n libgcc
@@ -237,8 +238,9 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
-Group:		Libraries
+License:	GPL v2+ + linking exception
 Version:	%{GCC_VERSION}
+Group:		Libraries
 Obsoletes:	libobjc1
 
 %description -n libobjc
@@ -254,8 +256,9 @@ Biblioteki Obiektowego C.
 Summary:	Static Objective C Libraries
 Summary(es):	Bibliotecas estáticas de Objective C
 Summary(pl):	Statyczne Biblioteki Obiektowego C
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libobjc-static
@@ -272,8 +275,8 @@ Summary:	Fortran 77 support for gcc
 Summary(es):	Soporte de Fortran 77 para gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
 Summary(pt_BR):	Suporte Fortran 77 para o GCC
-Group:		Development/Languages/Fortran
 Version:	%{GCC_VERSION}
+Group:		Development/Languages/Fortran
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libg2c = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	egcs-g77
@@ -297,8 +300,9 @@ Suporte Fortran 77 para o GCC.
 Summary:	Fortran 77 Libraries
 Summary(es):	Bibliotecas de Fortran 77
 Summary(pl):	Biblioteki Fortranu 77
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	LGPL v2+
+Group:		Libraries
 
 %description -n libg2c
 Fortran 77 Libraries.
@@ -313,8 +317,9 @@ Biblioteki Fortranu 77.
 Summary:	Static Fortran 77 Libraries
 Summary(es):	Bibliotecas estáticas de Fortran 77
 Summary(pl):	Statyczne Biblioteki Fortranu 77
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	LGPL v2+
+Group:		Development/Libraries
 Requires:	libg2c = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libg2c-static
@@ -330,8 +335,8 @@ Statyczne biblioteki Fortranu 77.
 Summary:	Java support for gcc
 Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
-Group:		Development/Languages/Java
 Version:	%{GCC_VERSION}
+Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	java-shared
@@ -356,8 +361,8 @@ by³o przeprowadziæ kompilacjê.
 Summary:	Shared java tools
 Summary(es):	Herramientas compartidas de Java
 Summary(pl):	Wspó³dzielone narzêdzia javy
-Group:		Development/Languages/Java
 Version:	%{GCC_VERSION}
+Group:		Development/Languages/Java
 Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
@@ -380,8 +385,9 @@ Javy(tm), takie jak rmic czy jar.
 Summary:	Java Class Libraries
 Summary(es):	Bibliotecas de clases de Java
 Summary(pl):	Biblioteki Klas Javy
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Libraries
 Requires:	zlib
 Obsoletes:	libgcj3
 
@@ -398,8 +404,9 @@ Biblioteki Klas Javy.
 Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Development/Libraries
 Requires:	%{name}-java = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libgcj = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	libgcj3-devel
@@ -417,8 +424,9 @@ Pliki nag³ówkowe dla Bibliotek Klas Javy.
 Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}-%{release}
 
@@ -436,8 +444,9 @@ Summary:	GNU c++ library
 Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
 Summary(pt_BR):	Biblioteca C++ GNU
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Libraries
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
 
@@ -482,8 +491,9 @@ Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	glibc-devel
@@ -513,8 +523,9 @@ para desenvolvimento de programas C++.
 Summary:	Static C++ standard library
 Summary(es):	Biblioteca estándar estática de C++
 Summary(pl):	Statyczna biblioteka standardowa C++
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libstdc++-static
@@ -530,8 +541,9 @@ Statyczna biblioteka standardowa C++.
 Summary:	Foreign Function Interface library
 Summary(es):	Biblioteca de interfaz de funciones ajenas
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Libraries
 
 %description -n libffi
 The libffi library provides a portable, high level programming
@@ -555,8 +567,9 @@ czasie wykonania.
 Summary:	Development files for Foreign Function Interface library
 Summary(es):	Ficheros de desarrollo para libffi
 Summary(pl):	Pliki nag³ówkowe dla libffi
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Development/Libraries
 Requires:	libffi = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libffi-devel
@@ -572,8 +585,9 @@ Pliki nag³ówkowe dla libffi.
 Summary:	Static Foreign Function Interface library
 Summary(es):	Biblioteca libffi estática
 Summary(pl):	Statyczna biblioteka libffi
-Group:		Development/Libraries
 Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libffi-static
@@ -589,8 +603,8 @@ Statyczna biblioteka libffi.
 Summary:	Ada support for gcc
 Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
-Group:		Development/Languages
 Version:	%{GCC_VERSION}
+Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libgnat = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	gcc-gnat
@@ -611,8 +625,9 @@ Adzie.
 Summary:	Ada standard libraries
 Summary(es):	Bibliotecas estándares de Ada
 Summary(pl):	Biblioteki standardowe dla Ady
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with linking exception
+Group:		Libraries
 Obsoletes:	gnat
 Obsoletes:	libgnat1
 
@@ -631,8 +646,9 @@ napisanych w Adzie.
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
-Group:		Libraries
 Version:	%{GCC_VERSION}
+License:	GPL v2+ with linking exception
+Group:		Libraries
 Obsoletes:	gnat-static
 
 %description -n libgnat-static
@@ -673,8 +689,8 @@ Summary:	The C Pre Processor
 Summary(es):	El preprocesador de C
 Summary(pl):	Preprocesor C
 Summary(pt_BR):	Preprocessador para a linguagem C
-Group:		Development/Languages
 Version:	%{GCC_VERSION}
+Group:		Development/Languages
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
 
@@ -1161,6 +1177,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj
 %defattr(644,root,root,755)
+%doc libjava/LIBGCJ_LICENSE
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
@@ -1219,6 +1236,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libffi
 %defattr(644,root,root,755)
+%doc libffi/LICENSE
 %attr(755,root,root) %{_libdir}/libffi-*.so
 %ifarch sparc64
 %attr(755,root,root) %{_libdir64}/libffi-*.so
