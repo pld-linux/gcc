@@ -39,7 +39,7 @@ BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2.14
+Requires:	binutils >= 2.15.90.0.3
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
