@@ -13,7 +13,7 @@ License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{DASHED_SNAP}/%{name}-%{SNAP}.tar.bz2
 Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Patch0:		gcc-slibdir.patch
 Patch1:		gcc-paths.patch
