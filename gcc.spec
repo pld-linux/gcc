@@ -3,7 +3,6 @@
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
-%bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 #
 %define		snap		20040324
 %define		GCC_VERSION	3.4
@@ -15,7 +14,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{snap}.2
+Release:	0.%{snap}.3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -35,8 +34,7 @@ BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
-%{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
-%{?with_ada:BuildRequires: gcc-ada}
+%{?with_ada:BuildRequires:	gcc-ada}
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
@@ -45,7 +43,6 @@ BuildRequires:	zlib-devel
 Requires:	binutils >= 2.14
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
-%{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -365,6 +362,7 @@ Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
 Requires:	%{name}-java
+Requires:	pkgconfig
 Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
@@ -798,12 +796,6 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
 	$RPM_BUILD_ROOT%{_libdir}/
-# check if symlink to be made is valid
-#test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
-#ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
-#ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
-#ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-#ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -1060,7 +1052,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/grepjar
-%attr(755,root,root) %{_bindir}/*-gcj
+%attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
@@ -1091,7 +1083,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_includedir}/java
 %{_includedir}/javax
-#%%{_includedir}/org
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
@@ -1109,6 +1100,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
+%{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
@@ -1137,6 +1129,7 @@ rm -rf $RPM_BUILD_ROOT
 %files ada
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/gnat*
+%attr(755,root,root) %{_bindir}/gpr*
 %attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
 %{_libdir}/gcc/*/*/adainclude
 %dir %{_libdir}/gcc/*/*/adalib
