@@ -5,14 +5,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
-
-%bcond_with	bootstrap
-
-%if %{with bootstrap}
-%undefine	with_fortran
-%undefine	with_java
-%undefine	with_objc
-%endif
+%bcond_without	profiling	# build without profiling
 
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
@@ -32,7 +25,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -46,6 +39,8 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
+Patch6:		%{name}-relink.patch
+Patch7:		%{name}-pr18628.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -473,8 +468,10 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 # PRs
+%patch7 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -521,9 +518,7 @@ TEXCONFIG=false \
 cd ..
 
 %{__make} -C obj-%{_target_platform} \
-%ifnarch ppc
-	%{!?with_bootstrap:profiledbootstrap} \
-%endif
+	%{?with_profiling:profiledbootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
