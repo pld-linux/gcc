@@ -8,14 +8,14 @@
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.2
 %define		KSI_VERSION	pre55
-%define		EPOCH		5
 
-Summary:	GNU Compiler Collection
-Summary(pl):	Kolekcja kompilatorów GNU
+Summary:	GNU C Compiler
+Summary(pl):	Kompilator C GNU
+Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
 Release:	0.5
-Epoch:		%{EPOCH}
+Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -95,11 +95,17 @@ necessary for a high-performance and stable development environment.
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
 wyprodukowania szybkiego i stablinego kodu wynikowego.
 
+%description -l pt_BR
+Este pacote adiciona infraestrutura básica e suporte a linguagem C
+ao Gnu Compiler Collection.
+
 %package -n libgcc
 Summary:	Shared gcc library
 Summary(pl):	Biblioteka gcc
+Summary(pt_BR):	Biblioteca runtime para o GCC
 Group:		Libraries
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
+Obsoletes:	libgcc1
 
 %description -n libgcc
 Shared gcc library.
@@ -107,9 +113,13 @@ Shared gcc library.
 %description -n libgcc -l pl
 Biblioteka dynamiczna gcc.
 
+%description -n libgcc -l pt_BR
+Biblioteca runtime para o GCC.
+
 %package c++
 Summary:	C++ support for gcc
 Summary(pl):	Obs³uga C++ dla gcc
+Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
@@ -137,6 +147,9 @@ bibliothéque C++ standard, qui est disponible séparément.
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc. Ma wsparcie dla
 du¿ej ilo¶ci obecnych specyfikacji C++, nie zawiera natomiast
 standardowych bibliotek C++, które s± w oddzielnym pakiecie.
+
+%description c++ -l pt_BR
+Este pacote adiciona suporte C++ para o gcc.
 
 %description c++ -l tr
 Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve
@@ -190,6 +203,7 @@ Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
 Version:	%{GCC_VERSION}
+Obsoletes:	libobjc1
 
 %description -n libobjc
 Objective C Libraries.
@@ -213,6 +227,7 @@ Statyczne biblioteki Obiektowego C.
 %package g77
 Summary:	Fortran 77 support for gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
+Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
 Version:	%{GCC_VERSION}
 Obsoletes:	egcs-g77
@@ -226,11 +241,14 @@ GNU compiler.
 Ten pakiet dodaje obs³ugê Fortranu 77 do kompilatora gcc. Jest
 potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 
+%description g77 -l pt_BR
+Suporte Fortran 77 para o GCC.
+
 %package -n libg2c
 Summary:	Fortran 77 Libraries
 Summary(pl):	Biblioteki Fortranu 77
 Group:		Libraries
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 
 %description -n libg2c
 Fortran 77 Libraries.
@@ -242,7 +260,7 @@ Biblioteki Fortranu 77.
 Summary:	Static Fortran 77 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 Requires:	libg2c = %{GCC_VERSION}
 
 %description -n libg2c-static
@@ -255,7 +273,7 @@ Statyczne biblioteki Fortranu 77.
 Summary:	Java support for gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 Requires:	libgcj-devel >= 3.0.0
@@ -275,13 +293,13 @@ by³o przeprowadziæ kompilacjê.
 %package java-tools
 Summary:	Shared java tools
 Summary(pl):	Wspó³dzielone narzêdzia javy
-Group:          Development/Languages/Java
-Version:        %{GCC_VERSION}
+Group:		Development/Languages/Java
+Version:	%{GCC_VERSION}
 Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
-Obsoletes:      java-shared
-Obsoletes:      jar
+Obsoletes:	java-shared
+Obsoletes:	jar
 
 %description java-tools
 This package contains tools that are common for every Java(tm) implementation,
@@ -297,6 +315,7 @@ Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
 Version:	%{GCC_VERSION}
 Requires:	zlib
+Obsoletes:	libgcj3
 
 %description -n libgcj
 Java Class Libraries.
@@ -311,6 +330,7 @@ Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	libgcj = %{GCC_VERSION}
 Requires:	%{name}-java
+Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
 Development files for Java Class Libraries.
@@ -335,9 +355,11 @@ Statyczne Biblioteki Klas Javy.
 %package -n libstdc++
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++
+Summary(pt_BR):	Biblioteca C++ GNU
 Group:		Libraries
 Version:	%{GCC_VERSION}
 Obsoletes:	libg++
+Obsoletes:	libstdc++3
 
 %description -n libstdc++
 This is the GNU implementation of the standard C++ libraries, along
@@ -349,6 +371,11 @@ Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
 weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
 C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
 
+%description -n libstdc++ -l es
+Este es el soporte de las bibliotecas padrón del C++, junto con
+herramientas GNU adicionales. El paquete incluye las bibliotecas
+compartidas necesarias para ejecutar aplicaciones C++.
+
 %description -n libstdc++ -l fr
 Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
 des outils GNU supplémentaires. Ce package comprend les librairies
@@ -359,6 +386,10 @@ Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
 bibliotek C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do
 uruchomienia aplikacji napisanych w C++.
 
+%description -n libstdc++ -l pt_BR
+Este pacote é uma implementação da biblioteca padrão C++ v3, um
+subconjunto do padrão ISO 14882.
+
 %description -n libstdc++ -l tr
 Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
 uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
@@ -368,22 +399,33 @@ Summary:	Header files and documentatino for C++ development
 Summary(de):	Header-Dateien zur Entwicklung mit C++
 Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
+Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
 Requires:	libstdc++ = %{GCC_VERSION}
 Requires:	%{name}-c++
 Obsoletes:	libg++-devel
+Obsoletes:	libstdc++3-devel
 
 %description -n libstdc++-devel
 This is the GNU implementation of the standard C++ libraries. This
 package includes the header files needed for C++ development and
 library documentation.
 
+%description -n libstdc++-static -l es
+Este es el soporte de las bibliotecas padrón del lenguaje C++. Este paquete
+incluye los archivos de inclusión y bibliotecas necesarios para desarrollo de
+programas en lenguaje C++.
+
 %description -n libstdc++-devel -l pl
 Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
 bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
 programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
+
+%description -n libstdc++-static -l pt_BR
+Este pacote inclui os arquivos de inclusão e bibliotecas necessárias para
+desenvolvimento de programas C++.
 
 %package -n libstdc++-static
 Summary:	Static C++ standard library
@@ -402,7 +444,7 @@ Statycza biblioteka standardowa C++.
 Summary:	Ada support for gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 Requires:	libgnat = %{GCC_VERSION}
 Requires:	gcc = %{GCC_VERSION}
 Obsoletes:	gcc-gnat
@@ -419,8 +461,9 @@ w Adzie.
 Summary:	Ada standard libraries
 Summary(pl):	Biblioteki standardowe dla Ady
 Group:		Libraries
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 Obsoletes:	gnat
+Obsoletes:	libgnat1
 
 %description -n libgnat
 This package contains shared libraries needed to run programs written
@@ -434,7 +477,7 @@ w Adzie.
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Group:		Libraries
-Version:        %{GCC_VERSION}
+Version:	%{GCC_VERSION}
 Obsoletes:	gnat-static
 
 %description -n libgnat-static
@@ -466,6 +509,7 @@ po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
 %package -n cpp
 Summary:	The C Pre Processor
 Summary(pl):	Preprocesor C
+Summary(pt_BR):	Preprocessador para a linguagem C
 Group:		Development/Languages
 Version:	%{GCC_VERSION}
 Obsoletes:	egcs-cpp
@@ -493,6 +537,9 @@ as you see fit:
   line control to inform the compiler of where each source line
   originally came from.
 
+%description -n cpp -l es
+Um preprocessador para a linguagem C.
+
 %description -n cpp -l pl
 Przeprocesor C jest "makro procesorem" który jest automatycznie
 u¿ywany przez kompilator C do obróbki kompilowanego programu przed
@@ -514,6 +561,17 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   podlega wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania
   s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
   odpowiada fragment pliku wynikowego.
+
+%description  -n cpp -l pt_BR
+O preprocessador C é um "processador de macros", que é utilizado pelo
+compilador C para fazer algumas modificações no seu programa, antes da
+compilação em si. Ele é chamado de "processador de macros" porque
+permite a você definir "macros", que são abreviações para construções
+mais complicadas.
+
+O preprocessador C fornece quatro funcionalidades básicas: inclusão de
+arquivos de cabeçalho; expansão de macros; compilação condicional;
+e controle da numeração das linhas do programa.
 
 %prep
 %setup -q -a1 -n %{name}-%{GCC_VERSION}
@@ -583,7 +641,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-        --enable-languages="c,c++,f77,gcov%{?!_without_objc:,objc},ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
+	--enable-languages="c,c++,f77,gcov%{?!_without_objc:,objc},ksi%{!?_without_ada:,ada}%{!?_without_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-multilib \
@@ -634,10 +692,10 @@ PATH=$PATH:/sbin:%{_sbindir}
 	slibdir=$RPM_BUILD_ROOT/lib
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
-echo .so gcc.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
+echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
-echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
+echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
@@ -645,8 +703,8 @@ mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1
 (cd $RPM_BUILD_ROOT%{_libdir} && \
- ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
- ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
+	ln -s libgnat-*so.1 libgnat.so.1   && ln -s libgnat-*so.1 libgnat.so && \
+	ln -s libgnarl-*so.1 libgnarl.so.1 && ln -s libgnarl-*so.1 libgnarl.so)
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -909,7 +967,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/rmi*
 %attr(755,root,root) %{_bindir}/jar
 %{_mandir}/man1/rmi*
-
 
 %files -n libgcj
 %defattr(644,root,root,755)
