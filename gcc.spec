@@ -9,7 +9,7 @@ Version:	2.95.4
 Release:	0.%{snap}.3
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{rver}/%{name}-%{rver}.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{rver}/%{name}-%{rver}.tar.bz2
 Source1:	gcov.1
 # generated from binutils' info
 Source2:	c++filt.1
