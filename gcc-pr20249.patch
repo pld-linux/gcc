@@ -1,0 +1,44 @@
+This patch fixes the problem by preventing the recording of equivalence
+with a register in a different mode.
+
+Bootstrapped & regtested on i686 and ia64 with -fprofile-arcs.  I have
+also tried bootstrapping on ppc, this is successful except for a
+bootstrap misscompare (which is a progress, since without the patch
+the bootstrap fails with an ICE similar to the one of the PR).  I need
+to check whether the misscompare problem is related to the PR or not.
+
+Zdenek Dvorak
+
+	PR middle-end/20249
+	* cse.c (insert_regs): Do not record equivalence of registers in
+	different modes.
+
+
+--- gcc-4.0-20050312/gcc/cse.c.orig	2005-03-13 15:47:15.000000000 +0100
++++ gcc-4.0-20050312/gcc/cse.c	2005-03-13 15:49:36.065976704 +0100
+@@ -1234,7 +1234,24 @@
+ 	      if (REG_P (classp->exp)
+ 		  && GET_MODE (classp->exp) == GET_MODE (x))
+ 		{
+-		  make_regs_eqv (regno, REGNO (classp->exp));
++		  unsigned c_regno = REGNO (classp->exp);
++
++		  gcc_assert (REGNO_QTY_VALID_P (c_regno));
++
++		  /* Suppose that 5 is hard reg and 100 and 101 are
++		     pseudos.  Consider
++
++		     (set (reg:si 100) (reg:si 5))
++		     (set (reg:si 5) (reg:si 100))
++		     (set (reg:di 101) (reg:di 5))
++
++		     We would now set REG_QTY (101) = REG_QTY (5), but the
++		     entry for 5 is in SImode.  When we use this later in
++		     copy propagation, we get the register in wrong mode.  */
++		  if (qty_table[REG_QTY (c_regno)].mode != GET_MODE (x))
++		    continue;
++
++		  make_regs_eqv (regno, c_regno);
+ 		  return 1;
+ 		}
+ 
