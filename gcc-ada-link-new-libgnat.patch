@@ -34,7 +34,7 @@
 -	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
 +	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
  
- ada/nmake.ads :  ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
+ ada/nmake.ads :  ada/sinfo.ads ada/nmake.adt ada/xnmake.adb ada/nmake.adb
  	-$(MKDIR) ada/bldtools
  	$(CP) $^ ada/bldtools
 -	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
