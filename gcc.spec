@@ -4,11 +4,9 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%bcond_with	pp		# build with ProPolice
 #
-%define		DASHED_SNAP	%{nil}
-%define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.3.2
+%define		snap		20040211
+%define		GCC_VERSION	3.4
 %define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
@@ -17,22 +15,20 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3
+Release:	0.%{snap}.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
-# Source0-md5:	65999f654102f5438ac8562d13a6eced
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-%{snap}/%{name}-%{version}-%{snap}.tar.bz2
+# Source0-md5:	c27040fcbe1cabc87d948390470433ba
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source2-md5:	4736f3422ddfb808423b745629acc321
 Patch0:		%{name}-info.patch
-Patch1:		%{name}-paths.patch
-Patch2:		%{name}-nolocalefiles.patch
-Patch3:		%{name}-ada-link-new-libgnat.patch
-Patch4:		%{name}-pr12965.patch
-Patch5:		%{name}-pr11793.patch
+Patch1:		%{name}-nolocalefiles.patch
+Patch2:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -49,7 +45,6 @@ Patch21:	gcc32-inline-label.patch
 Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
-Patch25:	%{name}-3.3.1-propolice.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -63,8 +58,8 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2.14
-Requires:	cpp = %{epoch}:%{GCC_VERSION}
-Requires:	libgcc = %{epoch}:%{GCC_VERSION}
+Requires:	cpp = %{epoch}:%{version}-%{release}
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
@@ -113,7 +108,6 @@ Summary(es):	Biblioteca compartida de gcc
 Summary(pl):	Biblioteka gcc
 Summary(pt_BR):	Biblioteca runtime para o GCC
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libgcc1
 
 %description -n libgcc
@@ -136,7 +130,7 @@ Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
-Requires:	gcc = %{epoch}:%{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{version}-%{release}
 
 %description c++
 This package adds C++ support to the GNU Compiler Collection. It
@@ -186,8 +180,8 @@ Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
-Requires:	libobjc = %{epoch}:%{GCC_VERSION}
-Requires:	gcc = %{epoch}:%{GCC_VERSION}
+Requires:	libobjc = %{epoch}:%{version}-%{release}
+Requires:	gcc = %{epoch}:%{version}-%{release}
 
 %description objc
 This package adds Objective C support to the GNU Compiler Collection.
@@ -231,7 +225,6 @@ Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libobjc1
 
 %description -n libobjc
@@ -248,8 +241,7 @@ Summary:	Static Objective C Libraries
 Summary(es):	Bibliotecas estáticas de Objective C
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libobjc = %{epoch}:%{GCC_VERSION}
+Requires:	libobjc = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-static
 Static Objective C Libraries.
@@ -266,9 +258,8 @@ Summary(es):	Soporte de Fortran 77 para gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
 Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
-Version:	%{GCC_VERSION}
 Obsoletes:	egcs-g77
-Requires:	libg2c = %{epoch}:%{GCC_VERSION}
+Requires:	libg2c = %{epoch}:%{version}-%{release}
 
 %description g77
 This package adds support for compiling Fortran 77 programs with the
@@ -290,7 +281,6 @@ Summary:	Fortran 77 Libraries
 Summary(es):	Bibliotecas de Fortran 77
 Summary(pl):	Biblioteki Fortranu 77
 Group:		Libraries
-Version:	%{GCC_VERSION}
 
 %description -n libg2c
 Fortran 77 Libraries.
@@ -306,8 +296,7 @@ Summary:	Static Fortran 77 Libraries
 Summary(es):	Bibliotecas estáticas de Fortran 77
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libg2c = %{epoch}:%{GCC_VERSION}
+Requires:	libg2c = %{epoch}:%{version}-%{release}
 
 %description -n libg2c-static
 Static Fortran 77 Libraries.
@@ -323,12 +312,11 @@ Summary:	Java support for gcc
 Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
-Version:	%{GCC_VERSION}
-Requires:	%{name} = %{epoch}:%{version}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj >= 3.0.0
 Requires:	libgcj-devel >= 3.0.0
 Requires:	java-shared
-Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	gcj = %{epoch}:%{version}-%{release}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
@@ -350,8 +338,7 @@ Summary:	Shared java tools
 Summary(es):	Herramientas compartidas de Java
 Summary(pl):	Wspó³dzielone narzêdzia javy
 Group:		Development/Languages/Java
-Version:	%{GCC_VERSION}
-Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	jar = %{epoch}:%{version}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
 Obsoletes:	java-shared
@@ -374,7 +361,6 @@ Summary:	Java Class Libraries
 Summary(es):	Bibliotecas de clases de Java
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Requires:	zlib
 Obsoletes:	libgcj3
 
@@ -392,8 +378,7 @@ Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libgcj = %{epoch}:%{GCC_VERSION}
+Requires:	libgcj = %{epoch}:%{version}-%{release}
 Requires:	%{name}-java
 Obsoletes:	libgcj3-devel
 
@@ -411,9 +396,8 @@ Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}
-Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
+Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -430,7 +414,6 @@ Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
 Summary(pt_BR):	Biblioteca C++ GNU
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
 
@@ -476,9 +459,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}
-Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -506,8 +488,7 @@ Summary:	Static C++ standard library
 Summary(es):	Biblioteca estándar estática de C++
 Summary(pl):	Statyczna biblioteka standardowa C++
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -523,7 +504,6 @@ Summary:	Foreign Function Interface library
 Summary(es):	Biblioteca de interfaz de funciones ajenas
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
 Group:		Libraries
-Version:	%{GCC_VERSION}
 
 %description -n libffi
 The libffi library provides a portable, high level programming
@@ -548,8 +528,7 @@ Summary:	Development files for Foreign Function Interface library
 Summary(es):	Ficheros de desarrollo para libffi
 Summary(pl):	Pliki nag³ówkowe dla libffi
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libffi = %{epoch}:%{GCC_VERSION}
+Requires:	libffi = %{epoch}:%{version}-%{release}
 
 %description -n libffi-devel
 Development files for Foreign Function Interface library.
@@ -565,8 +544,7 @@ Summary:	Static Foreign Function Interface library
 Summary(es):	Biblioteca libffi estática
 Summary(pl):	Statyczna biblioteka libffi
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libffi-devel = %{epoch}:%{GCC_VERSION}
+Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 
 %description -n libffi-static
 Static Foreign Function Interface library.
@@ -582,9 +560,8 @@ Summary:	Ada support for gcc
 Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
-Version:	%{GCC_VERSION}
-Requires:	libgnat = %{epoch}:%{GCC_VERSION}
-Requires:	gcc = %{epoch}:%{GCC_VERSION}
+Requires:	libgnat = %{epoch}:%{version}-%{release}
+Requires:	gcc = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
 
@@ -604,7 +581,6 @@ Summary:	Ada standard libraries
 Summary(es):	Bibliotecas estándares de Ada
 Summary(pl):	Biblioteki standardowe dla Ady
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	gnat
 Obsoletes:	libgnat1
 
@@ -624,7 +600,6 @@ napisanych w Adzie.
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	gnat-static
 
 %description -n libgnat-static
@@ -640,7 +615,7 @@ Summary(es):	Soporte de Ksi para gcc
 Summary(pl):	Obs³uga Ksi dla gcc
 Version:	%{GCC_VERSION}.%{KSI_VERSION}
 Group:		Development/Languages
-Requires:	gcc = %{epoch}:%{GCC_VERSION}
+Requires:	gcc = %{epoch}:%{version}-%{release}
 
 %description ksi
 This package adds experimental support for compiling Ksi programs into
@@ -749,33 +724,28 @@ arquivos de cabeçalho; expansão de macros; compilação condicional; e
 controle da numeração das linhas do programa.
 
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}
+%setup -q -a1 -n %{name}-%{version}-%{snap}
 mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
 
-%patch10 -p1
-%patch11
-%patch12
-%patch13
-%patch14
-%patch15
-
-%patch16
-%patch17
-%patch18
-%patch19
-%patch20
-%patch21
-%patch22
-%patch23
-%patch24
-%{?with_pp:%patch25 -p1}
+#%patch10 -p1
+#%patch11
+#%patch12
+#%patch13
+#%patch14
+#%patch15
+#%patch16
+#%patch17
+#%patch18
+#%patch19
+#%patch20
+#%patch21
+#%patch22
+#%patch23
+#%patch24
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -799,7 +769,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifarch amd64
@@ -818,7 +788,7 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap-lean \
+%{__make} -C obj-%{_target_platform} profiledbootstrap \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
@@ -855,7 +825,7 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/adalib/*.so.1 \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
 # check if symlink to be made is valid
 test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
@@ -881,7 +851,7 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
-# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
+# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
@@ -897,7 +867,7 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
 # include/ contains install-tools/include/* and headers that were fixed up
 # by fixincludes, we don't want former
-gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/)
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
 mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
@@ -961,10 +931,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc READ* ChangeLog
-%dir %{_libdir}/gcc-lib
-%dir %{_libdir}/gcc-lib/*
-%dir %{_libdir}/gcc-lib/*/*
-%dir %{_libdir}/gcc-lib/*/*/include
+%dir %{_libdir}/gcc
+%dir %{_libdir}/gcc/*
+%dir %{_libdir}/gcc/*/*
+%dir %{_libdir}/gcc/*/*/include
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
@@ -979,26 +949,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcc*
 
 %attr(755,root,root) %{_slibdir}*/lib*.so
-%{_libdir}/gcc-lib/*/*/libgcc.a
-%{_libdir}/gcc-lib/*/*/libgcc_eh.a
-%{_libdir}/gcc-lib/*/*/specs
-%attr(644,root,root) %{_libdir}*/gcc-lib/*/*/crt*.o
+%{_libdir}/gcc/*/*/libgcc.a
+%{_libdir}/gcc/*/*/libgcc_eh.a
+%{_libdir}/gcc/*/*/specs
+%attr(644,root,root) %{_libdir}*/gcc/*/*/crt*.o
 %ifarch sparc64
-%{_libdir}/gcc-lib/*/*/*/libgcc.a
-%{_libdir}/gcc-lib/*/*/*/libgcc_eh.a
-%attr(644,root,root) %{_libdir}*/gcc-lib/*/*/*/crt*.o
+%{_libdir}/gcc/*/*/*/libgcc.a
+%{_libdir}/gcc/*/*/*/libgcc_eh.a
+%attr(644,root,root) %{_libdir}*/gcc/*/*/*/crt*.o
 %endif
 %ifarch ppc
-%attr(644,root,root) %{_libdir}/gcc-lib/*/*/ecrt*.o
-%attr(644,root,root) %{_libdir}/gcc-lib/*/*/ncrt*.o
-%{_libdir}/gcc-lib/*/*/nof
+%attr(644,root,root) %{_libdir}/gcc/*/*/ecrt*.o
+%attr(644,root,root) %{_libdir}/gcc/*/*/ncrt*.o
+%{_libdir}/gcc/*/*/nof
 %dir %{_libdir}/nof
 %endif
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/collect2
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1
+%attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
-%{_libdir}/gcc-lib/*/*/include/*.h
-%exclude %{_libdir}/gcc-lib/*/*/include/g2c.h
+%{_libdir}/gcc/*/*/include/*.h
+%exclude %{_libdir}/gcc/*/*/include/g2c.h
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -1010,7 +980,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1plus
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
 %{_libdir}*/libsupc++.la
 %ifarch ppc
 %{_libdir}/nof/libsupc++.la
@@ -1031,7 +1001,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
-%{_includedir}/c++/%{GCC_VERSION}
+%{_includedir}/c++/%{version}.0
 %attr(755,root,root) %{_libdir}*/libstdc++.so
 %{_libdir}*/libstdc++.la
 %ifarch ppc
@@ -1050,14 +1020,14 @@ rm -rf $RPM_BUILD_ROOT
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/READ*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1obj
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
 %attr(755,root,root) %{_libdir}*/libobjc.so
 %{_libdir}*/libobjc.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
 %{_libdir}/nof/libobjc.la
 %endif
-%{_libdir}/gcc-lib/*/*/include/objc
+%{_libdir}/gcc/*/*/include/objc
 
 %files -n libobjc
 %defattr(644,root,root,755)
@@ -1079,7 +1049,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/g77
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/f771
+%attr(755,root,root) %{_libdir}/gcc/*/*/f771
 %{_libdir}*/libfrtbegin.a
 %{_libdir}*/libg2c.la
 %attr(755,root,root) %{_libdir}*/libg2c.so
@@ -1088,7 +1058,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
 %endif
-%{_libdir}/gcc-lib/*/*/include/g2c.h
+%{_libdir}/gcc/*/*/include/g2c.h
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %lang(ja) %{_mandir}/ja/man1/g77.1*
@@ -1118,8 +1088,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/*-gcj
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/jc1
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/jvgenmain
+%attr(755,root,root) %{_libdir}/gcc/*/*/jc1
+%attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
@@ -1152,7 +1122,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
-%{_libdir}/gcc-lib/*/*/include/gcj
+%{_libdir}/gcc/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
 %dir %{_datadir}/java
@@ -1193,14 +1163,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with ada}
 %files ada
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/gnat1
-%{_libdir}/gcc-lib/*/*/adainclude
-%dir %{_libdir}/gcc-lib/*/*/adalib
-%{_libdir}/gcc-lib/*/*/adalib/*.ali
+%attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
+%{_libdir}/gcc/*/*/adainclude
+%dir %{_libdir}/gcc/*/*/adalib
+%{_libdir}/gcc/*/*/adalib/*.ali
 %ifnarch ppc
-%{_libdir}/gcc-lib/*/*/adalib/libgmem.a
+%{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
-%{_libdir}/gcc-lib/*/*/adalib/Makefile.adalib
+%{_libdir}/gcc/*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
 %attr(755,root,root) %{_libdir}/libgnat*.so
@@ -1212,14 +1182,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc-lib/*/*/adalib/libgna*.a
+%{_libdir}/gcc/*/*/adalib/libgna*.a
 %endif
 
+%if 0
 %files ksi
 %defattr(644,root,root,755)
 %doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 %{_infodir}/ksi*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/ksi1
+%attr(755,root,root) %{_libdir}/gcc/*/*/ksi1
+%endif
 
 %files -n cpp
 %defattr(644,root,root,755)
