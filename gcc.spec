@@ -396,10 +396,6 @@ ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
-cp -a	$RPM_BUILD_ROOT%{_includedir}/g++*/%{_target_cpu}-*/bits/* \
-	$RPM_BUILD_ROOT%{_includedir}/g++*/bits/
-rm -r	$RPM_BUILD_ROOT%{_includedir}/g++*/%{_target_cpu}-*
-
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
@@ -444,9 +440,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
+
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
 %{_infodir}/gcc*
+
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 #%ifnarch alpha
@@ -455,6 +453,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 %attr(755,root,root) %{_libdir}/libgcc_s.so*
+
+%attr(755,root,root) %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
+
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
@@ -545,14 +547,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %{_includedir}/g++*
+%{_prefix}/{_target_cpu}*
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
 %attr(644,root,root) %{_libdir}/libstdc++.a
-%attr(755,root,root) %{_libdir}/libsupc++.la
-%{_libdir}/libsupc++.a
-
 
 %files -n cpp
 %defattr(644,root,root,755)
