@@ -11,6 +11,7 @@
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
+Epoch:		5
 Version:	4.0.0
 Release:	0.%{_snap}.0.1
 License:	GPL
