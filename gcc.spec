@@ -834,8 +834,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
-%dir %{_datadir}/java
-%{_datadir}/java/libgcj*.jar
+%{_javadir}/libgcj*.jar
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
