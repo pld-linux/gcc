@@ -77,7 +77,7 @@ uygulayabilir.
 ./configure \
 	--prefix=/usr \
 	--local-prefix=/usr/local \
-	--gxx-include-dir=/usr/include/g++ \
+	--gxx-include-dir=%{_includedir}/g++ \
 	--host=%{_target_cpu}-linux \
 	--target=%{_target_cpu}-linux
 
