@@ -738,7 +738,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libg2c
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
-%ifach ppc
+%ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
 %endif
 
