@@ -8,7 +8,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.%{SNAP}
+Release:	0.%{SNAP}.1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
@@ -522,7 +522,16 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 cd ..
 gzip -9nf READ* ChangeLog
 gzip -9nf gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
-gzip -9nf libjava/doc/cni.sgml
+
+mkdir java-doc
+mv -f libjava/doc/cni.sgml libjava/READ* java-doc
+mv -f fastjar/README java-doc/README.fastjar
+mv -f libffi/README java-doc/README.libffi
+mv -f libffi/LICENSE java-doc/LICENSE.libffi
+gzip -9nf java-doc/*
+
+mv libobjc/README gcc/objc/README.libobjc
+gzip -9nf gcc/objc/READ*
 
 %find_lang %{name}
 
@@ -595,6 +604,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcc*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 #%ifnarch alpha
 %attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/crt*.o
@@ -605,13 +615,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/mmintrin.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdarg.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdbool.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stddef.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/syslimits.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/varargs.h
+%ifarch %{ix86}
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/mmintrin.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/xmmintrin.h
+%endif
 
 %files c++
 %defattr(644,root,root,755)
@@ -627,6 +639,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files objc
 %defattr(644,root,root,755)
+%doc gcc/objc/*.gz
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
 %attr(755,root,root) %{_libdir}/libobjc.so
 %attr(755,root,root) %{_libdir}/libobjc.la
@@ -676,7 +689,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files java
 %defattr(644,root,root,755)
-%doc libjava/doc/*gz
+%doc java-doc/*.gz
 %attr(755,root,root) %{_bindir}/gcj*
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
