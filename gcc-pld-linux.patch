@@ -1,6 +1,6 @@
-diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
---- gcc-2.95.1.orig/gcc/Makefile.in	Fri Aug 13 09:46:55 1999
-+++ gcc-2.95.1/gcc/Makefile.in	Thu Aug 19 13:25:21 1999
+diff -urN gcc-2.95.3.test1.org/gcc/Makefile.in gcc-2.95.3.test1/gcc/Makefile.in
+--- gcc-2.95.3.test1.org/gcc/Makefile.in	Wed Jan  3 20:34:29 2001
++++ gcc-2.95.3.test1/gcc/Makefile.in	Wed Jan  3 20:37:33 2001
 @@ -368,6 +368,9 @@
  # libgcc1-test target (must also be overridable for a target)
  LIBGCC1_TEST = libgcc1-test
@@ -11,25 +11,24 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  # List of extra executables that should be compiled for this target machine
  # that are used for compiling from source code to object code.
  # The rules for compiling them should be in the t-* file for the machine.
-@@ -838,14 +841,15 @@
+@@ -838,14 +841,14 @@
  # Note that we can compile enquire using the cross-compiler just built,
  # although we can't run it on this machine.
  all.cross: native gcc-cross specs stmp-headers $(STMP_FIXPROTO) $(LIBGCC) \
 -	$(LIBGCC1_TEST) $(EXTRA_PARTS) lang.all.cross doc
 +	$(LIBGCC_MAP) $(LIBGCC1_TEST) $(EXTRA_PARTS) lang.all.cross doc
  # This is what to compile if making gcc with a cross-compiler.
- all.build: native xgcc$(exeext) xcpp$(exeext) $(EXTRA_PARTS) lang.all.build
+ all.build: native xgcc$(exeext) cpp$(exeext) $(EXTRA_PARTS) lang.all.build
  # This is what must be made before installing GCC and converting libraries.
- start.encap: native xgcc$(exeext) xcpp$(exeext) specs $(LIBGCC1) \
+ start.encap: native xgcc$(exeext) cpp$(exeext) specs $(LIBGCC1) \
  	xlimits.h lang.start.encap
  # These can't be made until after GCC can run.
 -rest.encap: stmp-headers $(STMP_FIXPROTO) $(LIBGCC) $(EXTRA_PARTS) lang.rest.encap
-+rest.encap: stmp-headers $(STMP_FIXPROTO) $(LIBGCC) $(LIBGCC_MAP) \
-+	$(EXTRA_PARTS) lang.rest.encap
++rest.encap: stmp-headers $(STMP_FIXPROTO) $(LIBGCC) $(LIBGCC_MAP) $(EXTRA_PARTS) lang.rest.encap
  # This is what is made with the host's compiler
  # whether making a cross compiler or not.
- native: config.status auto-host.h cpp$(exeext) intl.all $(LANGUAGES) \
-@@ -860,7 +864,7 @@
+ native: config.status auto-host.h intl.all $(LANGUAGES) \
+@@ -860,7 +863,7 @@
  
  # On the target machine, finish building a cross compiler.
  # This does the things that can't be done on the host machine.
@@ -38,7 +37,7 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  
  # Verify that it works to compile and link libgcc1-test.
  # If it does, then there are sufficient replacements for libgcc1.a.
-@@ -2353,7 +2357,7 @@
+@@ -2353,7 +2356,7 @@
  # Using unprotoize.c is not quite right in the first place, 
  # but what better way is there?
  	-rm -f libgcc.a libgcc1.a libgcc1-asm.a libgcc2.a libgcc2.ready
@@ -47,7 +46,7 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  	-rm -f *.dvi
  	-rm -f */*.dvi
  	-if [ -f md.pre-cpp ]; then \
-@@ -2526,6 +2530,12 @@
+@@ -2526,6 +2529,12 @@
  	  $(INSTALL_DATA) specs $(libsubdir)/specs; \
  	  chmod a-x $(libsubdir)/specs; \
  	fi
@@ -60,7 +59,19 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  # Install protoize if it was compiled.
  	-if [ -f protoize$(exeext) ]; \
  	then \
-@@ -3041,6 +3051,10 @@
+@@ -3032,7 +3041,10 @@
+ 	 do \
+ 	   if [ -d stage1/$$dir ] ; then true ; else mkdir stage1/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage1
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage1 ; \
++	 done
+ 	-mv intl/*$(objext) stage1/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3041,6 +3053,10 @@
  	-if [ -f collect-ld$(exeext) ] ; then $(LN_S) ../collect-ld$(exeext) stage1 ; else true ; fi
  	-rm -f stage1/libgcc.a
  	-cp libgcc.a stage1
@@ -71,7 +82,19 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  	-if $(RANLIB_TEST_FOR_TARGET) ; then \
  	  $(RANLIB_FOR_TARGET) stage1/libgcc.a; \
  	else true; fi
-@@ -3065,6 +3079,10 @@
+@@ -3056,7 +3072,10 @@
+ 	 do \
+ 	   if [ -d stage2/$$dir ] ; then true ; else mkdir stage2/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage2
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage2 ; \
++	 done
+ 	-mv intl/*$(objext) stage2/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3065,6 +3084,10 @@
  	-if [ -f collect-ld ] ; then $(LN_S) ../collect-ld$(exeext) stage2 ; else true ; fi
  	-rm -f stage2/libgcc.a
  	-cp libgcc.a stage2
@@ -82,7 +105,19 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  	-if $(RANLIB_TEST_FOR_TARGET) ; then \
  	  $(RANLIB_FOR_TARGET) stage2/libgcc.a; \
  	else true; fi
-@@ -3089,6 +3107,10 @@
+@@ -3080,7 +3103,10 @@
+ 	 do \
+ 	   if [ -d stage3/$$dir ] ; then true ; else mkdir stage3/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage3
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage3 ; \
++	 done
+ 	-mv intl/*$(objext) stage3/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3089,6 +3115,10 @@
  	-if [ -f collect-ld$(exeext) ] ; then $(LN_S) ../collect-ld$(exeext) stage3 ; else true ; fi
  	-rm -f stage3/libgcc.a
  	-cp libgcc.a stage3
@@ -93,7 +128,19 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  	-if $(RANLIB_TEST_FOR_TARGET) ; then \
  	  $(RANLIB_FOR_TARGET) stage3/libgcc.a; \
  	else true; fi
-@@ -3113,6 +3135,10 @@
+@@ -3104,7 +3134,10 @@
+ 	 do \
+ 	   if [ -d stage4/$$dir ] ; then true ; else mkdir stage4/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage4
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage4 ; \
++	 done
+ 	-mv intl/*$(objext) stage4/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3113,6 +3146,10 @@
  	-if [ -f collect-ld$(exeext) ] ; then $(LN_S) ../collect-ld$(exeext) stage4 ; else true ; fi
  	-rm -f stage4/libgcc.a
  	-cp libgcc.a stage4
@@ -104,7 +151,7 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
  	-if $(RANLIB_TEST_FOR_TARGET) ; then \
  	  $(RANLIB_FOR_TARGET) stage4/libgcc.a; \
  	else true; fi
-@@ -3196,3 +3222,9 @@
+@@ -3196,3 +3233,9 @@
  	echo "#endif" >> t-float.h-cross
  	mv t-float.h-cross float.h-cross
  
@@ -114,9 +161,9 @@ diff -urN gcc-2.95.1.orig/gcc/Makefile.in gcc-2.95.1/gcc/Makefile.in
 +	echo "  local:" >> $@
 +	$(EXTRACT_LIBGCC) >> $@
 +	echo "};" >> $@
-diff -urN gcc-2.95.1.orig/gcc/config/i386/i386.md gcc-2.95.1/gcc/config/i386/i386.md
---- gcc-2.95.1.orig/gcc/config/i386/i386.md	Sun Apr 25 13:43:46 1999
-+++ gcc-2.95.1/gcc/config/i386/i386.md	Thu Aug 19 13:25:21 1999
+diff -urN gcc-2.95.3.test1.org/gcc/config/i386/i386.md gcc-2.95.3.test1/gcc/config/i386/i386.md
+--- gcc-2.95.3.test1.org/gcc/config/i386/i386.md	Wed Jan  3 20:34:36 2001
++++ gcc-2.95.3.test1/gcc/config/i386/i386.md	Wed Jan  3 20:35:21 2001
 @@ -1345,7 +1345,8 @@
    else if ((reload_in_progress | reload_completed) == 0
  	   && GET_CODE (operands[0]) != MEM
@@ -147,9 +194,9 @@ diff -urN gcc-2.95.1.orig/gcc/config/i386/i386.md gcc-2.95.1/gcc/config/i386/i38
      {
        operands[1] = validize_mem (force_const_mem (XFmode, operands[1]));
      }
-diff -urN gcc-2.95.1.orig/gcc/config/linux.h gcc-2.95.1/gcc/config/linux.h
---- gcc-2.95.1.orig/gcc/config/linux.h	Wed Dec 16 21:59:55 1998
-+++ gcc-2.95.1/gcc/config/linux.h	Thu Aug 19 13:25:21 1999
+diff -urN gcc-2.95.3.test1.org/gcc/config/linux.h gcc-2.95.3.test1/gcc/config/linux.h
+--- gcc-2.95.3.test1.org/gcc/config/linux.h	Wed Jan  3 20:34:33 2001
++++ gcc-2.95.3.test1/gcc/config/linux.h	Wed Jan  3 20:35:22 2001
 @@ -103,7 +103,7 @@
       %{!profile:%{!ggdb:-lc} %{ggdb:-lg}}}"
  #else
@@ -159,9 +206,9 @@ diff -urN gcc-2.95.1.orig/gcc/config/linux.h gcc-2.95.1/gcc/config/linux.h
     %{!shared: %{mieee-fp:-lieee} %{pthread:-lpthread} \
  	%{profile:-lc_p} %{!profile: -lc}}"
  #endif
-diff -urN gcc-2.95.1.orig/gcc/config/t-linux gcc-2.95.1/gcc/config/t-linux
---- gcc-2.95.1.orig/gcc/config/t-linux	Wed Dec 16 22:00:09 1998
-+++ gcc-2.95.1/gcc/config/t-linux	Thu Aug 19 13:25:21 1999
+diff -urN gcc-2.95.3.test1.org/gcc/config/t-linux gcc-2.95.3.test1/gcc/config/t-linux
+--- gcc-2.95.3.test1.org/gcc/config/t-linux	Wed Jan  3 20:34:33 2001
++++ gcc-2.95.3.test1/gcc/config/t-linux	Wed Jan  3 20:35:22 2001
 @@ -14,3 +14,17 @@
  LIBGCC1 = 
  CROSS_LIBGCC1 =
@@ -180,9 +227,9 @@ diff -urN gcc-2.95.1.orig/gcc/config/t-linux gcc-2.95.1/gcc/config/t-linux
 +  __gcc_bcmp __lshrdi3 __moddi3 __muldi3 __negdi2 __pure_virtual \
 +  __ucmpdi2 __udiv_w_sdiv __udivdi3 __udivmoddi4 __umoddi3
 +EXTRACT_LIBGCC=for s in $(LIBGCC_MAP_LIST); do echo "    $$s;"; done
-diff -urN gcc-2.95.1.orig/gcc/f/Make-lang.in gcc-2.95.1/gcc/f/Make-lang.in
---- gcc-2.95.1.orig/gcc/f/Make-lang.in	Mon Jun  7 08:44:57 1999
-+++ gcc-2.95.1/gcc/f/Make-lang.in	Thu Aug 19 13:25:21 1999
+diff -urN gcc-2.95.3.test1.org/gcc/f/Make-lang.in gcc-2.95.3.test1/gcc/f/Make-lang.in
+--- gcc-2.95.3.test1.org/gcc/f/Make-lang.in	Wed Jan  3 20:34:42 2001
++++ gcc-2.95.3.test1/gcc/f/Make-lang.in	Wed Jan  3 20:35:22 2001
 @@ -212,7 +212,7 @@
  
  f77.all.build: g77$(exeext)
@@ -192,9 +239,9 @@ diff -urN gcc-2.95.1.orig/gcc/f/Make-lang.in gcc-2.95.1/gcc/f/Make-lang.in
  f77.rest.encap:
  
  f77.info: f/g77.info
-diff -urN gcc-2.95.1.orig/libf2c/Makefile.in gcc-2.95.1/libf2c/Makefile.in
---- gcc-2.95.1.orig/libf2c/Makefile.in	Sat Aug  7 07:36:10 1999
-+++ gcc-2.95.1/libf2c/Makefile.in	Thu Aug 19 13:27:12 1999
+diff -urN gcc-2.95.3.test1.org/libf2c/Makefile.in gcc-2.95.3.test1/libf2c/Makefile.in
+--- gcc-2.95.3.test1.org/libf2c/Makefile.in	Wed Jan  3 20:34:47 2001
++++ gcc-2.95.3.test1/libf2c/Makefile.in	Wed Jan  3 20:35:22 2001
 @@ -61,18 +61,18 @@
  # Quote this way so that it can be used to set shell variables too.
  # Currently no use for PICFLAG, RUNTESTFLAGS -- check usage.
@@ -226,53 +273,3 @@ diff -urN gcc-2.95.1.orig/libf2c/Makefile.in gcc-2.95.1/libf2c/Makefile.in
  
  LIBG2C = libg2c.a
  
---- gcc-2.95.2/gcc/Makefile.in~	Mon Dec 11 00:35:51 2000
-+++ gcc-2.95.2/gcc/Makefile.in	Mon Dec 11 00:50:03 2000
-@@ -3094,7 +3094,10 @@
- 	 do \
- 	   if [ -d stage1/$$dir ] ; then true ; else mkdir stage1/$$dir ; fi ; \
- 	 done
--	-mv $(STAGESTUFF) stage1
-+	-for i in $(STAGESTUFF) ; \
-+	 do \
-+	   mv $$i stage1 ; \
-+	 done
- 	-mv intl/*$(objext) stage1/intl
- # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
- # dir will work properly.
-@@ -3122,7 +3125,10 @@
- 	 do \
- 	   if [ -d stage2/$$dir ] ; then true ; else mkdir stage2/$$dir ; fi ; \
- 	 done
--	-mv $(STAGESTUFF) stage2
-+	-for i in $(STAGESTUFF) ; \
-+	 do \
-+	   mv $$i stage2 ; \
-+	 done
- 	-mv intl/*$(objext) stage2/intl
- # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
- # dir will work properly.
-@@ -3150,7 +3156,10 @@
- 	 do \
- 	   if [ -d stage3/$$dir ] ; then true ; else mkdir stage3/$$dir ; fi ; \
- 	 done
--	-mv $(STAGESTUFF) stage3
-+	-for i in $(STAGESTUFF) ; \
-+	 do \
-+	   mv $$i stage3 ; \
-+	 done
- 	-mv intl/*$(objext) stage3/intl
- # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
- # dir will work properly.
-@@ -3178,7 +3187,10 @@
- 	 do \
- 	   if [ -d stage4/$$dir ] ; then true ; else mkdir stage4/$$dir ; fi ; \
- 	 done
--	-mv $(STAGESTUFF) stage4
-+	-for i in $(STAGESTUFF) ; \
-+	 do \
-+	   mv $$i stage4 ; \
-+	 done
- 	-mv intl/*$(objext) stage4/intl
- # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
- # dir will work properly.
