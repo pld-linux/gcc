@@ -14,7 +14,7 @@ Summary(pl):	Kompilator C GNU
 Summary(pt_BR):	C Compilador GNU (GCC)
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -28,6 +28,7 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
+Patch4:		%{name}-PR10849.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -600,6 +601,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %patch10 -p1
 %patch11
