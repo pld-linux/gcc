@@ -420,7 +420,10 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
-(cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
+(cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* \
+	$RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so)
+mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
+        $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
@@ -573,11 +576,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %{_includedir}/g++*
-%attr(755,root,root) %{_libdir}/libstdc++.so
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%attr(644,root,root) %{_libdir}/libstdc++.a
+%attr(644,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.a
 
 %files -n libgcc
 %defattr(644,root,root,755)
