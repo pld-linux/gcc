@@ -162,6 +162,10 @@ applications as Ada (especially large embedded systems). Chill was
 never used much in the United States, but is still being used in
 Europe, Brazil, Korea, and other places.
 
+%description -l pl chill
+Ten pakiet dodaje do gcc mo¿liwo¶æ kompilowania programów w jêzyku
+CHILL.
+
 %package java
 Summary:	Java support for gcc
 Summary(pl):	Wspomoganie Java dla gcc
@@ -176,9 +180,14 @@ This package adds experimental support for compiling Java(tm) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
+%description -l pl java
+Ten pakiet dodaje do gcc (eksperymentaln±) mo¿liwo¶æ kompilowania
+programów w Javie(tm) i bytecode do kodu procesora. Wymaga pakietu
+libgcj.
+
 %package -n libstdc++
 Summary:	GNU c++ library
-Summary(pl):	Biblioteki GNU C++ 
+Summary(pl):	Biblioteki GNU C++
 Group:		Libraries
 Group(de):	Libraries
 Group(fr):	Librairies
@@ -213,7 +222,8 @@ uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
 %package -n libstdc++-devel
 Summary:	Header files and libraries for C++ development
 Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
-Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
+Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
+Summary(pl):	Pliki nag³ówkowe do programowania z u¿yciem bibliotek C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
@@ -236,7 +246,7 @@ programowaniu w jêzyku C++.
 
 %package -n libstdc++-static
 Summary:	Static c++ standard library
-Summary(pl):	Biblioeka statyczna c++
+Summary(pl):	Biblioteka statyczna c++
 Group:		Development/Libraries
 Group(de):	Entwicklung/Libraries
 Group(fr):	Development/Librairies
@@ -281,7 +291,7 @@ as you see fit:
   originally came from.
 
 %description -l pl -n cpp
-Przeprocesor C jest "makro procesorem" który jest automatycznie
+Preprocesor C jest "makro procesorem" który jest automatycznie
 u¿ywany przez kompilator C do obróbki kompilowanego programu przed
 w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
 umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
@@ -293,7 +303,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   deklaracji polecenia do³±czenia innego pliku.
 - Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
   których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
-  indentyfikatora deklarowan± wcze¶niej warto¶ci±.
+  identyfikatora deklarowan± wcze¶niej warto¶ci±.
 - Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
   ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne
   fragmenty obrabianego strumienia tekstów.
@@ -361,7 +371,7 @@ touch  ../gcc/c-gperf.h
 
 cd ..
 %{__make} -C obj-%{_target_platform} bootstrap \
-	LDFLAGS_FOR_TARGET="%{!?debug:-s}" \
+	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
