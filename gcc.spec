@@ -1,16 +1,18 @@
 %define		GCC_VERSION	3.0.3
 %define		STDC_VERSION	3.0.3
 %define		GCJ_VERSION	3.0.3
+%define		KSI_VERSION	pre42
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
+Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Patch0:		gcc-DESTDIR.patch
 Patch1:		gcc-paths.patch
 BuildRequires:	bison
@@ -363,8 +365,31 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
   odpowiada fragment pliku wynikowego.
 
+%package ksi
+Summary:	Ksi support for gcc
+Summary(pl):	Wspomoganie Ksi dla gcc
+Group:		Development/Languages
+Group(de):	Entwicklung/Sprachen
+Group(pl):	Programowanie/Jêzyki
+Requires:	%{name} = %{version}
+
+%description ksi
+This package adds experimental support for compiling Ksi programs
+into native code. You proabably don't need it, unless your are going
+to develop a compiler using Ksi as intermediate representation or
+you are using such compiler (like Gont).
+
+%description -l pl ksi
+Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów
+w Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba
+¿e zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jakos reprezentacji
+po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
+
+
 %prep
 %setup -q -n %{name}-%{GCC_VERSION}
+%setup -q -a1
+mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
 
@@ -382,7 +407,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-haifa \
-        --enable-languages="c,c++,f77,gcov,java,objc" \
+        --enable-languages="c,c++,f77,gcov,java,objc,ksi" \
 	--enable-long-long \
 	--enable-namespaces \
 	--enable-multilib \
@@ -429,7 +454,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 
-gzip -9nf ../READ* ../ChangeLog
+gzip -9nf ../READ* ../ChangeLog ../gcc/ksi/README ../gcc/ksi/NEWS
 
 %post
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
@@ -453,6 +478,12 @@ gzip -9nf ../READ* ../ChangeLog
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %postun -n cpp
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
+%post ksi
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+
+%postun ksi
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
 %post   -p /sbin/ldconfig -n libgcc
@@ -530,6 +561,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
+
+%files ksi
+%doc gcc/ksi/*.gz
+%defattr(644,root,root,755)
+%{_infodir}/ksi*
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/ksi1
 
 %ifarch no_longer_supported_by_gcc_team
 %files chill
