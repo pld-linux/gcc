@@ -7,7 +7,7 @@
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
-%bcond_without	objc		# build without objc support
+%bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.3
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -729,11 +729,6 @@ for tgt in gnatlib-shared gnattools gnatlib; do
 	infodir=%{_infodir}
 done
 %endif
-
-# snapshot doesn't contain these files...
-[ -r "NEWS" ] || touch NEWS
-[ -r "gcc/f/BUGS" ] || touch gcc/f/BUGS
-[ -r "gcc/f/NEWS" ] || touch gcc/f/NEWS
 
 %install
 rm -rf $RPM_BUILD_ROOT
