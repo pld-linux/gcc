@@ -5,7 +5,7 @@
 %bcond_without	objc		# build without objc support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		_snap		20040820
+%define		_snap		20040827
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -20,7 +20,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
-# Source0-md5:	1ac3d6a9b67ee2e55a5448dc7a1996cc
+# Source0-md5:	a1b3041177090adab4098e3ad4099dd8
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
