@@ -1,4 +1,7 @@
 #
+# TODO:
+#		- http://gcc.gnu.org/PR17384
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
