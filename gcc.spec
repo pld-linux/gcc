@@ -1,6 +1,6 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.1.1
+%define		GCC_VERSION	3.2
 %define		KSI_VERSION	pre48
 
 Summary:	GNU Compiler Collection
