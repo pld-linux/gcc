@@ -1,0 +1,26 @@
+diff -ur gcc-2.95.1.orig/libstdc++/config/linux.ml gcc-2.95.1/libstdc++/config/linux.ml
+--- gcc-2.95.1.orig/libstdc++/config/linux.ml	Sun Aug 30 23:18:46 1998
++++ gcc-2.95.1/libstdc++/config/linux.ml	Thu Aug 19 20:13:06 1999
+@@ -1,10 +1,5 @@
+ # Elf with shared libm, so we can link it into the shared libstdc++.
+ 
+-ARLIB   = libstdc++-$(LIBSTDCXX_INTERFACE)$(LIBC_INTERFACE)$(CXX_INTERFACE)-$(VERSION).a
+-MARLINK = libstdc++$(LIBC_INTERFACE)$(CXX_INTERFACE).a.$(LIBSTDCXX_INTERFACE)
+-SHLIB   = libstdc++-$(LIBSTDCXX_INTERFACE)$(LIBC_INTERFACE)$(CXX_INTERFACE)-$(VERSION).so
+-MSHLINK = libstdc++$(LIBC_INTERFACE)$(CXX_INTERFACE).so.$(LIBSTDCXX_INTERFACE)
+-
+ LIBS    = $(ARLIB) marlink $(ARLINK) $(SHLIB) mshlink $(SHLINK)
+ SHFLAGS = -Wl,-soname,$(MSHLINK)
+ SHDEPS  = -lm
+diff -ur gcc-2.95.1.orig/libstdc++/configure.in gcc-2.95.1/libstdc++/configure.in
+--- gcc-2.95.1.orig/libstdc++/configure.in	Tue Jun  8 01:28:10 1999
++++ gcc-2.95.1/libstdc++/configure.in	Thu Aug 19 20:15:53 1999
+@@ -193,7 +193,7 @@
+   if test x${enable_version_specific_runtime_libs} = xyes; then
+     gxx_include_dir='${libsubdir}/include/g++'
+   else
+-    gxx_include_dir='${prefix}/include/g++'-${libstdcxx_interface}
++    gxx_include_dir='${prefix}/include/g++'
+   fi
+ fi
+ 
