@@ -1,6 +1,6 @@
-%define		GCC_VERSION	3.0.2
-%define		STDC_VERSION	3.0.2
-%define		GCJ_VERSION	3.0.2
+%define		GCC_VERSION	3.0.3
+%define		STDC_VERSION	3.0.3
+%define		GCJ_VERSION	3.0.3
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
@@ -364,7 +364,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q -n %{name}-%{GCC_VERSION}
-%patch0 -p1
+#%patch0 -p1
 
 %build
 # cd gcc && autoconf; cd ..
