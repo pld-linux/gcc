@@ -26,7 +26,7 @@
 +__thread int l A("bar");  /* { dg-error "causes a section type conflict" "conflict with user-defined section" } */
 --- gcc/varasm.c.jj	2002-08-01 20:58:53.000000000 +0200
 +++ gcc/varasm.c	2002-08-08 16:10:15.000000000 +0200
-@@ -1597,6 +1597,13 @@ assemble_variable (decl, top_level, at_e
+@@ -1599,6 +1599,13 @@
    if (TREE_PUBLIC (decl))
      maybe_assemble_visibility (decl);
  
@@ -40,7 +40,7 @@
    /* Handle uninitialized definitions.  */
  
    /* If the decl has been given an explicit section name, then it
-@@ -1652,14 +1659,7 @@ assemble_variable (decl, top_level, at_e
+@@ -1654,14 +1661,7 @@
    if (TREE_PUBLIC (decl) && DECL_NAME (decl))
      globalize_decl (decl);
  
@@ -55,7 +55,7 @@
    variable_section (decl, reloc);
  
    /* dbxout.c needs to know this.  */
-@@ -5343,11 +5343,14 @@ default_section_type_flags (decl, name, 
+@@ -5345,11 +5345,14 @@
        || strcmp (name, ".sbss") == 0
        || strncmp (name, ".sbss.", 6) == 0
        || strncmp (name, ".gnu.linkonce.sb.", 17) == 0

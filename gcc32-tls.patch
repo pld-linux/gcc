@@ -422,16 +422,16 @@
  @end table
  
  @menu
-@@ -9910,6 +9910,14 @@ is to help link with legacy assembly cod
- 
- Be warned that you should know what you are doing when invoking this
- option, and that not all targets provide complete support for it.
+@@ -9988,6 +9988,14 @@
+ generate code that is not binary compatible with code generated without that
+ switch.  Use it to conform to a non-default application binary interface.
+ Not all targets provide complete support for this switch.
 +
 +@item -ftls-model=@var{model}
 +Alter the thread-local storage model to be used (@pxref{Thread-Local}).
 +The @var{model} argument should be one of @code{global-dynamic},
 +@code{local-dynamic}, @code{initial-exec} or @code{local-exec}.
-+
++ 
 +The default without @option{-fpic} is @code{initial-exec}; with
 +@option{-fpic} the default is @code{global-dynamic}.
  @end table

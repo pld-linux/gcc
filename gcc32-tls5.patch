@@ -13,7 +13,7 @@
 
 --- gcc/config/i386/i386.c.jj	2002-08-07 22:18:39.000000000 +0200
 +++ gcc/config/i386/i386.c	2002-08-08 18:18:18.000000000 +0200
-@@ -4850,8 +4850,6 @@ legitimate_constant_p (x)
+@@ -4861,8 +4861,6 @@
  	  {
  	  case UNSPEC_TPOFF:
  	    return local_exec_symbolic_operand (XVECEXP (inner, 0, 0), Pmode);
@@ -22,7 +22,7 @@
  	  default:
  	    return false;
  	  }
-@@ -4914,8 +4912,6 @@ legitimate_pic_operand_p (x)
+@@ -4921,8 +4919,6 @@
  	  {
  	  case UNSPEC_TPOFF:
  	    return local_exec_symbolic_operand (XVECEXP (inner, 0, 0), Pmode);
@@ -31,7 +31,7 @@
  	  default:
  	    return false;
  	  }
-@@ -5054,6 +5050,13 @@ legitimate_address_p (mode, addr, strict
+@@ -5048,6 +5044,13 @@
        debug_rtx (addr);
      }
  
@@ -45,7 +45,7 @@
    if (ix86_decompose_address (addr, &parts) <= 0)
      {
        reason = "decomposition failed";
-@@ -5521,7 +5524,9 @@ get_thread_pointer ()
+@@ -5499,7 +5502,9 @@
    rtx tp;
  
    tp = gen_rtx_UNSPEC (Pmode, gen_rtvec (1, const0_rtx), UNSPEC_TP);
@@ -56,7 +56,7 @@
    tp = force_reg (Pmode, tp);
  
    return tp;
-@@ -6611,17 +6615,6 @@ print_operand (file, x, code)
+@@ -6613,17 +6618,6 @@
        fprintf (file, "%s", dstr);
      }
  
@@ -74,7 +74,7 @@
    else
      {
        if (code != 'P')
-@@ -6660,6 +6653,16 @@ print_operand_address (file, addr)
+@@ -6662,6 +6656,16 @@
    rtx base, index, disp;
    int scale;
  
@@ -89,8 +89,8 @@
 +    }
 +
    if (! ix86_decompose_address (addr, &parts))
-     abort ();
- 
+     {
+       output_operand_lossage ("Wrong address expression or operand constraint");
 --- gcc/testsuite/gcc.dg/tls/opt-2.c.jj	2002-08-08 18:36:32.000000000 +0200
 +++ gcc/testsuite/gcc.dg/tls/opt-2.c	2002-08-08 18:34:44.000000000 +0200
 @@ -0,0 +1,53 @@
