@@ -86,6 +86,9 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2.15.91.0.2
 Requires:	libgcc = %{epoch}:%{version}-%{release}
+# Get rid of zounds of users that get 'C compiler cant produce executables'
+# after first install.
+Requires:	glibc-devel
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 %{?with_ssp:Provides:	gcc(ssp)}
