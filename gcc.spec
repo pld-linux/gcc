@@ -20,7 +20,7 @@ License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 # Source0-md5:	39147717455d8dba4d43d1b058ea46e2
-Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
+Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5: 66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.kernel.pl/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source2-md5: 4736f3422ddfb808423b745629acc321
@@ -627,7 +627,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
-perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld.org.pl/>";@' gcc/version.c
+perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 %build
 # cd gcc && autoconf; cd ..
