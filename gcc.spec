@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -33,6 +33,7 @@ Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-nodebug.patch
 Patch5:		%{name}-cse-find_best_addr.patch
 Patch6:		%{name}-alpha-regno-mode.patch
+Patch7:		%{name}-amd64-thunk.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -759,6 +760,10 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch5 -p1
 %ifarch alpha
 %patch6 -p1
+%endif
+%ifarch amd64
+# not sure if it wouldn't break x86 (it shouldn't, but better safe than sorry)
+%patch7 -p1
 %endif
 
 %patch10 -p1
