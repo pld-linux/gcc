@@ -1,14 +1,15 @@
 %define		STDC_VERSION 2.10.0
+%define		ver 2.95.3
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
-Version:	2.95.3
-Release:	16
+Version:	%{ver}
+Release:	17
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-2.95.2.tar.gz
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}-prerelease/%{name}-%{version}.test1.tar.gz
 Source1:	gcov.1
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
@@ -43,6 +44,7 @@ Patch27:	%{name}-glibc-2.2.patch
 Patch28:	%{name}-O2-bug.patch
 
 BuildRequires:	bison
+BuildRequires:	texinfo
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -311,24 +313,24 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
   odpowiada fragment pliku wynikowego.
 
 %prep
-%setup -q -n %{name}-2.95.2
+%setup -q -n %{name}-%{ver}.test1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p0
 %patch5 -p0
-%patch6 -p1
+#%patch6 -p1
 %patch7 -p0
 %patch8 -p0
-%patch9 -p0
+#%patch9 -p0
 %patch10 -p0
 %patch11 -p0
 %patch12 -p0
 %patch13 -p1
-%ifarch arm
-%patch14 -p0
-%endif
+#%ifarch arm
+#%patch14 -p0
+#%endif
 %ifarch m68k
 %patch15 -p0
 %endif
@@ -340,17 +342,17 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %ifarch ppc
 %patch19 -p0
 %patch20 -p0
-%patch21 -p0
+#%patch21 -p0
 %endif
 %ifarch alpha
 %patch22 -p1
 %endif
-%patch23 -p0
+#%patch23 -p0
 %patch24 -p0
 %patch25 -p0
 %patch26 -p0
-%patch27 -p1
-%patch28 -p1
+#%patch27 -p1
+#%patch28 -p1
 
 %build
 (cd gcc; autoconf)
@@ -370,6 +372,7 @@ TEXCONFIG=false ../configure \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-gxx-include-dir="\$\{prefix\}/include/g++" \
+	--disable-nls \
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
@@ -407,10 +410,6 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_mandir}/man1/
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
 (cd $RPM_BUILD_ROOT%{_libdir} ; ln -sf libstdc++.so.*.*.* $RPM_BUILD_ROOT%{_libdir}/libstdc++.so)
-
-install -d $RPM_BUILD_ROOT/lib
-(cd $RPM_BUILD_ROOT; \
-ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
 
 gzip -9nf ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
@@ -564,10 +563,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n cpp
 %defattr(644,root,root,755)
-%attr(755,root,root) /lib/cpp
+%attr(755,root,root) %{_bindir}/cpp
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
 
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/cccp.1*
 %{_infodir}/cpp.info*.gz
-
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp
