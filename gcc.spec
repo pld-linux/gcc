@@ -1137,9 +1137,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/*.ali
 %{_libdir}/gcc/*/*/adalib/g-trasym.o
 %{_libdir}/gcc/*/*/adalib/libgccprefix.a
-#%ifnarch ppc
-#%{_libdir}/gcc/*/*/adalib/libgmem.a
-#%endif
+%ifarch %{ix86}
+%{_libdir}/gcc/*/*/adalib/libgmem.a
+%endif
 %{_datadir}/gnat
 %{_infodir}/gnat*
 
