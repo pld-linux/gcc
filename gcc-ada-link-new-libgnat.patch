@@ -1,44 +1,11 @@
---- gcc-3.3/gcc/ada/Make-lang.in~	Fri May 16 15:14:53 2003
-+++ gcc-3.3/gcc/ada/Make-lang.in	Fri May 16 15:18:07 2003
-@@ -347,7 +347,7 @@
- ada/doctools/xgnatug : ada/xgnatug.adb
+--- gcc-3.4-20040611/gcc/ada/Make-lang.in.orig	2004-06-09 11:20:41.000000000 +0200
++++ gcc-3.4-20040611/gcc/ada/Make-lang.in	2004-06-12 03:38:09.373698608 +0200
+@@ -446,7 +446,7 @@
+ ada/doctools/xgnatugn$(build_exeext): ada/xgnatugn.adb
  	-$(MKDIR) ada/doctools
- 	cp $^ ada/doctools
--	cd ada/doctools && gnatmake -q xgnatug
-+	cd ada/doctools && gnatmake -q xgnatug -aO../rts
+ 	$(CP) $^ ada/doctools
+-	cd ada/doctools && gnatmake -q xgnatugn
++	cd ada/doctools && gnatmake -q xgnatugn -a0../rts
  
- $(srcdir)/ada/gnat_ug_unx.texi : ada/doctools/xgnatug \
- 	$(srcdir)/ada/gnat_ug.texi $(srcdir)/ada/ug_words
-@@ -871,27 +871,27 @@
- ada/treeprs.ads : ada/treeprs.adt ada/sinfo.ads ada/xtreeprs.adb
- 	-$(MKDIR) ada/bldtools
- 	$(CP) $^ ada/bldtools
--	(cd ada/bldtools; gnatmake -q xtreeprs ; ./xtreeprs ../treeprs.ads )
-+	(cd ada/bldtools; gnatmake -q xtreeprs -aO../rts ; ./xtreeprs ../treeprs.ads )
- 
- ada/einfo.h : ada/einfo.ads ada/einfo.adb ada/xeinfo.adb
- 	-$(MKDIR) ada/bldtools
- 	$(CP) $^ ada/bldtools
--	(cd ada/bldtools; gnatmake -q xeinfo ; ./xeinfo ../einfo.h )
-+	(cd ada/bldtools; gnatmake -q xeinfo -aO../rts ; ./xeinfo ../einfo.h )
- 
- ada/sinfo.h : ada/sinfo.ads ada/xsinfo.adb
- 	-$(MKDIR) ada/bldtools
- 	$(CP) $^ ada/bldtools
--	(cd ada/bldtools; gnatmake -q xsinfo ; ./xsinfo ../sinfo.h )
-+	(cd ada/bldtools; gnatmake -q xsinfo -aO../rts ; ./xsinfo ../sinfo.h )
- 
- ada/nmake.adb : ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
- 	-$(MKDIR) ada/bldtools
- 	$(CP) $^ ada/bldtools
--	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
-+	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
- 
- ada/nmake.ads :  ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
- 	-$(MKDIR) ada/bldtools
- 	$(CP) $^ ada/bldtools
--	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
-+	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -s ../nmake.ads )
- 
- update-sources : ada/treeprs.ads ada/einfo.h ada/sinfo.h ada/nmake.adb \
- 	ada/nmake.ads
+ doc/gnat_ugn_unw.texi : ada/doctools/xgnatugn$(build_exeext) \
+ 	$(srcdir)/ada/gnat_ugn.texi $(srcdir)/ada/ug_words
