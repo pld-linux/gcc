@@ -94,7 +94,7 @@ make CC="stage2/xgcc -Bstage2/" CFLAGS="-O2" LDFLAGS="-s" install \
 	prefix=$RPM_BUILD_ROOT/usr
 
 gzip -n -9f $RPM_BUILD_ROOT%{_infodir}/gcc.info*
-ln -sf gcc $RPM_BUILD_ROOT/usr/bin/cc
+ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 rm -rf $RPM_BUILD_ROOT%{_libdir}/gcc-lib/${RPM_ARCH}/*/include/objc
 
 %clean
@@ -103,7 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644, root, root, 755)
 %doc NEWS PROBLEMS
-%attr(755, root, root) /usr/bin/*-linux-gcc
+%attr(755, root, root) %{_bindir}/*-linux-gcc
 %dir %{_libdir}/gcc-lib/*/*
 %dir %{_libdir}/gcc-lib/*/*/include
 %{_libdir}/gcc-lib/*/*/SYSCALLS.c.X
