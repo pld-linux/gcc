@@ -13,7 +13,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2.1
+Release:	3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -28,6 +28,7 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
 Patch3:		%{name}-nodebug.patch
 Patch4:		%{name}-ssp.patch
+Patch5:		%{name}-pr14668.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -696,6 +697,7 @@ controle da numeração das linhas do programa.
 %patch2 -p1
 %{!?debug:%patch3 -p1}
 %{?with_ssp:%patch4 -p1}
+%patch5 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
