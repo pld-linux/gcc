@@ -19,7 +19,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.0.4
+Release:	0.%{_snap}.0.5
 License:	GPL
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -446,7 +446,7 @@ Statyczne biblioteki Obiektowego C.
 # final
 #setup -q -n gcc-%{version}
 
-#patch0 -p1	NEEDS UPDATE
+%patch0 -p1
 %patch1 -p1
 %{!?debug:%patch2 -p1}
 %patch3 -p1
