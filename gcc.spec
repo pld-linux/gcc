@@ -15,7 +15,7 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{rver}/%{name}-%{rver}.tar.gz
 Source1:	gcov.1
 # generated from binutils' info
 Source2:	c++filt.1
-Source3:	%{name}-non-english-man-pages.tar.bz2
+Source3:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-pld-linux.patch
 Patch2:		%{name}-libstdc++.patch
