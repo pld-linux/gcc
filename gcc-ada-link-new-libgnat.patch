@@ -9,3 +9,36 @@
  
  doc/gnat_ugn_unw.texi : ada/doctools/xgnatugn$(build_exeext) \
  	$(srcdir)/ada/gnat_ugn.texi $(srcdir)/ada/ug_words
+@@ -984,27 +984,27 @@
+ ada/treeprs.ads : ada/treeprs.adt ada/sinfo.ads ada/xtreeprs.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xtreeprs ; ./xtreeprs ../treeprs.ads )
++	(cd ada/bldtools; gnatmake -q xtreeprs -aO../rts ; ./xtreeprs ../treeprs.ads )
+ 
+ ada/einfo.h : ada/einfo.ads ada/einfo.adb ada/xeinfo.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xeinfo ; ./xeinfo ../einfo.h )
++	(cd ada/bldtools; gnatmake -q xeinfo -aO../rts ; ./xeinfo ../einfo.h )
+ 
+ ada/sinfo.h : ada/sinfo.ads ada/xsinfo.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xsinfo ; ./xsinfo ../sinfo.h )
++	(cd ada/bldtools; gnatmake -q xsinfo -aO../rts ; ./xsinfo ../sinfo.h )
+ 
+ ada/nmake.adb : ada/sinfo.ads ada/nmake.adt ada/xnmake.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -b ../nmake.adb )
++	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -b ../nmake.adb )
+ 
+ ada/nmake.ads :  ada/sinfo.ads ada/nmake.adt ada/xnmake.adb ada/nmake.adb
+ 	-$(MKDIR) ada/bldtools
+ 	$(CP) $^ ada/bldtools
+-	(cd ada/bldtools; gnatmake -q xnmake ; ./xnmake -s ../nmake.ads )
++	(cd ada/bldtools; gnatmake -q xnmake -aO../rts ; ./xnmake -s ../nmake.ads )
+ 
+ update-sources : ada/treeprs.ads ada/einfo.h ada/sinfo.h ada/nmake.adb \
+ 	ada/nmake.ads
