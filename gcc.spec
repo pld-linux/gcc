@@ -30,6 +30,7 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
+Patch5:		%{name}-pr19103.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -445,6 +446,7 @@ Statyczne biblioteki Obiektowego C.
 %{!?debug:%patch2 -p1}
 %patch3 -p1
 %patch4 -p1
+%patch5 -p0
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
