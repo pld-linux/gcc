@@ -7,9 +7,9 @@
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 
-%ifarch ppc # needed until 20249 is resolved
-%undefine with_profiling
-%endif
+# %ifarch ppc # needed until 20249 is resolved
+# %undefine with_profiling
+# %endif
 
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
