@@ -226,3 +226,53 @@ diff -urN gcc-2.95.1.orig/libf2c/Makefile.in gcc-2.95.1/libf2c/Makefile.in
  
  LIBG2C = libg2c.a
  
+--- gcc-2.95.2/gcc/Makefile.in~	Mon Dec 11 00:35:51 2000
++++ gcc-2.95.2/gcc/Makefile.in	Mon Dec 11 00:50:03 2000
+@@ -3094,7 +3094,10 @@
+ 	 do \
+ 	   if [ -d stage1/$$dir ] ; then true ; else mkdir stage1/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage1
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage1 ; \
++	 done
+ 	-mv intl/*$(objext) stage1/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3122,7 +3125,10 @@
+ 	 do \
+ 	   if [ -d stage2/$$dir ] ; then true ; else mkdir stage2/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage2
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage2 ; \
++	 done
+ 	-mv intl/*$(objext) stage2/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3150,7 +3156,10 @@
+ 	 do \
+ 	   if [ -d stage3/$$dir ] ; then true ; else mkdir stage3/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage3
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage3 ; \
++	 done
+ 	-mv intl/*$(objext) stage3/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
+@@ -3178,7 +3187,10 @@
+ 	 do \
+ 	   if [ -d stage4/$$dir ] ; then true ; else mkdir stage4/$$dir ; fi ; \
+ 	 done
+-	-mv $(STAGESTUFF) stage4
++	-for i in $(STAGESTUFF) ; \
++	 do \
++	   mv $$i stage4 ; \
++	 done
+ 	-mv intl/*$(objext) stage4/intl
+ # Copy as/ld if they exist to stage dir, so that running xgcc from the stage
+ # dir will work properly.
