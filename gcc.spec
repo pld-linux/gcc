@@ -316,7 +316,7 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
-make -j3 LDFLAGS_FOR_TARGET="-s" \
+make LDFLAGS_FOR_TARGET="-s" \
 	bootstrap-lean \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
