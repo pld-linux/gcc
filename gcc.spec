@@ -3,6 +3,7 @@
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
+%bcond_with	ssp		# build with stack-smashing protector support
 #
 %define		GCC_VERSION	3.4.0
 #
@@ -48,7 +49,7 @@ Requires:	binutils >= 2.15.90.0.3
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
-Provides:	gcc(ssp)
+%{?with_ssp:Provides:	gcc(ssp)}
 Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -694,10 +695,10 @@ controle da numeração das linhas do programa.
 %patch1 -p1
 %patch2 -p1
 %{!?debug:%patch3 -p1}
-%patch4 -p1
+%{?with_ssp:%patch4 -p1}
 
 # because we distribute modified version of gcc...
-perl -pi -e 's/(version.*)";/$1 SSP (PLD Linux)";/' gcc/version.c
+perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
@@ -882,7 +883,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
-%{_aclocaldir}/gcc_stack_protect.m4
+%{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
