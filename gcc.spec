@@ -6,7 +6,7 @@
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 #
 %define		snap		20040327
-%define		GCC_VERSION	3.4
+%define		GCC_VERSION	3.5
 %define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
