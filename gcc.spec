@@ -340,8 +340,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
-CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
-CXXFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
+CFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
