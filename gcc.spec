@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3
+Release:	4
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -822,10 +822,12 @@ cd ..
 	infodir=%{_infodir}
 
 %if %{with ada}
-%{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
+for tgt in gnatlib gnattools gnetlib-shared; do
+%{__make} -C obj-%{_target_platform}/gcc $tgt \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
+done
 %endif
 
 %install
