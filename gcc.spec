@@ -47,7 +47,7 @@ Patch24:	gcc32-duplicate-decl.patch
 Patch25:	gcc32-dwarf2-pr6381.patch
 Patch26:	gcc32-dwarf2-pr6436-test.patch
 Patch27:	gcc32-fde-merge-compat.patch
-Patch28:	gcc32-fold-const-associate.patch
+
 Patch29:	gcc32-hard-reg-sharing.patch
 Patch30:	gcc32-hard-reg-sharing2.patch
 Patch31:	gcc32-i386-default-momit-leaf-frame-pointer.patch
@@ -67,7 +67,6 @@ Patch44:	gcc32-tls2.patch
 Patch45:	gcc32-tls3.patch
 Patch46:	gcc32-tls4.patch
 Patch47:	gcc32-tls5.patch
-Patch48:	gcc32-bison_expect.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
@@ -525,7 +524,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch25
 %patch26
 %patch27
-#%patch28
 %patch29
 %patch30
 %patch31
@@ -545,10 +543,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch45
 %patch46
 %patch47
-#%patch48
 
-# fixme
-#%patch6 -p1
+%patch6 -p1
 
 perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
 
