@@ -722,7 +722,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adainclude
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.ali
+%ifnarch ppc
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/libgmem.a
+%endif
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
