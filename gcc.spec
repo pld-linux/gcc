@@ -95,7 +95,7 @@ BuildRequires:	perl-devel
 Requires:	binutils >= 2.12.90.0.4
 Requires:	cpp = %{GCC_VERSION}
 Requires:	libgcc = %{GCC_VERSION}
-Conflicts:	glibc-devel <= 2.2.5-20
+Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
