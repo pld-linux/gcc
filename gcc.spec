@@ -7,7 +7,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3.2
+Release:	3.3
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -207,6 +207,7 @@ Version:        %{GCC_VERSION}
 Requires:	%{name} = %{version}
 Requires:	libgcj >= 3.0.0
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
@@ -557,7 +558,7 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 cp -f libobjc/README gcc/objc/README.libobjc
 
 %find_lang %{name}
-#%%find_lang libstdc++
+%find_lang libstdc\+\+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -673,8 +674,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
 
-%files -n libstdc++
-#-f libstdc++.lang
+%files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 %ifarch ppc
