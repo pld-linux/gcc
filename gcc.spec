@@ -1,6 +1,6 @@
-%define		GCC_VERSION	3.0.1
-%define		STDC_VERSION	3.0.1
-%define		GCJ_VERSION	3.0.1
+%define		GCC_VERSION	3.0.2
+%define		STDC_VERSION	3.0.2
+%define		GCJ_VERSION	3.0.2
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
