@@ -1,75 +1,100 @@
 #
+# TODO:
+#		- http://gcc.gnu.org/PR11203
+#		- http://gcc.gnu.org/PR17384
+#		- http://gcc.gnu.org/PR17567
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
-%bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
+%bcond_with	ssp		# build with stack-smashing protector support
 #
-%define		DASHED_SNAP	%{nil}
-%define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.3.5
-%define		KSI_VERSION	1.1.0.1567
-
+%define		_snap		20041008
+#
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	%{GCC_VERSION}
-Release:	1
+Version:	3.4.3
+Release:	0.%{_snap}.1
+#Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
-# Source0-md5:	70ee088b498741bb08c779f9617df3a5
-# Source0-size:	23833856
-Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
-# Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
-Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
-# Source2-md5:	4736f3422ddfb808423b745629acc321
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/3.4-%{_snap}/gcc-3.4-%{_snap}.tar.bz2
+# Source0-md5:	9e5a58db111be1b31227b5a1139a740b
+Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
+# Source1-md5:	4736f3422ddfb808423b745629acc321
+Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
+# Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
 Patch0:		%{name}-info.patch
-Patch1:		%{name}-paths.patch
-Patch2:		%{name}-nolocalefiles.patch
-Patch3:		%{name}-ada-link-new-libgnat.patch
-Patch4:		%{name}-nodebug.patch
-Patch5:		%{name}-cse-find_best_addr.patch
-Patch6:		%{name}-amd64-thunk.patch
-# -- stolen patches from RH --
-Patch10:	gcc32-ada-link.patch
-Patch11:	gcc32-boehm-gc-libs.patch
-Patch12:	gcc32-bogus-inline.patch
-Patch13:	gcc32-c++-nrv-test.patch
-Patch14:	gcc32-c++-tsubst-asm.patch
-Patch15:	gcc32-debug-pr7241.patch
-Patch16:	gcc32-duplicate-decl.patch
-Patch17:	gcc32-dwarf2-pr6381.patch
-Patch18:	gcc32-dwarf2-pr6436-test.patch
-Patch19:	gcc32-fde-merge-compat.patch
-Patch20:	gcc32-i386-memtest-test.patch
-Patch21:	gcc32-inline-label.patch
-Patch22:	gcc32-java-no-rpath.patch
-Patch23:	gcc32-test-rh65771.patch
-Patch24:	gcc32-test-rotate.patch
-Patch25:	gcc-cmpi.patch
+Patch1:		%{name}-nolocalefiles.patch
+Patch2:		%{name}-ada-link-new-libgnat.patch
+Patch3:		%{name}-nodebug.patch
+Patch4:		%{name}-ssp.patch
+Patch5:		%{name}-ada-link.patch
+Patch6:		%{name}-pr15666.patch
+Patch7:		%{name}-pr16276.patch
+Patch8:		%{name}-ada-bootstrap.patch
+#
+# -fvisibility={default|internal|hidden|protected}
+#
+# Set the default ELF image symbol visibility to the specified option.
+# All symbols will be marked with this unless overrided within the code.
+# Using this feature can very substantially improve linking and load times
+# of shared object libraries, produce more optimised code, provide near-perfect
+# API export and prevent symbol clashes. It is strongly recommended that you
+# use this in any shared objects you distribute.
+#
+# -fvisibility-inlines-hidden
+#
+# Causes all inlined methods to be marked with __attribute__((visibility("hidden")))
+# so that they do not appear in the export table of a DSO and do not require a PLT
+# indirection when used within the DSO. Enabling this option can have a dramatic
+# effect on load and link times of a DSO as it massively reduces the size
+# of the dynamic export table when the library makes heavy use of templates.
+# While it can cause bloating through duplication of code within each DSO
+# where it is used, often the wastage is less than the considerable space
+# occupied by a long symbol name in the export table which is typical when using
+# templates and namespaces.
+#
+# How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
+#
+Patch9:		%{name}-visibility.patch
+#
+URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2:2.15.90.0.3
+BuildRequires:	binutils >= 2.15.91.0.2
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
-%{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
-%{?with_ada:BuildRequires: gcc-ada}
+BuildRequires:	flex
+%if %{with ada}
+BuildRequires:	gcc(ada)
+BuildRequires:	gcc-ada
+%endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
+BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2:2.15.90.0.3
-Requires:	cpp = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	gcc-dirs
-Requires:	libgcc = %{epoch}:%{GCC_VERSION}-%{release}
-%{?with_ada:Provides: gcc(ada)}
+Requires:	binutils >= 2.15.91.0.2
+Requires:	libgcc = %{epoch}:%{version}-%{release}
+Provides:	cpp = %{epoch}:%{version}-%{release}
+%{?with_ada:Provides:	gcc(ada)}
+%{?with_ssp:Provides:	gcc(ssp)}
+# ksi for gcc > 3.3.x not ready yet
+Obsoletes:	cpp
+Obsoletes:	egcs-cpp
+Obsoletes:	gcc-cpp
+Obsoletes:	gcc-ksi
+Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
-URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
@@ -115,7 +140,6 @@ Summary(es):	Biblioteca compartida de gcc
 Summary(pl):	Biblioteka gcc
 Summary(pt_BR):	Biblioteca runtime para o GCC
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libgcc1
 
 %description -n libgcc
@@ -136,7 +160,7 @@ Summary(es):	Soporte de C++ para gcc
 Summary(pl):	Obs³uga C++ dla gcc
 Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
 
@@ -186,8 +210,8 @@ Summary(fr):	Gestion d'Objective C pour gcc
 Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc
 Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libobjc = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libobjc = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
 
@@ -233,7 +257,6 @@ Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libobjc1
 
 %description -n libobjc
@@ -250,8 +273,7 @@ Summary:	Static Objective C Libraries
 Summary(es):	Bibliotecas estáticas de Objective C
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libobjc = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libobjc = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-static
 Static Objective C Libraries.
@@ -268,9 +290,7 @@ Summary(es):	Soporte de Fortran 77 para gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
 Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
-Version:	%{GCC_VERSION}
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libg2c = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libg2c = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 
 %description g77
@@ -293,7 +313,6 @@ Summary:	Fortran 77 Libraries
 Summary(es):	Bibliotecas de Fortran 77
 Summary(pl):	Biblioteki Fortranu 77
 Group:		Libraries
-Version:	%{GCC_VERSION}
 
 %description -n libg2c
 Fortran 77 Libraries.
@@ -309,8 +328,7 @@ Summary:	Static Fortran 77 Libraries
 Summary(es):	Bibliotecas estáticas de Fortran 77
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libg2c = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libg2c = %{epoch}:%{version}-%{release}
 
 %description -n libg2c-static
 Static Fortran 77 Libraries.
@@ -326,11 +344,11 @@ Summary:	Java support for gcc
 Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
-Version:	%{GCC_VERSION}
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgcj = %{epoch}:%{version}-%{release}
+Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	java-shared
-Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	gcj = %{epoch}:%{version}-%{release}
 
 %description java
 This package adds experimental support for compiling Java(tm) programs
@@ -352,8 +370,7 @@ Summary:	Shared java tools
 Summary(es):	Herramientas compartidas de Java
 Summary(pl):	Wspó³dzielone narzêdzia javy
 Group:		Development/Languages/Java
-Version:	%{GCC_VERSION}
-Provides:	jar = %{epoch}:%{GCC_VERSION}-%{release}
+Provides:	jar = %{epoch}:%{version}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
 Obsoletes:	jar
@@ -376,7 +393,6 @@ Summary:	Java Class Libraries
 Summary(es):	Bibliotecas de clases de Java
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Requires:	zlib
 Obsoletes:	libgcj3
 
@@ -394,9 +410,8 @@ Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	%{name}-java = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libgcj = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name}-java = %{epoch}:%{version}-%{release}
+Requires:	libgcj = %{epoch}:%{version}-%{release}
 Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
@@ -413,9 +428,8 @@ Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -432,7 +446,6 @@ Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
 Summary(pt_BR):	Biblioteca C++ GNU
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
 
@@ -478,9 +491,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -508,8 +520,7 @@ Summary:	Static C++ standard library
 Summary(es):	Biblioteca estándar estática de C++
 Summary(pl):	Statyczna biblioteka standardowa C++
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libstdc++-devel = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -525,7 +536,6 @@ Summary:	Foreign Function Interface library
 Summary(es):	Biblioteca de interfaz de funciones ajenas
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
 Group:		Libraries
-Version:	%{GCC_VERSION}
 
 %description -n libffi
 The libffi library provides a portable, high level programming
@@ -550,8 +560,7 @@ Summary:	Development files for Foreign Function Interface library
 Summary(es):	Ficheros de desarrollo para libffi
 Summary(pl):	Pliki nag³ówkowe dla libffi
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libffi = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libffi = %{epoch}:%{version}-%{release}
 
 %description -n libffi-devel
 Development files for Foreign Function Interface library.
@@ -567,8 +576,7 @@ Summary:	Static Foreign Function Interface library
 Summary(es):	Biblioteca libffi estática
 Summary(pl):	Statyczna biblioteka libffi
 Group:		Development/Libraries
-Version:	%{GCC_VERSION}
-Requires:	libffi-devel = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 
 %description -n libffi-static
 Static Foreign Function Interface library.
@@ -584,9 +592,8 @@ Summary:	Ada support for gcc
 Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
-Version:	%{GCC_VERSION}
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libgnat = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgnat = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
 
@@ -606,7 +613,6 @@ Summary:	Ada standard libraries
 Summary(es):	Bibliotecas estándares de Ada
 Summary(pl):	Biblioteki standardowe dla Ady
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	gnat
 Obsoletes:	libgnat1
 
@@ -626,7 +632,6 @@ napisanych w Adzie.
 Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Group:		Libraries
-Version:	%{GCC_VERSION}
 Obsoletes:	gnat-static
 
 %description -n libgnat-static
@@ -636,161 +641,41 @@ This package contains static libraries for programs written in Ada.
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
 
-%package ksi
-Summary:	Ksi support for gcc
-Summary(es):	Soporte de Ksi para gcc
-Summary(pl):	Obs³uga Ksi dla gcc
-Version:	%{GCC_VERSION}.%{KSI_VERSION}
-Group:		Development/Languages
-Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-
-%description ksi
-This package adds experimental support for compiling Ksi programs into
-native code. You proabably don't need it, unless your are going to
-develop a compiler using Ksi as intermediate representation or you are
-using such compiler (like Gont).
-
-%description ksi -l es
-Este paquete añade soporte experimental para compilar programas de Ksi
-en código nativo. Probablemento no lo necesitará, a menos que vaya a
-desarrollar un compilador que use Ksi como representación intermedia o
-use tal compilador (como Gont).
-
-%description ksi -l pl
-Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
-Ksi do kodu maszynowego. Prawdopodobnie nie potrzebujesz go, chyba ¿e
-zamierzasz pisaæ kompilator u¿ywaj±cy Ksi jako reprezentacji
-po¶rednicz±cej, lub u¿ywasz takiego kompilatora (jak Gont).
-
-%package -n cpp
-Summary:	The C Pre Processor
-Summary(es):	El preprocesador de C
-Summary(pl):	Preprocesor C
-Summary(pt_BR):	Preprocessador para a linguagem C
-Group:		Development/Languages
-Version:	%{GCC_VERSION}
-Obsoletes:	egcs-cpp
-Obsoletes:	gcc-cpp
-
-%description -n cpp
-The C preprocessor is a "macro processor" that is used automatically
-by the C compiler to transform your program before actual compilation.
-It is called a macro processor because it allows you to define
-"macros", which are brief abbreviations for longer constructs.
-
-The C preprocessor provides four separate facilities that you can use
-as you see fit:
-
-- Inclusion of header files. These are files of declarations that can
-  be substituted into your program.
-- Macro expansion. You can define "macros", which are abbreviations
-  for arbitrary fragments of C code, and then the C preprocessor will
-  replace the macros with their definitions throughout the program.
-- Conditional compilation. Using special preprocessing directives, you
-  can include or exclude parts of the program according to various
-  conditions.
-- Line control. If you use a program to combine or rearrange source
-  files into an intermediate file which is then compiled, you can use
-  line control to inform the compiler of where each source line
-  originally came from.
-
-%description -n cpp -l es
-El preprocesador de C es un "procesador de macros" que es usado
-automáticamente por el compilador C para transformar su programa antes
-de que éste se actualmente compile. Se llama procesador de macros
-porque permite definir "macros", los que son abreviaciones concisas
-para construcciones más largas.
-
-El preprocesador C provee cuatro cualidadedes distintas que puede usar
-como le convenga:
-
-- Inclusión de ficheros de cabecera. Éstos son ficheros de
-  declaraciones que pueden incorporarse a su programa.
-- Expansión de macros. Puede definir "macros", los que son
-  abreviaciones para fragmentos arbitrarios de código C, y a lo largo
-  del programa el preprocesador sustituirá los macros con sus
-  definiciones.
-- Compilación condicional. Usando especiales directivas del preproceso
-  puede incluir o excluir partes del programa según varias condiciones.
-- Control de líneas. Si usa un programa para combinar o reorganizar el
-  código fuente en un fichero intermedio que luego es compilado, puede
-  usar control de líneas para informar el compilador de dónde origina
-  cada línea.
-
-%description -n cpp -l pl
-Preprocesor C jest "makro procesorem" który jest automatycznie
-u¿ywany przez kompilator C do obróbki kompilowanego programu przed
-w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
-umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
-d³ugich konstrukcji w jêzyku C.
-
-Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
-
-- Do³±czanie plików (np. nag³ówkowych). Wstawia pliki w miejscu
-  deklaracji polecenia do³±czenia innego pliku.
-- Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
-  których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
-  indentyfikatora deklarowan± wcze¶niej warto¶ci±.
-- Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
-  ¶rodowisku preprocesora s± w³±czane warunkowo, b±d¼ nie, pewne
-  fragmenty obrabianego strumienia tekstów.
-- Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom
-  podlega wynikowy strumieñ danych w wyniku rozwijania makr i do³±czania
-  s± zapamiêtywane informacje o tym, której linii pliku ¼ród³owego
-  odpowiada fragment pliku wynikowego.
-
-%description -n cpp -l pt_BR
-O preprocessador C é um "processador de macros", que é utilizado pelo
-compilador C para fazer algumas modificações no seu programa, antes da
-compilação em si. Ele é chamado de "processador de macros" porque
-permite a você definir "macros", que são abreviações para construções
-mais complicadas.
-
-O preprocessador C fornece quatro funcionalidades básicas: inclusão de
-arquivos de cabeçalho; expansão de macros; compilação condicional; e
-controle da numeração das linhas do programa.
-
 %prep
-%setup -q -a1 -n %{name}-%{GCC_VERSION}
-mv ksi-%{KSI_VERSION} gcc/ksi
+# prerelease
+#setup -q -n %{name}-%{version}-%{_snap} -a1
+# snapshot
+%setup -q -n %{name}-3.4-%{_snap} -a1
+# final
+#setup -q -n %{name}-%{version} -a1
 
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%{!?debug:%patch4 -p1}
+%{!?debug:%patch3 -p1}
+%{?with_ssp:%patch4 -p1}
 %patch5 -p1
-%ifarch amd64
-# not sure if it wouldn't break x86 (it shouldn't, but better safe than sorry)
-%patch6 -p1
+%patch6 -p0
+%patch7 -p0
+%ifarch alpha ia64
+# needed for bootstrap using gcc 3.3.x on alpha
+# and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
+%patch8 -p2
 %endif
-
-%patch10 -p1
-%patch11
-%patch12
-%patch13
-%patch14
-%patch15
-
-%patch16
-%patch17
-%patch18
-%patch19
-%patch20
-%patch21
-%patch22
-%patch23
-%patch24
-%patch25 -p1
+%patch9 -p1
 
 # because we distribute modified version of gcc...
-perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
+perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
+mv ChangeLog ChangeLog.general
+
 %build
-# cd gcc && autoconf; cd ..
-# autoconf is not needed!
-cp /usr/share/automake/config.sub .
+# because pr16276 patch modifies configure.ac
+cd gcc
+%{__autoconf}
+cd ..
+cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
@@ -805,7 +690,7 @@ TEXCONFIG=false ../configure \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifarch amd64
@@ -824,29 +709,49 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap-lean \
+# - on alpha stage1 needs -O0 for 3.3->3.4 bootstrap (gnat from 3.3 is seriously broken)
+# - on ia64 use bootstrap-lean as profiledbootstrap is broken (PR 13882, 15836, 16108)
+%{__make} -C obj-%{_target_platform} \
+%ifarch ia64
+	bootstrap-lean \
+%else
+	profiledbootstrap \
+%endif
 	GCJFLAGS="%{rpmcflags}" \
+	BOOT_CFLAGS="%{rpmcflags}" \
+%ifarch alpha
+	STAGE1_CFLAGS="%{rpmcflags} -O0" \
+%else
+	STAGE1_CFLAGS="%{rpmcflags}" \
+%endif
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
 %if %{with ada}
-for tgt in gnatlib gnattools gnatlib-shared; do
+# cannot build it in parallel
+for tgt in gnatlib-shared gnattools gnatlib; do
 %{__make} -C obj-%{_target_platform}/gcc $tgt \
+	BOOT_CFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 done
 %endif
 
+# snapshot doesn't contain these files...
+[ -r "NEWS" ] || touch NEWS
+[ -r "gcc/f/BUGS" ] || touch gcc/f/BUGS
+[ -r "gcc/f/NEWS" ] || touch gcc/f/NEWS
+
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/lib,%{_datadir},%{_infodir}}
+install -d $RPM_BUILD_ROOT{/lib,%{_aclocaldir},%{_datadir},%{_infodir}}
 
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
-%{__make} install \
+%{__make} -j1 install \
 	mandir=%{_mandir} \
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
@@ -864,14 +769,14 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/adalib/*.so.1 \
+mv -f $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
-ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
-ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
-ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.4.so.1
+ln -sf libgnat-3.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.4.so
+ln -sf libgnarl-3.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.4.so
+ln -sf libgnat-3.4.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf libgnarl-3.4.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
@@ -890,7 +795,7 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
-# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
+# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
@@ -901,15 +806,15 @@ for f in libstdc++.la libsupc++.la libg2c.la \
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
 done
 
-bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 
 # include/ contains install-tools/include/* and headers that were fixed up
 # by fixincludes, we don't want former
-gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/)
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
+mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,libffi/ffitarget.h,gcj}} $gccdir/tmp
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
@@ -918,6 +823,10 @@ rm -rf $gccdir/install-tools
 
 %find_lang %{name}
 %find_lang libstdc\+\+
+
+%if %{with ssp}
+zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -940,18 +849,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun java
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
-%post ksi
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%postun ksi
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%post -n cpp
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
-%postun -n cpp
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-
 %post   -p /sbin/ldconfig -n libgcc
 %postun -p /sbin/ldconfig -n libgcc
 %post   -p /sbin/ldconfig -n libstdc++
@@ -967,45 +864,58 @@ rm -rf $RPM_BUILD_ROOT
 %post   -p /sbin/ldconfig -n libffi
 %postun -p /sbin/ldconfig -n libffi
 
-%files -f %{name}.lang
+%files -f gcc.lang
 %defattr(644,root,root,755)
-%doc READ* ChangeLog
-%dir %{_libdir}/gcc-lib/*/*
-%dir %{_libdir}/gcc-lib/*/*/include
+%doc ChangeLog.general MAINTAINERS NEWS bugs.html faq.html
+%doc gcc/{ChangeLog,ONEWS,README.Portability}
+%dir %{_libdir}/gcc
+%dir %{_libdir}/gcc/*
+%dir %{_libdir}/gcc/*/*
+%dir %{_libdir}/gcc/*/*/include
+%{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
+
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
+%attr(755,root,root) %{_bindir}/cpp
 
-%{_mandir}/man1/gcc.1*
 %{_mandir}/man1/cc.1*
-%{_mandir}/man1/gcov.1*
+%{_mandir}/man1/cpp.1*
+%lang(ja) %{_mandir}/ja/man1/cpp.1*
+%{_mandir}/man1/gcc.1*
 %lang(fr) %{_mandir}/fr/man1/gcc.1*
 %lang(ja) %{_mandir}/ja/man1/gcc.1*
+%{_mandir}/man1/gcov.1*
+
+%{_infodir}/cpp*
 %{_infodir}/gcc*
 
+%attr(755,root,root) /lib/cpp
+
 %attr(755,root,root) %{_slibdir}*/lib*.so
-%{_libdir}/gcc-lib/*/*/libgcc.a
-%{_libdir}/gcc-lib/*/*/libgcc_eh.a
-%{_libdir}/gcc-lib/*/*/specs
-%{_libdir}*/gcc-lib/*/*/crt*.o
+%{_libdir}/gcc/*/*/libgcov.a
+%{_libdir}/gcc/*/*/libgcc.a
+%{_libdir}/gcc/*/*/libgcc_eh.a
+%{_libdir}/gcc/*/*/specs
+%attr(644,root,root) %{_libdir}*/gcc/*/*/crt*.o
 %ifarch sparc64
-%{_libdir}/gcc-lib/*/*/*/libgcc.a
-%{_libdir}/gcc-lib/*/*/*/libgcc_eh.a
-%{_libdir}*/gcc-lib/*/*/*/crt*.o
+%{_libdir}/gcc/*/*/*/libgcc.a
+%{_libdir}/gcc/*/*/*/libgcc_eh.a
+%attr(644,root,root) %{_libdir}*/gcc/*/*/*/crt*.o
 %endif
 %ifarch ppc
-%{_libdir}/gcc-lib/*/*/ecrt*.o
-%{_libdir}/gcc-lib/*/*/ncrt*.o
-%{_libdir}/gcc-lib/*/*/nof
+%attr(644,root,root) %{_libdir}/gcc/*/*/ecrt*.o
+%attr(644,root,root) %{_libdir}/gcc/*/*/ncrt*.o
+%{_libdir}/gcc/*/*/nof
 %dir %{_libdir}/nof
 %endif
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/collect2
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1
+%attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
-%{_libdir}/gcc-lib/*/*/include/*.h
-%exclude %{_libdir}/gcc-lib/*/*/include/g2c.h
+%{_libdir}/gcc/*/*/include/*.h
+%exclude %{_libdir}/gcc/*/*/include/g2c.h
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -1013,11 +923,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++
 %defattr(644,root,root,755)
+%doc gcc/cp/{ChangeLog,NEWS}
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1plus
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
 %{_libdir}*/libsupc++.la
 %ifarch ppc
 %{_libdir}/nof/libsupc++.la
@@ -1029,6 +940,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
+%doc libstdc++-v3/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}*/libstdc++.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
@@ -1038,7 +950,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
-%{_includedir}/c++/%{GCC_VERSION}
+%{_includedir}/c++/%{version}
+%exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
 %attr(755,root,root) %{_libdir}*/libstdc++.so
 %{_libdir}*/libstdc++.la
 %ifarch ppc
@@ -1056,18 +969,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with objc}
 %files objc
 %defattr(644,root,root,755)
-%doc gcc/objc/READ*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1obj
+%doc gcc/objc/README
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
 %attr(755,root,root) %{_libdir}*/libobjc.so
 %{_libdir}*/libobjc.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
 %{_libdir}/nof/libobjc.la
 %endif
-%{_libdir}/gcc-lib/*/*/include/objc
+%{_libdir}/gcc/*/*/include/objc
 
 %files -n libobjc
 %defattr(644,root,root,755)
+%doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}*/libobjc.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
@@ -1083,10 +997,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files g77
 %defattr(644,root,root,755)
+%doc gcc/f/{BUGS,ChangeLog,NEWS}
 %attr(755,root,root) %{_bindir}/g77
 %attr(755,root,root) %{_bindir}/f77
 %{_infodir}/g77*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/f771
+%attr(755,root,root) %{_libdir}/gcc/*/*/f771
 %{_libdir}*/libfrtbegin.a
 %{_libdir}*/libg2c.la
 %attr(755,root,root) %{_libdir}*/libg2c.so
@@ -1095,7 +1010,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
 %endif
-%{_libdir}/gcc-lib/*/*/include/g2c.h
+%{_libdir}/gcc/*/*/include/g2c.h
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %lang(ja) %{_mandir}/ja/man1/g77.1*
@@ -1103,6 +1018,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libg2c
 %defattr(644,root,root,755)
+%doc libf2c/{ChangeLog,README,TODO}
 %attr(755,root,root) %{_libdir}*/libg2c.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
@@ -1118,64 +1034,63 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with java}
 %files java
 %defattr(644,root,root,755)
-%doc java-doc/*
+%doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/*-gcj
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/jc1
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/jvgenmain
+%attr(755,root,root) %{_bindir}/grepjar
+%attr(755,root,root) %{_bindir}/*-gcj*
+%attr(755,root,root) %{_libdir}/gcc/*/*/jc1
+%attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
 %{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
+%{_mandir}/man1/grepjar*
 
 %files java-tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/rmi*
 %attr(755,root,root) %{_bindir}/jar
-%attr(755,root,root) %{_bindir}/grepjar
 %{_mandir}/man1/rmi*
 %{_mandir}/man1/jar*
-%{_mandir}/man1/grepjar*
 %{_infodir}/fastjar*
 
 %files -n libgcj
 %defattr(644,root,root,755)
+%doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
-%attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
 %endif
+%{_libdir}/logging.properties
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
 %{_includedir}/java
 %{_includedir}/javax
-#%%{_includedir}/org
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
-%{_libdir}/gcc-lib/*/*/include/gcj
+%{_libdir}/gcc/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
 %{_libdir}/lib*cj.spec
+%{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
-%{_libdir}/lib*cj*.la
 %{_libdir}/lib-org-*.la
 %ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/lib*cj*.so
-%attr(755,root,root) %{_libdir}/nof/lib-org-*.so
 %{_libdir}/nof/lib*cj*.la
-%{_libdir}/nof/lib-org-*.la
+%attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
+%{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
@@ -1183,69 +1098,52 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib-org-*.a
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
-%{_libdir}/nof/lib-org-*.a
 %endif
 
 %files -n libffi
 %defattr(644,root,root,755)
+%doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
 %attr(755,root,root) %{_libdir}/libffi-*.so
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libffi-*.so
-%endif
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/include/ffitarget.h
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
-%ifarch ppc
-%attr(755,root,root) %{_libdir}/nof/libffi.so
-%{_libdir}/nof/libffi.la
-%endif
-%{_includedir}/ffi*
+%{_includedir}/ffi.h
 
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
-%ifarch ppc
-%{_libdir}/nof/libffi.a
-%endif
 %endif
 
 %if %{with ada}
 %files ada
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/gnat1
-%{_libdir}/gcc-lib/*/*/adainclude
-%dir %{_libdir}/gcc-lib/*/*/adalib
-%{_libdir}/gcc-lib/*/*/adalib/*.ali
-%ifnarch ppc
-%{_libdir}/gcc-lib/*/*/adalib/libgmem.a
-%endif
-%{_libdir}/gcc-lib/*/*/adalib/Makefile.adalib
+%doc gcc/ada/ChangeLog
 %attr(755,root,root) %{_bindir}/gnat*
-%{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat*.so
+%attr(755,root,root) %{_bindir}/gpr*
 %attr(755,root,root) %{_libdir}/libgnarl*.so
+%attr(755,root,root) %{_libdir}/libgnat*.so
+%attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
+%{_libdir}/gcc/*/*/adainclude
+%dir %{_libdir}/gcc/*/*/adalib
+%{_libdir}/gcc/*/*/adalib/*.ali
+%{_libdir}/gcc/*/*/adalib/g-trasym.o
+%{_libdir}/gcc/*/*/adalib/libgccprefix.a
+%ifarch %{ix86}
+%{_libdir}/gcc/*/*/adalib/libgmem.a
+%endif
+%{_datadir}/gnat
+%{_infodir}/gnat*
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*.so.1
+%attr(755,root,root) %{_libdir}/libgnarl*.so.1
+%attr(755,root,root) %{_libdir}/libgnat*.so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc-lib/*/*/adalib/libgna*.a
+%{_libdir}/gcc/*/*/adalib/libgnarl.a
+%{_libdir}/gcc/*/*/adalib/libgnat.a
 %endif
-
-%files ksi
-%defattr(644,root,root,755)
-%doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
-%{_infodir}/ksi*
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/ksi1
-
-%files -n cpp
-%defattr(644,root,root,755)
-%attr(755,root,root) /lib/cpp
-%attr(755,root,root) %{_bindir}/cpp
-%{_mandir}/man1/cpp.1*
-%lang(ja) %{_mandir}/ja/man1/cpp.1*
-%{_infodir}/cpp*
