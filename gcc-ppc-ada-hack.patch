@@ -1,0 +1,13 @@
+diff -ur gcc-20020311/gcc/ada/targtyps.c gcc-20020311-/gcc/ada/targtyps.c
+--- gcc-20020311/gcc/ada/targtyps.c	Tue Oct  2 16:57:55 2001
++++ gcc-20020311-/gcc/ada/targtyps.c	Sat Mar 16 15:19:39 2002
+@@ -99,6 +99,8 @@
+ #define WIDEST_HARDWARE_FP_SIZE LONG_DOUBLE_TYPE_SIZE
+ #endif
+ 
++static int rs6000_long_double_type_size = 64;
++
+ /* The following provide a functional interface for the front end Ada code
+    to determine the sizes that are used for various C types. */
+ 
+Only in gcc-20020311-/gcc/ada: targtyps.c~
