@@ -1,15 +1,15 @@
---- gcc-3.4-20040405/gcc/ada/Make-lang.in.orig	2004-04-01 19:25:01.000000000 +0200
-+++ gcc-3.4-20040405/gcc/ada/Make-lang.in	2004-04-05 21:43:54.935626632 +0200
-@@ -455,7 +455,7 @@
- ada/doctools/xgnatugn$(build_exeext): ada/xgnatugn.adb
+--- gcc-3.3/gcc/ada/Make-lang.in~	Fri May 16 15:14:53 2003
++++ gcc-3.3/gcc/ada/Make-lang.in	Fri May 16 15:18:07 2003
+@@ -347,7 +347,7 @@
+ ada/doctools/xgnatug : ada/xgnatug.adb
  	-$(MKDIR) ada/doctools
- 	$(CP) $^ ada/doctools
--	cd ada/doctools && gnatmake -q xgnatugn
-+	cd ada/doctools && gnatmake -q xgnatugn -aO../rts
+ 	cp $^ ada/doctools
+-	cd ada/doctools && gnatmake -q xgnatug
++	cd ada/doctools && gnatmake -q xgnatug -aO../rts
  
- doc/gnat_ugn_unw.texi : ada/doctools/xgnatugn$(build_exeext) \
- 	$(srcdir)/ada/gnat_ugn.texi $(srcdir)/ada/ug_words
-@@ -993,27 +993,27 @@
+ $(srcdir)/ada/gnat_ug_unx.texi : ada/doctools/xgnatug \
+ 	$(srcdir)/ada/gnat_ug.texi $(srcdir)/ada/ug_words
+@@ -871,27 +871,27 @@
  ada/treeprs.ads : ada/treeprs.adt ada/sinfo.ads ada/xtreeprs.adb
  	-$(MKDIR) ada/bldtools
  	$(CP) $^ ada/bldtools
