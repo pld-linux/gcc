@@ -7,12 +7,14 @@
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.1
 %define		KSI_VERSION	pre55
+%define		EPOCH		4
 
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
 Release:	0.pre.2
+Epoch:		%{EPOCH}
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}-%{SNAP}.tar.bz2
@@ -186,7 +188,6 @@ Summary:	Objective C Libraries
 Summary(pl):	Biblioteki Obiektowego C
 Group:		Libraries
 Version:	%{GCC_VERSION}
-Epoch:		3
 
 %description -n libobjc
 Objective C Libraries.
@@ -199,7 +200,6 @@ Summary:	Static Objective C Libraries
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Epoch:		4
 Requires:	libobjc = %{GCC_VERSION}
 
 %description -n libobjc-static
@@ -241,7 +241,6 @@ Summary:	Static Fortran 77 Libraries
 Summary(pl):	Statyczne Biblioteki Fortranu 77
 Group:		Development/Libraries
 Version:        %{GCC_VERSION}
-Epoch:		2
 Requires:	libg2c = %{GCC_VERSION}
 
 %description -n libg2c-static
@@ -275,7 +274,6 @@ Summary:	Java Class Libraries
 Summary(pl):	Biblioteki Klas Javy
 Group:		Libraries
 Version:	%{GCC_VERSION}
-Epoch:		2
 Requires:	zlib
 
 %description -n libgcj
@@ -289,7 +287,6 @@ Summary:	Development files for Java Class Libraries
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Epoch:		2
 Requires:	libgcj = %{GCC_VERSION}
 Requires:	%{name}-java
 
@@ -304,7 +301,6 @@ Summary:	Static Java Class Libraries
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Epoch:		2
 Requires:	libstdc++-devel = %{GCC_VERSION}
 Requires:	libgcj-devel = %{GCC_VERSION}
 
@@ -319,7 +315,6 @@ Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
 Version:	%{GCC_VERSION}
-Epoch:		1
 Obsoletes:	libg++
 
 %description -n libstdc++
@@ -354,7 +349,6 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Epoch:		1
 Requires:	libstdc++ = %{GCC_VERSION}
 Requires:	%{name}-c++
 Obsoletes:	libg++-devel
@@ -374,7 +368,6 @@ Summary:	Static C++ standard library
 Summary(pl):	Statyczna biblioteka standardowa C++
 Group:		Development/Libraries
 Version:	%{GCC_VERSION}
-Epoch:		1
 Requires:	libstdc++-devel = %{GCC_VERSION}
 
 %description -n libstdc++-static
