@@ -1,6 +1,6 @@
 %define		STDC_VERSION	3.0.0
 %define		GCJ_VERSION	3.0.0
-%define		snap		20010305
+%define		snap		20010319
 Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
@@ -11,10 +11,12 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{snap}.tar.gz
+Patch0:		%{name}-disableshared.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
 BuildRequires:	fileutils >= 4.0.41
+BuildRequires:	autoconf
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -335,8 +337,10 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q -n %{name}-%{snap}
+%patch0 -p1
 
 %build
+cd gcc && autoconf && cd ..
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
 CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}" \
@@ -453,7 +457,6 @@ rm -rf $RPM_BUILD_ROOT
 #%endif
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
-%attr(755,root,root) %{_libdir}/libgcc_s.so*
 
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
