@@ -582,11 +582,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 # autoconf is not needed!
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-#%if %{!?_without_ada:1}%{?_without_ada:0}
-#    BUILD_LANG="c,c++,f77,gcov,java,objc,ksi,ada";export BUILD_LANG
-#%else
-#    BUILD_LANG="c,c++,f77,gcov,java,objc,ksi";export BUILD_LANG
-#%endif
 BUILD_LANG="c,c++,f77,gcov,objc,ksi"
 %{!?_without_ada:BUILD_LANG=$BUILD_LANG+",ada";export BUILD_LANG}
 %{!?_without_java:BUILD_LANG=$BUILD_LANG+",java";export BUILD_LANG}
@@ -832,8 +827,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{GCC_VERSION}
-# Bohem-GC - it should be here? I think not but...
-#%{_includedir}/gc*.h
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.la
@@ -954,6 +947,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
 %endif
+# Bohem-GC - it should be here? I think not but...
+%{_includedir}/gc*.h
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
