@@ -577,7 +577,9 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch40
 %patch41
 
-perl -p -i -e 's/";/ (PLD Linux)";/' gcc/version.c
+# because we distribute modified version of gcc...
+perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
+perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld.org.pl/>";@' gcc/version.c
 
 %build
 # cd gcc && autoconf; cd ..
@@ -791,7 +793,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-c++
-#%%attr(755,root,root) %{_bindir}/c++filt
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 %{_libdir}/libsupc++.la
 %ifarch ppc
@@ -800,7 +801,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
-%lang(es) %{_mandir}/es/man1/c++filt.1*
 %lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
