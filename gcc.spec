@@ -389,6 +389,7 @@ Group:		Development/Languages
 Version:        %{GCC_VERSION}
 Requires:	libgnat = %{GCC_VERSION}
 Requires:	gcc = %{GCC_VERSION}
+Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
 
 %description ada
