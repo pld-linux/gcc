@@ -314,7 +314,6 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 	--enable-haifa \
 	--with-gnu-as \
 	--with-gnu-ld \
-	--datadir=%{_datadir} \
 	%{_target_platform}
 
 PATH=$PATH:/sbin:%{_sbindir}
@@ -323,7 +322,6 @@ touch  ../gcc/c-gperf.h
 make LDFLAGS_FOR_TARGET="-s" \
 	bootstrap-lean \
 	mandir=%{_mandir} \
-	datadir=%{_datadir} \
 	infodir=%{_infodir}
 
 %install
@@ -336,38 +334,36 @@ PATH=$PATH:/sbin:%{_sbindir}
 make install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
-	infodir=$RPM_BUILD_ROOT%{_infodir} \
-	datadir=$RPM_BUILD_ROOT%{_datadir}
+	infodir=$RPM_BUILD_ROOT%{_infodir}
+
 make install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
-	datadir=$RPM_BUILD_ROOT%{_datadir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} -C texinfo
 
 strip $RPM_BUILD_ROOT%{_bindir}/* || :
 
-strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/gcc*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
-strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*.*.* 
+strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++-3-*.*.*.*.so
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
-
-mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_datadir}
-mv $RPM_BUILD_ROOT/usr/info $RPM_BUILD_ROOT%{_datadir}
 
 echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
 
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 
+mv -f $RPM_BUILD_ROOT%{_includedir}/g++-3 $RPM_BUILD_ROOT%{_includedir}/g++
+
 install -d $RPM_BUILD_ROOT/lib
 (cd $RPM_BUILD_ROOT; \
-ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/gcc*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
+ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
 
 #install the compatibility libstdc++ library
 [ -d ../compat/$RPM_ARCH ] && install -s ../compat/$RPM_ARCH/* $RPM_BUILD_ROOT%{_libdir}/
 
 gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
-	  ../READ* ../ChangeLog
+	  ../READ* ../ChangeLog ../gcc/ch/chill.brochure
 
 %post
 /sbin/install-info %{_infodir}/gcc.info.gz /etc/info-dir
@@ -413,8 +409,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{_libdir}/gcc-lib
 %dir %{_libdir}/gcc-lib/%{_target_cpu}*
-%dir %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*
-%dir %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*/*
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*/*/include
 
 %attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcc
 %attr(755,root,root) %{_bindir}/gcc
@@ -426,28 +422,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gcc.1*
 %{_infodir}/gcc*
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/SYSCALLS.c.X
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libgcc.a
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/lib*.map
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/specs
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/SYSCALLS.c.X
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
 
 %ifnarch alpha
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/*.o
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/*.o
 %endif
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/collect2
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/collect2
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/float.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/iso646.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/limits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/proto.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stdarg.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stdbool.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stddef.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/syslimits.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/va-*.h
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/varargs.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/float.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/iso646.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/limits.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/proto.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdarg.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stdbool.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/stddef.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/syslimits.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/va-*.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/varargs.h
 
 %files c++
 %defattr(644,root,root,755)
@@ -457,20 +452,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/c++filt
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1plus
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1plus
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/exception
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/new
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/typeinfo
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/new.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/exception
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/new
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/typeinfo
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/new.h
 
 %files objc
 %defattr(644,root,root,755)
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1obj
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1obj
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libobjc.a
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/objc
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libobjc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/objc
 
 %files g77
 %defattr(644,root,root,755)
@@ -480,13 +475,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_infodir}/g77*
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/f771
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libg2c.a
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/f771
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libg2c.a
 
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/g2c.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/include/g2c.h
 
 %files chill
 %defattr(644,root,root,755)
@@ -496,9 +491,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{_infodir}/chill*
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1chill
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/chill*.o
-%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libchill.a
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cc1chill
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/chill*.o
+%{_libdir}/gcc-lib/%{_target_cpu}*/*/libchill.a
 
 %files java
 %defattr(644,root,root,755)
@@ -506,10 +501,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcj
 %attr(755,root,root) %{_bindir}/gcjh
 %attr(755,root,root) %{_bindir}/jcf-dump
-%attr(755,root,root) %{_bindir}/jvscan
+%attr(755,root,root) %{_bindir}/jv-convert
+%attr(755,root,root) %{_bindir}/jv-scan
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/jc1
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/jvgenmain
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jc1
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/jvgenmain
 
 %files libgcj
 %defattr(644,root,root,755)
@@ -521,7 +517,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/libgcj.zip
 
 %files -n libstdc++
-%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+%attr(755,root,root) %{_libdir}/libstdc++-3-*.*.*.*.so
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755) 
@@ -539,4 +535,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cccp.1*
 %{_infodir}/cpp.info*.gz
 
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cpp
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp
