@@ -1,0 +1,628 @@
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/cp-tree.h,v
+retrieving revision 1.1086
+retrieving revision 1.1087
+diff -u -r1.1086 -r1.1087
+--- gcc/gcc/cp/cp-tree.h	2004/12/30 23:29:29	1.1086
++++ gcc/gcc/cp/cp-tree.h	2005/01/05 10:02:00	1.1087
+@@ -1,6 +1,6 @@
+ /* Definitions for C++ parsing and type checking.
+    Copyright (C) 1987, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+-   2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
++   2000, 2001, 2002, 2003, 2004, 2005  Free Software Foundation, Inc.
+    Contributed by Michael Tiemann (tiemann@cygnus.com)
+ 
+ This file is part of GCC.
+@@ -3780,7 +3780,7 @@
+ extern tree check_tag_decl			(cp_decl_specifier_seq *);
+ extern tree shadow_tag				(cp_decl_specifier_seq *);
+ extern tree groktypename			(cp_decl_specifier_seq *, const cp_declarator *);
+-extern tree start_decl				(const cp_declarator *, cp_decl_specifier_seq *, int, tree, tree, bool *);
++extern tree start_decl				(const cp_declarator *, cp_decl_specifier_seq *, int, tree, tree, tree *);
+ extern void start_decl_1			(tree);
+ extern void cp_finish_decl			(tree, tree, tree, int);
+ extern void finish_decl				(tree, tree, tree);
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/decl.c,v
+retrieving revision 1.1350
+retrieving revision 1.1351
+diff -u -r1.1350 -r1.1351
+--- gcc/gcc/cp/decl.c	2005/01/01 16:15:17	1.1350
++++ gcc/gcc/cp/decl.c	2005/01/05 10:02:03	1.1351
+@@ -1,6 +1,6 @@
+ /* Process declarations and variables for C++ compiler.
+    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+-   2001, 2002, 2003, 2004,2005  Free Software Foundation, Inc.
++   2001, 2002, 2003, 2004, 2005  Free Software Foundation, Inc.
+    Contributed by Michael Tiemann (tiemann@cygnus.com)
+ 
+ This file is part of GCC.
+@@ -3687,13 +3687,13 @@
+             int initialized,
+             tree attributes,
+             tree prefix_attributes, 
+-	    bool *pop_scope_p)
++	    tree *pushed_scope_p)
+ {
+   tree decl;
+   tree type, tem;
+   tree context;
+ 
+-  *pop_scope_p = false;
++  *pushed_scope_p = NULL_TREE;
+  
+   /* This should only be done once on the top most decl.  */
+   if (have_extern_spec)
+@@ -3725,11 +3725,13 @@
+   context = DECL_CONTEXT (decl);
+ 
+   if (context)
+-    *pop_scope_p = push_scope (context);
++    {
++      *pushed_scope_p = push_scope (context);
+   
+-  /* We are only interested in class contexts, later.  */
+-  if (context && TREE_CODE (context) == NAMESPACE_DECL)
+-    context = NULL_TREE;
++      /* We are only interested in class contexts, later.  */
++      if (TREE_CODE (context) == NAMESPACE_DECL)
++	context = NULL_TREE;
++    }
+ 
+   if (initialized)
+     /* Is it valid for this decl to have an initializer at all?
+@@ -5893,7 +5895,7 @@
+       if (old_decl)
+ 	{
+ 	  tree ok;
+-	  bool pop_p;
++	  tree pushed_scope;
+ 
+ 	  /* Since we've smashed OLD_DECL to its
+ 	     DECL_TEMPLATE_RESULT, we must do the same to DECL.  */
+@@ -5902,10 +5904,10 @@
+ 
+ 	  /* Attempt to merge the declarations.  This can fail, in
+ 	     the case of some invalid specialization declarations.  */
+-	  pop_p = push_scope (ctype);
++	  pushed_scope = push_scope (ctype);
+ 	  ok = duplicate_decls (decl, old_decl);
+-	  if (pop_p)
+-	    pop_scope (ctype);
++	  if (pushed_scope)
++	    pop_scope (pushed_scope);
+ 	  if (!ok)
+ 	    {
+ 	      error ("no %q#D member function declared in class %qT",
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/decl2.c,v
+retrieving revision 1.763
+retrieving revision 1.764
+diff -u -r1.763 -r1.764
+--- gcc/gcc/cp/decl2.c	2005/01/01 01:43:12	1.763
++++ gcc/gcc/cp/decl2.c	2005/01/05 10:02:11	1.764
+@@ -1,6 +1,6 @@
+ /* Process declarations and variables for C++ compiler.
+    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+-   1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
++   1999, 2000, 2001, 2002, 2003, 2004, 2005  Free Software Foundation, Inc.
+    Hacked by Michael Tiemann (tiemann@cygnus.com)
+ 
+ This file is part of GCC.
+@@ -627,10 +627,10 @@
+       VEC(tree) *methods = CLASSTYPE_METHOD_VEC (ctype);
+       tree fndecls, fndecl = 0;
+       bool is_conv_op;
+-      bool pop_p;
++      tree pushed_scope;
+       const char *format = NULL;
+       
+-      pop_p = push_scope (ctype);
++      pushed_scope = push_scope (ctype);
+       for (fndecls = VEC_index (tree, methods, ix);
+ 	   fndecls; fndecls = OVL_NEXT (fndecls))
+ 	{
+@@ -669,8 +669,8 @@
+ 		      == DECL_TI_TEMPLATE (fndecl))))
+ 	    break;
+ 	}
+-      if (pop_p)
+-	pop_scope (ctype);
++      if (pushed_scope)
++	pop_scope (pushed_scope);
+       if (fndecls)
+ 	return OVL_CURRENT (fndecls);
+       error ("prototype for %q#D does not match any in class %qT",
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/name-lookup.c,v
+retrieving revision 1.104
+retrieving revision 1.105
+diff -u -r1.104 -r1.105
+--- gcc/gcc/cp/name-lookup.c	2004/12/30 23:29:33	1.104
++++ gcc/gcc/cp/name-lookup.c	2005/01/05 10:02:14	1.105
+@@ -1,5 +1,5 @@
+ /* Definitions for C++ name lookup routines.
+-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
++   Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.
+    Contributed by Gabriel Dos Reis <gdr@integrable-solutions.net>
+ 
+ This file is part of GCC.
+@@ -2214,16 +2214,14 @@
+     }
+ }
+ 
+-/* Enter the class or namespace scope indicated by T suitable for
+-   name lookup.  T can be arbitrary scope, not necessary nested inside
+-   the current scope.  Returns TRUE iff pop_scope should be called
+-   later to exit this scope.  */
++/* Enter the class or namespace scope indicated by T suitable for name
++   lookup.  T can be arbitrary scope, not necessary nested inside the
++   current scope.  Returns a non-null scope to pop iff pop_scope
++   should be called later to exit this scope.  */
+ 
+-bool
++tree
+ push_scope (tree t)
+ {
+-  bool pop = true;
+-
+   if (TREE_CODE (t) == NAMESPACE_DECL)
+     push_decl_namespace (t);
+   else if (CLASS_TYPE_P (t))
+@@ -2236,10 +2234,10 @@
+ 	   need to re-enter the scope.  Since we are not actually
+ 	   pushing a new scope, our caller should not call
+ 	   pop_scope.  */
+-	pop = false;
++	t = NULL_TREE;
+     }
+ 
+-  return pop;
++  return t;
+ }
+ 
+ /* Leave scope pushed by push_scope.  */
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/name-lookup.h,v
+retrieving revision 1.34
+retrieving revision 1.35
+diff -u -r1.34 -r1.35
+--- gcc/gcc/cp/name-lookup.h	2004/12/30 23:29:33	1.34
++++ gcc/gcc/cp/name-lookup.h	2005/01/05 10:02:16	1.35
+@@ -1,5 +1,5 @@
+ /* Declarations for C++ name lookup routines.
+-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
++   Copyright (C) 2003, 2004, 2005  Free Software Foundation, Inc.
+    Contributed by Gabriel Dos Reis <gdr@integrable-solutions.net>
+ 
+ This file is part of GCC.
+@@ -299,7 +299,7 @@
+ extern void pop_everything (void);
+ extern void keep_next_level (bool);
+ extern bool is_ancestor (tree, tree);
+-extern bool push_scope (tree);
++extern tree push_scope (tree);
+ extern void pop_scope (tree);
+ extern tree push_inner_scope (tree);
+ extern void pop_inner_scope (tree, tree);
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/parser.c,v
+retrieving revision 1.300
+retrieving revision 1.301
+diff -u -r1.300 -r1.301
+--- gcc/gcc/cp/parser.c	2005/01/03 17:03:00	1.300
++++ gcc/gcc/cp/parser.c	2005/01/05 10:02:16	1.301
+@@ -1,5 +1,6 @@
+ /* C++ Parser.
+-   Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
++   Copyright (C) 2000, 2001, 2002, 2003, 2004,
++   2005  Free Software Foundation, Inc.
+    Written by Mark Mitchell <mark@codesourcery.com>.
+ 
+    This file is part of GCC.
+@@ -6231,13 +6232,13 @@
+ 	 for sure.  */
+       if (cp_parser_parse_definitely (parser))
+ 	{
+-	  bool pop_p;	
++	  tree pushed_scope;	
+ 
+ 	  /* Create the declaration.  */
+ 	  decl = start_decl (declarator, &type_specifiers,
+ 			     /*initialized_p=*/true,
+ 			     attributes, /*prefix_attributes=*/NULL_TREE,
+-			     &pop_p);
++			     &pushed_scope);
+ 	  /* Parse the assignment-expression.  */
+ 	  initializer = cp_parser_assignment_expression (parser);
+ 
+@@ -6247,8 +6248,8 @@
+ 			  asm_specification,
+ 			  LOOKUP_ONLYCONVERTING);
+ 
+-	  if (pop_p)
+-	    pop_scope (DECL_CONTEXT (decl));
++	  if (pushed_scope)
++	    pop_scope (pushed_scope);
+ 
+ 	  return convert_from_reference (decl);
+ 	}
+@@ -7397,7 +7398,7 @@
+   tree saved_scope;
+   tree saved_qualifying_scope;
+   tree saved_object_scope;
+-  bool pop_p = false;
++  tree pushed_scope = NULL_TREE;
+ 
+   /* Look for the `operator' token.  */
+   if (!cp_parser_require_keyword (parser, RID_OPERATOR, "`operator'"))
+@@ -7422,12 +7423,12 @@
+      In order to see that `I' is a type-name in the definition, we
+      must be in the scope of `S'.  */
+   if (saved_scope)
+-    pop_p = push_scope (saved_scope);
++    pushed_scope = push_scope (saved_scope);
+   /* Parse the conversion-type-id.  */
+   type = cp_parser_conversion_type_id (parser);
+   /* Leave the scope of the class, if any.  */
+-  if (pop_p)
+-    pop_scope (saved_scope);
++  if (pushed_scope)
++    pop_scope (pushed_scope);
+   /* Restore the saved scope.  */
+   parser->scope = saved_scope;
+   parser->qualifying_scope = saved_qualifying_scope;
+@@ -10426,7 +10427,7 @@
+   bool is_non_constant_init;
+   int ctor_dtor_or_conv_p;
+   bool friend_p;
+-  bool pop_p = false;
++  tree pushed_scope = NULL;
+ 
+   /* Gather the attributes that were provided with the
+      decl-specifiers.  */
+@@ -10583,12 +10584,12 @@
+ 	}
+       decl = start_decl (declarator, decl_specifiers,
+ 			 is_initialized, attributes, prefix_attributes,
+-			 &pop_p);
++			 &pushed_scope);
+     }
+   else if (scope)
+     /* Enter the SCOPE.  That way unqualified names appearing in the
+        initializer will be looked up in SCOPE.  */
+-    pop_p = push_scope (scope);
++    pushed_scope = push_scope (scope);
+ 
+   /* Perform deferred access control checks, now that we know in which
+      SCOPE the declared entity resides.  */
+@@ -10638,10 +10639,10 @@
+      declaration.  */
+   if (member_p)
+     {
+-      if (pop_p)
++      if (pushed_scope)
+ 	{
+-	  pop_scope (scope);
+-	  pop_p = false;
++	  pop_scope (pushed_scope);
++	  pushed_scope = false;
+ 	}
+       decl = grokfield (declarator, decl_specifiers,
+ 			initializer, /*asmspec=*/NULL_TREE,
+@@ -10663,9 +10664,9 @@
+ 			 `explicit' constructor cannot be used.  */
+ 		      ((is_parenthesized_init || !is_initialized)
+ 		     ? 0 : LOOKUP_ONLYCONVERTING));
+-      if (pop_p)
+-	pop_scope (DECL_CONTEXT (decl));
+     }
++  if (!friend_p && pushed_scope)
++    pop_scope (pushed_scope);
+ 
+   /* Remember whether or not variables were initialized by
+      constant-expressions.  */
+@@ -10836,7 +10837,7 @@
+   bool saved_default_arg_ok_p = parser->default_arg_ok_p;
+   bool saved_in_declarator_p = parser->in_declarator_p;
+   bool first = true;
+-  bool pop_p = false;
++  tree pushed_scope = NULL_TREE;
+ 
+   while (true)
+     {
+@@ -11136,7 +11137,7 @@
+ 	  if (scope)
+ 	    /* Any names that appear after the declarator-id for a
+ 	       member are looked up in the containing scope.  */
+-	    pop_p = push_scope (scope);
++	    pushed_scope = push_scope (scope);
+ 	  parser->in_declarator_p = true;
+ 	  if ((ctor_dtor_or_conv_p && *ctor_dtor_or_conv_p)
+ 	      || (declarator && declarator->kind == cdk_id))
+@@ -11159,8 +11160,8 @@
+     cp_parser_error (parser, "expected declarator");
+ 
+   /* If we entered a scope, we must exit it now.  */
+-  if (pop_p)
+-    pop_scope (scope);
++  if (pushed_scope)
++    pop_scope (pushed_scope);
+ 
+   parser->default_arg_ok_p = saved_default_arg_ok_p;
+   parser->in_declarator_p = saved_in_declarator_p;
+@@ -12350,8 +12351,8 @@
+     {
+       tree queue_entry;
+       tree fn;
+-      tree class_type;
+-      bool pop_p;
++      tree class_type = NULL_TREE;
++      tree pushed_scope = NULL_TREE;
+ 
+       /* In a first pass, parse default arguments to the functions.
+ 	 Then, in a second pass, parse the bodies of the functions.
+@@ -12363,8 +12364,6 @@
+             };
+ 
+          */
+-      class_type = NULL_TREE;
+-      pop_p = false;
+       for (TREE_PURPOSE (parser->unparsed_functions_queues)
+ 	     = nreverse (TREE_PURPOSE (parser->unparsed_functions_queues));
+ 	   (queue_entry = TREE_PURPOSE (parser->unparsed_functions_queues));
+@@ -12376,10 +12375,10 @@
+ 	     take care of them now.  */
+ 	  if (class_type != TREE_PURPOSE (queue_entry))
+ 	    {
+-	      if (pop_p)
+-		pop_scope (class_type);
++	      if (pushed_scope)
++		pop_scope (pushed_scope);
+ 	      class_type = TREE_PURPOSE (queue_entry);
+-	      pop_p = push_scope (class_type);
++	      pushed_scope = push_scope (class_type);
+ 	    }
+ 	  /* Make sure that any template parameters are in scope.  */
+ 	  maybe_begin_member_template_processing (fn);
+@@ -12388,8 +12387,8 @@
+ 	  /* Remove any template parameters from the symbol table.  */
+ 	  maybe_end_member_template_processing ();
+ 	}
+-      if (pop_p)
+-	pop_scope (class_type);
++      if (pushed_scope)
++	pop_scope (pushed_scope);
+       /* Now parse the body of the functions.  */
+       for (TREE_VALUE (parser->unparsed_functions_queues)
+ 	     = nreverse (TREE_VALUE (parser->unparsed_functions_queues));
+@@ -12457,7 +12456,7 @@
+   bool qualified_p = false;
+   bool invalid_nested_name_p = false;
+   bool invalid_explicit_specialization_p = false;
+-  bool pop_p = false;
++  tree pushed_scope = NULL_TREE;
+   unsigned num_templates;
+   tree bases;
+ 
+@@ -12675,19 +12674,12 @@
+     {
+       type = TREE_TYPE (id);
+       maybe_process_partial_specialization (type);
++      if (nested_name_specifier)
++	pushed_scope = push_scope (nested_name_specifier);
+     }
+-  else if (!nested_name_specifier)
+-    {
+-      /* If the class was unnamed, create a dummy name.  */
+-      if (!id)
+-	id = make_anon_name ();
+-      type = xref_tag (class_key, id, /*tag_scope=*/ts_current,
+-		       parser->num_template_parameter_lists);
+-    }
+-  else
++  else if (nested_name_specifier)
+     {
+       tree class_type;
+-      bool pop_p = false;
+ 
+       /* Given:
+ 
+@@ -12713,8 +12705,7 @@
+       maybe_process_partial_specialization (TREE_TYPE (type));
+       class_type = current_class_type;
+       /* Enter the scope indicated by the nested-name-specifier.  */
+-      if (nested_name_specifier)
+-	pop_p = push_scope (nested_name_specifier);
++      pushed_scope = push_scope (nested_name_specifier);
+       /* Get the canonical version of this type.  */
+       type = TYPE_MAIN_DECL (TREE_TYPE (type));
+       if (PROCESSING_REAL_TEMPLATE_DECL_P ()
+@@ -12729,29 +12720,31 @@
+ 	}
+       
+       type = TREE_TYPE (type);
+-      if (nested_name_specifier)
+-	{
+-	  *nested_name_specifier_p = true;
+-	  if (pop_p)
+-	    pop_scope (nested_name_specifier);
+-	}
++      *nested_name_specifier_p = true;
+     }
++  else      /* The name is not a nested name.  */
++    {
++      /* If the class was unnamed, create a dummy name.  */
++      if (!id)
++	id = make_anon_name ();
++      type = xref_tag (class_key, id, /*tag_scope=*/ts_current,
++		       parser->num_template_parameter_lists);
++    }
++
+   /* Indicate whether this class was declared as a `class' or as a
+      `struct'.  */
+   if (TREE_CODE (type) == RECORD_TYPE)
+     CLASSTYPE_DECLARED_CLASS (type) = (class_key == class_type);
+   cp_parser_check_class_key (class_key, type);
+ 
+-  /* Enter the scope containing the class; the names of base classes
+-     should be looked up in that context.  For example, given:
++  /* We will have entered the scope containing the class; the names of
++     base classes should be looked up in that context.  For example,
++     given:
+ 
+        struct A { struct B {}; struct C; };
+        struct A::C : B {};
+ 
+      is valid.  */
+-  if (nested_name_specifier)
+-    pop_p = push_scope (nested_name_specifier);
+-
+   bases = NULL_TREE;
+ 
+   /* Get the list of base-classes, if there is one.  */
+@@ -12761,12 +12754,12 @@
+   /* Process the base classes.  */
+   xref_basetypes (type, bases);
+ 
++ done:
+   /* Leave the scope given by the nested-name-specifier.  We will
+      enter the class scope itself while processing the members.  */
+-  if (pop_p)
+-    pop_scope (nested_name_specifier);
++  if (pushed_scope)
++    pop_scope (pushed_scope);
+ 
+- done:
+   if (invalid_explicit_specialization_p)
+     {
+       end_specialization ();
+@@ -14207,7 +14200,7 @@
+ 	}
+       else
+ 	{
+-	  bool pop_p = false;
++	  tree pushed_scope = NULL_TREE;
+ 
+ 	  /* If PARSER->SCOPE is a dependent type, then it must be a
+ 	     class type, and we must not be checking dependencies;
+@@ -14215,7 +14208,7 @@
+ 	     that PARSER->SCOPE is not considered a dependent base by
+ 	     lookup_member, we must enter the scope here.  */
+ 	  if (dependent_p)
+-	    pop_p = push_scope (parser->scope);
++	    pushed_scope = push_scope (parser->scope);
+ 	  /* If the PARSER->SCOPE is a a template specialization, it
+ 	     may be instantiated during name lookup.  In that case,
+ 	     errors may be issued.  Even if we rollback the current
+@@ -14223,8 +14216,8 @@
+ 	  decl = lookup_qualified_name (parser->scope, name, 
+ 					tag_type != none_type, 
+ 					/*complain=*/true);
+-	  if (pop_p)
+-	    pop_scope (parser->scope);
++	  if (pushed_scope)
++	    pop_scope (pushed_scope);
+ 	}
+       parser->qualifying_scope = parser->scope;
+       parser->object_scope = NULL_TREE;
+@@ -14600,7 +14593,7 @@
+ 	  && !cp_parser_storage_class_specifier_opt (parser))
+ 	{
+ 	  tree type;
+-	  bool pop_p = false;
++	  tree pushed_scope = NULL_TREE;
+ 	  unsigned saved_num_template_parameter_lists;
+ 
+ 	  /* Names appearing in the type-specifier should be looked up
+@@ -14620,7 +14613,7 @@
+ 		      return false;
+ 		    }
+ 		}
+-	      pop_p = push_scope (type);
++	      pushed_scope = push_scope (type);
+ 	    }
+ 
+ 	  /* Inside the constructor parameter list, surrounding
+@@ -14641,8 +14634,8 @@
+ 	    = saved_num_template_parameter_lists;
+ 
+ 	  /* Leave the scope of the class.  */
+-	  if (pop_p)
+-	    pop_scope (type);
++	  if (pushed_scope)
++	    pop_scope (pushed_scope);
+ 
+ 	  constructor_p = !cp_parser_error_occurred (parser);
+ 	}
+===================================================================
+RCS file: /cvs/gcc/gcc/gcc/cp/pt.c,v
+retrieving revision 1.962
+retrieving revision 1.963
+diff -u -r1.962 -r1.963
+--- gcc/gcc/cp/pt.c	2004/12/23 19:54:08	1.962
++++ gcc/gcc/cp/pt.c	2005/01/05 10:02:21	1.963
+@@ -1,6 +1,6 @@
+ /* Handle parameterized types (templates) for GNU C++.
+    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+-   2001, 2002, 2003, 2004  Free Software Foundation, Inc.
++   2001, 2002, 2003, 2004, 2005  Free Software Foundation, Inc.
+    Written by Ken Raeburn (raeburn@cygnus.com) while at Watchmaker Computing.
+    Rewritten by Jason Merrill (jason@cygnus.com).
+ 
+@@ -5578,13 +5578,13 @@
+     {
+       tree pbase_binfo;
+       tree context = TYPE_CONTEXT (type);
+-      bool pop_p;
++      tree pushed_scope;
+       int i;
+ 
+       /* We must enter the scope containing the type, as that is where
+ 	 the accessibility of types named in dependent bases are
+ 	 looked up from.  */
+-      pop_p = push_scope (context ? context : global_namespace);
++      pushed_scope = push_scope (context ? context : global_namespace);
+   
+       /* Substitute into each of the bases to determine the actual
+ 	 basetypes.  */
+@@ -5606,8 +5606,8 @@
+       /* The list is now in reverse order; correct that.  */
+       base_list = nreverse (base_list);
+ 
+-      if (pop_p)
+-	pop_scope (context ? context : global_namespace);
++      if (pushed_scope)
++	pop_scope (pushed_scope);
+     }
+   /* Now call xref_basetypes to set up all the base-class
+      information.  */
+@@ -12286,7 +12286,7 @@
+   tree name;
+   tree decl;
+   int quals;
+-  bool pop_p;
++  tree pushed_scope;
+ 
+   gcc_assert (TREE_CODE (type) == TYPENAME_TYPE);
+ 
+@@ -12315,7 +12315,7 @@
+   /* Enter the SCOPE so that name lookup will be resolved as if we
+      were in the class definition.  In particular, SCOPE will no
+      longer be considered a dependent type.  */
+-  pop_p = push_scope (scope);
++  pushed_scope = push_scope (scope);
+   /* Look up the declaration.  */
+   decl = lookup_member (scope, name, /*protect=*/0, /*want_type=*/true);
+   /* Obtain the set of qualifiers applied to the TYPE.  */
+@@ -12345,8 +12345,8 @@
+   if (type != error_mark_node && quals)
+     type = cp_build_qualified_type (type, quals);
+   /* Leave the SCOPE.  */
+-  if (pop_p)
+-    pop_scope (scope);
++  if (pushed_scope)
++    pop_scope (pushed_scope);
+ 
+   return type;
+ }

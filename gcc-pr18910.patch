@@ -1,0 +1,21 @@
+2005-01-02  Jan Hubicka  <jh@suse.cz>
+	PR target/18910
+	* i386.c (ix86_expand_move): Work harder to discover TLS.
+
+--- gcc-4.0-20050102/gcc/config/i386/i386.c.orig	2005-01-05 15:05:28.450350488 +0000
++++ gcc-4.0-20050102/gcc/config/i386/i386.c	2005-01-05 15:05:37.535969264 +0000
+@@ -7472,7 +7472,13 @@
+   op0 = operands[0];
+   op1 = operands[1];
+ 
+-  model = GET_CODE (op1) == SYMBOL_REF ? SYMBOL_REF_TLS_MODEL (op1) : 0;
++  if (GET_CODE (op1) == CONST && GET_CODE (XEXP (op1, 0)) == PLUS
++      && GET_CODE (XEXP (XEXP (op1, 0), 0)) == SYMBOL_REF)
++    model = SYMBOL_REF_TLS_MODEL (XEXP (XEXP (op1, 0), 0));
++  else if (GET_CODE (op1) == SYMBOL_REF)
++    model = SYMBOL_REF_TLS_MODEL (op1);
++  else
++    model = 0;
+   if (model)
+     {
+       op1 = legitimize_tls_address (op1, model, true);
