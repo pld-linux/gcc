@@ -5,7 +5,7 @@ Summary(pl): Kompilator GNU C
 Summary(tr): GNU C derleyicisi
 Name:        gcc
 Version:     2.7.2.3
-Release:     15
+Release:     16
 Copyright:   GPL
 Group:       Development/Languages
 Source:      ftp://prep.ai.mit.edu/pub/gnu/%{name}-%{version}.tar.gz
@@ -97,14 +97,6 @@ rm -rf $RPM_BUILD_ROOT/usr/lib/gcc-lib/${RPM_ARCH}/*/include/objc
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/install-info /usr/info/gcc.info.gz /usr/info/dir --entry="* gcc: (gcc).                   The GNU C compiler."
-
-%preun
-if [ $1 = 0 ]; then
-    /sbin/install-info --delete /usr/info/gcc.info.gz /usr/info/dir --entry="* gcc: (gcc).                   The GNU C compiler."
-fi
-
 %files
 %defattr(644, root, root, 755)
 %doc NEWS PROBLEMS
@@ -112,7 +104,6 @@ fi
 %attr(755, root, root) /usr/bin/cc
 %attr(755, root, root) /usr/bin/*-gcc
 /usr/man/man1/gcc.1
-/usr/info/gcc.info*
 %dir /usr/lib/gcc-lib/*/*
 %dir /usr/lib/gcc-lib/*/*/include
 /usr/lib/gcc-lib/*/*/SYSCALLS.c.X
@@ -124,6 +115,10 @@ fi
 /usr/lib/gcc-lib/*/*/*.o
 
 %changelog
+* Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [2.7.2.3-16]
+- removed gcc info pages (this can be provided by egcs).
+
 * Sun Sep 27 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [2.7.2.3-15]
 - added full %attr description in %files,
