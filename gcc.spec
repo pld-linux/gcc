@@ -90,10 +90,10 @@ Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 %{?with_ssp:Provides:	gcc(ssp)}
-# ksi for gcc > 3.3.x not ready yet
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
+# ksi for gcc > 3.3.x not ready yet
 Obsoletes:	gcc-ksi
 Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
