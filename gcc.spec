@@ -7,7 +7,7 @@
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
 %define		GCC_VERSION	3.2.3
-%define		KSI_VERSION	pre55
+%define		KSI_VERSION	1.0.1.1567
 
 Summary:	GNU C Compiler
 Summary(pl):	Kompilator C GNU
