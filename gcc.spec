@@ -556,6 +556,7 @@ Requires:	libgnat = %{epoch}:%{version}-%{release}
 Requires:	gcc = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
+Provides:	libgnat
 
 %description ada
 This package adds experimental support for compiling Ada programs.
