@@ -991,15 +991,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/*/*/libgcc.a
 %{_libdir}/gcc-lib/*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/*/*/specs
-%attr(644,root,root) %{_libdir}*/gcc-lib/*/*/crt*.o
+%{_libdir}*/gcc-lib/*/*/crt*.o
 %ifarch sparc64
 %{_libdir}/gcc-lib/*/*/*/libgcc.a
 %{_libdir}/gcc-lib/*/*/*/libgcc_eh.a
-%attr(644,root,root) %{_libdir}*/gcc-lib/*/*/*/crt*.o
+%{_libdir}*/gcc-lib/*/*/*/crt*.o
 %endif
 %ifarch ppc
-%attr(644,root,root) %{_libdir}/gcc-lib/*/*/ecrt*.o
-%attr(644,root,root) %{_libdir}/gcc-lib/*/*/ncrt*.o
+%{_libdir}/gcc-lib/*/*/ecrt*.o
+%{_libdir}/gcc-lib/*/*/ncrt*.o
 %{_libdir}/gcc-lib/*/*/nof
 %dir %{_libdir}/nof
 %endif
@@ -1151,6 +1151,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
+%attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
 %endif
 
 %files -n libgcj-devel
@@ -1167,13 +1168,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
 %{_libdir}/lib*cj.spec
-%{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
+%{_libdir}/lib*cj*.la
 %{_libdir}/lib-org-*.la
 %ifarch ppc
-%{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
+%attr(755,root,root) %{_libdir}/nof/lib-org-*.so
+%{_libdir}/nof/lib*cj*.la
+%{_libdir}/nof/lib-org-*.la
 %endif
 
 %files -n libgcj-static
@@ -1182,21 +1185,32 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib-org-*.a
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
+%{_libdir}/nof/lib-org-*.a
 %endif
 
 %files -n libffi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi-*.so
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libffi-*.so
+%endif
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%ifarch ppc
+%attr(755,root,root) %{_libdir}/nof/libffi.so
+%{_libdir}/nof/libffi.la
+%endif
 %{_includedir}/ffi*
 
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
+%ifarch ppc
+%{_libdir}/nof/libffi.a
+%endif
 %endif
 
 %if %{with ada}
