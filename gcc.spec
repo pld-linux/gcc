@@ -1,115 +1,542 @@
-Summary:     GNU C Compiler
-Summary(de): GNU-C-Compiler 
-Summary(fr): Compilateur C de GNU
-Summary(pl): Kompilator GNU C
-Summary(tr): GNU C derleyicisi
-Name:        gcc
-Version:     2.7.2.3
-Release:     16
-Copyright:   GPL
-Group:       Development/Languages
-Source:      ftp://prep.ai.mit.edu/pub/gnu/%{name}-%{version}.tar.gz
-Patch1:      gcc-2.7.2-make.patch
-Patch2:      gcc-2.7.2.sparc.patch
-Patch3:      ftp://atheist.tamu.edu/pub/richard/linux/axp/rth-gcc-2.7.2-960814.diff.gz
-Patch4:      gcc-2.7.2-pg.patch
-Patch5:      gcc-2.7.2-flow.patch
-Patch6:      ftp://ftp.redhat.com/pub/alphabits/rth-gcc-2.7.2-961121.diff.gz
-Patch7:      gcc-2.7.2.sparc.patch2
-Patch8:      gcc-2.7.2.3-glibc2.patch
-Patch9:      gcc-2.7.2-alpha-ra.patch
-Requires:    binutils
-Prereq:      /sbin/install-info
+Summary:	GNU C Compiler
+Summary(pl):	Kompilator GNU
+Name:		gcc
+Version:	2.95
+Release:	1
+Copyright:	GPL
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
+Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{version}.tar.gz
+Source2:	libstdc++-compat.tar.gz
+Patch0:		gcc-info.patch
+Patch1:		gcc-libgcj-config.patch
+Requires:	binutils >= 2.9.1.0.25
+Requires:	cpp 
+URL:		http://www.gnu.org/
 BuildRoot:	/tmp/%{name}-%{version}-root
-Exclusivearch: i386
+%define		STDC_VERSION 2.10.0
+%define		GCJ_VERSION 2.95
 
 %description
-The GNU C compiler -- a full featured ANSI C compiler, with support
-for K&R C as well. GCC provides many levels of source code error
-checking tradionaly provided by other tools (such as lint), produces
-debugging information, and can perform many different optimizations to
-the resulting object code.
-
-%description -l de
-Der GNU-C-Compiler, ein ANSI-C-Compiler mit komplettem Funktions-
-umfang sowie Unterstützung für K&R. GCC bietet viele Ebenen der
-Quell-Code-Fehlerprüfung, wie sie früher durch separate Tools bereitgestellt
-wurde (etwa lint), produziert Debug-Infos und ist in der Lage, viele
-verschiedene Optimierungen am resultierenden Objektcode auszuführen. 
-
-%description -l fr
-Le compilateur C GNU -- un compilateur C ANSI complet, avec un support
-pour la norme K&R. GCC fournit de nombreux niveaux d'erreurs donnés par
-des outils extérieurs (comme lint), produit des informations de débogage,
-et peut réaliser différentes optimisations sur le code objet produit.
+A compiler aimed at integrating all the optimizations and features
+necessary for a high-performance and stable development environment.
 
 %description -l pl
-Kompilator GNU C jest pe³nowartosciowym kompilatorem ANSI C akceptuj±cym
-tak¿e K&R C. GCC udostêpnia wielopoziomowe sprawdzanie i raportowanie
-b³êdów na poziomie kodu ¼ród³owego w C jakie udostêpniaj± inne narzêdzia jak
-np. lint. GCC Umo¿liwia tak¿e wygenerowanie kodu wynikowego z informacjami
-do debugera, a tak¿e umo¿liwia generowanie zoptymalizowanego kodu
-wynikowego.
+Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
+wyprodukowania szybkiego i stablinego kodu wynikowego.
 
-%description -l tr
-GNU C derleyicisi, K&R C desteði olan ve ANSI C'nin bütün özelliklerine sahip
-bir derleyicidir. Normalde baþka araçlarýn (örneðin lint) yaptýðý kaynak kodu
-düzeyindeki pek çok hata denetimini gerçekleþtirir, hata ayýklama bilgisi
-üretebilir ve sonuç olarak ortaya çýkan ara kod üzerinde birçok optimizasyon
-uygulayabilir.
+%package c++
+Summary:	C++ support for gcc
+Summary(fr):	Support C++ pour le compilateur gcc.
+Summary(pl):	Wspomaganie C++ dla kompilatora gcc
+Summary(tr):	gcc için C++ desteði
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Obsoletes:	egcc-c++
+
+%description c++
+This package adds C++ support to the GNU C compiler. It includes support
+for most of the current C++ specification, including templates and
+exception handling. It does not include a standard C++ library, which
+is available separately.
+
+%description -l de c++
+Dieses Paket enthält die C++-Unterstützung für den GNU-C-Compiler. Es
+unterstützt die aktuelle C++-Spezifikation, inkl. Templates und
+Ausnahmeverarbeitung. Eine C++-Standard-Library ist nicht enthalten - sie ist
+getrennt erhältlich.
+
+%description -l fr c++
+Ce package ajoute un support C++ au compilateur c GNU. Il comprend un
+support pour la plupart des spécifications actuelles de C++, dont les 
+modéles et la gestion des exceptions. Il ne comprend pas une bibliothéque
+C++ standard, qui est disponible séparément.
+
+%description -l pl c++
+Programy z tego pakietu zapewniaj± wsparcie do C++ do GNU C kompilatora.
+Posiada wspomaganie dla du¿ej ilo¶ci obecnych specyfikacji C++, nie posiada
+natomiast standardowych bibliotek C++, które s± w oddzielnym pakiecie.
+
+%description -l tr c++
+Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve aykýrý durum
+iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart C++ kitaplýðý bu
+pakette yer almaz.
+
+%package objc
+Summary:	Objective C support for gcc
+Summary(de):	Objektive C-Unterstützung für gcc
+Summary(fr):	Gestion d'Objective C pour gcc
+Summary(pl):	Wspomaganie obiektowego C dla kompilatora gcc
+Summary(tr):	gcc için Objective C desteði
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Obsoletes:	egcc-objc
+
+%description objc
+This package adds Objective C support to the GNU C compiler. Objective C is
+a object oriented derivative of the C language, mainly used on systems
+running NeXTSTEP. This package does not include the standard objective C
+object library.
+
+%description -l de objc
+Dieses Paket ergänzt den GNU-C-Compiler durch Objective-C-Support. Objective
+C ist ein objektorientiertes Derivat von C, das zur Hauptsache auf Systemen
+mit NeXTSTEP zum Einsatz kommt. Die Standard-Objective-C-Objekt-Library ist
+nicht Teil des Pakets.
+
+%description -l fr objc
+Ce package ajoute un support Objective C au compilateur C GNU. L'Objective C
+est un langage orienté objetdérivé du langage C, principalement utilisé sur
+les systèmes NeXTSTEP. Ce package n'inclue pas la bibliothéque Objective C
+standard.
+
+%description -l pl objc
+Ten pakiet jest wsparciem obiektowego C dla kompilatora gcc.  W pakiecie nie
+ma jeszcze bibliotek C-obj.
+
+%description -l tr objc
+Bu paket, GNU C derleyicisine Objective C desteði ekler. Objective C, C
+dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan sistemlerde
+yaygýn olarak kullanýlýr. Standart Objective C nesne kitaplýðý bu pakette
+yer almaz.
+
+%package g77
+Summary:	Fortran 77 support for gcc
+Summary(pl):	Wspomaganie Fortran 77 dla gcc
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Prereq:		/sbin/install-info
+
+%description g77
+This apckage adds support for compiling Fortran 77 programs with the GNU
+compiler.
+
+%description -l pl g77
+Ten pakiet jest wspomaganiem Fortran 77 dla kompilatora gcc.
+Jest u¿yteczny kompilowania programów pisanych w jêzyku Fortran 77.
+
+%package chill
+Summary:	CHILL support for gcc
+Summary(pl):	Wspomoganie CHILL dla gcc
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Requires:	%{name} = %{version}
+Prereq:		/sbin/install-info
+
+%description chill
+This package adds support for compiling CHILL programs with the GNU
+compiler.
+
+Chill is the "CCITT High-Level Language", where CCITT is the old
+name for what is now ITU, the International Telecommunications Union.
+It is is language in the Modula2 family, and targets many of the
+same applications as Ada (especially large embedded systems).
+Chill was never used much in the United States, but is still
+being used in Europe, Brazil, Korea, and other places.
+
+%package java
+Summary:	Java support for gcc
+Summary(pl):	Wspomoganie Java dla gcc
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Requires:	%{name} = %{version}
+
+%description java
+This package adds experimental support for compiling Java(tm) programs and
+bytecode into native code. To use this you will also need the gcc-libgcj
+package.
+
+%package libgcj
+Summary:	Java runtime library for gcc
+Group:		Libraries
+URL:		http://sourceware.cygnus.com/java/
+Requires:	zip >= 2.1
+
+%description libgcj
+The Java runtime library. You will need this package to compile your Java
+programs using the gcc Java compiler (gcj).
+
+%package -n libstdc++
+Summary:	GNU c++ library
+Summary(pl):	Biblioteki GNU C++ 
+Group:		Libraries
+Group(pl):	Biblioteki
+Version:	%{STDC_VERSION}
+Obsoletes:	libg++
+
+%description -n libstdc++
+This is the GNU implementation of the standard C++ libraries, along with
+additional GNU tools. This package includes the shared libraries
+necessary to run C++ applications.
+
+%description -l de -n libstdc++
+Dies ist die GNU-Implementierung der Standard-C++-Libraries mit weiteren
+GNU-Tools. Dieses Paket enthält die zum Ausführen von C++-Anwendungen
+erforderlichen gemeinsam genutzten Libraries.
+
+%description -l fr -n libstdc++
+Ceci est l'implémentation GNU des librairies C++ standard, ainsi que des
+outils GNU supplémentaires. Ce package comprend les librairies partagées
+nécessaires à l'exécution d'application C++.
+
+%description -l pl -n libstdc++  
+Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
+C++, znajduj± siê w nim biblioteki dynamiczne niezbêdne do uruchomienia
+aplikacji C++.
+
+%description -l tr -n libstdc++
+Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
+uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
+
+%package -n libstdc++-compat
+Summary:	Old GNU c++ library
+Summary(pl):	Biblioteki GNU C++ 
+Group:		Libraries
+Group(pl):	Biblioteki
+Version:	%{STDC_VERSION}
+
+%description -n libstdc++-compat
+This is the GNU implementation of the standard C++ libraries, This package
+includes the old shared libraries necessary to run C++ applications.
+
+%description -l pl -n libstdc++-compat
+Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
+C++, znajduj± siê w nim poprzednie wersje bibliotek dynamicznych niezbêdnych
+do uruchomienia aplikacji C++.
+
+%package -n libstdc++-devel
+Summary:	Header files and libraries for C++ development
+Summary(de):	Header-Dateien und Libraries zur Entwicklung mit C++
+Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++.
+Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
+Group:		Development/Libraries
+Group(pl):	Programowanie/Biblioteki
+Version:	%{STDC_VERSION}
+Requires:	libstdc++ = %{STDC_VERSION}
+Obsoletes:	libg++-devel
+
+%description -n libstdc++-devel
+This is the GNU implementation of the standard C++ libraries.  This package
+includes the header files and libraries needed for C++ development.
+
+%description -l pl -n libstdc++-devel
+Pakiet ten zawiera biblioteki bêd±ce inplementacj± standardowych bibliotek
+C++, znajduj± siê w nim biblioteki i pliki nag³ówków wykorzystywane do
+programowania w jêzyku C++.
+
+%package -n libstdc++-static
+Summary:	Static c++ standard library
+Summary(pl):	Biblioeka statyczna c++
+Group:		Development/Libraries
+Group(pl):	Programowanie/Biblioteki
+Version:	%{STDC_VERSION}
+Requires:	libstdc++-devel = %{STDC_VERSION}
+
+%description -n libstdc++-static
+Static c++ standard library.
+
+%description -l pl -n libstdc++-static
+Biblioeka statyczna c++.
+
+%package -n cpp
+Summary:	The C Pre Processor
+Summary(pl):	Preprocesor C
+Group:		Development/Languages
+Group(pl):	Programowanie/Jêzyki
+Prereq:		/sbin/install-info
+Obsoletes:	egcs-cpp
+
+%description -n cpp
+The C preprocessor is a "macro processor" that is used automatically by the
+C compiler to transform your program before actual compilation. It is called
+a macro processor because it allows you to define "macros", which are brief
+abbreviations for longer constructs.
+
+The C preprocessor provides four separate facilities that you can use as you
+see fit:
+
+* Inclusion of header files.  These are files of declarations that
+  can be substituted into your program.
+* Macro expansion.  You can define "macros", which are abbreviations for
+  arbitrary fragments of C code, and then the C preprocessor will replace
+  the macros with their definitions throughout the program.
+* Conditional compilation.  Using special preprocessing directives,
+  you can include or exclude parts of the program according to various
+  conditions.
+* Line control.  If you use a program to combine or rearrange source
+  files into an intermediate file which is then compiled, you can use line
+  control to inform the compiler of where each source line originally came
+  from.
+
+%description -l pl -n cpp
+Przeprocesor C jest "makro procesorem" który jest automatycznie u¿ywaney
+przez kompilator C do obróbki kompilowanego programu przed w³a¶ciw±
+kompilacj±. Jest on nazywany makroprocesorem poniewa¿ poniewa¿ umo¿liwia
+definiowanie i rozwijanie makr umo¿liwiaj±cych kracanie d³ugich konstrukcji
+w jêzyku C.
+
+Preprocesor C umo¿liwia wykonywanie czterech róznych typow operacji:
+
+* Inkluzja (do³aczenie) plików (np. nag³ówkowych). W³±cza pliki w miejscu
+  deklaracji polecenia do³±czenia inefgo pliku.
+* Rozwijanie makr. Mo¿na definiowaæ "makra" nadaj±c im identyfikatory,
+  których pó¼niejsze u¿ycie powoduje podczas rozwijania podmienienie
+  indentyfikatora deklarowan± wcze¶niej warto¶ci±.
+* Kompilacja warunkowa. W zale¿no¶ci od obecno¶ci symboli i dyrektyw w
+  ¶rodowisku preprocesora s± w³±czane warunkowo b±æ nie pewne fragmenty
+  obrabianego strumienia tekstów.
+* Kontrola linii ¼ród³a. Niezale¿nie od tego jakim przeobra¿eniom podlega
+  wynikowy strumieñ danych w wyniku rozwijania makr i inkluzji s±
+  zapamiêtywane informacje o tym z której linii pliku ¼ród³owego
+  odpowiada fragment czy liniia pliku wynikowego.
 
 %prep
 %setup -q
-%patch1 -p1 -b .rh
-
-%ifarch sparc alpha
-%patch2 -p1
-%patch3 -p1
-%patch4 -p0
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1 -b .glibc2
-%patch9 -p0 -b .alphara
-%endif
+%setup -q -a1 -D -T
+mv libgcj-%{GCJ_VERSION} libgcj
+mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
+%patch0 -p1
+%patch1 -p1
+mkdir compat
+tar xzf %{SOURCE1} -C compat
 
 %build
-./configure \
-	--prefix=/usr \
-	--local-prefix=/usr/local \
-	--gxx-include-dir=%{_includedir}/g++ \
-	--host=%{_target_cpu}-linux \
-	--target=%{_target_cpu}-linux
+rm -rf obj-%{_target_platform}
+install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
-make LANGUAGES=c CFLAGS="-O2"
-make stage1
-make CC="stage1/xgcc -Bstage1/" CFLAGS="-O2" LDFLAGS="-s"
-make stage2
-make CC="stage2/xgcc -Bstage2/" CFLAGS="-O2" LDFLAGS="-s"
+CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
+../configure \
+	--prefix=%{_prefix} \
+	--infodir=%{_infodir} \
+	--enable-shared \
+	--enable-threads \
+	--enable-haifa \
+	--with-gnu-as \
+	--with-gnu-ld \
+	--datadir=%{_datadir} \
+	%{_target_platform}
+
+PATH=$PATH:/sbin:%{_sbindir}
+touch  ../gcc/c-gperf.h
+
+make LDFLAGS_FOR_TARGET="-s" \
+	bootstrap-lean \
+	mandir=%{_mandir} \
+	datadir=%{_datadir} \
+	infodir=%{_infodir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/usr/{bin,lib,info,man}
-make CC="stage2/xgcc -Bstage2/" CFLAGS="-O2" LDFLAGS="-s" install \
-	prefix=$RPM_BUILD_ROOT/usr
+install -d $RPM_BUILD_ROOT%{_datadir}
 
-gzip -n -9f $RPM_BUILD_ROOT%{_infodir}/gcc.info*
+cd obj-%{_target_platform}
+PATH=$PATH:/sbin:%{_sbindir}
+
+make install \
+	prefix=$RPM_BUILD_ROOT%{_prefix} \
+	mandir=$RPM_BUILD_ROOT%{_mandir} \
+	infodir=$RPM_BUILD_ROOT%{_infodir} \
+	datadir=$RPM_BUILD_ROOT%{_datadir}
+make install \
+	prefix=$RPM_BUILD_ROOT%{_prefix} \
+	mandir=$RPM_BUILD_ROOT%{_mandir} \
+	datadir=$RPM_BUILD_ROOT%{_datadir} \
+	infodir=$RPM_BUILD_ROOT%{_infodir} -C texinfo
+
+strip $RPM_BUILD_ROOT%{_bindir}/* || :
+
+strip $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/gcc*/{cc1,cc1chill,cc1obj,cc1plus,cpp,f771,collect2,jc1,jvgenmain}
+strip --strip-unneeded $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*.*.* 
+
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
-rm -rf $RPM_BUILD_ROOT%{_libdir}/gcc-lib/${RPM_ARCH}/*/include/objc
+
+mv $RPM_BUILD_ROOT/usr/man $RPM_BUILD_ROOT%{_datadir}
+mv $RPM_BUILD_ROOT/usr/info $RPM_BUILD_ROOT%{_datadir}
+
+echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
+echo .so cccp.1 > $RPM_BUILD_ROOT%{_mandir}/man1/cpp.1
+
+ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
+
+install -d $RPM_BUILD_ROOT/lib
+(cd $RPM_BUILD_ROOT; \
+ln -sf ../`dirname usr/lib/gcc-lib/%{_target_cpu}*/gcc*/cpp`/cpp $RPM_BUILD_ROOT/lib/cpp)
+
+#install the compatibility libstdc++ library
+[ -d ../compat/$RPM_ARCH ] && install -s ../compat/$RPM_ARCH/* $RPM_BUILD_ROOT%{_libdir}/
+
+gzip -9nf $RPM_BUILD_ROOT%{_datadir}/{info/*.info*,man/man1/*} \
+	  ../READ* ../ChangeLog
+
+%post
+/sbin/install-info %{_infodir}/gcc.info.gz /etc/info-dir
+
+%preun
+if [ "$1" = "0" ]; then
+	/sbin/install-info %{_infodir}/gcc.info.gz /etc/info-dir
+fi
+
+%post g77
+/sbin/install-info %{_infodir}/g77.info.gz /etc/info-dir
+
+%preun g77
+if [ "$1" = "0" ]; then
+	/sbin/install-info %{_infodir}/g77.info.gz /etc/info-dir
+fi
+
+%post chill
+/sbin/install-info %{_infodir}/chill.info.gz /etc/info-dir
+
+%preun chill
+if [ "$1" = "0" ]; then
+	/sbin/install-info %{_infodir}/chill.info.gz /etc/info-dir
+fi
+
+%post -n cpp
+/sbin/install-info %{_infodir}/cpp.info.gz /etc/info-dir
+
+%preun -n cpp
+if [ "$1" = "0" ]; then
+	/sbin/install-info %{_infodir}/cpp.info.gz /etc/info-dir
+fi
+
+%post   -p /sbin/ldconfig -n libstdc++
+%postun -p /sbin/ldconfig -n libstdc++
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc NEWS PROBLEMS
-%attr(755,root,root) %{_bindir}/*-linux-gcc
-%dir %{_libdir}/gcc-lib/*/*
-%dir %{_libdir}/gcc-lib/*/*/include
-%{_libdir}/gcc-lib/*/*/SYSCALLS.c.X
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cc1
-%attr(755,root,root) %{_libdir}/gcc-lib/*/*/cpp
-%{_libdir}/gcc-lib/*/*/libgcc.a
-%{_libdir}/gcc-lib/*/*/specs
-%{_libdir}/gcc-lib/*/*/include/*
-%{_libdir}/gcc-lib/*/*/*.o
+%doc READ* ChangeLog.gz
+
+%dir %{_libdir}/gcc-lib
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*
+%dir %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include
+
+%attr(755,root,root) %{_bindir}/%{_target_cpu}*-gcc
+%attr(755,root,root) %{_bindir}/gcc
+%attr(755,root,root) %{_bindir}/gcov
+%attr(755,root,root) %{_bindir}/protoize
+%attr(755,root,root) %{_bindir}/unprotoize
+%attr(755,root,root) %{_bindir}/cc
+
+%{_mandir}/man1/gcc.1*
+%{_infodir}/gcc*
+
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/SYSCALLS.c.X
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libgcc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/lib*.map
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/specs
+
+%ifnarch alpha
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/*.o
+%endif
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/collect2
+
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/float.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/iso646.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/limits.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/proto.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stdarg.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stdbool.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/stddef.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/syslimits.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/va-*.h
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/varargs.h
+
+%files c++
+%defattr(644,root,root,755)
+
+%{_mandir}/man1/g++.1.gz
+
+%attr(755,root,root) %{_bindir}/g++
+%attr(755,root,root) %{_bindir}/c++
+%attr(755,root,root) %{_bindir}/c++filt
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1plus
+
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/exception
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/new
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/typeinfo
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/new.h
+
+%files objc
+%defattr(644,root,root,755)
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1obj
+
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libobjc.a
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/objc
+
+%files g77
+%defattr(644,root,root,755)
+
+%attr(755,root,root) %{_bindir}/g77
+%attr(755,root,root) %{_bindir}/f77
+
+%{_infodir}/g77*
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/f771
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libg2c.a
+
+%{_mandir}/man1/g77.1*
+%{_mandir}/man1/f77.1*
+
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/include/g2c.h
+
+%files chill
+%defattr(644,root,root,755)
+%doc gcc/ch/chill.brochure.gz
+
+%attr(755,root,root) %{_bindir}/chill
+
+%{_infodir}/chill*
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cc1chill
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/chill*.o
+%{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/libchill.a
+
+%files java
+%defattr(644,root,root,755)
+
+%attr(755,root,root) %{_bindir}/gcj
+%attr(755,root,root) %{_bindir}/gcjh
+%attr(755,root,root) %{_bindir}/jcf-dump
+%attr(755,root,root) %{_bindir}/jvscan
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/jc1
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/jvgenmain
+
+%files libgcj
+%defattr(644,root,root,755)
+
+%attr(755,root,root) %{_bindir}/jv-convert
+
+%attr(755,root,root) %{_libdir}/lib*gcj*
+
+%{_datadir}/libgcj.zip
+
+%files -n libstdc++
+%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+
+%files -n libstdc++-devel
+%defattr(644,root,root,755) 
+%{_includedir}/g++
+%attr(755,root,root) %{_libdir}/libst*.so
+
+%files -n libstdc++-static
+%attr(644,root,root) %{_libdir}/libstdc*.a
+
+%files -n cpp
+%defattr(644,root,root,755)
+%attr(755,root,root) /lib/cpp
+
+%{_mandir}/man1/cpp.1*
+%{_mandir}/man1/cccp.1*
+%{_infodir}/cpp.info*.gz
+
+%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/gcc-*/cpp
