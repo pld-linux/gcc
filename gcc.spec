@@ -46,6 +46,7 @@ Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
 BuildRequires:	autoconf
+BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	gcc
@@ -55,7 +56,7 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 BuildRequires:	gettext-devel
-Requires:	binutils >= 2.12.90.0.4
+Requires:	binutils >= 2.14
 Requires:	cpp = %{GCC_VERSION}
 Requires:	libgcc = %{GCC_VERSION}
 Conflicts:	glibc-devel < 2.2.5-20
