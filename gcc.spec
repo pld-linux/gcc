@@ -11,33 +11,33 @@ Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
 Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
 Source2:	gcov.1
-Patch0:		gcc-info.patch
-Patch1:		gcc-libgcj-config.patch
-Patch2:		gcc-pld-linux.patch
+Patch0:		%{name}-info.patch
+Patch1:		%{name}-libgcj-config.patch
+Patch2:		%{name}-pld-linux.patch
 Patch3:		gcc-libstdc++.patch
-Patch4:		gcc-bootstrap.patch
-Patch5:		gcc-cpp-macro-doc.patch
-Patch6:		gcc-default-arch.patch
-Patch7:		gcc-cvs-updates.patch
-Patch8:		gcc-alpha-ev5-fix.patch
+Patch4:		%{name}-bootstrap.patch
+Patch5:		%{name}-cpp-macro-doc.patch
+Patch6:		%{name}-default-arch.patch
+Patch7:		%{name}-cvs-updates.patch
+Patch8:		%{name}-alpha-ev5-fix.patch
 Patch9:		gcc-libstdc++-out-of-mem.patch
 Patch10:	gcc-libstdc++-valarray.patch
 Patch11:	gcc-libstdc++-wstring.patch
 Patch12:	gcc-libstdc++-wall3.patch
 Patch13:	gcc-libstdc++-bastring.patch
-Patch14:	gcc-manpage.patch
-Patch15:	gcc-cpp-dos-newlines.patch
+Patch14:	%{name}-manpage.patch
+Patch15:	%{name}-cpp-dos-newlines.patch
 Patch16:	gcc-g++-is-tree.patch
-Patch17:	gcc-gpc.patch
-Patch18:	gcc-arm-config.patch
-Patch19:	gcc-m68k-pic.patch
-Patch20:	gcc-sparc32-rfi.patch
-Patch21:	gcc-builtin-apply.patch
-Patch22:	gcc-ppc-ice.patch
-Patch23:	gcc-ppc-descriptions.patch
-Patch24:	gcc-ppc-andrew-dwarf-eh.patch
+Patch17:	%{name}-gpc.patch
+Patch18:	%{name}-arm-config.patch
+Patch19:	%{name}-m68k-pic.patch
+Patch20:	%{name}-sparc32-rfi.patch
+Patch21:	%{name}-builtin-apply.patch
+Patch22:	%{name}-ppc-ice.patch
+Patch23:	%{name}-ppc-descriptions.patch
+Patch24:	%{name}-ppc-andrew-dwarf-eh.patch
 
-Patch30:	gcc-glibc-2.2.patch
+Patch30:	%{name}-glibc-2.2.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -177,6 +177,7 @@ gcc-libgcj package.
 %package libgcj
 Summary:	Java runtime library for gcc
 Group:		Libraries
+Group(pl):	Biblioteki
 Group(fr):	Librairies
 URL:		http://sourceware.cygnus.com/java/
 Requires:	zip >= 2.1
@@ -189,6 +190,7 @@ Java programs using the gcc Java compiler (gcj).
 Summary:	Static java runtime library for gcc
 Group:		Development/Libraries
 Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 URL:		http://sourceware.cygnus.com/java/
 Requires:	%{name}-libgcj = %{version}
 
@@ -200,8 +202,8 @@ staticly compile your Java programs using the gcc Java compiler (gcj).
 Summary:	GNU c++ library
 Summary(pl):	Biblioteki GNU C++ 
 Group:		Libraries
-Group(fr):	Librairies
-Group(pl):	Biblioteki
+Group(fr):	Development/Librairies
+Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Obsoletes:	libg++
 
@@ -321,8 +323,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 %prep
 %setup -q
 %setup -q -a1 -D -T
-mv libgcj-%{GCJ_VERSION} libgcj
-mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
+mv -f libgcj-%{GCJ_VERSION} libgcj
+mv -f libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
