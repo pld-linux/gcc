@@ -1,3 +1,9 @@
+This patch reverts gcc 3.3.4 change which triggers ICE on code using
+"complex" type - but generated code is _probably wrong_.
+Proper fix is included in gcc 3.4.0, but it changes ABI.
+This patch is meant only to provide gcc 3.3.4 on alpha, suitable to
+bootstrap gcc 3.4.0.
+
 --- gcc-3.3.4/gcc/emit-rtl.c.orig	2003-12-10 18:37:18.000000000 +0100
 +++ gcc-3.3.4/gcc/emit-rtl.c	2004-06-08 14:44:21.000000000 +0200
 @@ -925,7 +925,7 @@
