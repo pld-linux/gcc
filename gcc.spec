@@ -41,7 +41,7 @@ Requires:	cpp = %{version}
 Obsoletes:	egcs
 Prereq:		/usr/sbin/fix-info-dir
 URL:		http://gcc.gnu.org/
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 A compiler aimed at integrating all the optimizations and features
