@@ -29,9 +29,11 @@ Patch2:		%{name}-ada-link-new-libgnat.patch
 Patch3:		%{name}-nodebug.patch
 Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-pr14668.patch
+Patch6:		%{name}-ada-link.patch
+URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2.14
+BuildRequires:	binutils >= 2.15.90.0.3
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -45,14 +47,15 @@ BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	automake
 Requires:	binutils >= 2.15.90.0.3
 Requires:	cpp = %{epoch}:%{version}-%{release}
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 %{?with_ssp:Provides:	gcc(ssp)}
+# ksi for gcc > 3.3.x not ready yet
+Obsoletes:	gcc-ksi
+Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
-URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
@@ -61,7 +64,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir		/usr/lib
 %define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
-%define		specflags	-fPIC
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -119,9 +121,9 @@ Summary(es):	Soporte de C++ para gcc
 Summary(pl):	Obs³uga C++ dla gcc
 Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
-Requires:	gcc = %{epoch}:%{version}-%{release}
 
 %description c++
 This package adds C++ support to the GNU Compiler Collection. It
@@ -169,10 +171,10 @@ Summary(fr):	Gestion d'Objective C pour gcc
 Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc
 Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libobjc = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-objc
 Obsoletes:	egcs-objc
-Requires:	libobjc = %{epoch}:%{version}-%{release}
-Requires:	gcc = %{epoch}:%{version}-%{release}
 
 %description objc
 This package adds Objective C support to the GNU Compiler Collection.
@@ -249,8 +251,8 @@ Summary(es):	Soporte de Fortran 77 para gcc
 Summary(pl):	Obs³uga Fortranu 77 dla gcc
 Summary(pt_BR):	Suporte Fortran 77 para o GCC
 Group:		Development/Languages/Fortran
-Obsoletes:	egcs-g77
 Requires:	libg2c = %{epoch}:%{version}-%{release}
+Obsoletes:	egcs-g77
 
 %description g77
 This package adds support for compiling Fortran 77 programs with the
@@ -304,8 +306,8 @@ Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	libgcj >= 3.0.0
-Requires:	libgcj-devel >= 3.0.0
+Requires:	libgcj = %{epoch}:%{version}-%{release}
+Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	java-shared
 Provides:	gcj = %{epoch}:%{version}-%{release}
 
@@ -369,9 +371,8 @@ Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Group:		Development/Libraries
+Requires:	%{name}-java = %{epoch}:%{version}-%{release}
 Requires:	libgcj = %{epoch}:%{version}-%{release}
-Requires:	%{name}-java
-Requires:	pkgconfig
 Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
@@ -388,8 +389,8 @@ Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
 Group:		Development/Libraries
-Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -451,8 +452,8 @@ Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 Group:		Development/Libraries
-Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -552,8 +553,8 @@ Summary:	Ada support for gcc
 Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgnat = %{epoch}:%{version}-%{release}
-Requires:	gcc = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
 Obsoletes:	gnat-devel
 
@@ -607,7 +608,6 @@ Summary(es):	El preprocesador de C
 Summary(pl):	Preprocesor C
 Summary(pt_BR):	Preprocessador para a linguagem C
 Group:		Development/Languages
-Version:	%{GCC_VERSION}
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
 
@@ -691,13 +691,13 @@ controle da numeração das linhas do programa.
 
 %prep
 %setup -q -a1
-
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %{!?debug:%patch3 -p1}
 %{?with_ssp:%patch4 -p1}
 %patch5 -p1
+%patch6 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
@@ -708,7 +708,7 @@ mv ChangeLog ChangeLog.general
 %build
 # cd gcc && autoconf; cd ..
 # autoconf is not needed!
-cp %{_datadir}/automake/config.sub .
+cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
@@ -784,8 +784,14 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
+mv -f $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so \
 	$RPM_BUILD_ROOT%{_libdir}
+# check if symlink to be made is valid
+test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so.1
+ln -sf libgnat-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
+ln -sf libgnarl-3.15.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-3.15.so
+ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
