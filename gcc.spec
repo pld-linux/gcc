@@ -11,6 +11,7 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
+Patch0:		gcc-DESTDIR.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
@@ -360,6 +361,7 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q -n %{name}-%{GCC_VERSION}
+%patch0 -p1
 
 %build
 cd gcc && autoconf; cd ..
@@ -406,15 +408,10 @@ install -d $RPM_BUILD_ROOT{/lib,%{_datadir}}
 cd obj-%{_target_platform}
 PATH=$PATH:/sbin:%{_sbindir}
 
-# workaround
-sed -e 's,slibdir = /lib,slibdir = $(DESTDIR)%{_slibdir},g' gcc/Makefile > gcc/Makfefile.
-mv -f gcc/Makfefile. gcc/Makefile
-
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	mandir=$RPM_BUILD_ROOT%{_mandir} \
 	infodir=$RPM_BUILD_ROOT%{_infodir} \
-	slibdir=$RPM_BUILD_ROOT%{_slibdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
