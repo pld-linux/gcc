@@ -713,11 +713,11 @@ TEXCONFIG=false ../configure \
 	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
-%ifarch amd64
-	--disable-multilib \
-%else
+##%ifarch amd64
+##	--disable-multilib \
+##%else
 	--enable-multilib \
-%endif
+##%endif
 	--enable-nls \
 	--with-gnu-as \
 	--with-gnu-ld \
