@@ -10,10 +10,10 @@ Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{release}/%{name}-%{release}.tar.gz
-Patch0:		gcc-stage.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
+BuildRequires:	fileutils >= 4.0.41
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp = %{version}
 URL:		http://gcc.gnu.org/
@@ -283,7 +283,6 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q -n %{name}-%{release}
-#%patch0 -p1
 
 %build
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
