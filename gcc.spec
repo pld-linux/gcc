@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	5
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -1125,7 +1125,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/*-gcj
 %attr(755,root,root) %{_libdir}/gcc-lib/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc-lib/*/*/jvgenmain
@@ -1134,14 +1133,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jv-*
 %{_mandir}/man1/gij*
 %{_mandir}/man1/gcj*
-%{_mandir}/man1/grepjar*
 
 %files java-tools
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/rmi*
 %attr(755,root,root) %{_bindir}/jar
+%attr(755,root,root) %{_bindir}/grepjar
 %{_mandir}/man1/rmi*
 %{_mandir}/man1/jar*
+%{_mandir}/man1/grepjar*
 %{_infodir}/fastjar*
 
 %files -n libgcj
