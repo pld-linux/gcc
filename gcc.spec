@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	1
+Release:	4
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -14,6 +14,27 @@ Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
 Patch2:		gcc-pld-linux.patch
 Patch3:		gcc-libstdc++.patch
+Patch4:		gcc-bootstrap.patch
+Patch5:		gcc-cpp-macro-doc.patch
+Patch6:		gcc-default-arch.patch
+Patch7:		gcc-cvs-updates.patch
+Patch8:		gcc-alpha-ev5-fix.patch
+Patch9:		gcc-libstdc++-out-of-mem.patch
+Patch10:	gcc-libstdc++-valarray.patch
+Patch11:	gcc-libstdc++-wstring.patch
+Patch12:	gcc-libstdc++-wall3.patch
+Patch13:	gcc-libstdc++-bastring.patch
+Patch14:	gcc-manpage.patch
+Patch15:	gcc-cpp-dos-newlines.patch
+Patch16:	gcc-g++-is-tree.patch
+Patch17:	gcc-gpc.patch
+Patch18:	gcc-arm-config.patch
+Patch19:	gcc-m68k-pic.patch
+Patch20:	gcc-sparc32-rfi.patch
+Patch21:	gcc-builtin-apply.patch
+Patch22:	gcc-ppc-ice.patch
+Patch23:	gcc-ppc-descriptions.patch
+Patch24:	gcc-ppc-andrew-dwarf-eh.patch
 Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
 Obsoletes:	egcs
@@ -301,8 +322,30 @@ mv libgcj/boehm-gc libgcj/libjava libgcj/zlib libgcj/zip .
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p0
+%patch6 -p0
+%patch7 -p1
+%patch8 -p0
+%patch9 -p0
+%patch10 -p0
+%patch11 -p0
+%patch12 -p0
+%patch13 -p0
+%patch14 -p0
+%patch15 -p0
+%patch16 -p1
+%patch17 -p1
+%patch18 -p0
+%patch19 -p0
+%patch20 -p0
+%patch21 -p0
+%patch22 -p0
+%patch23 -p0
+%patch24 -p0
 
 %build
+(cd gcc; autoconf)
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform} && cd obj-%{_target_platform} 
 
@@ -311,8 +354,10 @@ CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS" LDFLAGS="-s" \
 	--prefix=%{_prefix} \
 	--infodir=%{_infodir} \
 	--enable-shared \
+%ifnarch sparc sparc64
 	--enable-threads \
 	--enable-haifa \
+%endif
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-gxx-include-dir="\$\{prefix\}/include/g++" \
@@ -322,7 +367,7 @@ PATH=$PATH:/sbin:%{_sbindir}
 touch  ../gcc/c-gperf.h
 
 make LDFLAGS_FOR_TARGET="-s" \
-	bootstrap-lean \
+#	bootstrap-lean \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
