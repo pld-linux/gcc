@@ -5,13 +5,14 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Development/Languages
 Group(de):	Entwicklung/Sprachen
 Group(pl):	Programowanie/Jêzyki
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 Patch0:		gcc-DESTDIR.patch
+Patch1:		gcc-paths.patch
 BuildRequires:	bison
 BuildRequires:	texinfo
 BuildRequires:	zlib-devel
@@ -364,7 +365,8 @@ Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
 %prep
 %setup -q -n %{name}-%{GCC_VERSION}
-#%patch0 -p1
+%patch0 -p1
+%patch1 -p1
 
 %build
 # cd gcc && autoconf; cd ..
@@ -600,6 +602,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir}/cpp
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 %{_mandir}/man1/cpp.1*
 %{_infodir}/cpp*
