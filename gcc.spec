@@ -4,7 +4,6 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%bcond_with	pp		# build with ProPolice
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -48,7 +47,6 @@ Patch21:	gcc32-inline-label.patch
 Patch22:	gcc32-java-no-rpath.patch
 Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
-Patch25:	%{name}-3.3.1-propolice.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2.14
@@ -773,7 +771,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch22
 %patch23
 %patch24
-%{?with_pp:%patch25 -p1}
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
