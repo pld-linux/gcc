@@ -810,6 +810,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ja) %{_mandir}/ja/man1/gcc.1*
 %{_infodir}/gcc*
 
+%attr(755,root,root) %{_slibdir}/lib*.so
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/libgcc_eh.a
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/specs
@@ -828,7 +829,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/lib*.so*
+%attr(755,root,root) %{_slibdir}/lib*.so.*
 
 %files c++
 %defattr(644,root,root,755)
@@ -964,8 +965,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/addr2name.awk
-%attr(755,root,root) %{_libdir}/lib*cj*.so.*
-%attr(755,root,root) %{_libdir}/lib-org*.so.*
+%attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
+%attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %endif
@@ -1051,8 +1052,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/cpp
 %attr(755,root,root) %{_bindir}/cpp
-#%%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/cpp0
-#%%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/tradcpp0
 %{_mandir}/man1/cpp.1*
 %lang(ja) %{_mandir}/ja/man1/cpp.1*
 %{_infodir}/cpp*
