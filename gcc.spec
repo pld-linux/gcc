@@ -558,9 +558,9 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch0 -p1
 %patch1 -p1
 %patch4 -p1
-##%%patch6 -p1
+%patch6 -p1
 
-##%%patch10 -p1
+%patch10 -p1
 #%patch16
 ##%%patch17
 %patch18
@@ -645,11 +645,10 @@ echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 %if %{!?_without_ada:1}%{?_without_ada:0}
 # move ada shared libraries to proper place...
-mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-3.15.so \
+mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}/
-# these shouldn't be needed i guess
-#ln -sf %{_libdir}/libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/
-#ln -sf %{_libdir}/libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/
+# check if symlink made is valid
+test -f $RPM_BUILD_ROOT%{_libdir}/libgnat-3.15.so
 ln -sf libgnat-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf libgnarl-3.15.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
@@ -971,12 +970,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/Makefile.adalib
 %attr(755,root,root) %{_bindir}/gnat*
 %{_infodir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnat.so
-%attr(755,root,root) %{_libdir}/libgnarl.so
+%attr(755,root,root) %{_libdir}/libgnat*.so
+%attr(755,root,root) %{_libdir}/libgnarl*.so
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgna*-3*.so
+%attr(755,root,root) %{_libdir}/libgna*.so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
