@@ -751,10 +751,15 @@ TEXCONFIG=false ../configure \
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
+# stage1 needs -O0 on alpha for 3.3->3.4 bootstrap (gnat from 3.3 is seriously broken)
 %{__make} -C obj-%{_target_platform} profiledbootstrap \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
+%ifarch alpha
+	STAGE1_CFLAGS="%{rpmcflags} -O0" \
+%else
 	STAGE1_CFLAGS="%{rpmcflags}" \
+%endif
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
