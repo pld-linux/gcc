@@ -25,6 +25,8 @@ Patch4:		%{name}-nolocalefiles.patch
 Patch5:		%{name}-march-i686-fix.patch
 Patch6:		%{name}-loop-ice.patch
 Patch7:		%{name}-mmx-ice.patch
+Patch8:		%{name}-mmx-sse-defines.patch
+Patch9:		%{name}-athlon-move-costs.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-attr-visibility.patch
@@ -525,6 +527,8 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %endif
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
 %patch10 
 %patch11 
 %patch12 
