@@ -53,6 +53,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir		/usr/lib
 %define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
+%define		specflags	-fPIC
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -741,8 +742,8 @@ cd ..
 
 %if %{with ada}
 %{__make} -C obj-%{_target_platform}/gcc gnatlib gnattools gnatlib-shared \
-	CFLAGS="%{rpmcflags} -fPIC" \
-	CXXFLAGS="%{rpmcflags} -fPIC" \
+	CFLAGS="%{rpmcflags}" \
+	CXXFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
