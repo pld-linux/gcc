@@ -451,8 +451,12 @@ gzip -9nf ../READ* ../ChangeLog
 %postun -n cpp
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 
+%post   -p /sbin/ldconfig -n libgcc
+%postun -p /sbin/ldconfig -n libgcc
 %post   -p /sbin/ldconfig -n libstdc++
 %postun -p /sbin/ldconfig -n libstdc++
+%post   -p /sbin/ldconfig -n libgcj
+%postun -p /sbin/ldconfig -n libgcj
 
 %clean
 rm -rf $RPM_BUILD_ROOT
