@@ -43,9 +43,8 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
-#Patch6:		%{name}-relink.patch		NEEDS FIX
-Patch7:		%{name}-pr18628.patch
-Patch8:		%{name}-pr19317.patch
+Patch100:	%{name}-pr18628.patch
+Patch101:	%{name}-pr19317.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -473,11 +472,10 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-#patch6 -p1	NEEDS FIX
 
 # PRs
-%patch7 -p1
-%patch8 -p1
+%patch100 -p1
+%patch101 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -525,6 +523,7 @@ cd ..
 
 %{__make} -C obj-%{_target_platform} \
 	%{?with_profiling:profiledbootstrap} \
+	%{!?with_profiling:bootstrap-lean} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
