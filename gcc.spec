@@ -1,13 +1,14 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203
-#		- http://gcc.gnu.org/PR17384
-#		- http://gcc.gnu.org/PR17567
+#		- http://gcc.gnu.org/PR14776
+#		- http://gcc.gnu.org/PR18648
+#		- http://gcc.gnu.org/PR18676
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
-%bcond_without	objc		# build without objc support
+%bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 #
 %define		_snap		20041008
@@ -39,7 +40,6 @@ Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
-Patch8:		%{name}-ada-bootstrap.patch
 #
 # -fvisibility={default|internal|hidden|protected}
 #
@@ -64,12 +64,13 @@ Patch8:		%{name}-ada-bootstrap.patch
 #
 # How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
 #
-Patch9:		%{name}-visibility.patch
+Patch30:	%{name}-visibility.patch
+Patch31:	%{name}-ada-bootstrap.patch
 #
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	binutils >= 2.15.91.0.2
+BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -79,11 +80,11 @@ BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
-BuildRequires:	gzip
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-Requires:	binutils >= 2.15.91.0.2
+Requires:	binutils >= 2:2.15.94.0.1
+Requires:	gcc-dirs >= 1.0-3
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
@@ -124,7 +125,7 @@ adecuado.
 
 %description -l pl
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
-wyprodukowania szybkiego i stablinego kodu wynikowego.
+wyprodukowania szybkiego i stabilnego kodu wynikowego.
 
 Ten pakiet zawiera kompilator C i pliki wspó³dzielone przez ró¿ne
 czê¶ci kolekcji kompilatorów GNU (GCC). ¯eby u¿ywaæ innego kompilatora
@@ -361,7 +362,7 @@ Java(tm) y su bytecode en código nativo. Para usarlo también va a
 necesitar el paquete libgcj.
 
 %description java -l pl
-Wsparcie dla kompilowania programów Java(tm) zrówno do bajt-kodu jak i
+Wsparcie dla kompilowania programów Java(tm) zarówno do bajt-kodu jak i
 do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
 by³o przeprowadziæ kompilacjê.
 
@@ -373,8 +374,8 @@ Group:		Development/Languages/Java
 Provides:	jar = %{epoch}:%{version}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
-Obsoletes:	java-shared
 Obsoletes:	jar
+Obsoletes:	java-shared
 
 %description java-tools
 This package contains tools that are common for every Java(tm)
@@ -529,7 +530,7 @@ Static C++ standard library.
 Biblioteca estándar estática de C++.
 
 %description -n libstdc++-static -l pl
-Statycza biblioteka standardowa C++.
+Statyczna biblioteka standardowa C++.
 
 %package -n libffi
 Summary:	Foreign Function Interface library
@@ -550,7 +551,7 @@ programador llame una función cualquiera especificada por una
 descripción de interfaz de llamada en el tiempo de ejecución.
 
 %description -n libffi -l pl
-Biblioteka libffi dostarcza przno¶nego, wysokopoziomowego
+Biblioteka libffi dostarcza przeno¶nego, wysokopoziomowego
 miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
 programi¶cie wywo³ywaæ dowolne funkcje podaj±c konwencjê wywo³ania w
 czasie wykonania.
@@ -647,7 +648,7 @@ Adzie.
 # snapshot
 %setup -q -n %{name}-3.4-%{_snap} -a1
 # final
-#setup -q -n %{name}-%{version} -a1
+%setup -q -a1
 
 %patch0 -p1
 %patch1 -p1
@@ -657,12 +658,13 @@ Adzie.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p0
+
+%patch30 -p1
 %ifarch alpha ia64
 # needed for bootstrap using gcc 3.3.x on alpha
 # and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
-%patch8 -p2
+%patch31 -p2
 %endif
-%patch9 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
@@ -827,6 +829,7 @@ rm -rf $gccdir/install-tools
 %if %{with ssp}
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 %endif
+install %{SOURCE3} $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -868,11 +871,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS NEWS bugs.html faq.html
 %doc gcc/{ChangeLog,ONEWS,README.Portability}
-%dir %{_libdir}/gcc
-%dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
 %{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
+%{_aclocaldir}/gcc_visibility.m4}
 
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
@@ -895,6 +897,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}*/lib*.so
+%ifarch ia64
+%{_slibdir}*/libunwind.a
+%endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
