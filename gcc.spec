@@ -702,7 +702,7 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{objc,g2c.h,syslimits.h,gcj} $gccdir/tmp
+mv -f $gccdir/include/{%{?!_without_objc:objc,}g2c.h,syslimits.h%{?!_without_java:,gcj}} $gccdir/tmp
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
