@@ -786,8 +786,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{GCC_VERSION}
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.so
-%attr(755,root,root) %{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.la
+%attr(755,root,root) %{_libdir}/libstdc++.so
 %attr(755,root,root) %{_libdir}/libstdc++.la
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
@@ -796,7 +795,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc-lib/%{_target_cpu}*/*/libstdc++.a
+%{_libdir}/libstdc++.a
 %ifarch ppc
 %{_libdir}/nof/libstdc++.a
 %endif
