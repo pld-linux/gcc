@@ -8,10 +8,10 @@
 *** gcc/c-decl.c	1 Aug 2002 06:20:30 -0000	1.344
 --- gcc/c-decl.c	7 Aug 2002 01:01:55 -0000
 *************** duplicate_decls (newdecl, olddecl, diffe
-*** 1400,1405 ****
---- 1400,1419 ----
-  	}
-        error_with_decl (olddecl, "previous declaration of `%s'");
+*** 1673,1678 ****
+--- 1673,1692 ----
+        if (TREE_CODE (newdecl) == VAR_DECL)
+  	DECL_INITIAL (newdecl) = 0;
       }
 +   /* TLS cannot follow non-TLS declaration.  */
 +   else if (TREE_CODE (olddecl) == VAR_DECL && TREE_CODE (newdecl) == VAR_DECL
