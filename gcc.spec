@@ -1,13 +1,15 @@
+%define		STDC_VERSION 2.10.0
+%define		GCJ_VERSION 2.95
 Summary:	GNU C Compiler
 Summary(pl):	Kompilator GNU
 Name:		gcc
-Version:	2.95
-Release:	0.1
+Version:	2.95.1
+Release:	1
 Copyright:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
-Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.gz
-Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{version}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/gcc/%{name}-%{version}.tar.bz2
+Source1:	ftp://sourceware.cygnus.com/pub/java/libgcj-%{GCJ_VERSION}.tar.gz
 Source2:	libstdc++-compat.tar.gz
 Patch0:		gcc-info.patch
 Patch1:		gcc-libgcj-config.patch
@@ -16,8 +18,6 @@ Requires:	binutils >= 2.9.1.0.25
 Requires:	cpp 
 URL:		http://www.gnu.org/
 BuildRoot:	/tmp/%{name}-%{version}-root
-%define		STDC_VERSION 2.10.0
-%define		GCJ_VERSION 2.95
 
 %description
 A compiler aimed at integrating all the optimizations and features
