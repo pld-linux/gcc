@@ -7,7 +7,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
@@ -523,6 +523,11 @@ echo .so g77.1 > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
 
 mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.a \
         $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/
+
+LIBSTDC=$(ls -d $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/* | sed -e "s#$RPM_BUILD_ROOT##g")
+mv $RPM_BUILD_ROOT%{_libdir}/libstdc++.la $RPM_BUILD_ROOT%{_libdir}/libstdc++.la.old
+sed -e "s#^libdir='/usr/lib'#libdir='$LIBSTDC'#g" $RPM_BUILD_ROOT%{_libdir}/libstdc++.la.old \
+ > $RPM_BUILD_ROOT%{_libdir}/libstdc++.la
 
 # move ada shared libraries to proper place...
 mv $RPM_BUILD_ROOT%{_libdir}/gcc-lib/%{_target_cpu}*/*/adalib/*-*so \
