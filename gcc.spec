@@ -17,7 +17,7 @@ Summary(pl):	Kolekcja Kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	0.2
+Release:	0.3
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -31,6 +31,7 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-nolocalefiles.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
+Patch4:		%{name}-pr12965.patch
 # -- stolen patches from RH --
 Patch10:	gcc32-ada-link.patch
 Patch11:	gcc32-boehm-gc-libs.patch
@@ -52,14 +53,13 @@ BuildRequires:	autoconf
 BuildRequires:	binutils >= 2.14
 BuildRequires:	bison
 BuildRequires:	fileutils >= 4.0.41
-BuildRequires:	gcc
 %{!?_without_ada:%{!?_with_bootstrap:BuildRequires:	gcc(ada)}}
 %{!?_without_ada:BuildRequires: gcc-ada}
+BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-BuildRequires:	gettext-devel
 Requires:	binutils >= 2.14
 Requires:	cpp = %{epoch}:%{GCC_VERSION}
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}
@@ -753,6 +753,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %patch10 -p1
 %patch11
