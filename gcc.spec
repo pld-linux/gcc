@@ -39,6 +39,7 @@ Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
 Patch8:		%{name}-ada-bootstrap.patch
+Patch9:		%{name}-visibility.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -635,6 +636,7 @@ Adzie.
 # and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
 %patch8 -p2
 %endif
+%patch9 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
