@@ -556,9 +556,7 @@ cp -f libffi/LICENSE java-doc/LICENSE.libffi
 cp -f libobjc/README gcc/objc/README.libobjc
 
 %find_lang %{name}
-# workaround, to be removed - on builders libstdc++.mo files are not created - no idea why
-touch libstdc++.lang
-%find_lang libstdc++
+#%%find_lang libstdc++
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -674,7 +672,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
 
-%files -n libstdc++ -f libstdc++.lang
+%files -n libstdc++
+#-f libstdc++.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 %ifarch ppc
