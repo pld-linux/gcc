@@ -346,7 +346,7 @@ TEXCONFIG=false ../configure \
 	--infodir=%{_infodir} \
 	--enable-shared \
 %ifnarch sparc sparc64
-	--enable-threads \
+	--enable-threads=posix \
 	--enable-haifa \
 %endif
 	--with-gnu-as \
