@@ -26,8 +26,6 @@ Source1:	ftp://ftp.pld.org.pl/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 Source2:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-paths.patch
-Patch2:		%{name}-ada-no-addr2line.patch
-Patch3:		%{name}-ada-no-prefix.o.patch
 Patch4:		%{name}-nolocalefiles.patch
 Patch6:		%{name}-ada-link-new-libgnat.patch
 # -- stolen patches from RH --
@@ -559,8 +557,6 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 
 %patch0 -p1
 %patch1 -p1
-##%%patch2 -p1
-##%%patch3 -p1
 %patch4 -p1
 ##%%patch6 -p1
 
