@@ -4,7 +4,7 @@ Summary:	GNU Compiler Collection
 Summary(pl):	Kolekcja kompilatorów GNU
 Name:		gcc
 Version:	2.95.2
-Release:	4
+Release:	5
 License:	GPL
 Group:		Development/Languages
 Group(pl):	Programowanie/Jêzyki
@@ -37,7 +37,7 @@ Patch22:	gcc-ppc-ice.patch
 Patch23:	gcc-ppc-descriptions.patch
 Patch24:	gcc-ppc-andrew-dwarf-eh.patch
 Requires:	binutils >= 2.9.1.0.25
-Requires:	cpp 
+Requires:	cpp = %{version}
 Obsoletes:	egcs
 Prereq:		/usr/sbin/fix-info-dir
 URL:		http://gcc.gnu.org/
@@ -237,6 +237,7 @@ Group:		Development/Libraries
 Group(pl):	Programowanie/Biblioteki
 Version:	%{STDC_VERSION}
 Requires:	libstdc++ = %{STDC_VERSION}
+Requires:	%{name}-g++ = %{version}
 Obsoletes:	libg++-devel
 
 %description -n libstdc++-devel
