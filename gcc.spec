@@ -9,6 +9,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
+%bcond_with	multilib	# build with multilib support
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -678,6 +679,8 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+%if %{with multilib}
+
 CC=%__cc
 %ifarch sparc64 
 cat > gcc64 <<"EOF"
@@ -697,6 +700,7 @@ chmod +x gcc64
 CC=`pwd`/gcc64
 %endif 
 
+%endif
 
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
@@ -713,7 +717,11 @@ TEXCONFIG=false ../configure \
 	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
+%if %{with multilib}
 	--enable-multilib \
+%else
+	-disable-multilib \
+%endif
 	--enable-nls \
 	--with-gnu-as \
 	--with-gnu-ld \
@@ -832,6 +840,8 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf $gccdir/install-tools
 
+%if %{with multilib}
+
 %ifarch sparc64 
 ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
@@ -841,6 +851,8 @@ ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 ln -sf %{_slibdir}*/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %endif 
+
+%endif
 
 %find_lang %{name}
 %find_lang libstdc\+\+
