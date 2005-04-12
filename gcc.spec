@@ -17,10 +17,11 @@
 #		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
+#		- http://gcc.gnu.org/PR20949 (critical c++ misscompilation)
 #		- disable internal zlib usage
 #		- translations from gcc.spec:HEAD
 #
-%define		_snap		20050409
+%define		_snap		20050410
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
@@ -31,9 +32,9 @@ Release:	0.%{_snap}.1
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
-# Source0-md5:	a81022feecfd6350c2d5653fafd881a2
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	db9b31ff0532b1336ce71a1c3a3e8139
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -479,9 +480,9 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 # prerelease
-#setup -q -n gcc-%{version}-%{_snap}
+%setup -q -n gcc-%{version}-%{_snap}
 # snapshot
-%setup -q -n gcc-4.0-%{_snap}
+#setup -q -n gcc-4.0-%{_snap}
 # final
 #setup -q -n gcc-%{version}
 
