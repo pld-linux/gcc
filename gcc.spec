@@ -6,6 +6,7 @@
 %bcond_without	objc		# build without ObjC support
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
+%bcond_without	bootstrap	# omit 3-stage bootstrap
 
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
@@ -546,8 +547,7 @@ TEXCONFIG=false \
 cd ..
 
 %{__make} -C obj-%{_target_platform} \
-	%{?with_profiling:profiledbootstrap} \
-	%{!?with_profiling:bootstrap} \
+	%{?with_bootstrap:%{?with_profiling:profiled}bootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
