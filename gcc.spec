@@ -602,6 +602,7 @@ cp -f	libjava/READ* java-doc
 cp -f	fastjar/README java-doc/README.fastjar
 cp -f	libffi/README java-doc/README.libffi
 cp -f	libffi/LICENSE java-doc/LICENSE.libffi
+ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 %endif
 %if %{with objc}
 cp -f	libobjc/README gcc/objc/README.libobjc
