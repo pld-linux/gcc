@@ -29,7 +29,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
@@ -897,7 +897,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
-%attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
@@ -906,7 +905,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
 %{_mandir}/man1/gcj*
-%{_mandir}/man1/gij*
 %{_mandir}/man1/grepjar*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
@@ -923,11 +921,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
+%attr(755,root,root) %{_bindir}/gij
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %{_libdir}/logging.properties
+%{_javadir}/libgcj*.jar
+%{_mandir}/man1/gij*
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
@@ -938,7 +939,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
-%{_javadir}/libgcj*.jar
 %{_libdir}/lib*cj.spec
 %{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
