@@ -19,19 +19,20 @@
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
 #
-%define		_snap		20050417
+#define		_snap		20050417
 #
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Name:		gcc
 Epoch:		5
 Version:	4.0.0
-Release:	0.%{_snap}.1
+#Release:	0.%{_snap}.1
+Release:	0.1
 License:	GPL v2+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-# Source0-md5:	99f114330f152939f0d9586010da176f
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/gcc-%{version}.tar.bz2
+# Source0-md5:	55ee7df1b29f719138ec063c57b89db6
+#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
@@ -479,11 +480,11 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 # prerelease
-%setup -q -n gcc-%{version}-%{_snap}
+#setup -q -n gcc-%{version}-%{_snap}
 # snapshot
 #setup -q -n gcc-4.0-%{_snap}
 # final
-#setup -q -n gcc-%{version}
+%setup -q -n gcc-%{version}
 rm -rf zlib
 
 %patch0 -p1
