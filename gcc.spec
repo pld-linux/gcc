@@ -27,7 +27,7 @@ Name:		gcc
 Epoch:		5
 Version:	4.0.0
 #Release:	0.%{_snap}.1
-Release:	0.1
+Release:	0.5
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
