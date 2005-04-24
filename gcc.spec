@@ -27,7 +27,7 @@ Name:		gcc
 Epoch:		5
 Version:	4.0.0
 #Release:	0.%{_snap}.1
-Release:	0.5
+Release:	1
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
@@ -43,6 +43,7 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch10:	%{name}-pr20973.patch
+Patch11:	%{name}-pr21173.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -496,6 +497,7 @@ rm -rf zlib
 
 # PRs
 %patch10 -p1
+%patch11 -p0
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
