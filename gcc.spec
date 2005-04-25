@@ -27,7 +27,7 @@ Name:		gcc
 Epoch:		5
 Version:	4.0.0
 #Release:	0.%{_snap}.1
-Release:	2
+Release:	2.1
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
@@ -631,7 +631,7 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h} $gccdir/tmp}
+%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv -f $gccdir/include/objc	$gccdir/tmp}
 mv -f	$gccdir/include/syslimits.h $gccdir/tmp
 rm -rf	$gccdir/include
@@ -940,6 +940,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/c++/%{version}/gcj
 %{_includedir}/c++/%{version}/gnu
 %{_libdir}/gcc/*/*/include/gcj
+%{_libdir}/gcc/*/*/include/jawt.h
+%{_libdir}/gcc/*/*/include/jawt_md.h
+%{_libdir}/gcc/*/*/include/jni.h
+%{_libdir}/gcc/*/*/include/jvmpi.h
 %dir %{_libdir}/security
 %{_libdir}/security/*
 %{_libdir}/lib*cj.spec
