@@ -27,7 +27,7 @@ Name:		gcc
 Epoch:		5
 Version:	4.0.0
 #Release:	0.%{_snap}.1
-Release:	2.1
+Release:	2.2
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
@@ -272,6 +272,7 @@ Group:		Development/Languages/Fortran
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 Obsoletes:	gcc-g77
+Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 
 %description fortran
 This package adds support for compiling Fortran 95 programs with the
