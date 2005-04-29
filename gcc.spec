@@ -653,7 +653,7 @@ Summary:	Static Ada standard libraries
 Summary(pl):	Statyczne biblioteki standardowe dla Ady
 Version:	%{GCC_VERSION}
 License:	GPL v2+ with linking exception
-Group:		Libraries
+Group:		Development/Libraries
 Obsoletes:	gnat-static
 
 %description -n libgnat-static
