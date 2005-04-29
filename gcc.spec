@@ -1,4 +1,10 @@
 #
+# TODO:
+#		- http://gcc.gnu.org/PR11203 (inline-asm)
+#		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
+#		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
+#		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	fortran		# build without Fortran support
@@ -12,28 +18,18 @@
 %undefine	with_multilib
 %endif
 
-#
-# TODO:
-#		- http://gcc.gnu.org/PR11203 (inline-asm)
-#		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
-#		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
-#		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
-#
-#define		_snap		20050417
-#
 Summary:	GNU Compiler Collection: the C compiler and shared files
+Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
+Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Epoch:		5
 Version:	4.0.0
-#Release:	0.%{_snap}.1
 Release:	3
+Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	55ee7df1b29f719138ec063c57b89db6
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/%{name}-4.0-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -81,14 +77,14 @@ Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%ifarch sparc64
-%define		rpmcflags	-O2 -mtune=ultrasparc
-%endif
 %define		_slibdir	/%{_lib}
-
 %if %{with multilib}
+# 32-bit environment on amd64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
+%endif
+%ifarch sparc64
+%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
 %description
@@ -99,6 +95,16 @@ This package contains the C compiler and some files shared by various
 parts of the GNU Compiler Collection. In order to use another GCC
 compiler you will need to install the appropriate subpackage.
 
+%description -l es
+Un compilador que intenta integrar todas las optimalizaciones y
+características necesarias para un entorno de desarrollo eficaz y
+estable.
+
+Este paquete contiene el compilador de C y unos ficheros compartidos
+por varias partes de la colección de compiladores GNU (GCC). Para usar
+otro compilador de GCC será necesario que instale el subpaquete
+adecuado.
+
 %description -l pl
 Kompilator, posiadaj±cy du¿e mo¿liwo¶ci optymalizacyjne niezbêdne do
 wyprodukowania szybkiego i stabilnego kodu wynikowego.
@@ -107,9 +113,15 @@ Ten pakiet zawiera kompilator C i pliki wspó³dzielone przez ró¿ne
 czê¶ci kolekcji kompilatorów GNU (GCC). ¯eby u¿ywaæ innego kompilatora
 z GCC, trzeba zainstalowaæ odpowiedni podpakiet.
 
+%description -l pt_BR
+Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
+GNU Compiler Collection.
+
 %package -n libgcc
 Summary:	Shared gcc library
+Summary(es):	Biblioteca compartida de gcc
 Summary(pl):	Biblioteka gcc
+Summary(pt_BR):	Biblioteca runtime para o GCC
 License:	GPL with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
@@ -117,19 +129,31 @@ Obsoletes:	libgcc1
 %description -n libgcc
 Shared gcc library.
 
+%description -n libgcc -l es
+Biblioteca compartida de gcc.
+
 %description -n libgcc -l pl
 Biblioteka dynamiczna gcc.
 
+%description -n libgcc -l pt_BR
+Biblioteca runtime para o GCC.
+
 %package -n libmudflap
 Summary:	GCC mudflap shared support library
+Summary(pl):	Wspó³dzielona biblioteka wspomagaj±ca GCC mudflap
 Group:		Libraries
 
 %description -n libmudflap
 The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations.
 
+%description -n libmudflap -l pl
+Biblioteki libmudflap s± u¿ywane przez GCC do obs³ugi operacji
+dereferencji wspa¼ników i tablic.
+
 %package -n libmudflap-devel
 Summary:	Development files for GCC mudflap library
+Summary(pl):	Pliki programistyczne biblioteki GCC mudflap
 Group:		Development/Libraries
 Requires:	libmudflap = %{epoch}:%{version}-%{release}
 
@@ -138,8 +162,14 @@ The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations. This package contains development
 files.
 
+%description -n libmudflap-devel -l pl
+Biblioteki libmudflap s± u¿ywane przez GCC do obs³ugi operacji
+dereferencji wspa¼ników i tablic. Ten pakiet zawiera pliki
+programistyczne.
+
 %package -n libmudflap-static
 Summary:	Static GCC mudflap library
+Summary(pl):	Statyczna biblioteka GCC mudflap
 Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
 
@@ -148,8 +178,14 @@ The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations. This package contains static
 libraries.
 
+%description -n libmudflap-static -l pl
+Biblioteki libmudflap s± u¿ywane przez GCC do obs³ugi operacji
+dereferencji wspa¼ników i tablic. Ten pakiet zawiera biblioteki
+statyczne.
+
 %package ada
 Summary:	Ada support for gcc
+Summary(es):	Soporte de Ada para gcc
 Summary(pl):	Obs³uga Ady do gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -160,21 +196,30 @@ Obsoletes:	gnat-devel
 %description ada
 This package adds experimental support for compiling Ada programs.
 
+%description ada -l es
+Este paquete añade soporte experimental para compilar programas en
+Ada.
+
 %description ada -l pl
 Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
 Adzie.
 
 %package -n libgnat
 Summary:	Ada standard libraries
+Summary(es):	Bibliotecas estándares de Ada
 Summary(pl):	Biblioteki standardowe dla Ady
 License:	GPL v2+ with linking exception
-Group:		Development/Libraries
+Group:		Libraries
 Obsoletes:	gnat
 Obsoletes:	libgnat1
 
 %description -n libgnat
 This package contains shared libraries needed to run programs written
 in Ada.
+
+%description -n libgnat -l es
+Este paquete contiene las bibliotecas compartidas necesarias para
+ejecutar programas escritos en Ada.
 
 %description -n libgnat -l pl
 Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
@@ -196,7 +241,9 @@ Adzie.
 
 %package c++
 Summary:	C++ support for gcc
+Summary(es):	Soporte de C++ para gcc
 Summary(pl):	Obs³uga C++ dla gcc
+Summary(pt_BR):	Suporte C++ para o gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
@@ -208,14 +255,43 @@ includes support for most of the current C++ specification, including
 templates and exception handling. It does not include a standard C++
 library, which is available separately.
 
+%description c++ -l de
+Dieses Paket enthält die C++-Unterstützung für den
+GNU-Compiler-Collection. Es unterstützt die aktuelle
+C++-Spezifikation, inkl. Templates und Ausnahmeverarbeitung. Eine
+C++-Standard-Library ist nicht enthalten - sie ist getrennt
+erhältlich.
+
+%description c++ -l es
+Este paquete añade soporte de C++ al GCC (colección de compiladores
+GNU). Ello incluye el soporte para la mayoría de la especificación
+actual de C++, incluyendo plantillas y manejo de excepciones. No
+incluye la biblioteca estándar de C++, la que es disponible separada.
+
+%description c++ -l fr
+Ce package ajoute un support C++ a la collection de compilateurs GNU.
+Il comprend un support pour la plupart des spécifications actuelles de
+C++, dont les modéles et la gestion des exceptions. Il ne comprend pas
+une bibliothéque C++ standard, qui est disponible séparément.
+
 %description c++ -l pl
 Ten pakiet dodaje obs³ugê C++ do kompilatora gcc. Ma wsparcie dla
 du¿ej ilo¶ci obecnych specyfikacji C++, nie zawiera natomiast
 standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 
+%description c++ -l pt_BR
+Este pacote adiciona suporte C++ para o gcc.
+
+%description c++ -l tr
+Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve
+aykýrý durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart
+C++ kitaplýðý bu pakette yer almaz.
+
 %package -n libstdc++
 Summary:	GNU C++ library
+Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
+Summary(pt_BR):	Biblioteca C++ GNU
 License:	GPL v2+ with free software exception
 Group:		Libraries
 Obsoletes:	libg++
@@ -226,19 +302,47 @@ This is the GNU implementation of the standard C++ libraries, along
 with additional GNU tools. This package includes the shared libraries
 necessary to run C++ applications.
 
+%description -n libstdc++ -l de
+Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
+weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
+C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
+
+%description -n libstdc++ -l es
+Este es el soporte de las bibliotecas padrón del C++, junto con
+herramientas GNU adicionales. El paquete incluye las bibliotecas
+compartidas necesarias para ejecutar aplicaciones C++.
+
+%description -n libstdc++ -l fr
+Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
+des outils GNU supplémentaires. Ce package comprend les librairies
+partagées nécessaires à l'exécution d'application C++.
+
 %description -n libstdc++ -l pl
 Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
 bibliotek C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do
 uruchomienia aplikacji napisanych w C++.
 
+%description -n libstdc++ -l pt_BR
+Este pacote é uma implementação da biblioteca padrão C++ v3, um
+subconjunto do padrão ISO 14882.
+
+%description -n libstdc++ -l tr
+Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
+uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
+
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
+Summary(de):	Header-Dateien zur Entwicklung mit C++
+Summary(es):	Ficheros de cabecera y documentación para desarrollo C++
+Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
 Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
+Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
+Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
-Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+Requires:	glibc-devel
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -247,13 +351,23 @@ This is the GNU implementation of the standard C++ libraries. This
 package includes the header files needed for C++ development and
 library documentation.
 
+%description -n libstdc++-devel -l es
+Este es el soporte de las bibliotecas padrón del lenguaje C++. Este
+paquete incluye los archivos de inclusión y bibliotecas necesarios
+para desarrollo de programas en lenguaje C++.
+
 %description -n libstdc++-devel -l pl
 Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
 bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
 programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 
+%description -n libstdc++-devel -l pt_BR
+Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
+para desenvolvimento de programas C++.
+
 %package -n libstdc++-static
 Summary:	Static C++ standard library
+Summary(es):	Biblioteca estándar estática de C++
 Summary(pl):	Statyczna biblioteka standardowa C++
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
@@ -262,41 +376,58 @@ Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 %description -n libstdc++-static
 Static C++ standard library.
 
+%description -n libstdc++-static -l es
+Biblioteca estándar estática de C++.
+
 %description -n libstdc++-static -l pl
 Statyczna biblioteka standardowa C++.
 
 %package fortran
 Summary:	Fortran 95 support for gcc
+Summary(es):	Soporte de Fortran 95 para gcc
 Summary(pl):	Obs³uga Fortranu 95 dla gcc
+Summary(pt_BR):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
+Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 Obsoletes:	gcc-g77
-Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 
 %description fortran
 This package adds support for compiling Fortran 95 programs with the
 GNU compiler.
 
+%description fortran -l es
+Este paquete añade soporte para compilar programas escritos en Fortran
+95 con el compilador GNU.
+
 %description fortran -l pl
 Ten pakiet dodaje obs³ugê Fortranu 95 do kompilatora gcc. Jest
 potrzebny do kompilowania programów pisanych w jêzyku Fortran 95.
 
+%description fortran -l pt_BR
+Suporte Fortran 95 para o GCC.
+
 %package -n libgfortran
 Summary:	Fortran 95 Libraries
+Summary(es):	Bibliotecas de Fortran 95
 Summary(pl):	Biblioteki Fortranu 95
 License:	LGPL v2+
-Group:		Development/Libraries
+Group:		Libraries
 Obsoletes:	libg2c
 
 %description -n libgfortran
 Fortran 95 Libraries.
+
+%description -n libgfortran -l es
+Bibliotecas de Fortran 95.
 
 %description -n libgfortran -l pl
 Biblioteki Fortranu 95.
 
 %package -n libgfortran-static
 Summary:	Static Fortran 95 Libraries
+Summary(es):	Bibliotecas estáticas de Fortran 95
 Summary(pl):	Statyczne Biblioteki Fortranu 95
 License:	LGPL v2+
 Group:		Development/Libraries
@@ -306,59 +437,76 @@ Obsoletes:	libg2c-static
 %description -n libgfortran-static
 Static Fortran 95 Libraries.
 
+%description -n libgfortran-static -l es
+Bibliotecas estáticas de Fortran 95.
+
 %description -n libgfortran-static -l pl
 Statyczne biblioteki Fortranu 95.
 
 %package java
 Summary:	Java support for gcc
+Summary(es):	Soporte de Java para gcc
 Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	libgcj = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	java-shared
 Provides:	gcj = %{epoch}:%{version}-%{release}
 
 %description java
-This package adds experimental support for compiling Java(tm) programs
+This package adds experimental support for compiling Java(TM) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
+%description java -l es
+Este paquete añade soporte experimental para compilar programas
+Java(tm) y su bytecode en código nativo. Para usarlo también va a
+necesitar el paquete libgcj.
+
 %description java -l pl
-Wsparcie dla kompilowania programów Java(tm) zarówno do bajt-kodu jak
-i do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
-by³o przeprowadziæ kompilacjê.
+Ten pakiet dodaje mo¿liwo¶æ kompilowania programów w jêzyku Java(TM)
+oraz bajtkodu do kodu natywnego. Do u¿ywania go wymagany jest
+dodatkowo pakiet libgcj.
 
 %package -n libgcj
 Summary:	Java Class Libraries
+Summary(es):	Bibliotecas de clases de Java
 Summary(pl):	Biblioteki Klas Javy
 License:	GPL with limited linking exception
 Group:		Libraries
-Requires:	zlib
 Obsoletes:	libgcj3
 
 %description -n libgcj
 Java Class Libraries.
+
+%description -n libgcj -l es
+Bibliotecas de clases de Java.
 
 %description -n libgcj -l pl
 Biblioteki Klas Javy.
 
 %package -n libgcj-devel
 Summary:	Development files for Java Class Libraries
+Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
+Requires:	zlib-devel
 Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
 Development files for Java Class Libraries.
+
+%description -n libgcj-devel -l es
+Ficheros de desarrollo para las bibliotecas de clases de Java.
 
 %description -n libgcj-devel -l pl
 Pliki nag³ówkowe dla Bibliotek Klas Javy.
 
 %package -n libgcj-static
 Summary:	Static Java Class Libraries
+Summary(es):	Bibliotecas estáticas de clases de Java
 Summary(pl):	Statyczne Biblioteki Klas Javy
 License:	GPL with limited linking exception
 Group:		Development/Libraries
@@ -368,11 +516,15 @@ Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 %description -n libgcj-static
 Static Java Class Libraries.
 
+%description -n libgcj-static -l es
+Bibliotecas estáticas de clases de Java.
+
 %description -n libgcj-static -l pl
 Statyczne Biblioteki Klas Javy.
 
 %package -n libffi
 Summary:	Foreign Function Interface library
+Summary(es):	Biblioteca de interfaz de funciones ajenas
 Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji
 License:	BSD-like
 Group:		Libraries
@@ -383,6 +535,12 @@ interface to various calling conventions. This allows a programmer to
 call any function specified by a call interface description at run
 time.
 
+%description -n libffi -l es
+La biblioteca libffi provee una interfaz portable de programación de
+alto nivel para varias convenciones de llamada. Ello permite que un
+programador llame una función cualquiera especificada por una
+descripción de interfaz de llamada en el tiempo de ejecución.
+
 %description -n libffi -l pl
 Biblioteka libffi dostarcza przeno¶nego, wysokopoziomowego
 miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
@@ -391,6 +549,7 @@ czasie wykonania.
 
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
+Summary(es):	Ficheros de desarrollo para libffi
 Summary(pl):	Pliki nag³ówkowe dla libffi
 License:	BSD-like
 Group:		Development/Libraries
@@ -399,11 +558,15 @@ Requires:	libffi = %{epoch}:%{version}-%{release}
 %description -n libffi-devel
 Development files for Foreign Function Interface library.
 
+%description -n libffi-devel -l es
+Ficheros de desarrollo para libffi.
+
 %description -n libffi-devel -l pl
 Pliki nag³ówkowe dla libffi.
 
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
+Summary(es):	Biblioteca libffi estática
 Summary(pl):	Statyczna biblioteka libffi
 License:	BSD-like
 Group:		Development/Libraries
@@ -412,22 +575,30 @@ Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 %description -n libffi-static
 Static Foreign Function Interface library.
 
+%description -n libffi-static -l es
+Biblioteca libffi estática.
+
 %description -n libffi-static -l pl
 Statyczna biblioteka libffi.
 
 %package java-tools
 Summary:	Shared java tools
+Summary(es):	Herramientas compartidas de Java
 Summary(pl):	Wspó³dzielone narzêdzia javy
 Group:		Development/Languages/Java
 Provides:	jar = %{epoch}:%{version}-%{release}
 Provides:	java-shared
 Obsoletes:	fastjar
-Obsoletes:	java-shared
 Obsoletes:	jar
+Obsoletes:	java-shared
 
 %description java-tools
 This package contains tools that are common for every Java(tm)
 implementation, such as rmic or jar.
+
+%description java-tools -l es
+Este paquete contiene herramientas que son comunes para cada
+implementación de Java(tm), como rmic o jar.
 
 %description java-tools -l pl
 Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
@@ -435,7 +606,11 @@ Javy(tm), takie jak rmic czy jar.
 
 %package objc
 Summary:	Objective C support for gcc
+Summary(de):	Objektive C-Unterstützung für gcc
+Summary(es):	Soporte de Objective C para gcc
+Summary(fr):	Gestion d'Objective C pour gcc
 Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc
+Summary(tr):	gcc için Objective C desteði
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
@@ -448,14 +623,40 @@ Objective C is a object oriented derivative of the C language, mainly
 used on systems running NeXTSTEP. This package does not include the
 standard objective C object library.
 
+%description objc -l de
+Dieses Paket ergänzt den GNU-Compiler-Collection durch
+Objective-C-Support. Objective C ist ein objektorientiertes Derivat
+von C, das zur Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt.
+Die Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
+
+%description objc -l es
+Este paquete añade soporte de Objective C al GCC (colección de
+compiladores GNU). Objective C es un lenguaje orientado a objetos
+derivado de C, principalmente usado en sistemas que funcionan bajo
+NeXTSTEP. El paquete no incluye la biblioteca de objetos estándar de
+Objective C.
+
+%description objc -l fr
+Ce package ajoute un support Objective C a la collection de
+compilateurs GNU. L'Objective C est un langage orienté objetdérivé du
+langage C, principalement utilisé sur les systèmes NeXTSTEP. Ce
+package n'inclue pas la bibliothéque Objective C standard.
+
 %description objc -l pl
 Ten pakiet dodaje obs³ugê obiektowego C do kompilatora gcc. Obiektowe
 C (objc) jest zorientowan± obiektowo pochodn± jêzyka C, u¿ywan±
 g³ównie w systemach u¿ywaj±cych NeXTSTEP. W pakiecie nie ma
 standardowej biblioteki objc (która znajduje siê w osobnym pakiecie).
 
+%description objc -l tr
+Bu paket, GNU C derleyicisine Objective C desteði ekler. Objective C,
+C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
+sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
+kitaplýðý bu pakette yer almaz.
+
 %package -n libobjc
 Summary:	Objective C Libraries
+Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Libraries
@@ -464,11 +665,15 @@ Obsoletes:	libobjc1
 %description -n libobjc
 Objective C Libraries.
 
+%description -n libobjc -l es
+Bibliotecas de Objective C.
+
 %description -n libobjc -l pl
 Biblioteki Obiektowego C.
 
 %package -n libobjc-static
 Summary:	Static Objective C Libraries
+Summary(es):	Bibliotecas estáticas de Objective C
 Summary(pl):	Statyczne Biblioteki Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
@@ -477,15 +682,13 @@ Requires:	libobjc = %{epoch}:%{version}-%{release}
 %description -n libobjc-static
 Static Objective C Libraries.
 
+%description -n libobjc-static -l es
+Bibliotecas estáticas de Objective C.
+
 %description -n libobjc-static -l pl
 Statyczne biblioteki Obiektowego C.
 
 %prep
-# prerelease
-#setup -q -n gcc-%{version}-%{_snap}
-# snapshot
-#setup -q -n gcc-4.0-%{_snap}
-# final
 %setup -q -n gcc-%{version}
 rm -rf zlib
 
@@ -522,7 +725,7 @@ TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
-	--libexecdir=%{_libexecdir} \
+	--libexecdir=%{_libdir} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--enable-shared \
@@ -736,11 +939,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/32/crt*.o
 %endif
 %{_libdir}/gcc/*/*/crt*.o
-%ifarch sparc64
-%{_libdir}/gcc/*/*/*/libgcc.a
-%{_libdir}/gcc/*/*/*/libgcc_eh.a
-%{_libdir}/gcc/*/*/*/crt*.o
-%endif
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
