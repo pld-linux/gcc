@@ -330,7 +330,7 @@ Requires:	libg2c = %{epoch}:%{GCC_VERSION}-%{release}
 %description -n libg2c-static
 Static Fortran 77 Libraries.
 
-%description -n libg2c -l es
+%description -n libg2c-static -l es
 Bibliotecas estáticas de Fortran 77.
 
 %description -n libg2c-static -l pl
@@ -348,7 +348,7 @@ Requires:	java-shared
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description java
-This package adds experimental support for compiling Java(tm) programs
+This package adds experimental support for compiling Java(TM) programs
 and bytecode into native code. To use this you will also need the
 libgcj package.
 
@@ -358,9 +358,9 @@ Java(tm) y su bytecode en código nativo. Para usarlo también va a
 necesitar el paquete libgcj.
 
 %description java -l pl
-Wsparcie dla kompilowania programów Java(tm) zarówno do bajt-kodu jak i
-do natywnego kodu. Dodatkowo wymagany jest pakiet libgcj, aby mo¿na
-by³o przeprowadziæ kompilacjê.
+Ten pakiet dodaje mo¿liwo¶æ kompilowania programów w jêzyku Java(TM)
+oraz bajtkodu do kodu natywnego. Do u¿ywania go wymagany jest
+dodatkowo pakiet libgcj.
 
 %package java-tools
 Summary:	Shared java tools
@@ -393,7 +393,6 @@ Summary(pl):	Biblioteki Klas Javy
 Version:	%{GCC_VERSION}
 License:	GPL with limited linking exception
 Group:		Libraries
-Requires:	zlib
 Obsoletes:	libgcj3
 
 %description -n libgcj
@@ -412,8 +411,9 @@ Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy
 Version:	%{GCC_VERSION}
 License:	GPL with limited linking exception
 Group:		Development/Libraries
-Requires:	%{name}-java = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	libgcj = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	zlib-devel
 Obsoletes:	libgcj3-devel
 
 %description -n libgcj-devel
@@ -445,7 +445,7 @@ Bibliotecas estáticas de clases de Java.
 Statyczne Biblioteki Klas Javy.
 
 %package -n libstdc++
-Summary:	GNU c++ library
+Summary:	GNU C++ library
 Summary(es):	Biblioteca C++ de GNU
 Summary(pl):	Biblioteki GNU C++
 Summary(pt_BR):	Biblioteca C++ GNU
