@@ -141,6 +141,7 @@ Biblioteca runtime para o GCC.
 %package -n libmudflap
 Summary:	GCC mudflap shared support library
 Summary(pl):	Wspó³dzielona biblioteka wspomagaj±ca GCC mudflap
+License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libmudflap
@@ -154,6 +155,7 @@ dereferencji wspa¼ników i tablic.
 %package -n libmudflap-devel
 Summary:	Development files for GCC mudflap library
 Summary(pl):	Pliki programistyczne biblioteki GCC mudflap
+License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap = %{epoch}:%{version}-%{release}
 
@@ -170,6 +172,7 @@ programistyczne.
 %package -n libmudflap-static
 Summary:	Static GCC mudflap library
 Summary(pl):	Statyczna biblioteka GCC mudflap
+License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
 
