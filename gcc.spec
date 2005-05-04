@@ -24,7 +24,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.0.0
-Release:	3
+Release:	4
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -40,6 +40,8 @@ Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch10:	%{name}-pr20973.patch
 Patch11:	%{name}-pr21173.patch
+Patch12:	%{name}-pr19664.patch
+Patch13:	%{name}-pr20218.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -705,6 +707,8 @@ rm -rf zlib
 # PRs
 %patch10 -p1
 %patch11 -p1
+%patch12 -p1
+%patch13 -p0
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
