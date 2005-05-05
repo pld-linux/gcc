@@ -4,6 +4,7 @@
 #		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
+#		- http://gcc.gnu.org/PR19664, PR20218 (visibility issues)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -24,7 +25,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.0.0
-Release:	4
+Release:	5
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -707,8 +708,8 @@ rm -rf zlib
 # PRs
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p0
+#patch12 -p1
+#patch13 -p0
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
