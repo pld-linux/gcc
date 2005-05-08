@@ -24,13 +24,15 @@ Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartid
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	4.0.0
-Release:	5
+Version:	4.0.1
+%define		_snap	20050507
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	55ee7df1b29f719138ec063c57b89db6
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
+# Source0-md5:	701f385de867d117f3648165174b254a
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -39,10 +41,8 @@ Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
-Patch10:	%{name}-pr20973.patch
-Patch11:	%{name}-pr21173.patch
-Patch12:	%{name}-pr19664.patch
-Patch13:	%{name}-pr20218.patch
+#Patch12:	%{name}-pr19664.patch
+#Patch13:	%{name}-pr20218.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -695,7 +695,8 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q -n gcc-%{version}
+#setup -q -n gcc-%{version}
+%setup -q -n gcc-4.0-%{_snap}
 rm -rf zlib
 
 %patch0 -p1
@@ -706,10 +707,6 @@ rm -rf zlib
 %patch5 -p1
 
 # PRs
-%patch10 -p1
-%patch11 -p1
-#patch12 -p1
-#patch13 -p0
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
