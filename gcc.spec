@@ -26,7 +26,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050507
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -856,6 +856,8 @@ ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
 %find_lang libstdc\+\+
+
+[ ! -f NEWS ] && touch NEWS
 
 %clean
 rm -rf $RPM_BUILD_ROOT
