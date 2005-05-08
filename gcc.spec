@@ -26,7 +26,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050507
-Release:	0.%{_snap}.5
+Release:	0.%{_snap}.6
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1110,6 +1110,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gjnih
 %attr(755,root,root) %{_bindir}/grepjar
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
@@ -1118,6 +1119,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/gcj*
 %{_mandir}/man1/gcj*
+%{_mandir}/man1/gjnih*
 %{_mandir}/man1/grepjar*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
