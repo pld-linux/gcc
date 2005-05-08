@@ -26,7 +26,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050507
-Release:	0.%{_snap}.4
+Release:	0.%{_snap}.5
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -860,8 +860,8 @@ ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 # cvs snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
 [ ! -f NEWS ] && touch NEWS
-[ ! -f libgfortan/AUTHORS ] && touch libgfortan/AUTHORS
-[ ! -f libgfortan/README ] && touch libgfortan/README
+[ ! -f libgfortran/AUTHORS ] && touch libgfortran/AUTHORS
+[ ! -f libgfortran/README ] && touch libgfortran/README
 
 %clean
 rm -rf $RPM_BUILD_ROOT
