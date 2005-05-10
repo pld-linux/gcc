@@ -15,7 +15,7 @@
 %bcond_without	profiling	# build without profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 
-%ifnarch amd64 ppc64 s390x sparc64
+%ifnarch %{x8664} ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
 
@@ -62,6 +62,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
+BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 # AS_NEEDED directive for dynamic linker
@@ -83,7 +84,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
 %if %{with multilib}
-# 32-bit environment on amd64,ppc64,s390x,sparc64
+# 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
@@ -698,7 +699,6 @@ Statyczne biblioteki Obiektowego C.
 %prep
 #setup -q -n gcc-%{version}
 %setup -q -n gcc-4.0-%{_snap}
-rm -rf zlib
 
 %patch0 -p1
 %patch1 -p1
