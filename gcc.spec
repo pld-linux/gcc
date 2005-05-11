@@ -26,7 +26,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050507
-Release:	0.%{_snap}.7
+Release:	0.%{_snap}.8
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -42,6 +42,7 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch10:	%{name}-pr21237.patch
+Patch11:	%{name}-pr21454.patch
 #Patch12:	%{name}-pr19664.patch
 #Patch13:	%{name}-pr20218.patch
 URL:		http://gcc.gnu.org/
@@ -460,6 +461,8 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	java-shared
 Provides:	gcj = %{epoch}:%{version}-%{release}
+Obsoletes:	fastjar
+Obsoletes:	gcc-java-tools
 
 %description java
 This package adds experimental support for compiling Java(TM) programs
@@ -589,29 +592,6 @@ Biblioteca libffi estática.
 %description -n libffi-static -l pl
 Statyczna biblioteka libffi.
 
-%package java-tools
-Summary:	Shared java tools
-Summary(es):	Herramientas compartidas de Java
-Summary(pl):	Wspó³dzielone narzêdzia javy
-Group:		Development/Languages/Java
-Provides:	jar = %{epoch}:%{version}-%{release}
-Provides:	java-shared
-Obsoletes:	fastjar
-Obsoletes:	jar
-Obsoletes:	java-shared
-
-%description java-tools
-This package contains tools that are common for every Java(tm)
-implementation, such as rmic or jar.
-
-%description java-tools -l es
-Este paquete contiene herramientas que son comunes para cada
-implementación de Java(tm), como rmic o jar.
-
-%description java-tools -l pl
-Pakiet ten zawiera narzêdzia wspólne dla ka¿dej implementacji
-Javy(tm), takie jak rmic czy jar.
-
 %package objc
 Summary:	Objective C support for gcc
 Summary(de):	Objektive C-Unterstützung für gcc
@@ -709,6 +689,7 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch10 -p1
+%patch11 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -1111,28 +1092,25 @@ rm -rf $RPM_BUILD_ROOT
 %files java
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
+%attr(755,root,root) %{_bindir}/fastjar
 %attr(755,root,root) %{_bindir}/gcj*
 %attr(755,root,root) %{_bindir}/gjnih
 %attr(755,root,root) %{_bindir}/grepjar
+%attr(755,root,root) %{_bindir}/grmi*
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
+%{_infodir}/fastjar*
 %{_infodir}/gcj*
+%{_mandir}/man1/fastjar*
 %{_mandir}/man1/gcj*
 %{_mandir}/man1/gjnih*
 %{_mandir}/man1/grepjar*
+%{_mandir}/man1/grmi*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
-
-%files java-tools
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/grmi*
-%attr(755,root,root) %{_bindir}/fastjar
-%{_mandir}/man1/grmi*
-%{_mandir}/man1/fastjar*
-%{_infodir}/fastjar*
 
 %files -n libgcj
 %defattr(644,root,root,755)
