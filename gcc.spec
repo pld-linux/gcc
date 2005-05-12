@@ -26,7 +26,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050507
-Release:	0.%{_snap}.8
+Release:	0.%{_snap}.9
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -459,7 +459,6 @@ Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
-Requires:	java-shared
 Provides:	gcj = %{epoch}:%{version}-%{release}
 Obsoletes:	fastjar
 Obsoletes:	gcc-java-tools
