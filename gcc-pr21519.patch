@@ -9,16 +9,6 @@ ourselves.  This only gets triggered by "gcj -C -O2".
 	* jcf-write.c (generate_bytecode_insns) <SAVE_EXPR>: Don't call
 	NOTE_PUSH.
 
---- gcc/gcc/java/expr.c	2005/04/29 20:27:57	1.225
-+++ gcc/gcc/java/expr.c	2005/05/15 18:28:17	1.226
-@@ -1800,6 +1800,7 @@
- 		     TREE_TYPE (return_address_type_node));
-   DECL_CONTEXT (decl) = current_function_decl;
-   DECL_IGNORED_P (decl) = 1;
-+  DECL_ARTIFICIAL (decl) = 1;
-   return decl;
- }
- 
 --- gcc/gcc/java/jcf-write.c 14 Feb 2005 20:04:36 -0000
 +++ gcc/gcc/java/jcf-write.c 13 May 2005 21:19:21 -0000
 @@ -2235,7 +2235,6 @@
