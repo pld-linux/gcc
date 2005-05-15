@@ -25,14 +25,14 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.0.1
-%define		_snap	20050507
-Release:	0.%{_snap}.9
+%define		_snap	20050514
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.0-%{_snap}/gcc-4.0-%{_snap}.tar.bz2
-# Source0-md5:	701f385de867d117f3648165174b254a
+# Source0-md5:	25e147473b14c4bb43cdc53299c3524c
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -41,7 +41,6 @@ Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
-Patch10:	%{name}-pr21237.patch
 Patch11:	%{name}-pr21454.patch
 #Patch12:	%{name}-pr19664.patch
 #Patch13:	%{name}-pr20218.patch
@@ -687,7 +686,6 @@ Statyczne biblioteki Obiektowego C.
 %patch5 -p1
 
 # PRs
-%patch10 -p1
 %patch11 -p1
 
 # because we distribute modified version of gcc...
