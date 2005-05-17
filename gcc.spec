@@ -711,7 +711,7 @@ install -d obj-%{_target_platform}
 cd obj-%{_target_platform}
 
 CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcflags}" \
+CXXFLAGS="%{rpmcxxflags}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
