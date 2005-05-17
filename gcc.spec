@@ -4,7 +4,6 @@
 #		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
-#		- http://gcc.gnu.org/PR19664, PR20218 (visibility issues)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -26,7 +25,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050514
-Release:	0.%{_snap}.1.2
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
