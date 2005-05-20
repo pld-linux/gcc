@@ -76,10 +76,13 @@
  std/std_vector.h         |    5 ++++-
  tr1/array                |    6 +++++-
  tr1/functional           |    4 ++++
+ tr1/memory               |    4 ++++
  tr1/tuple                |    4 ++++
  tr1/type_traits          |    4 ++++
+ tr1/unordered_map        |    4 ++++
+ tr1/unordered_set        |    4 ++++
  tr1/utility              |    6 +++++-
- 80 files changed, 343 insertions(+), 64 deletions(-)
+ 83 files changed, 355 insertions(+), 64 deletions(-)
 
 diff -uNr libstdc++-v3.orig/include/c_std/std_cassert.h libstdc++-v3/include/c_std/std_cassert.h
 --- libstdc++-v3.orig/include/c_std/std_cassert.h	2003-12-09 04:44:35.000000000 +0100
@@ -1977,6 +1980,25 @@ diff -uNr libstdc++-v3.orig/include/tr1/functional libstdc++-v3/include/tr1/func
 +#pragma GCC visibility pop
 +
  #endif
+diff -uNr libstdc++-v3.orig/include/tr1/memory libstdc++-v3/include/tr1/memory
+--- libstdc++-v3.orig/include/tr1/memory	2005-04-05 13:09:38.000000000 +0200
++++ libstdc++-v3/include/tr1/memory	2005-05-20 13:24:11.000000000 +0200
+@@ -30,6 +30,8 @@
+ #ifndef _TR1_MEMORY
+ #define _TR1_MEMORY 1
+ 
++#pragma GCC visibility push(default)
++
+ #include "../memory"
+ #include <functional>       // std::less
+ #include <exception>        // std::exception
+@@ -48,4 +50,6 @@
+ 
+ #include <tr1/boost_shared_ptr.h>
+ 
++#pragma GCC visibility pop
++
+ #endif
 diff -uNr libstdc++-v3.orig/include/tr1/tuple libstdc++-v3/include/tr1/tuple
 --- libstdc++-v3.orig/include/tr1/tuple	2005-04-01 06:24:32.000000000 +0200
 +++ libstdc++-v3/include/tr1/tuple	2005-05-17 11:28:29.000000000 +0200
@@ -2015,6 +2037,44 @@ diff -uNr libstdc++-v3.orig/include/tr1/type_traits libstdc++-v3/include/tr1/typ
 +#pragma GCC visibility pop
 +
  #endif
+diff -uNr libstdc++-v3.orig/include/tr1/unordered_map libstdc++-v3/include/tr1/unordered_map
+--- libstdc++-v3.orig/include/tr1/unordered_map	2005-02-22 18:07:07.000000000 +0100
++++ libstdc++-v3/include/tr1/unordered_map	2005-05-20 13:24:35.000000000 +0200
+@@ -34,6 +34,8 @@
+ #ifndef GNU_LIBSTDCXX_TR1_UNORDERED_MAP_
+ #define GNU_LIBSTDCXX_TR1_UNORDERED_MAP_
+ 
++#pragma GCC visibility push(default)
++
+ #include <tr1/hashtable>
+ #include <tr1/functional>
+ #include <tr1/functional>
+@@ -163,4 +165,6 @@
+ 
+ } }
+ 
++#pragma GCC visibility pop
++
+ #endif /* GNU_LIBSTDCXX_TR1_UNORDERED_MAP_ */
+diff -uNr libstdc++-v3.orig/include/tr1/unordered_set libstdc++-v3/include/tr1/unordered_set
+--- libstdc++-v3.orig/include/tr1/unordered_set	2005-02-22 18:07:07.000000000 +0100
++++ libstdc++-v3/include/tr1/unordered_set	2005-05-20 13:24:52.000000000 +0200
+@@ -34,6 +34,8 @@
+ #ifndef GNU_LIBSTDCXX_TR1_UNORDERED_SET_
+ #define GNU_LIBSTDCXX_TR1_UNORDERED_SET_
+ 
++#pragma GCC visibility push(default)
++
+ #include <tr1/hashtable>
+ #include <tr1/functional>
+ #include <memory>
+@@ -157,4 +159,6 @@
+ 
+ } }
+ 
++#pragma GCC visibility pop
++
+ #endif /* GNU_LIBSTDCXX_TR1_UNORDERED_SET_ */
 diff -uNr libstdc++-v3.orig/include/tr1/utility libstdc++-v3/include/tr1/utility
 --- libstdc++-v3.orig/include/tr1/utility	2005-02-22 18:07:07.000000000 +0100
 +++ libstdc++-v3/include/tr1/utility	2005-05-17 11:23:06.000000000 +0200
