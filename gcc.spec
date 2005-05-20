@@ -25,7 +25,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050514
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -63,6 +63,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
+%{?with_java:BuildRequires:	pkgconfig}
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -460,6 +461,7 @@ Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcj = %{epoch}:%{version}-%{release}
+Provides:	gcc-java-tools
 Obsoletes:	fastjar
 Obsoletes:	gcc-java-tools
 
