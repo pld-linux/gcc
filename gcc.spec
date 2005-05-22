@@ -25,7 +25,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.0.1
 %define		_snap	20050514
-Release:	0.%{_snap}.3
+Release:	0.%{_snap}.4
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -45,6 +45,7 @@ Patch11:	%{name}-pr20218.patch
 Patch12:	%{name}-pr21454.patch
 Patch13:	%{name}-pr21519.patch
 Patch14:	%{name}-push-pop-visibility.patch
+Patch15:	%{name}-pr21704.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -89,9 +90,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
-%endif
-%ifarch sparc64
-%define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
 %description
@@ -694,6 +692,7 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p0
+%patch15 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -768,7 +767,7 @@ cd obj-%{_target_platform}
 install gcc/specs $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}
 
 %ifarch sparc64
-ln -sf	$RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
+ln -sf	%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
 %endif
 
