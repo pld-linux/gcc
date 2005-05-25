@@ -19,13 +19,13 @@ Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartid
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	3.4.3
-Release:	5
+Version:	3.4.4
+Release:	0.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	e744b30c834360fccac41eb7269a3011
+# Source0-md5:	b594ff4ea4fbef4ba9220887de713dfe
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
@@ -39,7 +39,6 @@ Patch4:		%{name}-ssp.patch
 Patch5:		%{name}-ada-link.patch
 Patch6:		%{name}-pr15666.patch
 Patch7:		%{name}-pr16276.patch
-Patch8:		%{name}-pr18185.patch
 #
 # -fvisibility={default|internal|hidden|protected}
 #
@@ -64,8 +63,7 @@ Patch8:		%{name}-pr18185.patch
 #
 # How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
 #
-Patch9:		%{name}-visibility.patch
-Patch10:	%{name}-pr13470.patch
+Patch8:		%{name}-visibility.patch
 #
 Patch20:	%{name}-ada-bootstrap.patch
 URL:		http://gcc.gnu.org/
@@ -656,10 +654,8 @@ Adzie.
 %{?with_ssp:%patch4 -p1}
 %patch5 -p1
 %patch6 -p0
-#%patch7 -p0
+%patch7 -p0
 %patch8 -p1
-%patch9 -p1
-%patch10 -p1
 
 %ifarch alpha ia64
 # needed for bootstrap using gcc 3.3.x on alpha
