@@ -477,14 +477,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cwchar.h libstdc++-v3/include/c_st
 diff -uNr libstdc++-v3.orig/include/c_std/std_cwctype.h libstdc++-v3/include/c_std/std_cwctype.h
 --- libstdc++-v3.orig/include/c_std/std_cwctype.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cwctype.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CWCTYPE 1
  
