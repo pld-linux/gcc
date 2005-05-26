@@ -46,7 +46,8 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch11:	%{name}-pr20218.patch
-Patch12:	%{name}-pr20297.patch
+# temporary disabled -> http://gcc.gnu.org/bugzilla/show_bug.cgi?id=20297#c7
+#Patch12:	%{name}-pr20297.patch	
 Patch14:	%{name}-push-pop-visibility.patch
 Patch15:	%{name}-pr21704.patch
 URL:		http://gcc.gnu.org/
@@ -691,7 +692,7 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch11 -p0
-%patch12 -p1
+#patch12 -p1
 %patch14 -p0
 %patch15 -p1
 
@@ -728,6 +729,7 @@ TEXCONFIG=false \
 	--enable-long-long \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
+	--disable-werror \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-demangler-in-ld \
