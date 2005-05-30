@@ -20,7 +20,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.4
-Release:	0.1
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -840,6 +840,11 @@ ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 %endif
 install %{SOURCE3} $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
+
+# kill unpackaged files
+rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
+rm -f $RPM_BUILD_ROOT%{_infodir}/dir*
+rm -f $RPM_BUILD_ROOT%{_mandir}/man7/{fsf-funding,gfdl,gpl}*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
