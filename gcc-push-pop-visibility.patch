@@ -11,27 +11,27 @@
  c_std/std_cstdarg.h      |    6 +++++-
  c_std/std_cstddef.h      |    6 +++++-
  c_std/std_cstdio.h       |    5 ++++-
- c_std/std_cstdlib.h      |    5 ++++-
+ c_std/std_cstdlib.h      |    3 +++
  c_std/std_cstring.h      |    5 ++++-
  c_std/std_ctime.h        |    5 ++++-
  c_std/std_cwchar.h       |    5 ++++-
- c_std/std_cwctype.h      |    5 ++++-
+ c_std/std_cwctype.h      |    3 +++
  debug/bitset             |    4 ++++
  debug/deque              |    6 +++++-
- debug/hash_map           |    6 +++++-
- debug/hash_set           |    6 +++++-
+ debug/hash_map           |    4 ++++
+ debug/hash_set           |    4 ++++
  debug/list               |    6 +++++-
  debug/map                |    6 +++++-
  debug/set                |    6 +++++-
- debug/string             |    6 +++++-
- debug/vector             |    6 +++++-
+ debug/string             |    4 ++++
+ debug/vector             |    4 ++++
  ext/algorithm            |    5 ++++-
  ext/array_allocator.h    |    4 ++++
  ext/bitmap_allocator.h   |    4 ++++
  ext/debug_allocator.h    |    4 ++++
  ext/functional           |    6 +++++-
- ext/hash_map             |    7 ++++++-
- ext/hash_set             |    7 ++++++-
+ ext/hash_map             |    4 ++++
+ ext/hash_set             |    4 ++++
  ext/iterator             |    5 ++++-
  ext/malloc_allocator.h   |    7 ++++++-
  ext/memory               |    5 ++++-
@@ -82,7 +82,7 @@
  tr1/unordered_map        |    4 ++++
  tr1/unordered_set        |    4 ++++
  tr1/utility              |    6 +++++-
- 83 files changed, 355 insertions(+), 64 deletions(-)
+ 83 files changed, 345 insertions(+), 56 deletions(-)
 
 diff -uNr libstdc++-v3.orig/include/c_std/std_cassert.h libstdc++-v3/include/c_std/std_cassert.h
 --- libstdc++-v3.orig/include/c_std/std_cassert.h	2003-12-09 04:44:35.000000000 +0100
@@ -373,15 +373,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cstdio.h libstdc++-v3/include/c_st
 diff -uNr libstdc++-v3.orig/include/c_std/std_cstdlib.h libstdc++-v3/include/c_std/std_cstdlib.h
 --- libstdc++-v3.orig/include/c_std/std_cstdlib.h	2004-08-02 22:28:21.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_cstdlib.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
-@@ -45,6 +45,7 @@
  #define _GLIBCXX_CSTDLIB 1
  
  #pragma GCC system_header
@@ -541,15 +532,6 @@ diff -uNr libstdc++-v3.orig/include/debug/deque libstdc++-v3/include/debug/deque
 diff -uNr libstdc++-v3.orig/include/debug/hash_map libstdc++-v3/include/debug/hash_map
 --- libstdc++-v3.orig/include/debug/hash_map	2003-11-11 21:09:09.000000000 +0100
 +++ libstdc++-v3/include/debug/hash_map	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging hash_map/hash_multimap implementation -*- C++ -*-
- 
--// Copyright (C) 2003
-+// Copyright (C) 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
-@@ -31,8 +31,12 @@
  #ifndef _GLIBCXX_DEBUG_HASH_MAP
  #define _GLIBCXX_DEBUG_HASH_MAP 1
  
@@ -565,23 +547,15 @@ diff -uNr libstdc++-v3.orig/include/debug/hash_map libstdc++-v3/include/debug/ha
 diff -uNr libstdc++-v3.orig/include/debug/hash_set libstdc++-v3/include/debug/hash_set
 --- libstdc++-v3.orig/include/debug/hash_set	2003-12-09 05:26:28.000000000 +0100
 +++ libstdc++-v3/include/debug/hash_set	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging hash_set/hash_multiset implementation -*- C++ -*-
- 
--// Copyright (C) 2003
-+// Copyright (C) 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,8 +31,12 @@
  #ifndef _GLIBCXX_DEBUG_HASH_SET
  #define _GLIBCXX_DEBUG_HASH_SET 1
  
 +#pragma GCC visibility push(default)
 +
- #include <hash_set>
- #include <debug/dbg_hash_set.h>
- #include <debug/dbg_hash_multiset.h>
+ #include <ext/hash_set>
+ #include <debug/hash_set.h>
+ #include <debug/hash_multiset.h>
  
 +#pragma GCC visibility pop
 +
@@ -664,14 +638,6 @@ diff -uNr libstdc++-v3.orig/include/debug/set libstdc++-v3/include/debug/set
 diff -uNr libstdc++-v3.orig/include/debug/string libstdc++-v3/include/debug/string
 --- libstdc++-v3.orig/include/debug/string	2003-12-09 05:26:28.000000000 +0100
 +++ libstdc++-v3/include/debug/string	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging string implementation -*- C++ -*-
- 
--// Copyright (C) 2003
-+// Copyright (C) 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,6 +31,8 @@
  #ifndef _GLIBCXX_DEBUG_STRING
  #define _GLIBCXX_DEBUG_STRING 1
@@ -691,14 +657,6 @@ diff -uNr libstdc++-v3.orig/include/debug/string libstdc++-v3/include/debug/stri
 diff -uNr libstdc++-v3.orig/include/debug/vector libstdc++-v3/include/debug/vector
 --- libstdc++-v3.orig/include/debug/vector	2004-04-16 21:04:04.000000000 +0200
 +++ libstdc++-v3/include/debug/vector	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging vector implementation -*- C++ -*-
- 
--// Copyright (C) 2003, 2004
-+// Copyright (C) 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,6 +31,8 @@
  #ifndef _GLIBCXX_DEBUG_VECTOR
  #define _GLIBCXX_DEBUG_VECTOR 1
@@ -831,14 +789,6 @@ diff -uNr libstdc++-v3.orig/include/ext/functional libstdc++-v3/include/ext/func
 diff -uNr libstdc++-v3.orig/include/ext/hash_map libstdc++-v3/include/ext/hash_map
 --- libstdc++-v3.orig/include/ext/hash_map	2004-11-24 05:11:11.000000000 +0100
 +++ libstdc++-v3/include/ext/hash_map	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Hashing map implementation -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,8 @@
  #ifndef _HASH_MAP
  #define _HASH_MAP 1
@@ -848,25 +798,16 @@ diff -uNr libstdc++-v3.orig/include/ext/hash_map libstdc++-v3/include/ext/hash_m
  #include <ext/hashtable.h>
  #include <bits/concept_check.h>
  
-@@ -617,4 +619,7 @@
-       { return *this; }
-     };
- } // namespace std
-+
+@@ -622,4 +624,6 @@
+ # include <debug/hash_map>
+ #endif
+ 
 +#pragma GCC visibility push(default)
 +
  #endif
 diff -uNr libstdc++-v3.orig/include/ext/hash_set libstdc++-v3/include/ext/hash_set
 --- libstdc++-v3.orig/include/ext/hash_set	2004-11-24 05:11:11.000000000 +0100
 +++ libstdc++-v3/include/ext/hash_set	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Hashing set implementation -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,8 @@
  #ifndef _HASH_SET
  #define _HASH_SET 1
@@ -876,11 +817,10 @@ diff -uNr libstdc++-v3.orig/include/ext/hash_set libstdc++-v3/include/ext/hash_s
  #include <ext/hashtable.h>
  #include <bits/concept_check.h>
  
-@@ -583,4 +585,7 @@
-       operator++(int) { return *this; }
-     };
- } // namespace std
-+
+@@ -588,4 +590,6 @@
+ # include <debug/hash_set>
+ #endif
+ 
 +#pragma GCC visibility pop
 +
  #endif
