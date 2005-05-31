@@ -649,12 +649,18 @@ kitaplýðý bu pakette yer almaz.
 
 %package objc++
 Summary:	Objective C++ support for gcc
+Summary(pl):	Obs³uga jêzyka Objective C++ dla gcc
 Group:		Development/Languages
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	%{name}-objc = %{epoch}:%{version}-%{release}
 
 %description objc++
-This package adds Objective C++ support to the GNU Compiler Collection.
+This package adds Objective C++ support to the GNU Compiler
+Collection.
+
+%description objc++ -l pl
+Ten pakiet dodaje obs³ugê jêzyka Objective C++ do zestawu
+kompilatorów GNU Compiler Collection.
 
 %package -n libobjc
 Summary:	Objective C Libraries
