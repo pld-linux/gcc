@@ -647,6 +647,15 @@ C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
 sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
 kitaplýðý bu pakette yer almaz.
 
+%package objc++
+Summary:	Objective C++ support for gcc
+Group:		Development/Languages
+Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	%{name}-objc = %{epoch}:%{version}-%{release}
+
+%description objc++
+This package adds Objective C++ support to the GNU Compiler Collection.
+
 %package -n libobjc
 Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
@@ -1202,4 +1211,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libobjc.a
 %endif
 %{_libdir}/libobjc.a
+%endif
+
+%if %{with objcxx}
+%files objc++
+%defattr(644,root,root,755)
+%doc gcc/objcp/ChangeLog
+%attr(755,root,root) %{_libdir}/gcc/*/*/cc1objplus
 %endif
