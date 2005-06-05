@@ -12,7 +12,7 @@
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
-%define		GCC_VERSION	3.3.5
+%define		GCC_VERSION	3.3.6
 %define		KSI_VERSION	1.1.0.1567
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
@@ -21,12 +21,12 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3
+Release:	1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
-# Source0-md5:	70ee088b498741bb08c779f9617df3a5
+# Source0-md5:	6936616a967da5a0b46f1e7424a06414
 # Source0-size:	23833856
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
