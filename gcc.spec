@@ -4,8 +4,6 @@
 #		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
-#		- http://gcc.gnu.org/PR21029 (vrp miscompiles ada front-end, drops loop exit test
-#					      in well-defined wrap-around circumstances)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -17,8 +15,12 @@
 %bcond_without	profiling	# build without profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 
-%if !%{with objc}
+%if %{without objc}
 %undefine	with_objcxx
+%endif
+
+%if %{without bootstrap}
+%undefine	with_profiling
 %endif
 
 %ifnarch %{x8664} ppc64 s390x sparc64
@@ -31,14 +33,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050528
+%define		_snap	20050605_2025
 Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	38e650684282d96cf7ad1b5928399142
+#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
+Source0:	gcc-4.1-%{_snap}.tar.bz2
+# Source0-md5:	8c3f8fa353b4ac30abe1042b65e06d5d
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -915,7 +918,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
-%doc ChangeLog.general MAINTAINERS NEWS bugs.html faq.html
+%doc ChangeLog.general MAINTAINERS NEWS
+# bugs.html faq.html
 %doc gcc/{ChangeLog,ONEWS,README.Portability}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
