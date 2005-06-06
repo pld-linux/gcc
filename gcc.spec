@@ -34,7 +34,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050605_2025
-Release:	0.%{_snap}.0.1
+Release:	0.%{_snap}.0.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -51,8 +51,7 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # PRs
 Patch11:	%{name}-pr20218.patch
-# temporary disabled -> http://gcc.gnu.org/bugzilla/show_bug.cgi?id=20297#c7
-#Patch12:	%{name}-pr20297.patch	
+Patch12:	%{name}-pr20297.patch
 Patch14:	%{name}-push-pop-visibility.patch
 Patch15:	%{name}-pr21704.patch
 Patch16:	%{name}-pr21923.patch
@@ -713,7 +712,7 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch11 -p0
-#patch12 -p1
+%patch12 -p1
 %patch14 -p0
 %patch15 -p1
 %patch16 -p1
