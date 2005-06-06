@@ -14,6 +14,7 @@
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
+%bcond_with	tests		# torture gcc
 
 %if %{without objc}
 %undefine	with_objcxx
@@ -57,10 +58,12 @@ Patch15:	%{name}-pr21704.patch
 Patch16:	%{name}-pr21923.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
+%{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
 %{?with_java:BuildRequires:	cairo-devel}
+%{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
 %if %{with ada}
@@ -776,6 +779,8 @@ cd ..
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
+
+%{?with_tests:make -k -C obj-%{_target_platform} check}
 
 %install
 rm -rf $RPM_BUILD_ROOT
