@@ -55,6 +55,7 @@ Patch11:	%{name}-pr20218.patch
 #Patch12:	%{name}-pr20297.patch	
 Patch14:	%{name}-push-pop-visibility.patch
 Patch15:	%{name}-pr21704.patch
+Patch16:	%{name}-pr21923.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -715,6 +716,7 @@ Statyczne biblioteki Obiektowego C.
 #patch12 -p1
 %patch14 -p0
 %patch15 -p1
+%patch16 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
