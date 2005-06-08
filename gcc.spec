@@ -696,6 +696,8 @@ Summary(pl):	Preprocesor C
 Summary(pt_BR):	Preprocessador para a linguagem C
 Version:	%{GCC_VERSION}
 Group:		Development/Languages
+# uses cc1 (or cc1plus if -x c++) backend
+Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
 
