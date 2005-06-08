@@ -17,10 +17,10 @@
  c_std/std_cwchar.h       |    5 ++++-
  c_std/std_cwctype.h      |    3 +++
  debug/bitset             |    4 ++++
- debug/deque              |    6 +++++-
+ debug/deque              |    4 ++++
  debug/hash_map           |    4 ++++
  debug/hash_set           |    4 ++++
- debug/list               |    6 +++++-
+ debug/list               |    4 ++++
  debug/map                |    6 +++++-
  debug/set                |    6 +++++-
  debug/string             |    4 ++++
@@ -82,7 +82,7 @@
  tr1/unordered_map        |    4 ++++
  tr1/unordered_set        |    4 ++++
  tr1/utility              |    6 +++++-
- 83 files changed, 345 insertions(+), 56 deletions(-)
+ 83 files changed, 343 insertions(+), 54 deletions(-)
 
 diff -uNr libstdc++-v3.orig/include/c_std/std_cassert.h libstdc++-v3/include/c_std/std_cassert.h
 --- libstdc++-v3.orig/include/c_std/std_cassert.h	2003-12-09 04:44:35.000000000 +0100
@@ -505,14 +505,6 @@ diff -uNr libstdc++-v3.orig/include/debug/bitset libstdc++-v3/include/debug/bits
 diff -uNr libstdc++-v3.orig/include/debug/deque libstdc++-v3/include/debug/deque
 --- libstdc++-v3.orig/include/debug/deque	2004-04-16 21:04:04.000000000 +0200
 +++ libstdc++-v3/include/debug/deque	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging deque implementation -*- C++ -*-
- 
--// Copyright (C) 2003, 2004
-+// Copyright (C) 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,6 +31,8 @@
  #ifndef _GLIBCXX_DEBUG_DEQUE
  #define _GLIBCXX_DEBUG_DEQUE 1
@@ -563,14 +555,6 @@ diff -uNr libstdc++-v3.orig/include/debug/hash_set libstdc++-v3/include/debug/ha
 diff -uNr libstdc++-v3.orig/include/debug/list libstdc++-v3/include/debug/list
 --- libstdc++-v3.orig/include/debug/list	2004-04-16 21:04:04.000000000 +0200
 +++ libstdc++-v3/include/debug/list	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging list implementation -*- C++ -*-
- 
--// Copyright (C) 2003, 2004
-+// Copyright (C) 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,6 +31,8 @@
  #ifndef _GLIBCXX_DEBUG_LIST
  #define _GLIBCXX_DEBUG_LIST 1
