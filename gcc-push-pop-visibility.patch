@@ -1,80 +1,80 @@
 
- c_std/std_cassert.h      |    5 ++++-
- c_std/std_cctype.h       |    6 +++++-
- c_std/std_cerrno.h       |    6 +++++-
- c_std/std_cfloat.h       |    6 +++++-
+ c_std/std_cassert.h      |    3 +++
+ c_std/std_cctype.h       |    3 +++
+ c_std/std_cerrno.h       |    3 +++
+ c_std/std_cfloat.h       |    3 +++
  c_std/std_climits.h      |    2 ++
- c_std/std_clocale.h      |    5 ++++-
+ c_std/std_clocale.h      |    3 +++
  c_std/std_cmath.h        |    3 +++
- c_std/std_csetjmp.h      |    5 ++++-
- c_std/std_csignal.h      |    5 ++++-
- c_std/std_cstdarg.h      |    6 +++++-
- c_std/std_cstddef.h      |    6 +++++-
- c_std/std_cstdio.h       |    5 ++++-
+ c_std/std_csetjmp.h      |    3 +++
+ c_std/std_csignal.h      |    3 +++
+ c_std/std_cstdarg.h      |    3 +++
+ c_std/std_cstddef.h      |    3 +++
+ c_std/std_cstdio.h       |    3 +++
  c_std/std_cstdlib.h      |    3 +++
- c_std/std_cstring.h      |    5 ++++-
- c_std/std_ctime.h        |    5 ++++-
- c_std/std_cwchar.h       |    5 ++++-
+ c_std/std_cstring.h      |    3 +++
+ c_std/std_ctime.h        |    3 +++
+ c_std/std_cwchar.h       |    3 +++
  c_std/std_cwctype.h      |    3 +++
  debug/bitset             |    4 ++++
  debug/deque              |    4 ++++
  debug/hash_map           |    4 ++++
  debug/hash_set           |    4 ++++
  debug/list               |    4 ++++
- debug/map                |    6 +++++-
- debug/set                |    6 +++++-
+ debug/map                |    4 ++++
+ debug/set                |    4 ++++
  debug/string             |    4 ++++
  debug/vector             |    4 ++++
- ext/algorithm            |    5 ++++-
+ ext/algorithm            |    3 +++
  ext/array_allocator.h    |    4 ++++
  ext/bitmap_allocator.h   |    4 ++++
  ext/debug_allocator.h    |    4 ++++
- ext/functional           |    6 +++++-
+ ext/functional           |    4 ++++
  ext/hash_map             |    4 ++++
  ext/hash_set             |    4 ++++
- ext/iterator             |    5 ++++-
- ext/malloc_allocator.h   |    7 ++++++-
- ext/memory               |    5 ++++-
+ ext/iterator             |    3 +++
+ ext/malloc_allocator.h   |    4 ++++
+ ext/memory               |    3 +++
  ext/mt_allocator.h       |    4 ++++
- ext/new_allocator.h      |    6 +++++-
- ext/numeric              |    5 ++++-
+ ext/new_allocator.h      |    4 ++++
+ ext/numeric              |    3 +++
  ext/pod_char_traits.h    |    4 ++++
- ext/pool_allocator.h     |    6 +++++-
- ext/rb_tree              |    5 ++++-
+ ext/pool_allocator.h     |    4 ++++
+ ext/rb_tree              |    3 +++
  ext/rope                 |    4 ++++
  ext/slist                |    5 +++++
- ext/stdio_filebuf.h      |    5 ++++-
- ext/stdio_sync_filebuf.h |    5 ++++-
- std/std_algorithm.h      |    5 ++++-
+ ext/stdio_filebuf.h      |    3 +++
+ ext/stdio_sync_filebuf.h |    3 +++
+ std/std_algorithm.h      |    3 +++
  std/std_bitset.h         |    3 +++
  std/std_complex.h        |    3 +++
- std/std_deque.h          |    5 ++++-
+ std/std_deque.h          |    3 +++
  std/std_fstream.h        |    3 +++
- std/std_functional.h     |    5 ++++-
- std/std_iomanip.h        |    5 ++++-
- std/std_ios.h            |    6 +++++-
- std/std_iosfwd.h         |    5 ++++-
- std/std_iostream.h       |    6 +++++-
- std/std_istream.h        |    5 ++++-
- std/std_iterator.h       |    5 ++++-
- std/std_limits.h         |    6 +++++-
- std/std_list.h           |    5 ++++-
- std/std_locale.h         |    6 +++++-
- std/std_map.h            |    5 ++++-
- std/std_memory.h         |    5 ++++-
- std/std_numeric.h        |    5 ++++-
- std/std_ostream.h        |    5 ++++-
- std/std_queue.h          |    5 ++++-
- std/std_set.h            |    7 +++++--
- std/std_sstream.h        |    5 ++++-
- std/std_stack.h          |    5 ++++-
- std/std_stdexcept.h      |    5 ++++-
- std/std_streambuf.h      |    5 ++++-
+ std/std_functional.h     |    3 +++
+ std/std_iomanip.h        |    3 +++
+ std/std_ios.h            |    3 +++
+ std/std_iosfwd.h         |    3 +++
+ std/std_iostream.h       |    3 +++
+ std/std_istream.h        |    3 +++
+ std/std_iterator.h       |    3 +++
+ std/std_limits.h         |    3 +++
+ std/std_list.h           |    3 +++
+ std/std_locale.h         |    3 +++
+ std/std_map.h            |    3 +++
+ std/std_memory.h         |    3 +++
+ std/std_numeric.h        |    3 +++
+ std/std_ostream.h        |    3 +++
+ std/std_queue.h          |    3 +++
+ std/std_set.h            |    5 ++++-
+ std/std_sstream.h        |    3 +++
+ std/std_stack.h          |    3 +++
+ std/std_stdexcept.h      |    3 +++
+ std/std_streambuf.h      |    3 +++
  std/std_string.h         |    3 +++
- std/std_utility.h        |    5 ++++-
- std/std_valarray.h       |    5 ++++-
- std/std_vector.h         |    5 ++++-
- tr1/array                |    6 +++++-
+ std/std_utility.h        |    3 +++
+ std/std_valarray.h       |    3 +++
+ std/std_vector.h         |    3 +++
+ tr1/array                |    4 ++++
  tr1/functional           |    4 ++++
  tr1/memory               |    4 ++++
  tr1/tuple                |    4 ++++
@@ -82,19 +82,11 @@
  tr1/unordered_map        |    4 ++++
  tr1/unordered_set        |    4 ++++
  tr1/utility              |    6 +++++-
- 83 files changed, 343 insertions(+), 54 deletions(-)
+ 83 files changed, 281 insertions(+), 2 deletions(-)
 
 diff -uNr libstdc++-v3.orig/include/c_std/std_cassert.h libstdc++-v3/include/c_std/std_cassert.h
 --- libstdc++-v3.orig/include/c_std/std_cassert.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cassert.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -44,5 +44,8 @@
  // No include guards on this header...
  
@@ -107,15 +99,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cassert.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_cctype.h libstdc++-v3/include/c_std/std_cctype.h
 --- libstdc++-v3.orig/include/c_std/std_cctype.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cctype.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -44,6 +45,7 @@
  #define _GLIBCXX_CCTYPE 1
  
@@ -134,15 +117,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cctype.h libstdc++-v3/include/c_st
 diff -uNr libstdc++-v3.orig/include/c_std/std_cerrno.h libstdc++-v3/include/c_std/std_cerrno.h
 --- libstdc++-v3.orig/include/c_std/std_cerrno.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_cerrno.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // The -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -44,6 +45,7 @@
  #define _GLIBCXX_CERRNO 1
  
@@ -161,15 +135,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cerrno.h libstdc++-v3/include/c_st
 diff -uNr libstdc++-v3.orig/include/c_std/std_cfloat.h libstdc++-v3/include/c_std/std_cfloat.h
 --- libstdc++-v3.orig/include/c_std/std_cfloat.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_cfloat.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2000, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -44,7 +45,10 @@
  #define _GLIBCXX_CFLOAT 1
  
@@ -197,14 +162,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_climits.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_clocale.h libstdc++-v3/include/c_std/std_clocale.h
 --- libstdc++-v3.orig/include/c_std/std_clocale.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_clocale.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CLOCALE 1
  
@@ -241,14 +198,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cmath.h libstdc++-v3/include/c_std
 diff -uNr libstdc++-v3.orig/include/c_std/std_csetjmp.h libstdc++-v3/include/c_std/std_csetjmp.h
 --- libstdc++-v3.orig/include/c_std/std_csetjmp.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_csetjmp.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CSETJMP 1
  
@@ -267,14 +216,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_csetjmp.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_csignal.h libstdc++-v3/include/c_std/std_csignal.h
 --- libstdc++-v3.orig/include/c_std/std_csignal.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_csignal.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CSIGNAL 1
  
@@ -293,15 +234,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_csignal.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_cstdarg.h libstdc++-v3/include/c_std/std_cstdarg.h
 --- libstdc++-v3.orig/include/c_std/std_cstdarg.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_cstdarg.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2000, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -44,6 +45,7 @@
  #define _GLIBCXX_CSTDARG 1
  
@@ -320,15 +252,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cstdarg.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_cstddef.h libstdc++-v3/include/c_std/std_cstddef.h
 --- libstdc++-v3.orig/include/c_std/std_cstddef.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cstddef.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2000, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -44,6 +45,7 @@
  #define _GLIBCXX_CSTDDEF 1
  
@@ -347,14 +270,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cstddef.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_cstdio.h libstdc++-v3/include/c_std/std_cstdio.h
 --- libstdc++-v3.orig/include/c_std/std_cstdio.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cstdio.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CSTDIO 1
  
@@ -390,14 +305,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cstdlib.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_cstring.h libstdc++-v3/include/c_std/std_cstring.h
 --- libstdc++-v3.orig/include/c_std/std_cstring.h	2003-12-09 04:44:35.000000000 +0100
 +++ libstdc++-v3/include/c_std/std_cstring.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CSTRING 1
  
@@ -416,14 +323,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_cstring.h libstdc++-v3/include/c_s
 diff -uNr libstdc++-v3.orig/include/c_std/std_ctime.h libstdc++-v3/include/c_std/std_ctime.h
 --- libstdc++-v3.orig/include/c_std/std_ctime.h	2003-07-23 17:28:44.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_ctime.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CTIME 1
  
@@ -442,14 +341,6 @@ diff -uNr libstdc++-v3.orig/include/c_std/std_ctime.h libstdc++-v3/include/c_std
 diff -uNr libstdc++-v3.orig/include/c_std/std_cwchar.h libstdc++-v3/include/c_std/std_cwchar.h
 --- libstdc++-v3.orig/include/c_std/std_cwchar.h	2004-07-20 10:47:42.000000000 +0200
 +++ libstdc++-v3/include/c_std/std_cwchar.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // -*- C++ -*- forwarding header.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -45,6 +45,7 @@
  #define _GLIBCXX_CWCHAR 1
  
@@ -574,14 +465,6 @@ diff -uNr libstdc++-v3.orig/include/debug/list libstdc++-v3/include/debug/list
 diff -uNr libstdc++-v3.orig/include/debug/map libstdc++-v3/include/debug/map
 --- libstdc++-v3.orig/include/debug/map	2003-11-11 21:09:09.000000000 +0100
 +++ libstdc++-v3/include/debug/map	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging map/multimap implementation -*- C++ -*-
- 
--// Copyright (C) 2003
-+// Copyright (C) 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,8 +31,12 @@
  #ifndef _GLIBCXX_DEBUG_MAP
  #define _GLIBCXX_DEBUG_MAP 1
@@ -598,14 +481,6 @@ diff -uNr libstdc++-v3.orig/include/debug/map libstdc++-v3/include/debug/map
 diff -uNr libstdc++-v3.orig/include/debug/set libstdc++-v3/include/debug/set
 --- libstdc++-v3.orig/include/debug/set	2003-11-11 21:09:09.000000000 +0100
 +++ libstdc++-v3/include/debug/set	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Debugging set/multiset implementation -*- C++ -*-
- 
--// Copyright (C) 2003
-+// Copyright (C) 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -31,8 +31,12 @@
  #ifndef _GLIBCXX_DEBUG_SET
  #define _GLIBCXX_DEBUG_SET 1
@@ -660,14 +535,6 @@ diff -uNr libstdc++-v3.orig/include/debug/vector libstdc++-v3/include/debug/vect
 diff -uNr libstdc++-v3.orig/include/ext/algorithm libstdc++-v3/include/ext/algorithm
 --- libstdc++-v3.orig/include/ext/algorithm	2004-11-24 05:11:11.000000000 +0100
 +++ libstdc++-v3/include/ext/algorithm	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Algorithm extensions -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _EXT_ALGORITHM 1
  
@@ -745,14 +612,6 @@ diff -uNr libstdc++-v3.orig/include/ext/debug_allocator.h libstdc++-v3/include/e
 diff -uNr libstdc++-v3.orig/include/ext/functional libstdc++-v3/include/ext/functional
 --- libstdc++-v3.orig/include/ext/functional	2004-11-24 05:11:11.000000000 +0100
 +++ libstdc++-v3/include/ext/functional	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Functional extensions -*- C++ -*-
- 
--// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _EXT_FUNCTIONAL 1
  
@@ -811,14 +670,6 @@ diff -uNr libstdc++-v3.orig/include/ext/hash_set libstdc++-v3/include/ext/hash_s
 diff -uNr libstdc++-v3.orig/include/ext/iterator libstdc++-v3/include/ext/iterator
 --- libstdc++-v3.orig/include/ext/iterator	2004-11-24 05:11:13.000000000 +0100
 +++ libstdc++-v3/include/ext/iterator	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // HP/SGI iterator extensions -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _EXT_ITERATOR 1
  
@@ -838,15 +689,6 @@ diff -uNr libstdc++-v3.orig/include/ext/iterator libstdc++-v3/include/ext/iterat
 diff -uNr libstdc++-v3.orig/include/ext/malloc_allocator.h libstdc++-v3/include/ext/malloc_allocator.h
 --- libstdc++-v3.orig/include/ext/malloc_allocator.h	2004-12-05 01:25:18.000000000 +0100
 +++ libstdc++-v3/include/ext/malloc_allocator.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // Allocator that wraps "C" malloc -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2004, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -34,6 +35,8 @@
  #ifndef _MALLOC_ALLOCATOR_H
  #define _MALLOC_ALLOCATOR_H 1
@@ -866,14 +708,6 @@ diff -uNr libstdc++-v3.orig/include/ext/malloc_allocator.h libstdc++-v3/include/
 diff -uNr libstdc++-v3.orig/include/ext/memory libstdc++-v3/include/ext/memory
 --- libstdc++-v3.orig/include/ext/memory	2004-11-24 05:11:13.000000000 +0100
 +++ libstdc++-v3/include/ext/memory	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Memory extensions -*- C++ -*-
- 
--// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _EXT_MEMORY 1
  
@@ -912,14 +746,6 @@ diff -uNr libstdc++-v3.orig/include/ext/mt_allocator.h libstdc++-v3/include/ext/
 diff -uNr libstdc++-v3.orig/include/ext/new_allocator.h libstdc++-v3/include/ext/new_allocator.h
 --- libstdc++-v3.orig/include/ext/new_allocator.h	2004-11-24 05:11:13.000000000 +0100
 +++ libstdc++-v3/include/ext/new_allocator.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Allocator that wraps operator new -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -34,6 +34,8 @@
  #ifndef _NEW_ALLOCATOR_H
  #define _NEW_ALLOCATOR_H 1
@@ -939,14 +765,6 @@ diff -uNr libstdc++-v3.orig/include/ext/new_allocator.h libstdc++-v3/include/ext
 diff -uNr libstdc++-v3.orig/include/ext/numeric libstdc++-v3/include/ext/numeric
 --- libstdc++-v3.orig/include/ext/numeric	2004-11-24 05:11:13.000000000 +0100
 +++ libstdc++-v3/include/ext/numeric	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Numeric extensions -*- C++ -*-
- 
--// Copyright (C) 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _EXT_NUMERIC 1
  
@@ -985,14 +803,6 @@ diff -uNr libstdc++-v3.orig/include/ext/pod_char_traits.h libstdc++-v3/include/e
 diff -uNr libstdc++-v3.orig/include/ext/pool_allocator.h libstdc++-v3/include/ext/pool_allocator.h
 --- libstdc++-v3.orig/include/ext/pool_allocator.h	2005-04-28 10:01:33.000000000 +0200
 +++ libstdc++-v3/include/ext/pool_allocator.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Allocators -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -47,6 +47,8 @@
  #ifndef _POOL_ALLOCATOR_H
  #define _POOL_ALLOCATOR_H 1
@@ -1012,14 +822,6 @@ diff -uNr libstdc++-v3.orig/include/ext/pool_allocator.h libstdc++-v3/include/ex
 diff -uNr libstdc++-v3.orig/include/ext/rb_tree libstdc++-v3/include/ext/rb_tree
 --- libstdc++-v3.orig/include/ext/rb_tree	2004-11-24 05:11:13.000000000 +0100
 +++ libstdc++-v3/include/ext/rb_tree	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // rb_tree extension -*- C++ -*-
- 
--// Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -62,6 +62,7 @@
  #define _RB_TREE 1
  
@@ -1077,14 +879,6 @@ diff -uNr libstdc++-v3.orig/include/ext/slist libstdc++-v3/include/ext/slist
 diff -uNr libstdc++-v3.orig/include/ext/stdio_filebuf.h libstdc++-v3/include/ext/stdio_filebuf.h
 --- libstdc++-v3.orig/include/ext/stdio_filebuf.h	2004-11-23 10:18:39.000000000 +0100
 +++ libstdc++-v3/include/ext/stdio_filebuf.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // File descriptor layer for filebuf -*- C++ -*-
- 
--// Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -35,6 +35,7 @@
  #define _STDIO_FILEBUF_H 1
  
@@ -1103,14 +897,6 @@ diff -uNr libstdc++-v3.orig/include/ext/stdio_filebuf.h libstdc++-v3/include/ext
 diff -uNr libstdc++-v3.orig/include/ext/stdio_sync_filebuf.h libstdc++-v3/include/ext/stdio_sync_filebuf.h
 --- libstdc++-v3.orig/include/ext/stdio_sync_filebuf.h	2004-11-23 10:18:39.000000000 +0100
 +++ libstdc++-v3/include/ext/stdio_sync_filebuf.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Iostreams wrapper for stdio FILE* -*- C++ -*-
- 
--// Copyright (C) 2003, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -35,6 +35,7 @@
  #define _STDIO_SYNC_FILEBUF_H 1
  
@@ -1129,14 +915,6 @@ diff -uNr libstdc++-v3.orig/include/ext/stdio_sync_filebuf.h libstdc++-v3/includ
 diff -uNr libstdc++-v3.orig/include/std/std_algorithm.h libstdc++-v3/include/std/std_algorithm.h
 --- libstdc++-v3.orig/include/std/std_algorithm.h	2004-11-24 05:11:14.000000000 +0100
 +++ libstdc++-v3/include/std/std_algorithm.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <algorithm> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,10 +61,13 @@
  #define _GLIBCXX_ALGORITHM 1
  
@@ -1190,14 +968,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_complex.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_deque.h libstdc++-v3/include/std/std_deque.h
 --- libstdc++-v3.orig/include/std/std_deque.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_deque.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <deque> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_DEQUE 1
  
@@ -1234,14 +1004,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_fstream.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_functional.h libstdc++-v3/include/std/std_functional.h
 --- libstdc++-v3.orig/include/std/std_functional.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_functional.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <functional> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -49,9 +49,12 @@
  #define _GLIBCXX_FUNCTIONAL 1
  
@@ -1258,14 +1020,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_functional.h libstdc++-v3/include/st
 diff -uNr libstdc++-v3.orig/include/std/std_iomanip.h libstdc++-v3/include/std/std_iomanip.h
 --- libstdc++-v3.orig/include/std/std_iomanip.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_iomanip.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Standard stream manipulators -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBCXX_IOMANIP 1
  
@@ -1284,14 +1038,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_iomanip.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_iosfwd.h libstdc++-v3/include/std/std_iosfwd.h
 --- libstdc++-v3.orig/include/std/std_iosfwd.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_iosfwd.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Forwarding declarations -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBCXX_IOSFWD 1
  
@@ -1310,15 +1056,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_iosfwd.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/std/std_ios.h libstdc++-v3/include/std/std_ios.h
 --- libstdc++-v3.orig/include/std/std_ios.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_ios.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // Iostreams base classes -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -39,6 +40,7 @@
  #define _GLIBCXX_IOS 1
  
@@ -1337,15 +1074,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_ios.h libstdc++-v3/include/std/std_i
 diff -uNr libstdc++-v3.orig/include/std/std_iostream.h libstdc++-v3/include/std/std_iostream.h
 --- libstdc++-v3.orig/include/std/std_iostream.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_iostream.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // Standard iostream objects -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -39,6 +40,7 @@
  #define _GLIBCXX_IOSTREAM 1
  
@@ -1364,14 +1092,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_iostream.h libstdc++-v3/include/std/
 diff -uNr libstdc++-v3.orig/include/std/std_istream.h libstdc++-v3/include/std/std_istream.h
 --- libstdc++-v3.orig/include/std/std_istream.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_istream.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Input streams -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2004
-+// Copyright (C) 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBCXX_ISTREAM 1
  
@@ -1390,14 +1110,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_istream.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_iterator.h libstdc++-v3/include/std/std_iterator.h
 --- libstdc++-v3.orig/include/std/std_iterator.h	2004-11-24 05:11:15.000000000 +0100
 +++ libstdc++-v3/include/std/std_iterator.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <iterator> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_ITERATOR 1
  
@@ -1416,15 +1128,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_iterator.h libstdc++-v3/include/std/
 diff -uNr libstdc++-v3.orig/include/std/std_limits.h libstdc++-v3/include/std/std_limits.h
 --- libstdc++-v3.orig/include/std/std_limits.h	2005-02-01 02:00:39.000000000 +0100
 +++ libstdc++-v3/include/std/std_limits.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // The template and inlines for the -*- C++ -*- numeric_limits classes.
- 
--// Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 1999, 2000, 2001, 2002, 2003, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -43,6 +44,7 @@
  #define _GLIBCXX_NUMERIC_LIMITS 1
  
@@ -1443,14 +1146,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_limits.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/std/std_list.h libstdc++-v3/include/std/std_list.h
 --- libstdc++-v3.orig/include/std/std_list.h	2004-11-24 05:11:16.000000000 +0100
 +++ libstdc++-v3/include/std/std_list.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <list> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_LIST 1
  
@@ -1470,15 +1165,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_list.h libstdc++-v3/include/std/std_
 diff -uNr libstdc++-v3.orig/include/std/std_locale.h libstdc++-v3/include/std/std_locale.h
 --- libstdc++-v3.orig/include/std/std_locale.h	2004-11-24 05:11:16.000000000 +0100
 +++ libstdc++-v3/include/std/std_locale.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,7 @@
- // Locale support -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 1997, 1998, 1999, 2002, 2003, 2005
-+// Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -39,10 +40,13 @@
  #define _GLIBCXX_LOCALE	1
  
@@ -1496,14 +1182,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_locale.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/std/std_map.h libstdc++-v3/include/std/std_map.h
 --- libstdc++-v3.orig/include/std/std_map.h	2004-11-24 05:11:16.000000000 +0100
 +++ libstdc++-v3/include/std/std_map.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <map> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_MAP 1
  
@@ -1522,14 +1200,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_map.h libstdc++-v3/include/std/std_m
 diff -uNr libstdc++-v3.orig/include/std/std_memory.h libstdc++-v3/include/std/std_memory.h
 --- libstdc++-v3.orig/include/std/std_memory.h	2004-11-24 05:11:16.000000000 +0100
 +++ libstdc++-v3/include/std/std_memory.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <memory> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -49,6 +49,7 @@
  #define _GLIBCXX_MEMORY 1
  
@@ -1548,14 +1218,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_memory.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/std/std_numeric.h libstdc++-v3/include/std/std_numeric.h
 --- libstdc++-v3.orig/include/std/std_numeric.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_numeric.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <numeric> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_NUMERIC 1
  
@@ -1574,14 +1236,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_numeric.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_ostream.h libstdc++-v3/include/std/std_ostream.h
 --- libstdc++-v3.orig/include/std/std_ostream.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_ostream.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Output streams -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBCXX_OSTREAM 1
  
@@ -1600,14 +1254,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_ostream.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_queue.h libstdc++-v3/include/std/std_queue.h
 --- libstdc++-v3.orig/include/std/std_queue.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_queue.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <queue> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_QUEUE 1
  
@@ -1626,14 +1272,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_queue.h libstdc++-v3/include/std/std
 diff -uNr libstdc++-v3.orig/include/std/std_set.h libstdc++-v3/include/std/std_set.h
 --- libstdc++-v3.orig/include/std/std_set.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_set.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <set> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,7 +61,8 @@
  #define _GLIBCXX_SET 1
  
@@ -1654,14 +1292,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_set.h libstdc++-v3/include/std/std_s
 diff -uNr libstdc++-v3.orig/include/std/std_sstream.h libstdc++-v3/include/std/std_sstream.h
 --- libstdc++-v3.orig/include/std/std_sstream.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_sstream.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // String based streams -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2002, 2003, 2004
-+// Copyright (C) 1997, 1998, 1999, 2002, 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBCXX_SSTREAM 1
  
@@ -1680,14 +1310,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_sstream.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_stack.h libstdc++-v3/include/std/std_stack.h
 --- libstdc++-v3.orig/include/std/std_stack.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_stack.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <stack> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_STACK 1
  
@@ -1706,14 +1328,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_stack.h libstdc++-v3/include/std/std
 diff -uNr libstdc++-v3.orig/include/std/std_stdexcept.h libstdc++-v3/include/std/std_stdexcept.h
 --- libstdc++-v3.orig/include/std/std_stdexcept.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_stdexcept.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Standard exception classes  -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -39,6 +39,7 @@
  #define _GLIBCXX_STDEXCEPT 1
  
@@ -1732,14 +1346,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_stdexcept.h libstdc++-v3/include/std
 diff -uNr libstdc++-v3.orig/include/std/std_streambuf.h libstdc++-v3/include/std/std_streambuf.h
 --- libstdc++-v3.orig/include/std/std_streambuf.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_streambuf.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // Stream buffer classes -*- C++ -*-
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -40,6 +40,7 @@
  #define _GLIBXX_STREAMBUF 1
  
@@ -1776,14 +1382,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_string.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/std/std_utility.h libstdc++-v3/include/std/std_utility.h
 --- libstdc++-v3.orig/include/std/std_utility.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_utility.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <utility> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,9 +61,12 @@
  #define _GLIBCXX_UTILITY 1
  
@@ -1800,14 +1398,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_utility.h libstdc++-v3/include/std/s
 diff -uNr libstdc++-v3.orig/include/std/std_valarray.h libstdc++-v3/include/std/std_valarray.h
 --- libstdc++-v3.orig/include/std/std_valarray.h	2004-11-24 05:11:21.000000000 +0100
 +++ libstdc++-v3/include/std/std_valarray.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // The template and inlines for the -*- C++ -*- valarray class.
- 
--// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004
-+// Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005
- // Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
 @@ -38,6 +38,7 @@
  #define _GLIBCXX_VALARRAY 1
  
@@ -1826,14 +1416,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_valarray.h libstdc++-v3/include/std/
 diff -uNr libstdc++-v3.orig/include/std/std_vector.h libstdc++-v3/include/std/std_vector.h
 --- libstdc++-v3.orig/include/std/std_vector.h	2004-11-24 05:11:22.000000000 +0100
 +++ libstdc++-v3/include/std/std_vector.h	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // <vector> -*- C++ -*-
- 
--// Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
-+// Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -61,6 +61,7 @@
  #define _GLIBCXX_VECTOR 1
  
@@ -1853,14 +1435,6 @@ diff -uNr libstdc++-v3.orig/include/std/std_vector.h libstdc++-v3/include/std/st
 diff -uNr libstdc++-v3.orig/include/tr1/array libstdc++-v3/include/tr1/array
 --- libstdc++-v3.orig/include/tr1/array	2004-11-23 10:18:41.000000000 +0100
 +++ libstdc++-v3/include/tr1/array	2005-05-17 11:23:06.000000000 +0200
-@@ -1,6 +1,6 @@
- // class template array -*- C++ -*-
- 
--// Copyright (C) 2004 Free Software Foundation, Inc.
-+// Copyright (C) 2004, 2005 Free Software Foundation, Inc.
- //
- // This file is part of the GNU ISO C++ Library.  This library is free
- // software; you can redistribute it and/or modify it under the
 @@ -34,6 +34,8 @@
  #ifndef _ARRAY
  #define _ARRAY 1
