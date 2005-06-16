@@ -106,6 +106,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
+# disable -mtune=pentium4 due to p4 related regression.
+%define		specflags_i686	-mtune=i686
+
 %description
 A compiler aimed at integrating all the optimizations and features
 necessary for a high-performance and stable development environment.
