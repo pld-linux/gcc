@@ -17,6 +17,9 @@
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
+# debuginfo not needed for devel snaps.
+%define		_enable_debug_packages	0
+
 %if %{without objc}
 %undefine	with_objcxx
 %endif
