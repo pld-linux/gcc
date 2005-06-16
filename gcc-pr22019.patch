@@ -1,0 +1,20 @@
+--- gcc-4.1-20050616_1200/gcc/ada/Makefile.in.orig	2005-06-16 13:56:05.508458712 +0200
++++ gcc-4.1-20050616_1200/gcc/ada/Makefile.in	2005-06-16 14:20:01.827105088 +0200
+@@ -2057,6 +2057,17 @@
+ 	$(CC) -c $(ALL_ADAFLAGS) $(FORCE_DEBUG_ADAFLAGS) -O2 $(ADA_INCLUDES) \
+ 	      $< $(OUTPUT_OPTION)
+ 
++# workaround for PR tree-optimization/22019
++g-socket.o  : g-socket.adb g-socket.ads
++	$(CC) -c $(ALL_ADAFLAGS) $(FORCE_DEBUG_ADAFLAGS) -O0 $(ADA_INCLUDES) \
++	      $< $(OUTPUT_OPTION)
++make.o      : make.adb make.ads
++	$(CC) -c $(ALL_ADAFLAGS) $(FORCE_DEBUG_ADAFLAGS) -O0 $(ADA_INCLUDES) \
++	      $< $(OUTPUT_OPTION)
++prj-util.o  : prj-util.adb prj-util.ads
++	$(CC) -c $(ALL_ADAFLAGS) $(FORCE_DEBUG_ADAFLAGS) -O0 $(ADA_INCLUDES) \
++	      $< $(OUTPUT_OPTION)
++
+ adadecode.o : adadecode.c adadecode.h
+ aux-io.o  : aux-io.c
+ argv.o    : argv.c
