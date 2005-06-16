@@ -4,6 +4,7 @@
 #		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR19317 (removing a temporary return value when we cannot)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
+#		- http://gcc.gnu.org/PR22019 (do_structure_copy ice on ada gnatlib)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -55,6 +56,7 @@ Patch11:	%{name}-pr20218.patch
 Patch12:	%{name}-pr20297.patch
 Patch14:	%{name}-push-pop-visibility.patch
 Patch15:	%{name}-pr21704.patch
+Patch16:	%{name}-pr22019.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -718,6 +720,7 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch14 -p0
 %patch15 -p1
+%patch16 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
