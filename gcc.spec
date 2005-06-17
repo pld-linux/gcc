@@ -21,7 +21,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1
+Release:	1.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -141,6 +141,27 @@ Biblioteka dynamiczna gcc.
 %description -n libgcc -l pt_BR
 Biblioteca runtime para o GCC.
 
+%package -n libgcc32
+Summary:	Shared gcc library - 32 bit version
+Summary(es):	Biblioteca compartida de gcc
+Summary(pl):	Biblioteka gcc - wersja 32 bitowa
+Summary(pt_BR):	Biblioteca runtime para o GCC
+Version:	%{GCC_VERSION}
+License:	GPL with unlimited link permission
+Group:		Libraries
+
+%description -n libgcc32
+Shared gcc library - 32 bit version.
+
+%description -n libgcc32 -l es
+Biblioteca compartida de gcc.
+
+%description -n libgcc32 -l pl
+Biblioteka dynamiczna gcc w wersji 32 bitowej.
+
+%description -n libgcc32 -l pt_BR
+Biblioteca runtime para o GCC.
+
 %package c++
 Summary:	C++ support for gcc
 Summary(es):	Soporte de C++ para gcc
@@ -185,6 +206,52 @@ standardowych bibliotek C++, które s± w oddzielnym pakiecie.
 Este pacote adiciona suporte C++ para o gcc.
 
 %description c++ -l tr
+Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve
+aykýrý durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart
+C++ kitaplýðý bu pakette yer almaz.
+
+%package c++32
+Summary:	C++ support for gcc - 32 bit version
+Summary(es):	Soporte de C++ para gcc
+Summary(pl):	Obs³uga C++ dla 32 bitowego gcc
+Summary(pt_BR):	Suporte C++ para o gcc
+Group:		Development/Languages
+Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description c++32
+This package adds C++ support to the GNU Compiler Collection. It
+includes support for most of the current C++ specification, including
+templates and exception handling. It does not include a standard C++
+library, which is available separately.
+
+%description c++32 -l de
+Dieses Paket enthält die C++-Unterstützung für den
+GNU-Compiler-Collection. Es unterstützt die aktuelle
+C++-Spezifikation, inkl. Templates und Ausnahmeverarbeitung. Eine
+C++-Standard-Library ist nicht enthalten - sie ist getrennt
+erhältlich.
+
+%description c++32 -l es
+Este paquete añade soporte de C++ al GCC (colección de compiladores
+GNU). Ello incluye el soporte para la mayoría de la especificación
+actual de C++, incluyendo plantillas y manejo de excepciones. No
+incluye la biblioteca estándar de C++, la que es disponible separada.
+
+%description c++32 -l fr
+Ce package ajoute un support C++ a la collection de compilateurs GNU.
+Il comprend un support pour la plupart des spécifications actuelles de
+C++, dont les modéles et la gestion des exceptions. Il ne comprend pas
+une bibliothéque C++ standard, qui est disponible séparément.
+
+%description c++32 -l pl
+Ten pakiet dodaje obs³ugê C++ do kompilatora gcc. Ma wsparcie dla
+du¿ej ilo¶ci obecnych specyfikacji C++, nie zawiera natomiast
+standardowych bibliotek C++, które s± w oddzielnym pakiecie.
+
+%description c++32 -l pt_BR
+Este pacote adiciona suporte C++ para o gcc.
+
+%description c++32 -l tr
 Bu paket, GNU C derleyicisine C++ desteði ekler. 'Template'ler ve
 aykýrý durum iþleme gibi çoðu güncel C++ tanýmlarýna uyar. Standart
 C++ kitaplýðý bu pakette yer almaz.
@@ -239,6 +306,54 @@ C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
 sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
 kitaplýðý bu pakette yer almaz.
 
+%package objc32
+Summary:	Objective C support for gcc - 32 bit version
+Summary(de):	Objektive C-Unterstützung für gcc
+Summary(es):	Soporte de Objective C para gcc
+Summary(fr):	Gestion d'Objective C pour gcc
+Summary(pl):	Obs³uga obiektowego C dla kompilatora gcc w wersji 32 bitowej
+Summary(tr):	gcc için Objective C desteði
+Group:		Development/Languages
+Requires:	%{name}-objc = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libobjc32 = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description objc32
+This package adds Objective C support to the GNU Compiler Collection.
+Objective C is a object oriented derivative of the C language, mainly
+used on systems running NeXTSTEP. This package does not include the
+standard objective C object library.
+
+%description objc32 -l de
+Dieses Paket ergänzt den GNU-Compiler-Collection durch
+Objective-C-Support. Objective C ist ein objektorientiertes Derivat
+von C, das zur Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt.
+Die Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
+
+%description objc32 -l es
+Este paquete añade soporte de Objective C al GCC (colección de
+compiladores GNU). Objective C es un lenguaje orientado a objetos
+derivado de C, principalmente usado en sistemas que funcionan bajo
+NeXTSTEP. El paquete no incluye la biblioteca de objetos estándar de
+Objective C.
+
+%description objc32 -l fr
+Ce package ajoute un support Objective C a la collection de
+compilateurs GNU. L'Objective C est un langage orienté objetdérivé du
+langage C, principalement utilisé sur les systèmes NeXTSTEP. Ce
+package n'inclue pas la bibliothéque Objective C standard.
+
+%description objc32 -l pl
+Ten pakiet dodaje obs³ugê obiektowego C do kompilatora gcc. Obiektowe
+C (objc) jest zorientowan± obiektowo pochodn± jêzyka C, u¿ywan±
+g³ównie w systemach u¿ywaj±cych NeXTSTEP. W pakiecie nie ma
+standardowej biblioteki objc (która znajduje siê w osobnym pakiecie).
+
+%description objc32 -l tr
+Bu paket, GNU C derleyicisine Objective C desteði ekler. Objective C,
+C dilinin nesne yönelik bir türevidir ve NeXTSTEP altýnda çalýþan
+sistemlerde yaygýn olarak kullanýlýr. Standart Objective C nesne
+kitaplýðý bu pakette yer almaz.
+
 %package -n libobjc
 Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
@@ -257,6 +372,23 @@ Bibliotecas de Objective C.
 %description -n libobjc -l pl
 Biblioteki Obiektowego C.
 
+%package -n libobjc32
+Summary:	Objective C Libraries - 32 bit version
+Summary(es):	Bibliotecas de Objective C
+Summary(pl):	Biblioteki Obiektowego C w wersji 32 bitowej
+License:	GPL v2+ + linking exception
+Version:	%{GCC_VERSION}
+Group:		Libraries
+
+%description -n libobjc32
+Objective C Libraries.
+
+%description -n libobjc32 -l es
+Bibliotecas de Objective C.
+
+%description -n libobjc32 -l pl
+Biblioteki Obiektowego C.
+
 %package -n libobjc-static
 Summary:	Static Objective C Libraries
 Summary(es):	Bibliotecas estáticas de Objective C
@@ -273,6 +405,24 @@ Static Objective C Libraries.
 Bibliotecas estáticas de Objective C.
 
 %description -n libobjc-static -l pl
+Statyczne biblioteki Obiektowego C.
+
+%package -n libobjc32-static
+Summary:	Static Objective C Libraries - 32 bit version
+Summary(es):	Bibliotecas estáticas de Objective C
+Summary(pl):	Statyczne Biblioteki Obiektowego C w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libobjc32 = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libobjc32-static
+Static Objective C Libraries.
+
+%description -n libobjc32-static -l es
+Bibliotecas estáticas de Objective C.
+
+%description -n libobjc32-static -l pl
 Statyczne biblioteki Obiektowego C.
 
 %package g77
@@ -301,6 +451,31 @@ potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
 %description g77 -l pt_BR
 Suporte Fortran 77 para o GCC.
 
+%package g7732
+Summary:	Fortran 77 support for gcc - 32 bit version
+Summary(es):	Soporte de Fortran 77 para gcc
+Summary(pl):	Obs³uga Fortranu 77 dla gcc w wersji 32 bitowej
+Summary(pt_BR):	Suporte Fortran 77 para o GCC
+Version:	%{GCC_VERSION}
+Group:		Development/Languages/Fortran
+Requires:	%{name}-g77 = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libg2c32 = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description g7732
+This package adds support for compiling Fortran 77 programs with the
+GNU compiler.
+
+%description g7732 -l es
+Este paquete añade soporte para compilar programas escritos en Fortran
+77 con el compilador GNU.
+
+%description g7732 -l pl
+Ten pakiet dodaje obs³ugê Fortranu 77 do kompilatora gcc. Jest
+potrzebny do kompilowania programów pisanych w jêzyku Fortran 77.
+
+%description g7732 -l pt_BR
+Suporte Fortran 77 para o GCC.
+
 %package -n libg2c
 Summary:	Fortran 77 Libraries
 Summary(es):	Bibliotecas de Fortran 77
@@ -316,6 +491,23 @@ Fortran 77 Libraries.
 Bibliotecas de Fortran 77.
 
 %description -n libg2c -l pl
+Biblioteki Fortranu 77.
+
+%package -n libg2c32
+Summary:	Fortran 77 Libraries - 32 bit version
+Summary(es):	Bibliotecas de Fortran 77
+Summary(pl):	Biblioteki Fortranu 77 w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	LGPL v2+
+Group:		Libraries
+
+%description -n libg2c32
+Fortran 77 Libraries.
+
+%description -n libg2c32 -l es
+Bibliotecas de Fortran 77.
+
+%description -n libg2c32 -l pl
 Biblioteki Fortranu 77.
 
 %package -n libg2c-static
@@ -334,6 +526,24 @@ Static Fortran 77 Libraries.
 Bibliotecas estáticas de Fortran 77.
 
 %description -n libg2c-static -l pl
+Statyczne biblioteki Fortranu 77.
+
+%package -n libg2c32-static
+Summary:	Static Fortran 77 Libraries - 32 bit version
+Summary(es):	Bibliotecas estáticas de Fortran 77
+Summary(pl):	Statyczne Biblioteki Fortranu 77 w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	LGPL v2+
+Group:		Development/Libraries
+Requires:	libg2c32 = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libg2c32-static
+Static Fortran 77 Libraries.
+
+%description -n libg2c32-static -l es
+Bibliotecas estáticas de Fortran 77.
+
+%description -n libg2c32-static -l pl
 Statyczne biblioteki Fortranu 77.
 
 %package java
@@ -404,6 +614,23 @@ Bibliotecas de clases de Java.
 %description -n libgcj -l pl
 Biblioteki Klas Javy.
 
+%package -n libgcj32
+Summary:	Java Class Libraries - 32 bit version
+Summary(es):	Bibliotecas de clases de Java
+Summary(pl):	Biblioteki Klas Javy w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Libraries
+
+%description -n libgcj32
+Java Class Libraries.
+
+%description -n libgcj32 -l es
+Bibliotecas de clases de Java.
+
+%description -n libgcj32 -l pl
+Biblioteki Klas Javy.
+
 %package -n libgcj-devel
 Summary:	Development files for Java Class Libraries
 Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
@@ -425,6 +652,26 @@ Ficheros de desarrollo para las bibliotecas de clases de Java.
 %description -n libgcj-devel -l pl
 Pliki nag³ówkowe dla Bibliotek Klas Javy.
 
+%package -n libgcj32-devel
+Summary:	Development files for Java Class Libraries - 32 bit version
+Summary(es):	Ficheros de desarrollo para las bibliotecas de clases de Java
+Summary(pl):	Pliki nag³ówkowe dla Bibliotek Klas Javy w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Development/Libraries
+Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libgcj32 = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	zlib-devel
+
+%description -n libgcj32-devel
+Development files for Java Class Libraries.
+
+%description -n libgcj32-devel -l es
+Ficheros de desarrollo para las bibliotecas de clases de Java.
+
+%description -n libgcj32-devel -l pl
+Pliki nag³ówkowe dla Bibliotek Klas Javy.
+
 %package -n libgcj-static
 Summary:	Static Java Class Libraries
 Summary(es):	Bibliotecas estáticas de clases de Java
@@ -442,6 +689,25 @@ Static Java Class Libraries.
 Bibliotecas estáticas de clases de Java.
 
 %description -n libgcj-static -l pl
+Statyczne Biblioteki Klas Javy.
+
+%package -n libgcj32-static
+Summary:	Static Java Class Libraries - 32 bit version
+Summary(es):	Bibliotecas estáticas de clases de Java
+Summary(pl):	Statyczne Biblioteki Klas Javy w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	GPL with limited linking exception
+Group:		Development/Libraries
+Requires:	libgcj32-devel = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libstdc++32-devel = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libgcj32-static
+Static Java Class Libraries.
+
+%description -n libgcj32-static -l es
+Bibliotecas estáticas de clases de Java.
+
+%description -n libgcj32-static -l pl
 Statyczne Biblioteki Klas Javy.
 
 %package -n libstdc++
@@ -488,6 +754,48 @@ subconjunto do padrão ISO 14882.
 Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
 uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
 
+%package -n libstdc++32
+Summary:	GNU C++ library - 32 bit version
+Summary(es):	Biblioteca C++ de GNU
+Summary(pl):	Biblioteki GNU C++ w wersji 32 bitowej
+Summary(pt_BR):	Biblioteca C++ GNU
+Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Libraries
+
+%description -n libstdc++32
+This is the GNU implementation of the standard C++ libraries, along
+with additional GNU tools. This package includes the shared libraries
+necessary to run C++ applications.
+
+%description -n libstdc++32 -l de
+Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
+weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
+C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
+
+%description -n libstdc++32 -l es
+Este es el soporte de las bibliotecas padrón del C++, junto con
+herramientas GNU adicionales. El paquete incluye las bibliotecas
+compartidas necesarias para ejecutar aplicaciones C++.
+
+%description -n libstdc++32 -l fr
+Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
+des outils GNU supplémentaires. Ce package comprend les librairies
+partagées nécessaires à l'exécution d'application C++.
+
+%description -n libstdc++32 -l pl
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
+bibliotek C++. Znajduj± siê w nim biblioteki dynamiczne niezbêdne do
+uruchomienia aplikacji napisanych w C++.
+
+%description -n libstdc++32 -l pt_BR
+Este pacote é uma implementação da biblioteca padrão C++ v3, um
+subconjunto do padrão ISO 14882.
+
+%description -n libstdc++32 -l tr
+Bu paket, standart C++ kitaplýklarýnýn GNU gerçeklemesidir ve C++
+uygulamalarýnýn koþturulmasý için gerekli kitaplýklarý içerir.
+
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
 Summary(de):	Header-Dateien zur Entwicklung mit C++
@@ -524,6 +832,40 @@ programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
 Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
 para desenvolvimento de programas C++.
 
+%package -n libstdc++32-devel
+Summary:	Header files and documentation for C++ development
+Summary(de):	Header-Dateien zur Entwicklung mit C++
+Summary(es):	Ficheros de cabecera y documentación para desarrollo C++
+Summary(fr):	Fichiers d'en-tête et biblitothèques pour développer en C++
+Summary(pl):	Pliki nag³ówkowe i dokumentacja do biblioteki standardowej C++
+Summary(pt_BR):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
+Summary(tr):	C++ ile program geliþtirmek için gerekli dosyalar
+Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	%{name}-c++32 = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	libstdc++32 = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	glibc-devel
+
+%description -n libstdc++32-devel
+This is the GNU implementation of the standard C++ libraries. This
+package includes the header files needed for C++ development and
+library documentation.
+
+%description -n libstdc++32-devel -l es
+Este es el soporte de las bibliotecas padrón del lenguaje C++. Este
+paquete incluye los archivos de inclusión y bibliotecas necesarios
+para desarrollo de programas en lenguaje C++.
+
+%description -n libstdc++32-devel -l pl
+Pakiet ten zawiera biblioteki bêd±ce implementacj± standardowych
+bibliotek C++. Znajduj± siê w nim pliki nag³ówkowe wykorzystywane przy
+programowaniu w jêzyku C++ oraz dokumentacja biblioteki standardowej.
+
+%description -n libstdc++32-devel -l pt_BR
+Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
+para desenvolvimento de programas C++.
+
 %package -n libstdc++-static
 Summary:	Static C++ standard library
 Summary(es):	Biblioteca estándar estática de C++
@@ -540,6 +882,24 @@ Static C++ standard library.
 Biblioteca estándar estática de C++.
 
 %description -n libstdc++-static -l pl
+Statyczna biblioteka standardowa C++.
+
+%package -n libstdc++32-static
+Summary:	Static C++ standard library - 32 bit version
+Summary(es):	Biblioteca estándar estática de C++
+Summary(pl):	Statyczna biblioteka standardowa C++ w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	libstdc++32-devel = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libstdc++32-static
+Static C++ standard library.
+
+%description -n libstdc++32-static -l es
+Biblioteca estándar estática de C++.
+
+%description -n libstdc++32-static -l pl
 Statyczna biblioteka standardowa C++.
 
 %package -n libffi
@@ -568,6 +928,32 @@ miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
 programi¶cie wywo³ywaæ dowolne funkcje podaj±c konwencjê wywo³ania w
 czasie wykonania.
 
+%package -n libffi32
+Summary:	Foreign Function Interface library - 32 bit version
+Summary(es):	Biblioteca de interfaz de funciones ajenas
+Summary(pl):	Biblioteka zewnêtrznych wywo³añ funkcji w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Libraries
+
+%description -n libffi32
+The libffi library provides a portable, high level programming
+interface to various calling conventions. This allows a programmer to
+call any function specified by a call interface description at run
+time.
+
+%description -n libffi32 -l es
+La biblioteca libffi provee una interfaz portable de programación de
+alto nivel para varias convenciones de llamada. Ello permite que un
+programador llame una función cualquiera especificada por una
+descripción de interfaz de llamada en el tiempo de ejecución.
+
+%description -n libffi32 -l pl
+Biblioteka libffi dostarcza przeno¶nego, wysokopoziomowego
+miêdzymordzia do ró¿nych konwencji wywo³añ funkcji. Pozwala to
+programi¶cie wywo³ywaæ dowolne funkcje podaj±c konwencjê wywo³ania w
+czasie wykonania.
+
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
 Summary(es):	Ficheros de desarrollo para libffi
@@ -586,6 +972,24 @@ Ficheros de desarrollo para libffi.
 %description -n libffi-devel -l pl
 Pliki nag³ówkowe dla libffi.
 
+%package -n libffi32-devel
+Summary:	Development files for Foreign Function Interface library - 32 bit version
+Summary(es):	Ficheros de desarrollo para libffi
+Summary(pl):	Pliki nag³ówkowe dla libffi w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi32 = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libffi32-devel
+Development files for Foreign Function Interface library.
+
+%description -n libffi32-devel -l es
+Ficheros de desarrollo para libffi.
+
+%description -n libffi32-devel -l pl
+Pliki nag³ówkowe dla libffi.
+
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
 Summary(es):	Biblioteca libffi estática
@@ -602,6 +1006,24 @@ Static Foreign Function Interface library.
 Biblioteca libffi estática.
 
 %description -n libffi-static -l pl
+Statyczna biblioteka libffi.
+
+%package -n libffi32-static
+Summary:	Static Foreign Function Interface library - 32 bit version
+Summary(es):	Biblioteca libffi estática
+Summary(pl):	Statyczna biblioteka libffi w wersji 32 bitowej
+Version:	%{GCC_VERSION}
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi32-devel = %{epoch}:%{GCC_VERSION}-%{release}
+
+%description -n libffi32-static
+Static Foreign Function Interface library.
+
+%description -n libffi32-static -l es
+Biblioteca libffi estática.
+
+%description -n libffi32-static -l pl
 Statyczna biblioteka libffi.
 
 %package ada
@@ -1046,7 +1468,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/lib*.so.*
+
 %if %{with multilib}
+%files -n libgcc32
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 #%attr(755,root,root) %{_libdir}/gcc-lib/*/*/libgcc*.so
 %endif
@@ -1064,12 +1488,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libsupc++.la
 %{_libdir}/nof/libsupc++.a
 %endif
+%{_mandir}/man1/g++.1*
+%lang(ja) %{_mandir}/ja/man1/g++.1*
+
 %if %{with multilib}
+%files c++32
 %{_libdir32}/libsupc++.la
 %{_libdir32}/libsupc++.a
 %endif
-%{_mandir}/man1/g++.1*
-%lang(ja) %{_mandir}/ja/man1/g++.1*
 
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
@@ -1077,7 +1503,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
 %endif
+
 %if %{with multilib}
+%files -n libstdc++32
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %endif
 
@@ -1090,12 +1518,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so
 %{_libdir}/nof/libstdc++.la
 %endif
+%dir %{_includedir}/c++
+%{_includedir}/c++/%{GCC_VERSION}
+
 %if %{with multilib}
+%files -n libstdc++32-devel
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
 %endif
-%dir %{_includedir}/c++
-%{_includedir}/c++/%{GCC_VERSION}
 
 %files -n libstdc++-static
 %defattr(644,root,root,755)
@@ -1103,7 +1533,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/libstdc++.a
 %endif
+
 %if %{with multilib}
+%files -n libstdc++32-static
 %{_libdir32}/libstdc++.a
 %endif
 
@@ -1118,11 +1550,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/libobjc.so
 %{_libdir}/nof/libobjc.la
 %endif
+%{_libdir}/gcc-lib/*/*/include/objc
+
 %if %{with multilib}
+%files objc32
 %attr(755,root,root) %{_libdir32}/libobjc.so
 %{_libdir32}/libobjc.la
 %endif
-%{_libdir}/gcc-lib/*/*/include/objc
 
 %files -n libobjc
 %defattr(644,root,root,755)
@@ -1130,7 +1564,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
 %endif
+
 %if %{with multilib}
+%files -n libobjc32
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %endif
 
@@ -1140,7 +1576,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/libobjc.a
 %endif
+
 %if %{with multilib}
+%files -n libobjc32-static
 %{_libdir32}/libobjc.a
 %endif
 %endif
@@ -1159,16 +1597,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/libg2c.la
 %attr(755,root,root) %{_libdir}/nof/libg2c.so
 %endif
-%if %{with multilib}
-%{_libdir32}/libfrtbegin.a
-%{_libdir32}/libg2c.la
-%attr(755,root,root) %{_libdir32}/libg2c.so
-%endif
 %{_libdir}/gcc-lib/*/*/include/g2c.h
 %{_mandir}/man1/g77.1*
 %{_mandir}/man1/f77.1*
 %lang(ja) %{_mandir}/ja/man1/g77.1*
 %lang(ja) %{_mandir}/ja/man1/f77.1*
+
+%if %{with multilib}
+%files g7732
+%{_libdir32}/libfrtbegin.a
+%{_libdir32}/libg2c.la
+%attr(755,root,root) %{_libdir32}/libg2c.so
+%endif
 
 %files -n libg2c
 %defattr(644,root,root,755)
@@ -1176,7 +1616,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
 %endif
+
 %if %{with multilib}
+%files -n libg2c32
 %attr(755,root,root) %{_libdir32}/libg2c.so.*.*.*
 %endif
 
@@ -1186,7 +1628,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/libg2c.a
 %endif
+
 %if %{with multilib}
+%files -n libg2c32-static
 %{_libdir32}/libg2c.a
 %endif
 
@@ -1227,7 +1671,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
 %endif
+
 %if %{with multilib}
+%files -n libgcj32
 %attr(755,root,root) %{_libdir32}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir32}/lib-org*.so.*.*.*
 %endif
@@ -1250,17 +1696,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/lib*cj*.la
 %{_libdir}/nof/lib-org-*.la
 %endif
-%if %{with multilib}
-%attr(755,root,root) %{_libdir32}/lib*cj*.so
-%attr(755,root,root) %{_libdir32}/lib-org-*.so
-%{_libdir32}/lib*cj*.la
-%{_libdir32}/lib-org-*.la
-%endif
 %{_includedir}/java
 %{_includedir}/javax
 %{_includedir}/gcj
 %{_includedir}/j*.h
 %{_includedir}/gnu/*
+
+%if %{with multilib}
+%files -n libgcj32-devel
+%attr(755,root,root) %{_libdir32}/lib*cj*.so
+%attr(755,root,root) %{_libdir32}/lib-org-*.so
+%{_libdir32}/lib*cj*.la
+%{_libdir32}/lib-org-*.la
+%endif
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
@@ -1270,7 +1718,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/lib*cj*.a
 %{_libdir}/nof/lib-org-*.a
 %endif
+
 %if %{with multilib}
+%files -n libgcj32-static
 %{_libdir32}/lib*cj*.a
 %{_libdir32}/lib-org-*.a
 %endif
@@ -1282,7 +1732,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libffi-*.so
 %endif
+
 %if %{with multilib}
+%files -n libffi32
 %attr(755,root,root) %{_libdir32}/libffi-*.so
 %endif
 
@@ -1294,11 +1746,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/nof/libffi.so
 %{_libdir}/nof/libffi.la
 %endif
+%{_includedir}/ffi*
+
 %if %{with multilib}
+%files -n libffi32-devel
 %attr(755,root,root) %{_libdir32}/libffi.so
 %{_libdir32}/libffi.la
 %endif
-%{_includedir}/ffi*
 
 %files -n libffi-static
 %defattr(644,root,root,755)
@@ -1306,7 +1760,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch ppc
 %{_libdir}/nof/libffi.a
 %endif
+
 %if %{with multilib}
+%files -n libffi32-static
 %{_libdir32}/libffi.a
 %endif
 %endif
