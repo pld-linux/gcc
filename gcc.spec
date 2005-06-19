@@ -38,7 +38,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050616_1440
+%define		_snap	20050619_1459
 Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
@@ -46,7 +46,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	8cc0f906131ba1b6aa83757c8a324caa
+# Source0-md5:	88c13d5bc21dd453d560b072f00376d7
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -77,8 +77,10 @@ BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= %{!?with_multilib:2.2.5-20}%{?with_multilib:6:2.3.4-1.5}
+%if %{with fortran}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
+%endif
 %{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
 %{?with_java:BuildRequires:	pkgconfig}
@@ -108,9 +110,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
-
-# disable -mtune=pentium4 due to p4 related regression.
-%define		specflags_i686	-mtune=i686
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -769,7 +768,7 @@ TEXCONFIG=false \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
-	--enable-cmath \
+	%{?with_fortran:--enable-cmath} \
 %if %{with java}
 	--enable-libgcj \
 	--enable-libgcj-multifile \
