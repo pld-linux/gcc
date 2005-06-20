@@ -53,6 +53,7 @@ Patch23:	gcc32-test-rh65771.patch
 Patch24:	gcc32-test-rotate.patch
 Patch25:	gcc-cmpi.patch
 Patch26:	gcc-ffi64.patch
+Patch27:	gcc33-multi32-hack.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.90.0.3
@@ -74,11 +75,19 @@ Conflicts:	glibc-devel < 2.2.5-20
 URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define 	multilib_64_archs sparc64 ppc64 s390x x86_64
+
 %define		_slibdir	/%{_lib}
 %ifarch sparc64
-%define		_slibdir64	/lib64
+#%define		_slibdir64	/lib64
 %define		_libdir		/usr/lib
-%define		rpmcflags	-O2 -mtune=ultrasparc
+%define		rpmcflags	-mtune=ultrasparc
+%define 	multilib_32_arch sparc
+%endif
+
+%ifarch sparc
+%define 	_target_platform sparc64-%{_vendor}-%{_target_os}
+%define		rpmcflags	-mtune=ultrasparc
 %endif
 
 %description
@@ -763,7 +772,7 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch3 -p1
 %{!?debug:%patch4 -p1}
 %patch5 -p1
-%ifarch amd64
+%ifarch amd64 sparc64
 # not sure if it wouldn't break x86 (it shouldn't, but better safe than sorry)
 %patch6 -p1
 %endif
@@ -787,6 +796,10 @@ mv ksi-%{KSI_VERSION} gcc/ksi
 %patch24
 %patch25 -p1
 %patch26 -p2
+%ifarch sparc ppc
+%patch27 -p0 
+%endif
+
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -799,6 +812,26 @@ cp /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+%ifarch sparc64
+cat > gcc64 <<"EOF"
+#!/bin/sh
+exec /usr/bin/gcc -m64 "$@"
+EOF
+chmod +x gcc64
+CC=`pwd`/gcc64
+%endif
+%ifarch ppc64
+if gcc -m64 -xc -S /dev/null -o - > /dev/null 2>&1; then
+  cat > gcc64 <<"EOF"
+#!/bin/sh
+exec /usr/bin/gcc -m64 "$@"
+EOF
+  chmod +x gcc64
+  CC=`pwd`/gcc64
+fi
+%endif
+
+CC="${CC}" \
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false ../configure \
@@ -808,6 +841,8 @@ TEXCONFIG=false ../configure \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--enable-shared \
+	--disable-checking \
+	--disable-libunwind-exceptions \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
 	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java},ksi" \
@@ -824,8 +859,15 @@ TEXCONFIG=false ../configure \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
-	%{_target_platform}
-
+	%ifarch sparc
+        --host=%{_target_platform} \
+	--build=%{_target_platform} \
+	--target=%{_target_platform} \
+	--with-cpu=v7
+	%endif
+	%ifnarch sparc
+	%{_target_platform} 
+	%endif
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
