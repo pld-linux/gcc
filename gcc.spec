@@ -21,7 +21,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	1.1
+Release:	2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1410,18 +1410,30 @@ rm -rf $RPM_BUILD_ROOT
 
 %post   -p /sbin/ldconfig -n libgcc
 %postun -p /sbin/ldconfig -n libgcc
+%post   -p /sbin/ldconfig -n libgcc32
+%postun -p /sbin/ldconfig -n libgcc32
 %post   -p /sbin/ldconfig -n libstdc++
 %postun -p /sbin/ldconfig -n libstdc++
+%post   -p /sbin/ldconfig -n libstdc++32
+%postun -p /sbin/ldconfig -n libstdc++32
 %post   -p /sbin/ldconfig -n libobjc
 %postun -p /sbin/ldconfig -n libobjc
+%post   -p /sbin/ldconfig -n libobjc32
+%postun -p /sbin/ldconfig -n libobjc32
 %post   -p /sbin/ldconfig -n libg2c
 %postun -p /sbin/ldconfig -n libg2c
+%post   -p /sbin/ldconfig -n libg2c32
+%postun -p /sbin/ldconfig -n libg2c32
 %post   -p /sbin/ldconfig -n libgcj
 %postun -p /sbin/ldconfig -n libgcj
+%post   -p /sbin/ldconfig -n libgcj32
+%postun -p /sbin/ldconfig -n libgcj32
 %post   -p /sbin/ldconfig -n libgnat
 %postun -p /sbin/ldconfig -n libgnat
 %post   -p /sbin/ldconfig -n libffi
 %postun -p /sbin/ldconfig -n libffi
+%post   -p /sbin/ldconfig -n libffi32
+%postun -p /sbin/ldconfig -n libffi32
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
@@ -1471,6 +1483,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libgcc32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 #%attr(755,root,root) %{_libdir}/gcc-lib/*/*/libgcc*.so
 %endif
@@ -1493,6 +1506,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files c++32
+%defattr(644,root,root,755)
 %{_libdir32}/libsupc++.la
 %{_libdir32}/libsupc++.a
 %endif
@@ -1506,6 +1520,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libstdc++32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %endif
 
@@ -1523,6 +1538,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libstdc++32-devel
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
 %endif
@@ -1536,6 +1552,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libstdc++32-static
+%defattr(644,root,root,755)
 %{_libdir32}/libstdc++.a
 %endif
 
@@ -1554,6 +1571,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files objc32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so
 %{_libdir32}/libobjc.la
 %endif
@@ -1567,6 +1585,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libobjc32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %endif
 
@@ -1579,6 +1598,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libobjc32-static
+%defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
 %endif
 %endif
@@ -1605,6 +1625,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files g7732
+%defattr(644,root,root,755)
 %{_libdir32}/libfrtbegin.a
 %{_libdir32}/libg2c.la
 %attr(755,root,root) %{_libdir32}/libg2c.so
@@ -1619,6 +1640,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libg2c32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libg2c.so.*.*.*
 %endif
 
@@ -1631,6 +1653,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libg2c32-static
+%defattr(644,root,root,755)
 %{_libdir32}/libg2c.a
 %endif
 
@@ -1674,6 +1697,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libgcj32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir32}/lib-org*.so.*.*.*
 %endif
@@ -1704,6 +1728,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libgcj32-devel
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/lib*cj*.so
 %attr(755,root,root) %{_libdir32}/lib-org-*.so
 %{_libdir32}/lib*cj*.la
@@ -1721,6 +1746,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libgcj32-static
+%defattr(644,root,root,755)
 %{_libdir32}/lib*cj*.a
 %{_libdir32}/lib-org-*.a
 %endif
@@ -1735,6 +1761,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libffi32
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi-*.so
 %endif
 
@@ -1750,6 +1777,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libffi32-devel
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so
 %{_libdir32}/libffi.la
 %endif
@@ -1763,6 +1791,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with multilib}
 %files -n libffi32-static
+%defattr(644,root,root,755)
 %{_libdir32}/libffi.a
 %endif
 %endif
