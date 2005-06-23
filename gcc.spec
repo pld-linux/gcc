@@ -71,7 +71,6 @@ BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.90.0.3
-Requires:	cpp = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	gcc-dirs
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}-%{release}
 %{?with_ada:Provides: gcc(ada)}
@@ -1122,6 +1121,7 @@ Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
+Obsoletes:	gpp
 
 %description -n cpp
 The C preprocessor is a "macro processor" that is used automatically
