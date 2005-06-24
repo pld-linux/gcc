@@ -1,0 +1,12 @@
+--- gcc-4.1-20050624_1105/gcc/tree-ssa-dom.c.orig	2005-06-14 15:31:48.000000000 +0200
++++ gcc-4.1-20050624_1105/gcc/tree-ssa-dom.c	2005-06-24 16:08:56.000000000 +0200
+@@ -1885,7 +1885,8 @@
+       /* Now make sure the RHS of the MODIFY_EXPR is a typecast.  */
+       if ((TREE_CODE (def_rhs) == NOP_EXPR
+ 	   || TREE_CODE (def_rhs) == CONVERT_EXPR)
+-	  && TREE_CODE (TREE_OPERAND (def_rhs, 0)) == SSA_NAME)
++	  && TREE_CODE (TREE_OPERAND (def_rhs, 0)) == SSA_NAME
++	  && tree_ssa_useless_type_conversion (def_rhs))
+ 	{
+ 	  tree def_rhs_inner = TREE_OPERAND (def_rhs, 0);
+ 	  tree def_rhs_inner_type = TREE_TYPE (def_rhs_inner);
