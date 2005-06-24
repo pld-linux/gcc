@@ -60,7 +60,7 @@ Patch12:	%{name}-pr20297.patch
 Patch13:	%{name}-pr19161.patch
 Patch14:	%{name}-push-pop-visibility.patch
 Patch15:	%{name}-pr21704.patch
-Patch16:	%{name}-pr22019.patch
+
 Patch17:	%{name}-pr22026.patch
 Patch18:	%{name}-pr22028.patch
 Patch19:	%{name}-pr22134.patch
@@ -733,7 +733,7 @@ Statyczne biblioteki Obiektowego C.
 #patch13 -p1	NFY!
 %patch14 -p0
 %patch15 -p1
-%patch16 -p1
+
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
