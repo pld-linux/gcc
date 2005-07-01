@@ -1,12 +1,47 @@
---- gcc-4.1-20050624_1105/gcc/tree-ssa-dom.c.orig	2005-06-14 15:31:48.000000000 +0200
-+++ gcc-4.1-20050624_1105/gcc/tree-ssa-dom.c	2005-06-24 16:08:56.000000000 +0200
-@@ -1885,7 +1885,8 @@
-       /* Now make sure the RHS of the MODIFY_EXPR is a typecast.  */
-       if ((TREE_CODE (def_rhs) == NOP_EXPR
- 	   || TREE_CODE (def_rhs) == CONVERT_EXPR)
--	  && TREE_CODE (TREE_OPERAND (def_rhs, 0)) == SSA_NAME)
-+	  && TREE_CODE (TREE_OPERAND (def_rhs, 0)) == SSA_NAME
-+	  && tree_ssa_useless_type_conversion (def_rhs))
- 	{
- 	  tree def_rhs_inner = TREE_OPERAND (def_rhs, 0);
- 	  tree def_rhs_inner_type = TREE_TYPE (def_rhs_inner);
+	* tree-ssa-dom.c (find_equivalent_equality_comparison): Do not
+	a eliminate type conversion which feeds an equality comparison
+	if the original type or either operand in the comparison is a
+	function pointer. 
+	
+*** gcc/gcc/tree-ssa-dom.c	24 Feb 2005 21:47:26 -0000	2.94
+--- gcc/gcc/tree-ssa-dom.c	30 Jun 2005 23:07:18 -0000
+*************** find_equivalent_equality_comparison (tre
+*** 1929,1934 ****
+--- 1929,1946 ----
+      {
+        tree def_rhs = TREE_OPERAND (def_stmt, 1);
+  
++ 
++       /* If either operand to the comparison is a pointer to
++ 	 a function, then we can not apply this optimization
++ 	 as some targets require function pointers to be
++ 	 canonicalized and in this case this optimization would
++ 	 eliminate a necessary canonicalization.  */
++       if ((POINTER_TYPE_P (TREE_TYPE (op0))
++ 	   && TREE_CODE (TREE_TYPE (TREE_TYPE (op0))) == FUNCTION_TYPE)
++ 	  || (POINTER_TYPE_P (TREE_TYPE (op1))
++ 	      && TREE_CODE (TREE_TYPE (TREE_TYPE (op1))) == FUNCTION_TYPE))
++ 	return NULL;
++ 	      
+        /* Now make sure the RHS of the MODIFY_EXPR is a typecast.  */
+        if ((TREE_CODE (def_rhs) == NOP_EXPR
+  	   || TREE_CODE (def_rhs) == CONVERT_EXPR)
+*************** find_equivalent_equality_comparison (tre
+*** 1942,1947 ****
+--- 1954,1969 ----
+  	      > TYPE_PRECISION (TREE_TYPE (def_rhs)))
+  	    return NULL;
+  
++ 	  /* If the inner type of the conversion is a pointer to
++ 	     a function, then we can not apply this optimization
++ 	     as some targets require function pointers to be
++ 	     canonicalized.  This optimization would result in
++ 	     canonicalization of the pointer when it was not originally
++ 	     needed/intended.  */
++ 	  if (POINTER_TYPE_P (def_rhs_inner_type)
++ 	      && TREE_CODE (TREE_TYPE (def_rhs_inner_type)) == FUNCTION_TYPE)
++ 	    return NULL;
++ 
+  	  /* What we want to prove is that if we convert OP1 to
+  	     the type of the object inside the NOP_EXPR that the
+  	     result is still equivalent to SRC. 
