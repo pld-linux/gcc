@@ -1,0 +1,289 @@
+Date: Thu, 30 Jun 2005 23:41:10 +0200
+From: Zdenek Dvorak <rakdver at atrey dot karlin dot mff dot cuni dot cz>
+Subject: [patch] Empty loop removal
+
+Hello,
+
+this patch implements removal of finite empty loops.  Unlike the
+previous version of the patch that worked by transfering information
+about finiteness of the loop to DCE, this version removes the loops
+directly.  This makes it safer and less likely to cause bugs, although
+possibly a bit weaker; nevertheless, on the practical cases there should
+be no difference.
+
+Bootstrapped & regtested on i686 and ia64.
+
+Zdenek
+
+	* tree-flow.h (remove_empty_loops, single_dom_exit): Declare.
+	* tree-optimize.c (init_tree_optimization_passes): Add pass_empty_loop.
+	* tree-pass.h (pass_empty_loop): Declare.
+	* tree-ssa-loop-ivcanon.c (empty_loop_p, remove_empty_loop,
+	try_remove_empty_loop, remove_empty_loops): New functions.
+	* tree-ssa-loop-ivopts.c (single_dom_exit): Export.
+	* tree-ssa-loop.c (tree_ssa_empty_loop, pass_empty_loop): New.
+
+	* gcc.dg/tree-ssa/loop-10.c: New test.
+
+*** gcc/gcc/tree-flow.h	25 Jun 2005 02:01:21 -0000	2.121
+--- gcc/gcc/tree-flow.h	30 Jun 2005 15:39:16 -0000
+*************** void tree_ssa_lim (struct loops *);
+*** 650,655 ****
+--- 650,656 ----
+  void tree_ssa_unswitch_loops (struct loops *);
+  void canonicalize_induction_variables (struct loops *);
+  void tree_unroll_loops_completely (struct loops *, bool);
++ void remove_empty_loops (struct loops *);
+  void tree_ssa_iv_optimize (struct loops *);
+  
+  bool number_of_iterations_exit (struct loop *, edge,
+*************** struct loop *tree_ssa_loop_version (stru
+*** 681,686 ****
+--- 682,688 ----
+  				    basic_block *);
+  tree expand_simple_operations (tree);
+  void substitute_in_loop_info (struct loop *, tree, tree);
++ edge single_dom_exit (struct loop *);
+  
+  /* In tree-ssa-loop-im.c  */
+  /* The possibilities of statement movement.  */
+*** gcc/gcc/tree-optimize.c	30 Jun 2005 00:47:49 -0000	2.116
+--- gcc/gcc/tree-optimize.c	30 Jun 2005 15:39:17 -0000
+*************** init_tree_optimization_passes (void)
+*** 564,569 ****
+--- 564,570 ----
+    NEXT_PASS (pass_lim);
+    NEXT_PASS (pass_unswitch);
+    NEXT_PASS (pass_scev_cprop);
++   NEXT_PASS (pass_empty_loop);
+    NEXT_PASS (pass_record_bounds);
+    NEXT_PASS (pass_linear_transform);
+    NEXT_PASS (pass_iv_canon);
+*** gcc/gcc/tree-pass.h	28 Jun 2005 02:20:29 -0000	2.46
+--- gcc/gcc/tree-pass.h	30 Jun 2005 15:39:17 -0000
+*************** extern struct tree_opt_pass pass_lim;
+*** 175,180 ****
+--- 175,181 ----
+  extern struct tree_opt_pass pass_unswitch;
+  extern struct tree_opt_pass pass_iv_canon;
+  extern struct tree_opt_pass pass_scev_cprop;
++ extern struct tree_opt_pass pass_empty_loop;
+  extern struct tree_opt_pass pass_record_bounds;
+  extern struct tree_opt_pass pass_if_conversion;
+  extern struct tree_opt_pass pass_vectorize;
+*** gcc/gcc/tree-ssa-loop-ivcanon.c	26 Jun 2005 21:21:32 -0000	2.16
+--- gcc/gcc/tree-ssa-loop-ivcanon.c	30 Jun 2005 15:39:17 -0000
+*************** tree_unroll_loops_completely (struct loo
+*** 371,373 ****
+--- 371,523 ----
+    if (changed)
+      cleanup_tree_cfg_loop ();
+  }
++ 
++ /* Checks whether LOOP is empty.  */
++ 
++ static bool
++ empty_loop_p (struct loop *loop)
++ {
++   edge exit;
++   struct tree_niter_desc niter;
++   tree phi, def;
++   basic_block *body;
++   block_stmt_iterator bsi;
++   unsigned i;
++   tree stmt;
++ 
++   /* If the loop has multiple exits, it is too hard for us to handle.
++      Similarly, if the exit is not dominating, we cannot determine
++      whether the loop is not infinite.  */
++   exit = single_dom_exit (loop);
++   if (!exit)
++     return false;
++ 
++   /* The loop must be finite.  */
++   if (!number_of_iterations_exit (loop, exit, &niter))
++     return false;
++ 
++   /* Values of all loop exit phi nodes must be invariants.  */
++   for (phi = phi_nodes (exit->dest); phi; phi = PHI_CHAIN (phi))
++     {
++       if (!is_gimple_reg (PHI_RESULT (phi)))
++ 	continue;
++ 
++       def = PHI_ARG_DEF_FROM_EDGE (phi, exit);
++ 
++       if (!expr_invariant_in_loop_p (loop, def))
++ 	return false;
++     }
++ 
++   /* And there should be no memory modifying or from other reasons
++      unremovable statements.  */
++   body = get_loop_body (loop);
++   for (i = 0; i < loop->num_nodes; i++)
++     {
++       /* Irreducible region might be infinite.  */
++       if (body[i]->flags & BB_IRREDUCIBLE_LOOP)
++ 	{
++ 	  free (body);
++ 	  return false;
++ 	}
++ 	
++       for (bsi = bsi_start (body[i]); !bsi_end_p (bsi); bsi_next (&bsi))
++ 	{
++ 	  stmt = bsi_stmt (bsi);
++ 	  if (!ZERO_SSA_OPERANDS (stmt, SSA_OP_VIRTUAL_DEFS)
++ 	      || stmt_ann (stmt)->has_volatile_ops)
++ 	    {
++ 	      free (body);
++ 	      return false;
++ 	    }
++ 
++ 	  /* Also, asm statements and calls may have side effects and we
++ 	     cannot change the number of times they are executed.  */
++ 	  switch (TREE_CODE (stmt))
++ 	    {
++ 	    case RETURN_EXPR:
++ 	    case MODIFY_EXPR:
++ 	      stmt = get_call_expr_in (stmt);
++ 	      if (!stmt)
++ 		break;
++ 
++ 	    case CALL_EXPR:
++ 	      if (TREE_SIDE_EFFECTS (stmt))
++ 		{
++ 		  free (body);
++ 		  return false;
++ 		}
++ 	      break;
++ 
++ 	    case ASM_EXPR:
++ 	      free (body);
++ 	      return false;
++ 
++ 	    default:
++ 	      break;
++ 	    }
++ 	}
++       }
++   free (body);
++ 
++   return true;
++ }
++ 
++ /* Remove LOOP by making it exit in the first iteration.  */
++ 
++ static void
++ remove_empty_loop (struct loop *loop)
++ {
++   edge exit = single_dom_exit (loop);
++   tree cond_stmt = last_stmt (exit->src);
++   tree do_exit;
++ 
++   if (exit->flags & EDGE_TRUE_VALUE)
++     do_exit = boolean_true_node;
++   else
++     do_exit = boolean_false_node;
++ 
++   COND_EXPR_COND (cond_stmt) = do_exit;
++   update_stmt (cond_stmt);
++ }
++ 
++ /* Removes LOOP if it is empty.  */
++ 
++ static bool
++ try_remove_empty_loop (struct loop *loop)
++ {
++   bool changed = false, all = true;
++   struct loop *sub;
++ 
++   /* First, all subloops must be removed.  */
++   for (sub = loop->inner; sub; sub = sub->next)
++     {
++       if (try_remove_empty_loop (sub))
++ 	changed = true;
++       else
++ 	all = false;
++     }
++ 
++   if (!all || !empty_loop_p (loop))
++     return changed;
++ 
++   remove_empty_loop (loop);
++   return true;
++ }
++ 
++ /* Remove the empty LOOPS.  */
++ 
++ void
++ remove_empty_loops (struct loops *loops)
++ {
++   bool changed = false;
++   struct loop *loop;
++ 
++   for (loop = loops->tree_root->inner; loop; loop = loop->next)
++     changed |= try_remove_empty_loop (loop);
++ 
++   if (changed)
++     {
++       scev_reset ();
++       cleanup_tree_cfg_loop ();
++     }
++ }
+*** gcc/gcc/tree-ssa-loop-ivopts.c	26 Jun 2005 21:21:32 -0000	2.82
+--- gcc/gcc/tree-ssa-loop-ivopts.c	30 Jun 2005 15:39:18 -0000
+*************** loop_data (struct loop *loop)
+*** 358,364 ****
+  
+  /* The single loop exit if it dominates the latch, NULL otherwise.  */
+  
+! static edge
+  single_dom_exit (struct loop *loop)
+  {
+    edge exit = loop->single_exit;
+--- 358,364 ----
+  
+  /* The single loop exit if it dominates the latch, NULL otherwise.  */
+  
+! edge
+  single_dom_exit (struct loop *loop)
+  {
+    edge exit = loop->single_exit;
+*** gcc/gcc/tree-ssa-loop.c	25 Jun 2005 02:01:42 -0000	2.31
+--- gcc/gcc/tree-ssa-loop.c	30 Jun 2005 15:39:18 -0000
+*************** struct tree_opt_pass pass_scev_cprop =
+*** 311,316 ****
+--- 311,344 ----
+    0					/* letter */
+  };
+  
++ /* Remove empty loops.  */
++ 
++ static void
++ tree_ssa_empty_loop (void)
++ {
++   if (!current_loops)
++     return;
++ 
++   remove_empty_loops (current_loops);
++ }
++ 
++ struct tree_opt_pass pass_empty_loop =
++ {
++   "empty",				/* name */
++   NULL,					/* gate */
++   tree_ssa_empty_loop,		       	/* execute */
++   NULL,					/* sub */
++   NULL,					/* next */
++   0,					/* static_pass_number */
++   TV_COMPLETE_UNROLL,	  		/* tv_id */
++   PROP_cfg | PROP_ssa,			/* properties_required */
++   0,					/* properties_provided */
++   0,					/* properties_destroyed */
++   0,					/* todo_flags_start */
++   TODO_dump_func | TODO_verify_loops,	/* todo_flags_finish */
++   0					/* letter */
++ };
++ 
+  /* Record bounds on numbers of iterations of loops.  */
+  
+  static void
