@@ -36,15 +36,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050624_1408
-Release:	0.%{_snap}.1
+%define		_snap	20050701T1908UTC
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	dc4c01729d614e27710b97264c5732ac
+# Source0-md5:	40fb5ac23af0b2b92550b22561ead27d
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -57,15 +57,9 @@ Patch6:		%{name}-ada-fwrapv.patch
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20218.patch
 Patch12:	%{name}-pr20297.patch
-Patch13:	%{name}-pr19161.patch
-Patch14:	%{name}-push-pop-visibility.patch
-Patch15:	%{name}-pr21704.patch
-
-Patch17:	%{name}-pr22026.patch
-Patch18:	%{name}-pr22028.patch
-Patch19:	%{name}-pr22134.patch
-Patch20:	%{name}-pr22171.patch
-Patch21:	%{name}-pr22051.patch
+Patch13:	%{name}-push-pop-visibility.patch
+Patch14:	%{name}-pr21704.patch
+Patch15:	%{name}-pr22051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -730,15 +724,9 @@ Statyczne biblioteki Obiektowego C.
 %patch10 -p1
 %patch11 -p0
 %patch12 -p1
-#patch13 -p1	NFY!
-%patch14 -p0
+%patch13 -p0
+%patch14 -p1
 %patch15 -p1
-
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -747,6 +735,7 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 mv ChangeLog ChangeLog.general
 
 %build
+%if 1
 cd gcc
 %{__autoconf}
 cd ..
@@ -790,6 +779,7 @@ TEXCONFIG=false \
 	%{_target_platform}
 
 cd ..
+%endif
 
 %{__make} -C obj-%{_target_platform} \
 	%{?with_bootstrap:%{?with_profiling:profiled}bootstrap} \
