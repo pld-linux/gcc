@@ -1,7 +1,6 @@
 #
 # TODO:
 #		- http://gcc.gnu.org/PR11203 (inline-asm)
-#		- http://gcc.gnu.org/PR17640 (empty loop not removed after optimization)
 #		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
 #
 # Conditional build:
@@ -62,6 +61,7 @@ Patch14:	%{name}-pr21704.patch
 Patch15:	%{name}-pr22051.patch
 Patch16:	%{name}-pr22071.patch
 Patch17:	%{name}-pr17640.patch
+Patch18:	%{name}-pr22037.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -731,6 +731,7 @@ Statyczne biblioteki Obiektowego C.
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch18 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c

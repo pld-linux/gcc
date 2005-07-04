@@ -1,0 +1,18 @@
+--- gcc/gcc/tree-cfg.c	28 Jun 2005 19:33:20 -0000	2.207
++++ gcc/gcc/tree-cfg.c	4 Jul 2005 10:31:07 -0000
+@@ -1298,10 +1298,12 @@ tree_merge_blocks (basic_block a, basic_
+       tree copy;
+       
+       if (!may_propagate_copy (def, use)
+-	  /* Propagating pointers might cause the set of vops for statements
+-	     to be changed, and thus require ssa form update.  */
++	  /* Propagating pointers and constants might cause the
++	     set of vops for statements to be changed, and thus
++	     require ssa form update.  */
+ 	  || (is_gimple_reg (def)
+-	      && POINTER_TYPE_P (TREE_TYPE (def))))
++	      && (POINTER_TYPE_P (TREE_TYPE (def))
++		  || TREE_CONSTANT (use))))
+ 	{
+ 	  gcc_assert (is_gimple_reg (def));
+ 
