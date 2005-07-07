@@ -54,15 +54,11 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-ada-fwrapv.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
-Patch11:	%{name}-pr20218.patch
-Patch12:	%{name}-pr20297.patch
-Patch13:	%{name}-push-pop-visibility.patch
-Patch14:	%{name}-pr21704.patch
-Patch15:	%{name}-pr22051.patch
-Patch16:	%{name}-pr22071.patch
-Patch17:	%{name}-pr17640.patch
-Patch18:	%{name}-pr22037.patch
-Patch19:	%{name}-pr19055.patch
+Patch11:	%{name}-pr20297.patch
+Patch12:	%{name}-pr21704.patch
+Patch13:	%{name}-pr17640.patch
+Patch14:	%{name}-pr22037.patch
+Patch15:	%{name}-pr19055.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -725,15 +721,11 @@ Statyczne biblioteki Obiektowego C.
 
 # PRs
 %patch10 -p1
-%patch11 -p0
+%patch11 -p1
 %patch12 -p1
-%patch13 -p0
+%patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -742,7 +734,6 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 mv ChangeLog ChangeLog.general
 
 %build
-%if 1
 cd gcc
 %{__autoconf}
 cd ..
@@ -786,7 +777,6 @@ TEXCONFIG=false \
 	%{_target_platform}
 
 cd ..
-%endif
 
 %{__make} -C obj-%{_target_platform} \
 	%{?with_bootstrap:%{?with_profiling:profiled}bootstrap} \
