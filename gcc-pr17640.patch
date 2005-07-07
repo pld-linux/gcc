@@ -47,18 +47,16 @@ Zdenek
   
   /* In tree-ssa-loop-im.c  */
   /* The possibilities of statement movement.  */
-*** gcc/gcc/tree-optimize.c	30 Jun 2005 00:47:49 -0000	2.116
---- gcc/gcc/tree-optimize.c	30 Jun 2005 15:39:17 -0000
-*************** init_tree_optimization_passes (void)
-*** 564,569 ****
---- 564,570 ----
-    NEXT_PASS (pass_lim);
-    NEXT_PASS (pass_unswitch);
-    NEXT_PASS (pass_scev_cprop);
-+   NEXT_PASS (pass_empty_loop);
-    NEXT_PASS (pass_record_bounds);
-    NEXT_PASS (pass_linear_transform);
-    NEXT_PASS (pass_iv_canon);
+--- gcc/gcc/passes.c.orig	2005-07-07 18:12:20.000000000 +0000
++++ gcc/gcc/passes.c	2005-07-07 18:39:13.767948968 +0000
+@@ -558,6 +558,7 @@ init_optimization_passes (void)
+   NEXT_PASS (pass_lim);
+   NEXT_PASS (pass_unswitch);
+   NEXT_PASS (pass_scev_cprop);
++  NEXT_PASS (pass_empty_loop);
+   NEXT_PASS (pass_record_bounds);
+   NEXT_PASS (pass_linear_transform);
+   NEXT_PASS (pass_iv_canon);
 *** gcc/gcc/tree-pass.h	28 Jun 2005 02:20:29 -0000	2.46
 --- gcc/gcc/tree-pass.h	30 Jun 2005 15:39:17 -0000
 *************** extern struct tree_opt_pass pass_lim;
