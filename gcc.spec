@@ -17,6 +17,11 @@
 # debuginfo not needed for devel snaps.
 %define		_enable_debug_packages	0
 
+%if %{with multilib}
+# the latest chrpath(64) can't handle 32-bit binaries :/
+%define		_noautochrpath	.*/lib/.*\\.so.*
+%endif
+
 %if %{without objc}
 %undefine	with_objcxx
 %endif
@@ -35,7 +40,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050709T1542UTC
+%define		_snap	20050711T1626UTC
 Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
@@ -43,7 +48,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	9f6cb21a1c60f5fdb54c43d307a37544
+# Source0-md5:	bd4418cf5fabfee675ce6c95f08542cb
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -774,7 +779,6 @@ TEXCONFIG=false \
 	--enable-libgcj-database \
 	--enable-gtk-cairo \
 %endif
-	--enable-version-specific-runtime-libs \
 	%{_target_platform}
 
 cd ..
@@ -947,6 +951,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cc
 %attr(755,root,root) %{_bindir}/cpp
 
+%{_includedir}/ssp
+
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
@@ -958,12 +964,18 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}/lib*.so
+%{_libdir}/libssp.la
+%attr(755,root,root) %{_libdir}/libssp.a
+#{_libdir}/libssp_nonshared.*
 %if %{with multilib}
 %dir %{_libdir}/gcc/*/*/32
 %{_libdir}/gcc/*/*/32/libgcov.a
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
 %{_libdir}/gcc/*/*/32/libgcc_s.so
+%{_libdir32}/libssp.la
+%attr(755,root,root) %{_libdir32}/libssp.a
+#{_libdir32}/libssp_nonshared.*
 %endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
@@ -983,8 +995,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %if %{with multilib}
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
+%attr(755,root,root) %{_libdir32}/libssp.so.*
 %endif
 %attr(755,root,root) %{_slibdir}/lib*.so.*
+%attr(755,root,root) %{_libdir}/libssp.so.*
 
 %files -n libmudflap
 %defattr(644,root,root,755)
