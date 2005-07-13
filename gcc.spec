@@ -40,7 +40,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050711T1659UTC
+%define		_snap	20050713T1743UTC
 Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
@@ -48,7 +48,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	455b05f3a8ecff66010de10a80abcd46
+# Source0-md5:	61efa0ebc0b3be339ee1e78472fc53c6
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -60,8 +60,7 @@ Patch6:		%{name}-ada-fwrapv.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
-Patch12:	%{name}-pr21704.patch
-Patch13:	%{name}-pr17640.patch
+
 Patch14:	%{name}-pr22037.patch
 Patch15:	%{name}-pr19055.patch
 URL:		http://gcc.gnu.org/
@@ -727,8 +726,7 @@ Statyczne biblioteki Obiektowego C.
 # PRs
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
+
 %patch14 -p1
 %patch15 -p1
 
@@ -816,6 +814,15 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
+libssp=%(basename `echo $RPM_BUILD_ROOT%{_libdir}/libssp.so.*.*.*`)
+mv $RPM_BUILD_ROOT{%{_libdir}/$libssp,%{_slibdir}}
+ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/$libssp
+%if %{with multilib}
+libssp=%(basename `echo $RPM_BUILD_ROOT%{_libdir32}/libssp.so.*.*.*`)
+mv $RPM_BUILD_ROOT{%{_libdir32}/$libssp,%{_slibdir32}}
+ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/$libssp
+%endif
+
 %if %{with fortran}
 ln -sf gfortran $RPM_BUILD_ROOT%{_bindir}/g95
 echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
@@ -849,7 +856,7 @@ cp -f	libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libmudflap.la libmudflapth.la libstdc++.la libsupc++.la \
+for f in libmudflap.la libmudflapth.la libssp.la libstdc++.la libsupc++.la \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
 	%{?with_java:libgcj.la libffi.la} \
 	%{?with_objc:libobjc.la};
