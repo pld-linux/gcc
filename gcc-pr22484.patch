@@ -1,0 +1,21 @@
+--- gcc/gcc/tree-ssa-ccp.c	27 Jun 2005 12:17:24 -0000	2.82
++++ gcc/gcc/tree-ssa-ccp.c	16 Jul 2005 21:28:15 -0000
+@@ -2337,6 +2337,7 @@ fold_stmt_inplace (tree stmt)
+     return changed;
+ 
+   new_rhs = fold (rhs);
++  STRIP_USELESS_TYPE_CONVERSION (new_rhs);
+   if (new_rhs == rhs)
+     return changed;
+ 
+--- gcc/gcc/tree-ssa-propagate.c	8 Jul 2005 19:26:01 -0000	2.26
++++ gcc/gcc/tree-ssa-propagate.c	16 Jul 2005 21:28:15 -0000
+@@ -604,6 +604,8 @@ set_rhs (tree *stmt_p, tree expr)
+       break;
+ 
+     case COND_EXPR:
++      if (!is_gimple_condexpr (expr))
++        return false;
+       COND_EXPR_COND (stmt) = expr;
+       break;
+     case SWITCH_EXPR:
