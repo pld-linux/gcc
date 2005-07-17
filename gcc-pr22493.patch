@@ -53,7 +53,7 @@
 -      max = (vr0.min == TYPE_MIN_VALUE (TREE_TYPE (expr)))
 -	    ? TYPE_MAX_VALUE (TREE_TYPE (expr))
 -	    : fold_unary_to_constant (code, TREE_TYPE (expr), vr0.min);
-+	  type = VR_ANTI_RANGE;
++	  vr_type = VR_ANTI_RANGE;
 +	  max = fold_unary_to_constant (code, TREE_TYPE (expr), vr0.max);
 +    	  max = int_const_binop (MINUS_EXPR, max, one, 0);
 +	  min = int_const_binop (PLUS_EXPR, min, one, 0);
