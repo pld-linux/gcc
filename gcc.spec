@@ -5,6 +5,7 @@
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
+%bcond_without	cxx		# build without C++ support
 %bcond_without	fortran		# build without Fortran support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without Objective-C support
@@ -20,6 +21,11 @@
 %if %{with multilib}
 # the latest chrpath(64) can't handle 32-bit binaries :/
 %define		_noautochrpath	.*/lib/.*\\.so.*
+%endif
+
+%if %{without cxx}
+%undefine	with_java
+%undefine	with_objcxx
 %endif
 
 %if %{without objc}
@@ -758,7 +764,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++%{?with_fortran:,f95}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,f95}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
@@ -814,13 +820,13 @@ ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
-libssp=%(basename `echo $RPM_BUILD_ROOT%{_libdir}/libssp.so.*.*.*`)
+libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT{%{_libdir}/$libssp,%{_slibdir}}
-ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/$libssp
+ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/libssp.so
 %if %{with multilib}
-libssp=%(basename `echo $RPM_BUILD_ROOT%{_libdir32}/libssp.so.*.*.*`)
+libssp=$($RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*`)
 mv $RPM_BUILD_ROOT{%{_libdir32}/$libssp,%{_slibdir32}}
-ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/$libssp
+ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 %endif
 
 %if %{with fortran}
@@ -856,7 +862,8 @@ cp -f	libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libmudflap.la libmudflapth.la libssp.la libstdc++.la libsupc++.la \
+for f in libmudflap.la libmudflapth.la libssp.la \
+	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
 	%{?with_java:libgcj.la libffi.la} \
 	%{?with_objc:libobjc.la};
@@ -889,7 +896,7 @@ ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
 ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
-%find_lang libstdc\+\+
+%{?with_cxx:%find_lang libstdc\+\+}
 
 # cvs snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
@@ -973,6 +980,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir}/lib*.so
 %{_libdir}/libssp.la
 %attr(755,root,root) %{_libdir}/libssp.a
+%attr(755,root,root) %{_libdir}/libssp.so
 #{_libdir}/libssp_nonshared.*
 %if %{with multilib}
 %dir %{_libdir}/gcc/*/*/32
@@ -982,6 +990,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/32/libgcc_s.so
 %{_libdir32}/libssp.la
 %attr(755,root,root) %{_libdir32}/libssp.a
+%attr(755,root,root) %{_libdir32}/libssp.so
 #{_libdir32}/libssp_nonshared.*
 %endif
 %{_libdir}/gcc/*/*/libgcov.a
@@ -1002,10 +1011,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %if %{with multilib}
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
-%attr(755,root,root) %{_libdir32}/libssp.so.*
 %endif
 %attr(755,root,root) %{_slibdir}/lib*.so.*
-%attr(755,root,root) %{_libdir}/libssp.so.*
 
 %files -n libmudflap
 %defattr(644,root,root,755)
@@ -1061,6 +1068,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/libgnat.a
 %endif
 
+%if %{with cxx}
 %files c++
 %defattr(644,root,root,755)
 %doc gcc/cp/{ChangeLog,NEWS}
@@ -1112,6 +1120,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libstdc++.a
 %endif
 %{_libdir}/libstdc++.a
+%endif
 
 %if %{with fortran}
 %files fortran
