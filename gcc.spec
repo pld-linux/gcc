@@ -46,15 +46,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050722T2023UTC
-Release:	0.%{_snap}.1
+%define		_snap	20050723T1611UTC
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	8777b16adae820774fbacee281be783b
+# Source0-md5:	5f9c817d32902536838b7eeebbe10363
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -69,6 +69,8 @@ Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr22484.patch
 Patch13:	%{name}-pr22493.patch
 Patch14:	%{name}-pr22037.patch
+Patch15:	%{name}-pr22533.patch
+Patch16:	%{name}-mmx-x87-fpu-mode-switching-and-mmx-vectorizer.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -740,6 +742,8 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
+%patch16 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -886,7 +890,7 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jvmpi.h} $gccdir/tmp}
+%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv -f $gccdir/include/objc	$gccdir/tmp}
 mv -f	$gccdir/include/syslimits.h $gccdir/tmp
 rm -rf	$gccdir/include
@@ -1212,6 +1216,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
+%{_libdir}/gcc/*/*/include/jni.h
 %{_libdir}/gcc/*/*/include/jvmpi.h
 %dir %{_libdir}/security
 %{_libdir}/security/*
