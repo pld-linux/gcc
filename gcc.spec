@@ -47,7 +47,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050722T2023UTC
-Release:	0.%{_snap}.0.1
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -117,6 +117,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
+%endif
+
+%ifarch i686
+# workaround PR wrong-code/22584
+%define		optflags	-march=i486 -O2
 %endif
 
 %description
@@ -881,7 +886,7 @@ done
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 # we have to save these however
-%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jvmpi.h} $gccdir/tmp}
+%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv -f $gccdir/include/objc	$gccdir/tmp}
 mv -f	$gccdir/include/syslimits.h $gccdir/tmp
 rm -rf	$gccdir/include
@@ -1175,6 +1180,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/fastjar*
 %{_infodir}/gcj*
+%{_infodir}/hacking*
+%{_infodir}/vmintegration*
 %{_mandir}/man1/fastjar*
 %{_mandir}/man1/gcj*
 %{_mandir}/man1/gjnih*
@@ -1205,7 +1212,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
-%{_libdir}/gcc/*/*/include/jni.h
 %{_libdir}/gcc/*/*/include/jvmpi.h
 %dir %{_libdir}/security
 %{_libdir}/security/*
