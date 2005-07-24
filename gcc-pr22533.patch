@@ -1,12 +1,9 @@
 --- gcc/gcc/gimplify.c	20 Jul 2005 01:18:18 -0000	2.142
-+++ gcc/gcc/gimplify.c	20 Jul 2005 17:03:36 -0000
-@@ -298,6 +298,28 @@ create_artificial_label (void)
++++ gcc/gcc/gimplify.c	24 Jul 2005 10:10:35 -0000
+@@ -298,6 +298,25 @@
    return lab;
  }
  
-+/* Create an ADDR_EXPR for T,  if T is a CONSTRUCTOR, create a temporary
-+   variable to hold the CONSTRUCTOR.  */
-+
 +static tree
 +gimplify_build_fold_addr_expr (tree t)
 +{
@@ -14,7 +11,7 @@
 +    {
 +      tree new_t;
 +      tree new_var
-+	= create_tmp_var (TREE_TYPE (t), NULL);
++	= create_tmp_var (TREE_TYPE (t), "ATP");
 +      TREE_ADDRESSABLE (new_var) = 1;
 +      TREE_READONLY (new_var) = 1;
 +      DECL_INITIAL (new_var) = t;
@@ -29,11 +26,12 @@
  /* Create a new temporary name with PREFIX.  Returns an identifier.  */
  
  static GTY(()) unsigned int tmp_var_id_num;
-@@ -3224,9 +3246,9 @@ gimplify_variable_sized_compare (tree *e
+@@ -3224,9 +3243,10 @@
    t = unshare_expr (t);
    t = SUBSTITUTE_PLACEHOLDER_IN_EXPR (t, op0);
    args = tree_cons (NULL, t, NULL);
 -  t = build_fold_addr_expr (op1);
++
 +  t = gimplify_build_fold_addr_expr (op1);
    args = tree_cons (NULL, t, args);
 -  dest = build_fold_addr_expr (op0);
@@ -41,22 +39,43 @@
    args = tree_cons (NULL, dest, args);
    t = implicit_built_in_decls[BUILT_IN_MEMCMP];
    t = build_function_call_expr (t, args);
-@@ -3441,9 +3463,9 @@ gimplify_addr_expr (tree *expr_p, tree *
- 	 same type.  */
-       if (tree_ssa_useless_type_conversion (TREE_OPERAND (op0, 0)))
+@@ -3443,7 +3463,7 @@
  	op0 = TREE_OPERAND (op0, 0);
--
--      *expr_p = fold_convert (TREE_TYPE (expr),
+ 
+       *expr_p = fold_convert (TREE_TYPE (expr),
 -			      build_fold_addr_expr (TREE_OPERAND (op0, 0)));
-+      
-+      op0 = gimplify_build_fold_addr_expr (TREE_OPERAND (op0, 0));
-+      *expr_p = fold_convert (TREE_TYPE (expr), op0);
++			      gimplify_build_fold_addr_expr (TREE_OPERAND (op0, 0)));
        ret = GS_OK;
        break;
  
+@@ -4473,7 +4493,7 @@
+       /* An lvalue will do.  Take the address of the expression, store it
+ 	 in a temporary, and replace the expression with an INDIRECT_REF of
+ 	 that temporary.  */
+-      tmp = build_fold_addr_expr (*expr_p);
++      tmp = gimplify_build_fold_addr_expr (*expr_p);
+       gimplify_expr (&tmp, pre_p, post_p, is_gimple_reg, fb_rvalue);
+       *expr_p = build1 (INDIRECT_REF, TREE_TYPE (TREE_TYPE (tmp)), tmp);
+     }
 --- gcc/gcc/ada/trans.c	20 Jul 2005 01:18:53 -0000	1.101
-+++ gcc/gcc/ada/trans.c	20 Jul 2005 17:03:39 -0000
-@@ -4549,28 +4549,6 @@ gnat_gimplify_expr (tree *expr_p, tree *
++++ gcc/gcc/ada/trans.c	24 Jul 2005 10:10:37 -0000
+@@ -3585,6 +3585,7 @@
+ 		else
+ 		  gnu_lhs = DECL_RESULT (current_function_decl);
+ 
++#if 0
+ 		/* Do not remove the padding from GNU_RET_VAL if the inner
+ 		   type is self-referential since we want to allocate the fixed
+ 		   size in that case.  */
+@@ -3596,6 +3597,7 @@
+ 		    && (CONTAINS_PLACEHOLDER_P
+ 			(TYPE_SIZE (TREE_TYPE (gnu_ret_val)))))
+ 		  gnu_ret_val = TREE_OPERAND (gnu_ret_val, 0);
++#endif
+ 
+ 		if (TYPE_RETURNS_BY_REF_P (gnu_subprog_type)
+ 		    || By_Ref (gnat_node))
+@@ -4549,28 +4551,6 @@
        *expr_p = TREE_OPERAND (*expr_p, 0);
        return GS_OK;
  
@@ -85,16 +104,17 @@
      case COMPONENT_REF:
        /* We have a kludge here.  If the FIELD_DECL is from a fat pointer and is
  	 from an early dummy type, replace it with the proper FIELD_DECL.  */
-@@ -5361,7 +5339,6 @@ addressable_p (tree gnu_expr)
+@@ -5361,7 +5341,7 @@
  
      case UNCONSTRAINED_ARRAY_REF:
      case INDIRECT_REF:
 -    case CONSTRUCTOR:
++/*    case CONSTRUCTOR:*/
      case NULL_EXPR:
      case SAVE_EXPR:
        return true;
 --- gcc/gcc/ada/utils2.c	20 Jul 2005 01:18:55 -0000	1.50
-+++ gcc/gcc/ada/utils2.c	20 Jul 2005 17:03:39 -0000
++++ gcc/gcc/ada/utils2.c	24 Jul 2005 10:10:37 -0000
 @@ -45,6 +45,8 @@
  #include "einfo.h"
  #include "ada-tree.h"
@@ -104,7 +124,7 @@
  
  static tree find_common_type (tree, tree);
  static bool contains_save_expr_p (tree);
-@@ -1032,6 +1034,7 @@ build_unary_op (enum tree_code op_code, 
+@@ -1032,6 +1034,7 @@
    tree operation_type = result_type;
    tree result;
    bool side_effects = false;
@@ -112,20 +132,20 @@
  
    if (operation_type
        && TREE_CODE (operation_type) == RECORD_TYPE
-@@ -1150,6 +1153,22 @@ build_unary_op (enum tree_code op_code, 
+@@ -1150,6 +1153,22 @@
  				result);
  	      break;
  	    }
 +	  else
 +	    {
-+	      /* Create a temporary variable to hold the CONSTRUCTON.  */
-+	      tree new_var = create_tmp_var_raw (type, NULL);
++	      tree new_var = create_tmp_var_raw (type, "C");
 +	      TREE_ADDRESSABLE (new_var) = 1;
 +	      TREE_READONLY (new_var) = 1;
 +	      if (global_bindings_p ())
 +		TREE_STATIC (new_var) = 1;
 +	      DECL_INITIAL (new_var) = operand;
 +	      gnat_pushdecl (new_var, Empty);
++	      
 +	      if (global_bindings_p ())
 +		rest_of_decl_compilation (new_var, 1, 0);
 +	      else
@@ -135,7 +155,7 @@
  
  	  goto common;
  
-@@ -1198,6 +1217,9 @@ build_unary_op (enum tree_code op_code, 
+@@ -1198,6 +1217,9 @@
  	}
  
        TREE_CONSTANT (result) = staticp (operand) || TREE_CONSTANT (operand);
@@ -145,14 +165,3 @@
        break;
  
      case INDIRECT_REF:
-@@ -1964,10 +1986,6 @@ gnat_mark_addressable (tree expr_node)
- 	expr_node = TREE_OPERAND (expr_node, 0);
- 	break;
- 
--      case CONSTRUCTOR:
--	TREE_ADDRESSABLE (expr_node) = 1;
--	return true;
--
-       case VAR_DECL:
-       case PARM_DECL:
-       case RESULT_DECL:
