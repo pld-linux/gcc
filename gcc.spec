@@ -121,8 +121,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
+%ifarch i686
 # workaround PR wrong-code/22584
-%define		specflags_i686	-march=i486
+%define		optflags	-march=i486 -O2
+%endif
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -988,7 +990,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp.la
 %attr(755,root,root) %{_libdir}/libssp.a
 %attr(755,root,root) %{_libdir}/libssp.so
-#{_libdir}/libssp_nonshared.*
+%{_libdir}/libssp_nonshared.a
+%{_libdir}/libssp_nonshared.la
 %if %{with multilib}
 %dir %{_libdir}/gcc/*/*/32
 %{_libdir}/gcc/*/*/32/libgcov.a
@@ -998,7 +1001,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libssp.la
 %attr(755,root,root) %{_libdir32}/libssp.a
 %attr(755,root,root) %{_libdir32}/libssp.so
-#{_libdir32}/libssp_nonshared.*
+%{_libdir32}/libssp_nonshared.a
+%{_libdir32}/libssp_nonshared.la
 %endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
