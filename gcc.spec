@@ -47,7 +47,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050724T0642UTC
-Release:	0.%{_snap}.0.1
+Release:	0.%{_snap}.0.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -121,10 +121,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
-%ifarch i686
 # workaround PR wrong-code/22584
-%define		optflags	-march=i486 -O2
-%endif
+%define		specflags_i686	-march=i486
 
 %description
 A compiler aimed at integrating all the optimizations and features
