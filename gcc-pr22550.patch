@@ -1,0 +1,32 @@
+From: ja2morri at csclub dot uwaterloo dot ca (James A dot  Morrison)
+Date: Mon, 25 Jul 2005 10:37:52 -0400
+
+Hi,
+
+This fixes PR22550 by simply returning COND in vrp_evaluate_condition if
+it is an INTEGER_CST.  In PR22550 I believe the if (0) comes from
+merge_seq_blocks which is called after cleanup_control_flow in
+cleanup_tree_cfg.  This patch has been bootstrapped and regtested on ia64-linux
+with no new regressions, ok for mainline?
+
+Thanks,
+Jim
+
+2005-07-25  James A. Morrison  <phython@gcc.gnu.org>
+
+	PR tree-optimization/22550
+	* tree-vrp.c (vrp_evaluate_condition): Return COND if it is an
+	INTEGER_CST.
+
+--- gcc/gcc/tree-vrp.c	20 Jul 2005 20:26:00 -0000	2.42
++++ gcc/gcc/tree-vrp.c	25 Jul 2005 14:22:55 -0000
+@@ -3014,6 +3072,9 @@ compare_names (enum tree_code comp, tree
+ tree
+ vrp_evaluate_conditional (tree cond, bool use_equiv_p)
+ {
++  if (TREE_CODE (cond) == INTEGER_CST)
++    return cond;
++
+   gcc_assert (TREE_CODE (cond) == SSA_NAME
+               || TREE_CODE_CLASS (TREE_CODE (cond)) == tcc_comparison);
+ 
