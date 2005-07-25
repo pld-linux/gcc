@@ -44,7 +44,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050724T0642UTC
-Release:	0.%{_snap}.0.3
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -68,6 +68,7 @@ Patch13:	%{name}-pr22493.patch
 Patch14:	%{name}-pr22037.patch
 Patch15:	%{name}-pr22533.patch
 #Patch16:	%{name}-mmx-x87-fpu-mode-switching-and-mmx-vectorizer.patch	NEEDS UPDATE
+Patch17:	%{name}-pr22550.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -741,6 +742,7 @@ Statyczne biblioteki Obiektowego C.
 %patch14 -p1
 %patch15 -p1
 #patch16 -p1	NEEDS UPDATE
+%patch17 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
