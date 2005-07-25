@@ -15,9 +15,6 @@
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
-# debuginfo not needed for devel snaps.
-%define		_enable_debug_packages	0
-
 %if %{with multilib}
 # the latest chrpath(64) can't handle 32-bit binaries :/
 %define		_noautochrpath	.*/lib/.*\\.so.*
@@ -47,7 +44,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050724T0642UTC
-Release:	0.%{_snap}.0.2
+Release:	0.%{_snap}.0.3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
