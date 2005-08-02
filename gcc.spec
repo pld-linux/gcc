@@ -11,7 +11,7 @@
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
-%bcond_without	profiling	# build without profiling
+%bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
