@@ -1,8 +1,4 @@
 #
-# TODO:
-#		- http://gcc.gnu.org/PR11203 (inline-asm)
-#		- http://gcc.gnu.org/PR20128 (ice with mudflap + profile generate)
-#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
@@ -44,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050815T0803UTC
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -65,6 +61,7 @@ Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr23128.patch
 Patch13:	%{name}-pr22533.patch
+Patch14:	%{name}-pr23386.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -730,6 +727,7 @@ Statyczne biblioteki Obiektowego C.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
