@@ -39,15 +39,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050815T0803UTC
-Release:	0.%{_snap}.3
+%define		_snap	20050818T2314UTC
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	ecb28f45b0109a097a17b88a129c66cd
+# Source0-md5:	6579390fb1ef8b02e9667c7db1c52327
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -61,8 +61,8 @@ Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr23128.patch
 Patch13:	%{name}-pr22533.patch
-Patch14:	%{name}-pr23386.patch
-Patch15:	%{name}-pr23402.patch
+Patch14:	%{name}-x87-mmx-switch.patch
+Patch15:	%{name}-x87-mmx-eh.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
