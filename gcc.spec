@@ -4,13 +4,14 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
+%ifarch amd64
+%bcond_without	multilib	# build without multilib support
+%else
 %bcond_with	multilib	# build with multilib support
+%endif
 #
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
-%endif
-%ifarch amd64
-%define		with_multilib	1
 %endif
 #
 %define		DASHED_SNAP	%{nil}
