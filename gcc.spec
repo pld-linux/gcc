@@ -9,6 +9,9 @@
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
+%ifarch amd64
+%define		with_multilib	1
+%endif
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -21,7 +24,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	2
+Release:	3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -67,6 +70,11 @@ BuildRequires:	fileutils >= 4.0.41
 %{?with_ada:BuildRequires: gcc-ada}
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 2.2.5-20
+%if %{with multilib}
+%ifarch %{x8664}
+BuildRequires:	glibc-devel(i686)
+%endif
+%endif
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
