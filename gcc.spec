@@ -40,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20050823T1409UTC
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1172,8 +1172,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/fastjar*
 %{_infodir}/gcj*
-%{_infodir}/hacking*
-%{_infodir}/vmintegration*
 %{_mandir}/man1/fastjar*
 %{_mandir}/man1/gcj*
 %{_mandir}/man1/gjnih*
