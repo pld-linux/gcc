@@ -791,7 +791,7 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%{?with_tests:%{__make} -k -C obj-%{_target_platform} check 2>&1 | cat}
+%{?with_tests:%{__make} -k -C obj-%{_target_platform} check 2>&1 ||:}
 
 %install
 rm -rf $RPM_BUILD_ROOT
