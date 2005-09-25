@@ -64,6 +64,7 @@ Patch13:	%{name}-pr22533.patch
 Patch14:	%{name}-x87-mmx-switch.patch
 Patch15:	%{name}-x87-mmx-eh.patch
 Patch16:	%{name}-pr21419.patch
+Patch17:	%{name}-pr23948.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -732,6 +733,7 @@ Statyczne biblioteki Obiektowego C.
 #patch14 -p1	NEEDS UPDATE
 #patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
