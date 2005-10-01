@@ -39,15 +39,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20050922T2047UTC
-Release:	0.%{_snap}.3
+%define		_snap	20051001T1855UTC
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	2fe9d8eb7b02f12831cc11b82d67995f
+# Source0-md5:	084f71e6ab618b871d560769842e8e6a
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -63,9 +63,7 @@ Patch12:	%{name}-pr23128.patch
 Patch13:	%{name}-pr22533.patch
 Patch14:	%{name}-x87-mmx-switch.patch
 Patch15:	%{name}-x87-mmx-eh.patch
-Patch16:	%{name}-pr21419.patch
-Patch17:	%{name}-pr23948.patch
-Patch18:	%{name}-pr24055.patch
+Patch16:	%{name}-pr23948.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -734,8 +732,6 @@ Statyczne biblioteki Obiektowego C.
 #patch14 -p1	NEEDS UPDATE
 #patch15 -p1
 %patch16 -p1
-%patch17 -p1
-%patch18 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
