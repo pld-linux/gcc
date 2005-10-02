@@ -877,20 +877,26 @@ done
 # by fixincludes, we don't want former
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
+
+#
+# [Bug libgcj/24057] [4.1 regression] libgcj installs jawt.h and jni.h in version independent location
+%{?with_java:mv $RPM_BUILD_ROOT%{_includedir}/{jawt.h,jawt_md.h,jni.h,jni_md.h} $gccdir/include}
+#
+
 # we have to save these however
-%{?with_java:mv -f $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
-%{?with_objc:mv -f $gccdir/include/objc	$gccdir/tmp}
-mv -f	$gccdir/include/syslimits.h $gccdir/tmp
-rm -rf	$gccdir/include
-mv -f	$gccdir/tmp $gccdir/include
-cp -f	$gccdir/install-tools/include/*.h $gccdir/include
+%{?with_java:mv $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
+%{?with_objc:mv $gccdir/include/objc $gccdir/tmp}
+mv $gccdir/include/syslimits.h $gccdir/tmp
+rm -rf $gccdir/include
+mv $gccdir/tmp $gccdir/include
+cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
-rm -rf	$gccdir/install-tools
+rm -rf $gccdir/install-tools
 
 %if %{with multilib}
-ln -sf	%{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
+ln -sf %{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
 %endif
-ln -sf	%{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
+ln -sf %{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
 %{?with_cxx:%find_lang libstdc\+\+}
