@@ -1,0 +1,32 @@
+The problem here is that have two basic block forwarders which go to the
+same basic block but destination of two different eh regions.  We cannot
+forward both of these basic blocks to that other basic block.
+
+The way I fixed the issue is to make sure that if we removing
+a forwarder block which is coming in from a EH edge, make sure
+that the destination basic block have only one single predecessor.
+Yes this is too strong but there is no simple way to check if a basic
+block is the destination of a different eh region.
+
+--- gcc/gcc/tree-cfgcleanup.c	19 Aug 2005 18:52:55 -0000	2.7
++++ gcc/gcc/tree-cfgcleanup.c	24 Sep 2005 23:30:54 -0000
+@@ -392,7 +392,18 @@ remove_forwarder_block (basic_block bb, 
+ 	    return false;
+ 	}
+     }
+-
++  /* Check to make sure that we can remove a forwarder block for eh edges.  */
++  FOR_EACH_EDGE (e, ei, bb->preds)
++    {
++      /* This check is too strong, we should also be checking eh regions
++         but this is much harder.  */
++      if (e->flags & EDGE_EH)
++        {
++	  if (!single_pred_p (dest))
++	    return false;
++	}
++    }
++  
+   /* Redirect the edges.  */
+   for (ei = ei_start (bb->preds); (e = ei_safe_edge (ei)); )
+     {
