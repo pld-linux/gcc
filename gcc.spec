@@ -59,7 +59,7 @@ Patch6:		%{name}-keep-volatile-sematics.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
-Patch12:	%{name}-pr23128.patch
+
 Patch13:	%{name}-pr22533.patch
 Patch14:	%{name}-x87-mmx-switch.patch
 Patch15:	%{name}-x87-mmx-eh.patch
@@ -729,7 +729,7 @@ Statyczne biblioteki Obiektowego C.
 # PRs
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
+
 %patch13 -p1
 #patch14 -p1	NEEDS UPDATE
 #patch15 -p1
