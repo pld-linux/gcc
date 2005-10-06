@@ -39,7 +39,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20051003T0833UTC
+%define		_snap	20051005T0949UTC
 Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
@@ -47,7 +47,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	c68f232e43b178991f732b2b224e9a29
+# Source0-md5: 19b30d36af9aaa6216af104b77714cad
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -881,11 +881,6 @@ done
 # by fixincludes, we don't want former
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
-
-#
-# [Bug libgcj/24057] [4.1 regression] libgcj installs jawt.h and jni.h in version independent location
-%{?with_java:mv $RPM_BUILD_ROOT%{_includedir}/{jawt.h,jawt_md.h,jni.h,jni_md.h} $gccdir/include}
-#
 
 # we have to save these however
 %{?with_java:mv $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
