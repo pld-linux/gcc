@@ -30,7 +30,7 @@
    else
      pending_weaks = tree_cons (name, value, pending_weaks);
 +
-+  decl = identifier_global_value (value);
++  decl = value ? identifier_global_value (value) : NULL_TREE;
 +  if (decl && DECL_P (decl))
 +    {
 +      /* Force DECL into the assembler output no matter what.  */
