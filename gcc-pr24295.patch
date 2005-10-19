@@ -1,0 +1,43 @@
+--- a/gcc/c-pragma.c	2005-07-19 20:19:12.000000000 +0000
++++ b/gcc/c-pragma.c	2005-10-19 09:03:52.461999480 +0000
+@@ -36,6 +36,7 @@
+ #include "tm_p.h"
+ #include "vec.h"
+ #include "target.h"
++#include "cgraph.h"
+ 
+ #define GCC_BAD(gmsgid) \
+   do { warning (OPT_Wpragmas, gmsgid); return; } while (0)
+@@ -310,7 +311,7 @@
+       alias_id = TREE_PURPOSE (t);
+       id = TREE_VALUE (t);
+ 
+-      if (TREE_VALUE (t) == NULL)
++      if (id == NULL)
+ 	continue;
+ 
+       decl = build_decl (FUNCTION_DECL, alias_id, default_function_type);
+@@ -330,6 +331,7 @@
+ {
+   tree name, value, x, decl;
+   enum cpp_ttype t;
++  struct cgraph_varpool_node *node;
+ 
+   value = 0;
+ 
+@@ -354,6 +356,15 @@
+     }
+   else
+     pending_weaks = tree_cons (name, value, pending_weaks);
++
++  decl = identifier_global_value (value);
++  if (decl && DECL_P (decl))
++    {
++      /* Force DECL into the assembler output no matter what.  */
++      node = cgraph_varpool_node (decl);
++      cgraph_varpool_mark_needed_node (node);
++      node->force_output = true;
++    }
+ }
+ #else
+ void
