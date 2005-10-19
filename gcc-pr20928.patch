@@ -1,0 +1,30 @@
+--- gcc-4.1-20051019T0822UTC/gcc/expr.c.orig	2005-10-17 18:06:59.000000000 +0000
++++ gcc-4.1-20051019T0822UTC/gcc/expr.c	2005-10-19 09:12:34.710605624 +0000
+@@ -3153,7 +3153,9 @@
+ 
+       y_cst = y;
+ 
+-      if (!LEGITIMATE_CONSTANT_P (y))
++      if ((!flag_pic && !LEGITIMATE_CONSTANT_P (y)) 
++          || (flag_pic && !LEGITIMATE_PIC_OPERAND_P (y))) 
++
+ 	{
+ 	  y = force_const_mem (mode, y);
+ 
+--- gcc-4.1-20051019T0822UTC/gcc/config/i386/i386.c.orig	2005-10-19 08:35:54.000000000 +0000
++++ gcc-4.1-20051019T0822UTC/gcc/config/i386/i386.c	2005-10-19 09:19:14.648805776 +0000
+@@ -6087,7 +6087,13 @@
+ 					     base == reg ? NULL_RTX : reg);
+ 
+ 	      if (GET_CODE (new) == CONST_INT)
+-		new = plus_constant (base, INTVAL (new));
++                {
++                  if (legitimate_pic_address_disp_p (new))
++                    new = plus_constant (base, INTVAL (new));
++                  else
++                    new = gen_rtx_PLUS (Pmode, base,
++                                        copy_to_mode_reg (Pmode, new));
++                }
+ 	      else
+ 		{
+ 		  if (GET_CODE (new) == PLUS && CONSTANT_P (XEXP (new, 1)))
