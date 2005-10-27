@@ -39,7 +39,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20051019T0822UTC
+%define		_snap	20051027T1624UTC
 Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
@@ -47,7 +47,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	17f1799208df6e0142d3af55e03e0eed
+# Source0-md5:	acf7417cdfad702aa4272ef3138d2be5
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -55,7 +55,6 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link-new-libgnat.patch
 Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
-Patch6:		%{name}-keep-volatile-sematics.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
@@ -65,11 +64,9 @@ Patch14:	%{name}-x87-mmx-switch.patch
 Patch15:	%{name}-x87-mmx-eh.patch
 Patch16:	%{name}-pr23948.patch
 Patch17:	%{name}-pr19505.patch
-Patch18:	%{name}-pr20606_pr24069.patch
-Patch19:	%{name}-pr24419.patch
-Patch20:	%{name}-pr24172.patch
-Patch21:	%{name}-pr24295.patch
-Patch22:	%{name}-pr20928.patch
+Patch18:	%{name}-pr24419.patch
+Patch19:	%{name}-pr24172.patch
+Patch20:	%{name}-pr20928.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -728,7 +725,6 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p1
 
 # PRs
 %patch10 -p1
@@ -742,8 +738,6 @@ Statyczne biblioteki Obiektowego C.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-%patch21 -p1
-%patch22 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
