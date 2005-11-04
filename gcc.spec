@@ -57,6 +57,8 @@ Patch4:		%{name}-ada-link.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # -fvisibility fixes...
 Patch6:		%{name}-pr19664_gnu_internal.patch
+Patch7:		%{name}-pr19664_libstdc++.patch
+
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
@@ -728,6 +730,7 @@ Statyczne biblioteki Obiektowego C.
 
 # -fvisbility fixes...
 %patch6 -p1
+%patch7 -p1
 
 # PRs
 %patch10 -p1
