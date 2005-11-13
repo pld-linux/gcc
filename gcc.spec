@@ -62,13 +62,14 @@ Patch7:		%{name}-pr19664_libstdc++.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
-
+Patch12:	%{name}-pr24653.patch
 Patch13:	%{name}-pr22533.patch
-Patch14:	%{name}-x87-mmx-switch.patch
-Patch15:	%{name}-x87-mmx-eh.patch
+#Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
+#Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
 Patch16:	%{name}-pr23948.patch
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
+Patch19:	%{name}-pr24669.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -735,13 +736,14 @@ Statyczne biblioteki Obiektowego C.
 # PRs
 %patch10 -p1
 %patch11 -p1
-
+%patch12 -p1
 %patch13 -p1
 #patch14 -p1	NEEDS UPDATE
 #patch15 -p1	NEEDS UPDATE
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
+%patch19 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
