@@ -4,13 +4,13 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%ifarch amd64
+%ifarch %{x8664}
 %bcond_without	multilib	# build without multilib support
 %else
 %bcond_with	multilib	# build with multilib support
 %endif
 #
-%ifnarch amd64 ppc64 s390x sparc64
+%ifnarch %{x8664} ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
 #
@@ -75,6 +75,15 @@ BuildRequires:	glibc-devel >= 2.2.5-20
 %ifarch %{x8664}
 BuildRequires:	glibc-devel(i686)
 %endif
+%ifarch ppc64
+BuildRequires:	glibc-devel(ppc)
+%endif
+%ifarch s390x
+BuildRequires:	glibc-devel(s390)
+%endif
+%ifarch sparc64
+BuildRequires:	glibc-devel(sparc)
+%endif
 %endif
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
@@ -89,7 +98,7 @@ URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
-%ifarch amd64 ppc64 s390x sparc64
+%ifarch %{x8664} ppc64 s390x sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
