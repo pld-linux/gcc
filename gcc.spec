@@ -85,7 +85,23 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
-BuildRequires:	glibc-devel >= %{!?with_multilib:2.2.5-20}%{?with_multilib:6:2.3.4-1.5}
+%if %{with multilib}
+BuildRequires:	glibc-devel >= 6:2.3.4-1.5
+%ifarch %{x8664}
+BuildRequires:	glibc-devel(i686)
+%endif
+%ifarch ppc64
+BuildRequires:	glibc-devel(ppc)
+%endif
+%ifarch s390x
+BuildRequires:	glibc-devel(s390)
+%endif
+%ifarch sparc64
+BuildRequires:	glibc-devel(sparc)
+%endif
+%else
+BuildRequires:	glibc-devel >= 2.2.5-20
+%endif
 %if %{with fortran}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
