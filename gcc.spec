@@ -40,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051113r106863
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -59,6 +59,7 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-pr19664_gnu_internal.patch
 Patch7:		%{name}-pr19664_libstdc++.patch
 
+Patch9:		%{name}-enable-java-awt-qt.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
@@ -70,7 +71,9 @@ Patch16:	%{name}-pr23948.patch
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
+Patch20:	%{name}-pr17390.patch
 URL:		http://gcc.gnu.org/
+%{?with_java:BuildRequires:	QtGui-devel >= 4.0.1}
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
@@ -749,6 +752,7 @@ Statyczne biblioteki Obiektowego C.
 %patch6 -p1
 %patch7 -p1
 
+%patch9 -p1
 # PRs
 %patch10 -p1
 %patch11 -p1
@@ -760,6 +764,7 @@ Statyczne biblioteki Obiektowego C.
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -807,6 +812,7 @@ TEXCONFIG=false \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
 	--enable-gtk-cairo \
+	--enable-java-awt=qt \
 %endif
 	%{_target_platform}
 
