@@ -39,15 +39,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20051113r106863
-Release:	0.%{_snap}.2
+%define		_snap	20051121r107281
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	22358f2ef6602d94b57635d1e4962e6c
+# Source0-md5:	b9505ecef44cb3598fda7ee920858602
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -59,21 +59,21 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-pr19664_gnu_internal.patch
 Patch7:		%{name}-pr19664_libstdc++.patch
 
-Patch9:		%{name}-enable-java-awt-qt.patch
+#Patch9:		%{name}-enable-java-awt-qt.patch	NEEDS UPDATE
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr24653.patch
-Patch13:	%{name}-pr22533.patch
-#Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
-#Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
+
+Patch14:	%{name}-x87-mmx-switch.patch
+Patch15:	%{name}-x87-mmx-eh.patch
 Patch16:	%{name}-pr23948.patch
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
-Patch20:	%{name}-pr17390.patch
+#Patch20:	%{name}-pr17390.patch		NEEDS UPDATE
 URL:		http://gcc.gnu.org/
-%{?with_java:BuildRequires:	QtGui-devel >= 4.0.1}
+#{?with_java:BuildRequires:	QtGui-devel >= 4.0.1}
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
@@ -752,19 +752,21 @@ Statyczne biblioteki Obiektowego C.
 %patch6 -p1
 %patch7 -p1
 
-%patch9 -p1
+#patch9 -p1	NEEDS UPDATE
 # PRs
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
-#patch14 -p1	NEEDS UPDATE
-#patch15 -p1	NEEDS UPDATE
+
+%ifarch %{ix86} %{x8664}
+%patch14 -p1
+%patch15 -p1
+%endif
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
-%patch20 -p1
+#patch20 -p1	NEEDS UPDATE
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
@@ -776,6 +778,9 @@ mv ChangeLog ChangeLog.general
 cd gcc
 %{__autoconf}
 cd ..
+cd libjava/classpath
+%{__autoconf}
+cd ../..
 cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform}
@@ -812,7 +817,7 @@ TEXCONFIG=false \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
 	--enable-gtk-cairo \
-	--enable-java-awt=qt \
+	--enable-java-awt=gtk \
 %endif
 	%{_target_platform}
 
