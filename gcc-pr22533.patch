@@ -1,0 +1,135 @@
+--- gcc/gcc/ada/trans.c	(revision 107434)
++++ gcc/gcc/ada/trans.c	(working copy)
+@@ -4570,7 +4570,6 @@ int
+ gnat_gimplify_expr (tree *expr_p, tree *pre_p, tree *post_p ATTRIBUTE_UNUSED)
+ {
+   tree expr = *expr_p;
+-  tree op;
+ 
+   if (IS_ADA_STMT (expr))
+     return gnat_gimplify_stmt (expr_p);
+@@ -4600,53 +4599,6 @@ gnat_gimplify_expr (tree *expr_p, tree *
+       *expr_p = TREE_OPERAND (*expr_p, 0);
+       return GS_OK;
+ 
+-    case ADDR_EXPR:
+-      op = TREE_OPERAND (expr, 0);
+-
+-      /* If we're taking the address of a constant CONSTRUCTOR, force it to
+-	 be put into static memory.  We know it's going to be readonly given
+-	 the semantics we have and it's required to be static memory in
+-	 the case when the reference is in an elaboration procedure.   */
+-      if (TREE_CODE (op) == CONSTRUCTOR && TREE_CONSTANT (op))
+-	{
+-	  tree new_var = create_tmp_var (TREE_TYPE (op), "C");
+-
+-	  TREE_READONLY (new_var) = 1;
+-	  TREE_STATIC (new_var) = 1;
+-	  TREE_ADDRESSABLE (new_var) = 1;
+-	  DECL_INITIAL (new_var) = op;
+-
+-	  TREE_OPERAND (expr, 0) = new_var;
+-	  recompute_tree_invarant_for_addr_expr (expr);
+-	  return GS_ALL_DONE;
+-	}
+-
+-      /* Otherwise, if we are taking the address of something that is neither
+-	 reference, declaration, or constant, make a variable for the operand
+-	 here and then take its address.  If we don't do it this way, we may
+-	 confuse the gimplifier because it needs to know the variable is
+-	 addressable at this point.  This duplicates code in
+-	 internal_get_tmp_var, which is unfortunate.  */
+-      else if (TREE_CODE_CLASS (TREE_CODE (op)) != tcc_reference
+-	       && TREE_CODE_CLASS (TREE_CODE (op)) != tcc_declaration
+-	       && TREE_CODE_CLASS (TREE_CODE (op)) != tcc_constant)
+-	{
+-	  tree new_var = create_tmp_var (TREE_TYPE (op), "A");
+-	  tree mod = build (MODIFY_EXPR, TREE_TYPE (op), new_var, op);
+-
+-	  TREE_ADDRESSABLE (new_var) = 1;
+-
+-	  if (EXPR_HAS_LOCATION (op))
+-	    SET_EXPR_LOCUS (mod, EXPR_LOCUS (op));
+-
+-	  gimplify_and_add (mod, pre_p);
+-	  TREE_OPERAND (expr, 0) = new_var;
+-	  recompute_tree_invarant_for_addr_expr (expr);
+-	  return GS_ALL_DONE;
+-	}
+-
+-      return GS_UNHANDLED;
+-
+     case COMPONENT_REF:
+       /* We have a kludge here.  If the FIELD_DECL is from a fat pointer and is
+ 	 from an early dummy type, replace it with the proper FIELD_DECL.  */
+@@ -5436,7 +5388,6 @@ addressable_p (tree gnu_expr)
+ 
+     case UNCONSTRAINED_ARRAY_REF:
+     case INDIRECT_REF:
+-    case CONSTRUCTOR:
+     case NULL_EXPR:
+     case SAVE_EXPR:
+       return true;
+--- gcc/gcc/ada/utils2.c	(revision 107414)
++++ gcc/gcc/ada/utils2.c	(working copy)
+@@ -45,6 +45,8 @@
+ #include "einfo.h"
+ #include "ada-tree.h"
+ #include "gigi.h"
++#include "tree-gimple.h"
++#include "toplev.h"
+ 
+ static tree find_common_type (tree, tree);
+ static bool contains_save_expr_p (tree);
+@@ -998,6 +1000,7 @@ build_unary_op (enum tree_code op_code, 
+   tree operation_type = result_type;
+   tree result;
+   bool side_effects = false;
++  tree before = NULL;
+ 
+   if (operation_type
+       && TREE_CODE (operation_type) == RECORD_TYPE
+@@ -1116,6 +1119,22 @@ build_unary_op (enum tree_code op_code, 
+ 				result);
+ 	      break;
+ 	    }
++	  else
++	    {
++	      /* Create a temporary variable to hold the CONSTRUCTON.  */
++	      tree new_var = create_tmp_var_raw (type, "C");
++	      TREE_ADDRESSABLE (new_var) = 1;
++	      TREE_READONLY (new_var) = 1;
++	      if (global_bindings_p ())
++		TREE_STATIC (new_var) = 1;
++	      DECL_INITIAL (new_var) = operand;
++	      gnat_pushdecl (new_var, Empty);
++	      if (global_bindings_p ())
++		rest_of_decl_compilation (new_var, 1, 0);
++	      else
++		before = build1 (DECL_EXPR, void_type_node, new_var);
++	      operand = new_var;
++	    }
+ 
+ 	  goto common;
+ 
+@@ -1170,6 +1189,9 @@ build_unary_op (enum tree_code op_code, 
+ 	}
+ 
+       TREE_CONSTANT (result) = staticp (operand) || TREE_CONSTANT (operand);
++      if (before)
++        result = build2 (COMPOUND_EXPR, TREE_TYPE (result), before,
++			      result);
+       break;
+ 
+     case INDIRECT_REF:
+@@ -2003,10 +2025,6 @@ gnat_mark_addressable (tree expr_node)
+ 	expr_node = TREE_OPERAND (expr_node, 0);
+ 	break;
+ 
+-      case CONSTRUCTOR:
+-	TREE_ADDRESSABLE (expr_node) = 1;
+-	return true;
+-
+       case VAR_DECL:
+       case PARM_DECL:
+       case RESULT_DECL:
