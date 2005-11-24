@@ -1,4 +1,9 @@
 #
+# TODO:
+#	checking for XTestQueryExtension in -lXtst... no
+#	configure: error: libXtst not found, required by java.awt.Robot
+#	make[2]: *** [configure-target-libjava] Error 1
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
@@ -39,15 +44,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20051121r107281
-Release:	0.%{_snap}.2
+%define		_snap	20051123r107414
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	b9505ecef44cb3598fda7ee920858602
+# Source0-md5:	aaec4c87bd99d49138cbae8d1e15053c
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -63,7 +68,7 @@ Patch7:		%{name}-pr19664_libstdc++.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
-Patch12:	%{name}-pr24653.patch
+Patch12:	%{name}-pr22533.patch
 
 Patch14:	%{name}-x87-mmx-switch.patch
 Patch15:	%{name}-x87-mmx-eh.patch
@@ -821,6 +826,9 @@ TEXCONFIG=false \
 %endif
 	%{_target_platform}
 
+# horrible compile time hog with perfect tree checking
+#	--enable-checking=all \
+
 cd ..
 
 %{__make} -C obj-%{_target_platform} \
@@ -828,6 +836,7 @@ cd ..
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
+	GNATLIBCFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
