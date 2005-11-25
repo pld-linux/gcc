@@ -45,7 +45,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051123r107414
-Release:	0.%{_snap}.0.2
+Release:	0.%{_snap}.0.3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -79,12 +79,14 @@ Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
 URL:		http://gcc.gnu.org/
 #{?with_java:BuildRequires:	QtGui-devel >= 4.0.1}
+%{?with_java:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
 %{?with_java:BuildRequires:	cairo-devel >= 0.5.0}
+%{?with_java:BuildRequires:	dssi}
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -823,7 +825,12 @@ TEXCONFIG=false \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
+	--enable-gtk-peer \
 	--enable-gtk-cairo \
+	--enable-jni \
+	--enable-xmlj \
+	--enable-alsa \
+	--enable-dssi \
 %endif
 	%{_target_platform}
 
@@ -888,11 +895,11 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.0.so.1
-ln -sf	libgnat-4.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.0.so
-ln -sf	libgnarl-4.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.0.so
-ln -sf	libgnat-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf	libgnarl-4.0.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.1.so.1
+ln -sf	libgnat-4.1.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.1.so
+ln -sf	libgnarl-4.1.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.1.so
+ln -sf	libgnat-4.1.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf	libgnarl-4.1.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 cd ..
@@ -1180,6 +1187,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc gcc/fortran/ChangeLog
 %attr(755,root,root) %{_bindir}/g95
 %attr(755,root,root) %{_bindir}/gfortran
+%attr(755,root,root) %{_bindir}/*-gfortran
 %{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
 %if %{with multilib}
