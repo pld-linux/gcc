@@ -117,6 +117,7 @@ BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %endif
+%{?with:java:BuildRequires:	libxslt-devel}
 %{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
 %{?with_java:BuildRequires:	pkgconfig}
