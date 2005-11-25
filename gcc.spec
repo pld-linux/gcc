@@ -45,7 +45,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051123r107414
-Release:	0.%{_snap}.0.3
+Release:	0.%{_snap}.0.4
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1248,6 +1248,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
+%dir %{_libdir}/classpath
+%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so.*.*.*
+%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so.*.*.*
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
@@ -1262,6 +1265,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/c++/%{version}/javax
 %{_includedir}/c++/%{version}/gcj
 %{_includedir}/c++/%{version}/gnu
+%{_libdir}/classpath/libgjsmalsa.la
+%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so
+%{_libdir}/classpath/libgjsmdssi.la
+%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
