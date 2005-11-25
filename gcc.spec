@@ -45,7 +45,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051123r107414
-Release:	0.%{_snap}.0.1
+Release:	0.%{_snap}.0.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -110,6 +110,7 @@ BuildRequires:	glibc-devel(sparc)
 %else
 BuildRequires:	glibc-devel >= 2.2.5-20
 %endif
+#{?with_java:BuildRequires:	gtk+2-devel >= 2.4.0}
 %if %{with fortran}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
@@ -801,6 +802,7 @@ TEXCONFIG=false \
 	--libexecdir=%{_libdir} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
+	--x-libraries=/usr/X11R6/%{_lib} \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
@@ -822,9 +824,11 @@ TEXCONFIG=false \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
 	--enable-gtk-cairo \
-	--enable-java-awt=gtk \
 %endif
 	%{_target_platform}
+
+# not finished yet
+#	--enable-java-awt=gtk \
 
 # horrible compile time hog with perfect tree checking
 #	--enable-checking=all \
@@ -836,7 +840,7 @@ cd ..
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
-	GNATLIBCFLAGS="%{rpmcflags}" \
+	GNATLIBCFLAGS="%{rpmcflags} -O1" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
