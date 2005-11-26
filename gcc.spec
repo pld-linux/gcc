@@ -45,7 +45,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051123r107414
-Release:	0.%{_snap}.0.4
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -117,7 +117,7 @@ BuildRequires:	glibc-devel >= 2.2.5-20
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %endif
-%{?with:java:BuildRequires:	libxslt-devel}
+%{?with_java:BuildRequires:	libxslt-devel}
 %{?with_java:BuildRequires:	pango-devel}
 BuildRequires:	perl-devel
 %{?with_java:BuildRequires:	pkgconfig}
@@ -146,6 +146,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
+%endif
+
+%ifarch %{ix86} %{x8664}
+%define		specflags	-mno-mmx
 %endif
 
 %description
@@ -752,7 +756,7 @@ Statyczne biblioteki Obiektowego C.
 
 %patch0 -p1
 %patch1 -p1
-%{!?debug:%patch2 -p1}
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
@@ -848,7 +852,7 @@ cd ..
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
-	GNATLIBCFLAGS="%{rpmcflags} -O1" \
+	GNATLIBCFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
