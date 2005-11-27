@@ -45,7 +45,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051126r107546
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -70,8 +70,8 @@ Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr22533.patch
 
-Patch14:	%{name}-x87-mmx-switch.patch
-Patch15:	%{name}-x87-mmx-eh.patch
+#Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
+#Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
 Patch16:	%{name}-pr23948.patch
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
@@ -146,10 +146,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
-%endif
-
-%ifarch %{ix86} %{x8664}
-%define		specflags	-mno-mmx
 %endif
 
 %description
@@ -772,8 +768,8 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 
 %ifarch %{ix86} %{x8664}
-%patch14 -p1
-%patch15 -p1
+#patch14 -p1
+#patch15 -p1
 %endif
 %patch16 -p1
 %patch17 -p1
