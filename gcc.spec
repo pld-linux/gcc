@@ -752,7 +752,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q -n gcc-%{version}
-%setup -q -n gcc
+%setup -q -n gcc-4_1-branch
 
 %patch0 -p1
 %patch1 -p1
