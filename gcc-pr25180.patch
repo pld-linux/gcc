@@ -1,0 +1,60 @@
+2005-11-30  Paolo Bonzini  <bonzini@gnu.org>
+
+	* config/rs6000/predicates.md (logical_const_operand): Split
+	out of logical_operand.
+	(logical_operand): Use it.
+	* config/rs6000/rs6000.md (cmp -> xor peephole2): Use
+	logical_const_operand.
+
+--- gcc/gcc/config/rs6000/predicates.md	(revision 107455)
++++ gcc/gcc/config/rs6000/predicates.md	(working copy)
+@@ -411,16 +411,13 @@
+        (match_test "!CONST_OK_FOR_LETTER_P (INTVAL (op), 'I')
+ 		    && !CONST_OK_FOR_LETTER_P (INTVAL (op), 'L')")))
+ 
+-;; Return 1 if the operand is a non-special register or a constant that
+-;; can be used as the operand of an OR or XOR.
+-(define_predicate "logical_operand"
+-  (match_code "reg,subreg,const_int,const_double")
++;; Return 1 if the operand is a constant that can be used as the operand
++;; of an OR or XOR.
++(define_predicate "logical_const_operand"
++  (match_code "const_int,const_double")
+ {
+   HOST_WIDE_INT opl, oph;
+ 
+-  if (gpc_reg_operand (op, mode))
+-    return 1;
+-
+   if (GET_CODE (op) == CONST_INT)
+     {
+       opl = INTVAL (op) & GET_MODE_MASK (mode);
+@@ -445,7 +442,13 @@
+ 	  || (opl & ~ (unsigned HOST_WIDE_INT) 0xffff0000) == 0);
+ })
+ 
++;; Return 1 if the operand is a non-special register or a constant that
++;; can be used as the operand of an OR or XOR.
++(define_predicate "logical_operand"
++  (ior (match_operand 0 "gpc_reg_operand")
++       (match_operand 0 "logical_const_operand")))
++
+ ;; Return 1 if op is a constant that is not a logical operand, but could
+ ;; be split into one.
+ (define_predicate "non_logical_cint_operand"
+   (and (match_code "const_int,const_double")
+--- gcc/gcc/config/rs6000/rs6000.md	(revision 107455)
++++ gcc/gcc/config/rs6000/rs6000.md	(working copy)
+@@ -11283,10 +11283,10 @@
+ 
+ (define_peephole2
+   [(set (match_operand:SI 0 "register_operand")
+-        (match_operand:SI 1 "logical_operand" ""))
++        (match_operand:SI 1 "logical_const_operand" ""))
+    (set (match_dup 0) (match_operator:SI 3 "boolean_or_operator"
+ 		       [(match_dup 0)
+-			(match_operand:SI 2 "logical_operand" "")]))
++			(match_operand:SI 2 "logical_const_operand" "")]))
+    (set (match_operand:CC 4 "cc_reg_operand" "")
+         (compare:CC (match_operand:SI 5 "gpc_reg_operand" "")
+                     (match_dup 0)))
