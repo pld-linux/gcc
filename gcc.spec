@@ -44,15 +44,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20051126r107546
-Release:	0.%{_snap}.2
+%define		_snap	20051130r107724
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	75028aa85a2c604505a8706c6c813c94
+# Source0-md5:	38ca117c2cf381cc15a217710a3a7d11
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -69,7 +69,7 @@ Patch7:		%{name}-pr19664_libstdc++.patch
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
 Patch12:	%{name}-pr22533.patch
-
+Patch13:	%{name}-pr25180.patch
 #Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
 #Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
 Patch16:	%{name}-pr23948.patch
@@ -766,7 +766,7 @@ Statyczne biblioteki Obiektowego C.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-
+%patch13 -p1
 %ifarch %{ix86} %{x8664}
 #patch14 -p1
 #patch15 -p1
