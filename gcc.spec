@@ -1,9 +1,4 @@
 #
-# TODO:
-#	checking for XTestQueryExtension in -lXtst... no
-#	configure: error: libXtst not found, required by java.awt.Robot
-#	make[2]: *** [configure-target-libjava] Error 1
-#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
@@ -64,7 +59,6 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-pr19664_gnu_internal.patch
 Patch7:		%{name}-pr19664_libstdc++.patch
 
-#Patch9:		%{name}-enable-java-awt-qt.patch	NEEDS UPDATE
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
@@ -78,7 +72,6 @@ Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
 URL:		http://gcc.gnu.org/
-#{?with_java:BuildRequires:	QtGui-devel >= 4.0.1}
 %{?with_java:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -112,7 +105,6 @@ BuildRequires:	glibc-devel(sparc)
 %else
 BuildRequires:	glibc-devel >= 2.2.5-20
 %endif
-#{?with_java:BuildRequires:	gtk+2-devel >= 2.4.0}
 %if %{with fortran}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
@@ -834,12 +826,6 @@ TEXCONFIG=false \
 	--enable-dssi \
 %endif
 	%{_target_platform}
-
-# not finished yet
-#	--enable-java-awt=gtk \
-
-# horrible compile time hog with perfect tree checking
-#	--enable-checking=all \
 
 cd ..
 
