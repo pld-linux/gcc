@@ -43,15 +43,15 @@ Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartid
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	4.1.0
-%define		_snap	20051130r107724
-Release:	0.%{_snap}.1
+Version:	4.2.0
+%define		_snap	20051201r107828
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
-Source0:	gcc-4.1-%{_snap}.tar.bz2
+Source0:	gcc-4.2-%{_snap}.tar.bz2
 # Source0-md5:	38ca117c2cf381cc15a217710a3a7d11
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
@@ -748,7 +748,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q -n gcc-%{version}
-%setup -q -n gcc-4_1-branch
+%setup -q -n trunk
 
 %patch0 -p1
 %patch1 -p1
