@@ -72,6 +72,7 @@ Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
+Patch21:	%{name}-pr25248.patch
 URL:		http://gcc.gnu.org/
 %{?with_java:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
@@ -769,6 +770,7 @@ Statyczne biblioteki Obiektowego C.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
