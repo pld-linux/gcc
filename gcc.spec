@@ -942,6 +942,8 @@ ln -sf %{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
 ln -sf %{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
+%find_lang cpplib
+cat cpplib.lang >> gcc.lang
 %{?with_cxx:%find_lang libstdc\+\+}
 
 # cvs snap doesn't contain (release does) below files,
