@@ -1,71 +1,38 @@
 #
-# TODO:
-#		- http://gcc.gnu.org/PR11203 (inline-asm)
-#		- http://gcc.gnu.org/PR14776 (target / wrong SSE-code)
-#		- http://gcc.gnu.org/PR18378 (regression)
-#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
 %bcond_with	multilib	# build with multilib support
+
 %ifnarch amd64 ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
-#
+
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	3.4.4
+Version:	3.4.5
 Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	b594ff4ea4fbef4ba9220887de713dfe
+# Source0-md5:	7c3c3c3e764dcee5eb771432062d69e1
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
 # Source2-md5:	07d93ad5fc07ca44cdaba46c658820de
-Source3:	gcc_visibility.m4
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-ada-link-new-libgnat.patch
-Patch3:		%{name}-nodebug.patch
-Patch4:		%{name}-ssp.patch
-Patch5:		%{name}-ada-link.patch
-Patch6:		%{name}-pr15666.patch
-Patch7:		%{name}-pr16276.patch
-#
-# -fvisibility={default|internal|hidden|protected}
-#
-# Set the default ELF image symbol visibility to the specified option.
-# All symbols will be marked with this unless overrided within the code.
-# Using this feature can very substantially improve linking and load times
-# of shared object libraries, produce more optimised code, provide near-perfect
-# API export and prevent symbol clashes. It is strongly recommended that you
-# use this in any shared objects you distribute.
-#
-# -fvisibility-inlines-hidden
-#
-# Causes all inlined methods to be marked with __attribute__((visibility("hidden")))
-# so that they do not appear in the export table of a DSO and do not require a PLT
-# indirection when used within the DSO. Enabling this option can have a dramatic
-# effect on load and link times of a DSO as it massively reduces the size
-# of the dynamic export table when the library makes heavy use of templates.
-# While it can cause bloating through duplication of code within each DSO
-# where it is used, often the wastage is less than the considerable space
-# occupied by a long symbol name in the export table which is typical when using
-# templates and namespaces.
-#
-# How to Write Shared Libraries: http://people.redhat.com/drepper/dsohowto.pdf
-#
-Patch8:		%{name}-visibility.patch
-#
-Patch20:	%{name}-ada-bootstrap.patch
+Patch3:		%{name}-ada-bootstrap.patch
+Patch4:		%{name}-nodebug.patch
+Patch5:		%{name}-ssp.patch
+Patch6:		%{name}-ada-link.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -88,7 +55,6 @@ Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 %{?with_ssp:Provides:	gcc(ssp)}
-# ksi for gcc > 3.3.x not ready yet
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-cpp
@@ -650,18 +616,14 @@ Adzie.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%{!?debug:%patch3 -p1}
-%{?with_ssp:%patch4 -p1}
-%patch5 -p1
-%patch6 -p0
-%patch7 -p0
-%patch8 -p1
-
 %ifarch alpha ia64
 # needed for bootstrap using gcc 3.3.x on alpha
 # and even using the same 3.4.x(!) (but not Debian's 3.3.x) on ia64
-%patch20 -p2
+%patch3 -p2
 %endif
+%{!?debug:%patch4 -p1}
+%{?with_ssp:%patch5 -p1}
+%patch6 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
@@ -670,10 +632,6 @@ perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc
 mv ChangeLog ChangeLog.general
 
 %build
-# because pr16276 patch modifies configure.ac
-cd gcc
-%{__autoconf}
-cd ..
 cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
@@ -721,21 +679,11 @@ TEXCONFIG=false \
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
-# - on alpha stage1 needs -O0 for 3.3->3.4 bootstrap (gnat from 3.3 is seriously broken)
-# - on ia64 use bootstrap-lean as profiledbootstrap is broken (PR 13882, 15836, 16108)
 %{__make} -C obj-%{_target_platform} \
-%ifarch ia64
-	bootstrap-lean \
-%else
-	profiledbootstrap \
-%endif
+	bootstrap \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
-%ifarch alpha
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
-%else
-	STAGE1_CFLAGS="%{rpmcflags}" \
-%endif
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
@@ -839,7 +787,6 @@ ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %if %{with ssp}
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 %endif
-install %{SOURCE3} $RPM_BUILD_ROOT%{_aclocaldir}/gcc_visibility.m4
 
 # kill unpackaged files
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
@@ -889,7 +836,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
 %{?with_ssp:%{_aclocaldir}/gcc_stack_protect.m4}
-%{_aclocaldir}/gcc_visibility.m4
 
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
