@@ -16,7 +16,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.5
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -33,6 +33,7 @@ Patch3:		%{name}-ada-bootstrap.patch
 Patch4:		%{name}-nodebug.patch
 Patch5:		%{name}-ssp.patch
 Patch6:		%{name}-ada-link.patch
+Patch7:		%{name}-pr13676.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -624,6 +625,7 @@ Adzie.
 %{!?debug:%patch4 -p1}
 %{?with_ssp:%patch5 -p1}
 %patch6 -p1
+%patch7 -p1
 
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 %{?with_ssp:SSP }(PLD Linux)";/' gcc/version.c
