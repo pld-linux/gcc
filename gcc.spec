@@ -1,11 +1,14 @@
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
+%bcond_without	cxx		# build without C++ support
+%bcond_without	fortran		# build without Fortran77 support
 %bcond_without	java		# build without Java support
 %bcond_without	ksi		# build without KSI support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
-%ifarch %{x8664}
+%bcond_with	boot64		# 32->64-bit bootstrap (sparc->sparc64, maybe ppc too?)
+%ifarch %{x8664} sparc64
 %bcond_without	multilib	# build without multilib support
 %else
 %bcond_with	multilib	# build with multilib support
@@ -13,6 +16,14 @@
 #
 %ifnarch %{x8664} ppc64 s390x sparc64
 %undefine	with_multilib
+%endif
+%if %{with boot64}
+%undefine	with_ada
+%undefine	with_cxx
+%undefine	with_fortran
+%undefine	with_java
+%undefine	with_ksi
+%undefine	with_objc
 %endif
 #
 %define		DASHED_SNAP	%{nil}
@@ -32,7 +43,6 @@ License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{GCC_VERSION}/%{name}-%{GCC_VERSION}.tar.bz2
 # Source0-md5:	6936616a967da5a0b46f1e7424a06414
-# Source0-size:	23833856
 Source1:	ftp://ftp.pld-linux.org/people/malekith/ksi/ksi-%{KSI_VERSION}.tar.gz
 # Source1-md5:	66f07491b44f06928fd95b0e65bb8cd3
 Source2:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
@@ -103,8 +113,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
+%if %{with boot64}
 %ifarch sparc64
 %define		rpmcflags	-O2 -mtune=ultrasparc
+%endif
 %endif
 
 %description
@@ -1275,7 +1287,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}%{?with_ksi:,ksi}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,f77}%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}%{?with_ksi:,ksi}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifnarch ppc
@@ -1284,17 +1296,27 @@ TEXCONFIG=false \
 %endif
 %endif
 	--enable-nls \
+%ifarch sparc64
+	--with-cpu=ultrasparc \
+%endif
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
+%if %{with boot64}
+	--with-sysroot= \
+	--target=%{_target_platform} \
+	--host=%{_host_alias} \
+	--build=%{_host_alias}
+%else
 	%{_target_platform}
+%endif
 
 PATH=$PATH:/sbin:%{_sbindir}
 
 cd ..
-%{__make} -C obj-%{_target_platform} bootstrap-lean \
+%{__make} -C obj-%{_target_platform} %{?with_boot64:all-gcc}%{!?with_boot64:bootstrap-lean} \
 	GCJFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
@@ -1321,6 +1343,14 @@ PATH=$PATH:/sbin:%{_sbindir}
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%if boot64
+ln -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gcc
+mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gccbug
+mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gcov
+mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}cpp
+mv -f $RPM_BUILD_ROOT%{_mandir}/man1/{sparc64-pld-linux-,}gcc.1
+%endif
+
 %ifarch sparc64
 ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
@@ -1329,8 +1359,10 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
+%if %{with fortran}
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
+%endif
 
 %if %{with ada}
 # move ada shared libraries to proper place...
@@ -1361,11 +1393,13 @@ cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc-lib/*/%{version}
-for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la} ; do
+for f in %{?with_cxx:libstdc++.la libsupc++.la} %{?with_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libstdc++.la libsupc++.la libg2c.la \
+for f in \
+	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_fortran:libg2c.la} \
 	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
 	%{?with_objc:libobjc.la}; do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
@@ -1379,7 +1413,9 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc-lib/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,gcj}} $gccdir/tmp
+for f in syslimits.h %{?with_fortran:g2c.h} %{?with_java:gcj} %{?with_objc:objc} ; do
+	mv -f $gccdir/include/$f $gccdir/tmp
+done
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
@@ -1392,7 +1428,9 @@ ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %endif
 
 %find_lang %{name}
+%if %{with cxx}
 %find_lang libstdc\+\+
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -1494,7 +1532,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc-lib/*/*/collect2
 
 %{_libdir}/gcc-lib/*/*/include/*.h
-%exclude %{_libdir}/gcc-lib/*/*/include/g2c.h
+%{?with_fortran:%exclude %{_libdir}/gcc-lib/*/*/include/g2c.h}
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -1507,6 +1545,7 @@ rm -rf $RPM_BUILD_ROOT
 #%attr(755,root,root) %{_libdir}/gcc-lib/*/*/libgcc*.so
 %endif
 
+%if %{with cxx}
 %files c++
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/g++
@@ -1574,6 +1613,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libstdc++.a
 %endif
+%endif
 
 %if %{with objc}
 %files objc
@@ -1622,6 +1662,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+%if %{with fortran}
 %files g77
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/g77
@@ -1674,6 +1715,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libg2c32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libg2c.a
+%endif
 %endif
 
 %if %{with java}
