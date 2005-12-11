@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	java		# build without Java support
+%bcond_without	ksi		# build without KSI support
 %bcond_without	objc		# build without objc support
 %bcond_with	bootstrap	# don't BR gcc(ada) (temporary for Ac upgrade bootstrap)
 %ifarch %{x8664}
@@ -1274,7 +1275,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java},ksi" \
+	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}%{?with_ksi:,ksi}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifnarch ppc
@@ -1839,11 +1840,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/*/*/adalib/libgna*.a
 %endif
 
+%if %{with ksi}
 %files ksi
 %defattr(644,root,root,755)
 %doc gcc/ksi/README gcc/ksi/NEWS gcc/ksi/t/*.{ksi,c,foo}
 %{_infodir}/ksi*
 %attr(755,root,root) %{_libdir}/gcc-lib/*/*/ksi1
+%endif
 
 %files -n cpp
 %defattr(644,root,root,755)
