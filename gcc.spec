@@ -116,10 +116,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
-%if %{with boot64}
 %ifarch sparc64
+# skip -m64, gcc needs to add -m32 for 32-bit libs
 %define		rpmcflags	-O2 -mtune=ultrasparc
-%endif
 %endif
 
 %description
