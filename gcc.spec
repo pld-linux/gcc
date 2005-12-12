@@ -1277,6 +1277,8 @@ cp /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
+# NOTE: enable-symvers is a hack to enforce versioned symbols in (multilib)
+# 32-bit libstdc++ (to workaround broken -lgcc_s(_32) check in configure)
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 TEXCONFIG=false \
@@ -1287,6 +1289,7 @@ TEXCONFIG=false \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--enable-shared \
+	--enable-symvers=gnu \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,f77}%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}%{?with_ksi:,ksi}" \
