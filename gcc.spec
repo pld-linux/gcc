@@ -1447,6 +1447,7 @@ if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null ; then
 #include <bits/c++config64.h>
 #endif
 EOF
+fi
 %endif
 %endif
 
