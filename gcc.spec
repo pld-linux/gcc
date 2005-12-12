@@ -40,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20051206r108118
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.2.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -75,14 +75,11 @@ Patch20:	%{name}-pr17390.patch
 Patch21:	%{name}-pr25248.patch
 Patch22:	%{name}-pr13676.patch
 URL:		http://gcc.gnu.org/
-%{?with_java:BuildRequires:	alsa-lib-devel}
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
-%{?with_java:BuildRequires:	cairo-devel >= 0.5.0}
-%{?with_java:BuildRequires:	dssi}
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
@@ -108,17 +105,25 @@ BuildRequires:	glibc-devel(sparc)
 %else
 BuildRequires:	glibc-devel >= 2.2.5-20
 %endif
+BuildRequires:	perl-devel
+BuildRequires:	rpmbuild(macros) >= 1.211
+BuildRequires:	texinfo >= 4.1
+BuildRequires:	zlib-devel
 %if %{with fortran}
 BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %endif
-%{?with_java:BuildRequires:	libxslt-devel}
-%{?with_java:BuildRequires:	pango-devel}
-BuildRequires:	perl-devel
-%{?with_java:BuildRequires:	pkgconfig}
-BuildRequires:	rpmbuild(macros) >= 1.211
-BuildRequires:	texinfo >= 4.1
-BuildRequires:	zlib-devel
+%if %{with java}
+BuildRequires:	alsa-lib-devel
+BuildRequires:	cairo-devel >= 0.5.0
+BuildRequires:	dssi
+BuildRequires:	gtk+2-devel >= 2:2.4.0
+BuildRequires:	libart_lgpl-devel >= 2.1
+BuildRequires:	libxslt-devel
+BuildRequires:	pango-devel
+BuildRequires:	pkgconfig
+#BR: X-lib-libXtst-devel
+%endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
 # http://sources.redhat.com/ml/binutils/2005-01/msg00288.html
@@ -802,6 +807,7 @@ TEXCONFIG=false \
 	--libexecdir=%{_libdir} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
+	--x-libraries=/usr/X11R6/%{_lib} \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
@@ -816,14 +822,14 @@ TEXCONFIG=false \
 	--with-demangler-in-ld \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
-	--without-x \
+	%{!?with_java:--without-x} \
 	%{?with_fortran:--enable-cmath} \
 %if %{with java}
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
-	--enable-gtk-peer \
 	--enable-gtk-cairo \
+	--enable-java-awt=gtk,xlib \
 	--enable-jni \
 	--enable-xmlj \
 	--enable-alsa \
