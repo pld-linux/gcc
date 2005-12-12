@@ -77,6 +77,9 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.90.0.3
 BuildRequires:	bison
+%ifarch sparc64
+%{?with_boot64:BuildRequires:	crosssparc64-binutils >= 1.15.90.0.3}
+%endif
 BuildRequires:	fileutils >= 4.0.41
 %{?with_ada:%{!?with_bootstrap:BuildRequires:	gcc(ada)}}
 %{?with_ada:BuildRequires: gcc-ada}
@@ -1305,6 +1308,8 @@ TEXCONFIG=false \
 	--with-slibdir=%{_slibdir} \
 	--without-x \
 %if %{with boot64}
+	--with-as=/usr/bin/as \
+	--with-ld=/usr/bin/ld \
 	--with-sysroot= \
 	--target=%{_target_platform} \
 	--host=%{_host_alias} \
@@ -1343,15 +1348,14 @@ PATH=$PATH:/sbin:%{_sbindir}
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%if boot64
+%ifarch sparc64
+%if %{with boot64}
 ln -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gcc
 mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gccbug
 mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}gcov
 mv -f $RPM_BUILD_ROOT%{_bindir}/{sparc64-pld-linux-,}cpp
 mv -f $RPM_BUILD_ROOT%{_mandir}/man1/{sparc64-pld-linux-,}gcc.1
 %endif
-
-%ifarch sparc64
 ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
 %endif
