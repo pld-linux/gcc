@@ -117,6 +117,7 @@ BuildRequires:	libmpfr-devel
 BuildRequires:	alsa-lib-devel
 BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	dssi
+BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	libart_lgpl-devel >= 2.1
 BuildRequires:	libxslt-devel
@@ -908,6 +909,7 @@ cp -f	fastjar/README java-doc/README.fastjar
 cp -f	libffi/README java-doc/README.libffi
 cp -f	libffi/LICENSE java-doc/LICENSE.libffi
 ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
+rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 %endif
 %if %{with objc}
 cp -f	libobjc/README gcc/objc/README.libobjc
@@ -1247,13 +1249,21 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
+%attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
+# R: lib-gnu-java-awt-peer-gtk (see below)
+%attr(755,root,root) %{_libdir}/libgcjawt.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgij.so.*.*.*
+# R: libX11
+%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
+# R: gtk+2
+%attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-gtk.so.*.*.*
 %dir %{_libdir}/classpath
-%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so.*.*.*
-%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so.*.*.*
+# R: alsa-libs
+%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so*
+# R: jack
+%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so*
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
-%attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
 %{_mandir}/man1/gij*
@@ -1264,10 +1274,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/c++/%{version}/javax
 %{_includedir}/c++/%{version}/gcj
 %{_includedir}/c++/%{version}/gnu
-%{_libdir}/classpath/libgjsmalsa.la
-%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so
-%{_libdir}/classpath/libgjsmdssi.la
-%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
@@ -1275,17 +1281,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/jvmpi.h
 %dir %{_libdir}/security
 %{_libdir}/security/*
-%{_libdir}/lib*cj.spec
-%{_libdir}/lib*cj*.la
-%attr(755,root,root) %{_libdir}/lib*cj*.so
-%{_libdir}/libgij.la
+%{_libdir}/libgcj.spec
+%attr(755,root,root) %{_libdir}/libgcj.so
+%{_libdir}/libgcj.la
+%attr(755,root,root) %{_libdir}/libgcjawt.so
+%{_libdir}/libgcjawt.la
 %attr(755,root,root) %{_libdir}/libgij.so
+%{_libdir}/libgij.la
+%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
+%{_libdir}/lib-gnu-awt-xlib.la
+%attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-gtk.so
+%{_libdir}/lib-gnu-java-awt-peer-gtk.la
 %{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-%{_libdir}/lib*cj*.a
+%{_libdir}/libgcj.a
+%{_libdir}/libgcjawt.a
 %{_libdir}/libgij.a
+%{_libdir}/lib-gnu-awt-xlib.a
+%{_libdir}/lib-gnu-java-awt-peer-gtk.a
 
 %files -n libffi
 %defattr(644,root,root,755)
