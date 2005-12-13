@@ -1,6 +1,8 @@
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
+%bcond_without	cxx		# build without C++ support
+%bcond_without	fortran		# build without Fortran support
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without ObjC support
 %bcond_with	ssp		# build with stack-smashing protector support
@@ -16,7 +18,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.5
-Release:	2
+Release:	2.1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -65,7 +67,7 @@ Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
-%ifarch amd64 ppc64 s390x sparc64
+%ifarch %{x8664} ppc64 s390x sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
@@ -638,17 +640,6 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%{_target_platform}
 
-CC="%{__cc}"
-
-%if %{with multilib}
-cat > gcc64 <<"EOF"
-#!/bin/sh
-exec /usr/bin/gcc -m64 "$@"
-EOF
-chmod +x gcc64
-CC=`pwd`/gcc64
-%endif
-
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
 CC="$CC" \
@@ -662,7 +653,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c,c++,f77%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,f77}%{?with_objc:,objc}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 %ifnarch ppc
@@ -721,8 +712,10 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
+%if %{with fortran}
 ln -sf g77 $RPM_BUILD_ROOT%{_bindir}/f77
 echo ".so g77.1" > $RPM_BUILD_ROOT%{_mandir}/man1/f77.1
+%endif
 
 %if %{with ada}
 # move ada shared libraries to proper place...
@@ -753,11 +746,14 @@ cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
-for f in libstdc++.la libsupc++.la %{?with_java:libgcj.la} ; do
+for f in %{?with_cxx:libstdc++.la libsupc++.la} %{?with_java:libgcj.la} ; do
 	perl -pi -e 's@-L[^ ]*[acs.] @@g' $RPM_BUILD_ROOT%{_libdir}/$f
 done
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libstdc++.la libsupc++.la libg2c.la \
+
+for f in \
+	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_fortran:libg2c.la} \
 	%{?with_java:libgcj.la lib-org-w3c-dom.la lib-org-xml-sax.la libffi.la} \
 	%{?with_objc:libobjc.la}; do
 	perl -pi -e "s@^libdir='.*@libdir='/usr/%{_lib}'@" $RPM_BUILD_ROOT%{_libdir}/$f
@@ -771,7 +767,9 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/ja/man1/{cccp,cpp}.1
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir $gccdir/tmp
 # we have to save these however
-mv -f $gccdir/include/{%{?with_objc:objc,}g2c.h,syslimits.h%{?with_java:,libffi/ffitarget.h,gcj}} $gccdir/tmp
+for f in syslimits.h %{?with_fortran:g2c.h} %{?with_java:libffi/ffitarget.h gcj} %{?with_objc:objc}; do
+	mv -f $gccdir/include/$f $gccdir/tmp
+done
 rm -rf $gccdir/include
 mv -f $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
@@ -784,7 +782,9 @@ ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 %endif
 
 %find_lang %{name}
+%if %{with cxx}
 %find_lang libstdc\+\+
+%endif
 
 %if %{with ssp}
 zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
@@ -792,6 +792,7 @@ zcat %{SOURCE2} > $RPM_BUILD_ROOT%{_aclocaldir}/gcc_stack_protect.m4
 
 # kill unpackaged files
 rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
+%{?with_multilib:rm -f $RPM_BUILD_ROOT%{_libdir}/32/libiberty.a}
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir*
 rm -f $RPM_BUILD_ROOT%{_mandir}/man7/{fsf-funding,gfdl,gpl}*
 
@@ -885,7 +886,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
 %{_libdir}/gcc/*/*/include/*.h
-%exclude %{_libdir}/gcc/*/*/include/g2c.h
+%{?with_fortran:%exclude %{_libdir}/gcc/*/*/include/g2c.h}
 
 %files -n libgcc
 %defattr(644,root,root,755)
@@ -894,6 +895,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 %endif
 
+%if %{with cxx}
 %files c++
 %defattr(644,root,root,755)
 %doc gcc/cp/{ChangeLog,NEWS}
@@ -952,6 +954,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %{_libdir32}/libstdc++.a
 %endif
+%endif
 
 %if %{with objc}
 %files objc
@@ -992,6 +995,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+%if %{with fortran}
 %files g77
 %defattr(644,root,root,755)
 %doc gcc/f/{BUGS,ChangeLog,NEWS}
@@ -1038,6 +1042,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %{_libdir32}/libg2c.a
 %endif
+%endif
 
 %if %{with java}
 %files java
@@ -1072,6 +1077,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/lib*cj*.so.*.*.*
+%attr(755,root,root) %{_libdir32}/lib-org*.so.*.*.*
+%endif
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
 %endif
@@ -1090,10 +1099,16 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/java
 %{_datadir}/java/libgcj*.jar
 %{_libdir}/lib*cj.spec
-%{_libdir}/lib*cj*.la
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
+%{_libdir}/lib*cj*.la
 %{_libdir}/lib-org-*.la
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/lib*cj*.so
+%attr(755,root,root) %{_libdir32}/lib-org-*.so
+%{_libdir32}/lib*cj*.la
+%{_libdir32}/lib-org-*.la
+%endif
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.la
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so
@@ -1104,6 +1119,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/lib*cj*.a
 %{_libdir}/lib-org-*.a
+%if %{with multilib}
+%{_libdir32}/lib*cj*.a
+%{_libdir32}/lib-org-*.a
+%endif
 %ifarch ppc
 %{_libdir}/nof/lib*cj*.a
 %endif
@@ -1112,17 +1131,23 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
 %attr(755,root,root) %{_libdir}/libffi-*.so
+%{?with_multilib:%attr(755,root,root) %{_libdir32}/libffi-*.so}
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/include/ffitarget.h
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libffi.so
+%{_libdir32}/libffi.la
+%endif
 %{_includedir}/ffi.h
 
 %files -n libffi-static
 %defattr(644,root,root,755)
 %{_libdir}/libffi.a
+%{?with_multilib:%{_libdir32}/libffi.a}
 %endif
 
 %if %{with ada}
