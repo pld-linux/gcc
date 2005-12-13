@@ -1438,7 +1438,7 @@ sfile=libstdc++-v3/include/%{_target_platform}/bits/c++config.h
 dpath=$RPM_BUILD_ROOT%{_includedir}/c++/%{GCC_VERSION}/%{_target_platform}/bits
 if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null ; then
 	cp -f $spath/$sfile $dpath/c++config64.h
-	cp -f 32/$spath/$sfile $dpath/c++config32.h
+	cp -f $spath/32/$sfile $dpath/c++config32.h
 	cat > $dpath/c++config.h <<EOF
 #include <bits/wordsize.h>
 #if __WORDSIZE == 32
