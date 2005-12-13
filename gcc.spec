@@ -1432,7 +1432,7 @@ rm -rf $gccdir/install-tools
 ln -sf %{_slibdir}/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
 
-%if %{with c++}
+%if %{with cxx}
 spath=objc-%{_target_platform}/%{_target_platform}
 sfile=libstdc++-v3/include/%{_target_platform}/bits/c++config.h
 dpath=$RPM_BUILD_ROOT%{_includedir}/c++/%{GCC_VERSION}/%{_target_platform}/bits
