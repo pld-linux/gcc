@@ -25,6 +25,10 @@
 %undefine	with_ksi
 %undefine	with_objc
 %endif
+%ifarch sparc64
+# not bootstrapped yet
+%undefine      with_ada
+%endif
 #
 %define		DASHED_SNAP	%{nil}
 %define		SNAP		%(echo %{DASHED_SNAP} | sed -e "s#-##g")
@@ -37,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	3
+Release:	4
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
