@@ -1,0 +1,53 @@
+--- gcc41/gcc/dwarf2out.c	(revision 106773)
++++ gcc41/gcc/dwarf2out.c	(working copy)
+@@ -3520,7 +3520,6 @@ static void dwarf2out_imported_module_or
+ static void dwarf2out_abstract_function (tree);
+ static void dwarf2out_var_location (rtx);
+ static void dwarf2out_begin_function (tree);
+-static void dwarf2out_switch_text_section (void);
+ 
+ /* The debug hooks structure.  */
+ 
+@@ -6866,7 +6865,7 @@ add_loc_descr_to_loc_list (dw_loc_list_r
+   *d = new_loc_list (descr, begin, end, section, 0);
+ }
+ 
+-static void
++void
+ dwarf2out_switch_text_section (void)
+ {
+   dw_fde_ref fde;
+--- gcc41/gcc/debug.h	(revision 106773)
++++ gcc41/gcc/debug.h	(working copy)
+@@ -160,6 +160,7 @@ extern void dwarf2out_frame_finish (void
+ /* Decide whether we want to emit frame unwind information for the current
+    translation unit.  */
+ extern int dwarf2out_do_frame (void);
++void dwarf2out_switch_text_section (void);
+ 
+ extern void debug_flush_symbol_queue (void);
+ extern void debug_queue_symbol (tree);
+--- gcc41/gcc/final.c	(revision 106773)
++++ gcc41/gcc/final.c	(working copy)
+@@ -1720,11 +1720,21 @@ final_scan_insn (rtx insn, FILE *file, i
+ 	  if (last_text_section == in_text)
+ 	    {
+ 	      (*debug_hooks->switch_text_section) ();
++#if defined (DWARF2_UNWIND_INFO)
++	        if (write_symbols != DWARF2_DEBUG && write_symbols != VMS_AND_DWARF2_DEBUG
++	 	    && dwarf2out_do_frame ())
++	 	  dwarf2out_switch_text_section ();
++#endif
+ 	      unlikely_text_section ();
+ 	    }
+ 	  else
+ 	    {
+ 	      (*debug_hooks->switch_text_section) ();
++#if defined (DWARF2_UNWIND_INFO)
++	        if (write_symbols != DWARF2_DEBUG && write_symbols != VMS_AND_DWARF2_DEBUG
++	 	    && dwarf2out_do_frame ())
++	 	  dwarf2out_switch_text_section ();
++#endif
+ 	      text_section ();
+ 	    }
+ 	  break;
