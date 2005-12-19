@@ -812,7 +812,7 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,f95}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
@@ -878,7 +878,7 @@ libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT{%{_libdir}/$libssp,%{_slibdir}}
 ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/libssp.so
 %if %{with multilib}
-libssp=$($RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*`)
+libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT{%{_libdir32}/$libssp,%{_slibdir32}}
 ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 %endif
