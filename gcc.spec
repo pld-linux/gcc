@@ -954,7 +954,12 @@ ln -sf %{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 %find_lang gcc
 %find_lang cpplib
 cat cpplib.lang >> gcc.lang
-%{?with_cxx:%find_lang libstdc\+\+}
+
+%if %{with cxx}
+%find_lang libstdc\+\+
+rm -rf $RPM_BUILD_ROOT%{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
+install libstdc++-v3/include/stdc++.h $RPM_BUILD_ROOT%{_includedir}
+%endif
 
 # cvs snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
@@ -1157,15 +1162,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
 %dir %{_includedir}/c++
+%{_includedir}/stdc++.h
 %{_includedir}/c++/%{version}
 %if %{with java}
 %exclude %{_includedir}/c++/%{version}/java
 %exclude %{_includedir}/c++/%{version}/javax
 %exclude %{_includedir}/c++/%{version}/gcj
 %exclude %{_includedir}/c++/%{version}/gnu
-%endif
-%ifnarch sparc
-%exclude %{_includedir}/c++/%{version}/*/bits/stdc++.h.gch
 %endif
 %if %{with multilib}
 %{_libdir32}/libstdc++.la
