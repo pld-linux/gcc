@@ -41,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	3.9
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1364,6 +1364,18 @@ mv -f $RPM_BUILD_ROOT%{_mandir}/man1/{sparc64-pld-linux-,}gcc.1
 %endif
 ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc-%{version} \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc-%{version}
+%if %{with cxx}
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-c++ \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-c++
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-g++ \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-g++
+%endif
+%if %{with java}
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcj \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcj
+%endif
 %endif
 
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
