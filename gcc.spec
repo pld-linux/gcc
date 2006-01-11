@@ -52,8 +52,8 @@ Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
-Patch3:		%{name}-ada-link-new-libgnat.patch
-Patch4:		%{name}-ada-link.patch
+Patch3:		%{name}-ada-link.patch
+Patch4:		%{name}-sparc64-ada_fix.patch
 Patch5:		%{name}-alpha-ada_fix.patch
 # -fvisibility fixes...
 Patch6:		%{name}-pr19664_gnu_internal.patch
@@ -66,7 +66,7 @@ Patch11:	%{name}-pr20297.patch
 
 #Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
 #Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
-Patch16:	%{name}-pr23948.patch
+
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
@@ -770,7 +770,7 @@ Statyczne biblioteki Obiektowego C.
 #patch14 -p1
 #patch15 -p1
 %endif
-%patch16 -p1
+
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
