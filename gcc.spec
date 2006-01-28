@@ -40,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20060122r110083
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -63,7 +63,8 @@ Patch8:		%{name}-pr20218.patch
 # PRs
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr20297.patch
-
+Patch12:	%{name}-pr19606.patch
+Patch13:	%{name}-pr24879.patch
 #Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
 #Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
 
@@ -765,6 +766,8 @@ Statyczne biblioteki Obiektowego C.
 # PRs
 %patch10 -p1
 %patch11 -p1
+%patch12 -p0
+%patch13 -p0
 
 %ifarch %{ix86} %{x8664}
 #patch14 -p1
