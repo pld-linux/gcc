@@ -39,15 +39,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20060122r110083
-Release:	0.%{_snap}.3
+%define		_snap	20060209r110780
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	1ac7a590d142e20b56f094e0ca93d00c
+# Source0-md5:	0e00769203b7f819db9e0ecd05c3c7ad
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -72,7 +72,7 @@ Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
-Patch21:	%{name}-pr25654.patch
+
 Patch22:	%{name}-pr13676.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -778,7 +778,7 @@ Statyczne biblioteki Obiektowego C.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-%patch21 -p1
+
 %patch22 -p1
 
 # because we distribute modified version of gcc...
