@@ -39,15 +39,15 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.0
-%define		_snap	20060210r110831
-Release:	0.%{_snap}.1
+%define		_snap	20060211r110872
+Release:	0.%{_snap}.0.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	e47d9ba50698eaab60e25ef66229f36d
+# Source0-md5:	405c51f710957c7423185a821731d756
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -74,6 +74,10 @@ Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
 
 Patch22:	%{name}-pr13676.patch
+
+# 128-bit long double support for glibc 2.4
+Patch30:	%{name}-ldbl-default-libstdc++.patch
+Patch31:	%{name}-ldbl-default.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -781,6 +785,9 @@ Statyczne biblioteki Obiektowego C.
 
 %patch22 -p1
 
+%patch30 -p0
+%patch31 -p0
+
 # because we distribute modified version of gcc...
 perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
@@ -791,9 +798,6 @@ mv ChangeLog ChangeLog.general
 cd gcc
 %{__autoconf}
 cd ..
-cd libjava/classpath
-%{__autoconf}
-cd ../..
 cp -f /usr/share/automake/config.sub .
 
 rm -rf obj-%{_target_platform}
@@ -826,6 +830,7 @@ TEXCONFIG=false \
 	--with-slibdir=%{_slibdir} \
 	%{!?with_java:--without-x} \
 	%{?with_fortran:--enable-cmath} \
+	--with-long-double-128 \
 %if %{with java}
 	--enable-libgcj \
 	--enable-libgcj-multifile \
