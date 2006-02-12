@@ -1,0 +1,10 @@
+--- gcc-4_1-branch/gcc/cp/except.c	2006/02/12 16:02:00	110889
++++ gcc-4_1-branch/gcc/cp/except.c	2006/02/12 16:07:04	110890
+@@ -722,6 +722,7 @@
+       temp_expr = NULL_TREE;
+       stabilize_init (exp, &temp_expr);
+ 
++      exp = build1 (CLEANUP_POINT_EXPR, TREE_TYPE (exp), exp);
+       if (elided)
+ 	exp = build2 (TRY_CATCH_EXPR, void_type_node, exp,
+ 		      do_free_exception (ptr));
