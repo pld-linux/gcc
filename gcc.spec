@@ -801,9 +801,6 @@ cd gcc
 %{__autoconf}
 cd ..
 cp -f /usr/share/automake/config.sub .
-sed -e '/ppc.*basic_machine=powerpc-unknown/a;;\nppc74[05]0-*) basic_machine=powerpc-`echo $basic_machine | sed "s/^[^-]*-//"`' \
-	-i config.sub	
-
 
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform}
