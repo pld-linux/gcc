@@ -40,7 +40,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 %define		_snap	20060211r110872
-Release:	0.%{_snap}.0.1
+Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -72,7 +72,7 @@ Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
-
+Patch21:	%{name}-pr24996.patch
 Patch22:	%{name}-pr13676.patch
 
 # 128-bit long double support for glibc 2.4
@@ -152,8 +152,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
-
-%define	_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -784,7 +782,7 @@ Statyczne biblioteki Obiektowego C.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
-
+%patch21 -p1
 %patch22 -p1
 
 %patch30 -p0
