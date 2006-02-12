@@ -153,6 +153,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
+%define	_target_platform	%{_target_cpu}-%{_vendor}-%{_target_os}
+
 %description
 A compiler aimed at integrating all the optimizations and features
 necessary for a high-performance and stable development environment.
@@ -799,6 +801,9 @@ cd gcc
 %{__autoconf}
 cd ..
 cp -f /usr/share/automake/config.sub .
+sed -e '/ppc.*basic_machine=powerpc-unknown/a;;\nppc74[05]0-*) basic_machine=powerpc-`echo $basic_machine | sed "s/^[^-]*-//"`' \
+	-i config.sub	
+
 
 rm -rf obj-%{_target_platform}
 install -d obj-%{_target_platform}
