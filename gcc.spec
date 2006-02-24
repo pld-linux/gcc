@@ -40,13 +40,13 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
-%define		_snap	20060219
+%define		_snap	20060223
 Release:	0.%{_snap}.1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-# Source0-md5:	afe7a62dd812d7dbb9542472fc07cbe7
+# Source0-md5:	b6f748cec2eb6765a21b1863d8bc5f5b
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 #Source0:	gcc-4.1-%{_snap}.tar.bz2
@@ -815,7 +815,7 @@ TEXCONFIG=false \
 	--libexecdir=%{_libdir} \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
-	--x-libraries=/usr/X11R6/%{_lib} \
+	--x-libraries=%{_libdir} \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-__cxa_atexit \
