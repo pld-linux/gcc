@@ -41,7 +41,7 @@ Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
 %define		_snap	20060223
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.4
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -80,6 +80,7 @@ Patch23:	%{name}-libstdcxx-bitset.patch
 Patch24:	%{name}-unexpected_eof.patch
 Patch25:	%{name}-libjava-multilib.patch
 Patch26:	%{name}-ppc64-m32-m64-multilib-only.patch
+Patch27:	%{name}-enable-java-awt-qt.patch
 
 # 128-bit long double support for glibc 2.4
 Patch30:	%{name}-ldbl-default-libstdc++.patch
@@ -125,7 +126,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %endif
 %if %{with java}
-#BuildRequires:	QtGui-devel >= 4.0.1
+BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	alsa-lib-devel
 BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	dssi
@@ -135,7 +136,7 @@ BuildRequires:	libart_lgpl-devel >= 2.1
 BuildRequires:	libxslt-devel
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
-#BuildRequires:	qt4-build
+BuildRequires:	qt4-build
 BuildRequires:	xorg-lib-libXtst-devel
 %endif
 # AS_NEEDED directive for dynamic linker
@@ -798,6 +799,7 @@ Statyczne biblioteki Obiektowego C.
 %patch24 -p1
 %patch25 -p1
 %patch26 -p1
+%patch27 -p1
 
 %patch30 -p0
 %patch31 -p0
@@ -814,12 +816,12 @@ cd gcc
 cd ..
 cd libjava
 %{__autoconf}
-cd ..
+cd classpath
+%{__autoconf}
+cd ../..
 cp -f /usr/share/automake/config.sub .
 
-rm -rf obj-%{_target_platform}
-install -d obj-%{_target_platform}
-cd obj-%{_target_platform}
+rm -rf builddir && install -d builddir && cd builddir
 
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
@@ -869,7 +871,7 @@ TEXCONFIG=false \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
 	--enable-gtk-cairo \
-	--enable-java-awt=gtk,xlib \
+	--enable-java-awt=qt,gtk,xlib \
 	--enable-jni \
 	--enable-xmlj \
 	--enable-alsa \
@@ -879,7 +881,7 @@ TEXCONFIG=false \
 
 cd ..
 
-%{__make} -C obj-%{_target_platform} \
+%{__make} -C builddir \
 	%{?with_bootstrap:%{?with_profiling:profiled}bootstrap} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
@@ -889,13 +891,13 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%{?with_tests:%{__make} -k -C obj-%{_target_platform} check 2>&1 ||:}
+%{?with_tests:%{__make} -k -C builddir check 2>&1 ||:}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/lib,%{_aclocaldir},%{_datadir},%{_infodir}}
 
-cd obj-%{_target_platform}
+cd builddir
 
 %{__make} -j1 install \
 	mandir=%{_mandir} \
@@ -964,11 +966,17 @@ for f in libmudflap.la libmudflapth.la libssp.la \
 do
 	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/$f %{_libdir} > $RPM_BUILD_ROOT%{_libdir}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
+done
 %if %{with multilib}
+for f in libmudflap.la libmudflapth.la libssp.la \
+	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
+	%{?with_objc:libobjc.la};
+do
 	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
-%endif
 done
+%endif
 
 # include/ contains install-tools/include/* and headers that were fixed up
 # by fixincludes, we don't want former
@@ -984,11 +992,6 @@ mv $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf $gccdir/install-tools
-
-%if %{with multilib}
-ln -sf %{_slibdir32}/libgcc_s.so.1	$gccdir/32/libgcc_s.so
-%endif
-ln -sf %{_slibdir}/libgcc_s.so.1	$gccdir/libgcc_s.so
 
 %find_lang gcc
 %find_lang cpplib
@@ -1085,11 +1088,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp_nonshared.a
 %{_libdir}/libssp_nonshared.la
 %if %{with multilib}
+%attr(755,root,root) %{_slibdir32}/lib*.so
 %dir %{_libdir}/gcc/*/*/32
 %{_libdir}/gcc/*/*/32/libgcov.a
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
-%{_libdir}/gcc/*/*/32/libgcc_s.so
 %{_libdir32}/libssp.la
 %attr(755,root,root) %{_libdir32}/libssp.a
 %attr(755,root,root) %{_libdir32}/libssp.so
@@ -1099,7 +1102,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
-%{_libdir}/gcc/*/*/libgcc_s.so
 %{_libdir}/gcc/*/*/specs
 %if %{with multilib}
 %{_libdir}/gcc/*/*/32/crt*.o
@@ -1291,13 +1293,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
-# R: lib-gnu-java-awt-peer-gtk (see below)
+# R: lib-gnu-java-awt-peer-gtk/qt (see below)
 %attr(755,root,root) %{_libdir}/libgcjawt.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
-# R: libX11
+# R: xorg libs
 %attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
 # R: gtk+2
 %attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-gtk.so.*.*.*
+# R: QtGui
+%attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-qt.so.7.0.0
 %dir %{_libdir}/classpath
 # R: alsa-libs
 %attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so*
@@ -1333,6 +1337,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib-gnu-awt-xlib.la
 %attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-gtk.so
 %{_libdir}/lib-gnu-java-awt-peer-gtk.la
+%attr(755,root,root) %{_libdir}/lib-gnu-java-awt-peer-qt.so
+%{_libdir}/lib-gnu-java-awt-peer-qt.la
 %{_pkgconfigdir}/libgcj.pc
 
 %files -n libgcj-static
@@ -1342,6 +1348,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgij.a
 %{_libdir}/lib-gnu-awt-xlib.a
 %{_libdir}/lib-gnu-java-awt-peer-gtk.a
+%{_libdir}/lib-gnu-java-awt-peer-qt.a
 
 %files -n libffi
 %defattr(644,root,root,755)
