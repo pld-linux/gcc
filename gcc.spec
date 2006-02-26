@@ -41,7 +41,7 @@ Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
 %define		_snap	20060223
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -75,10 +75,16 @@ Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
 Patch21:	%{name}-pr13676.patch
+Patch22:	%{name}-pr25626.patch
+Patch23:	%{name}-libstdcxx-bitset.patch
+Patch24:	%{name}-unexpected_eof.patch
+Patch25:	%{name}-libjava-multilib.patch
+Patch26:	%{name}-ppc64-m32-m64-multilib-only.patch
 
 # 128-bit long double support for glibc 2.4
 Patch30:	%{name}-ldbl-default-libstdc++.patch
 Patch31:	%{name}-ldbl-default.patch
+
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -119,6 +125,7 @@ BuildRequires:	gmp-devel
 BuildRequires:	libmpfr-devel
 %endif
 %if %{with java}
+#BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	alsa-lib-devel
 BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	dssi
@@ -128,7 +135,8 @@ BuildRequires:	libart_lgpl-devel >= 2.1
 BuildRequires:	libxslt-devel
 BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
-#BR: X-lib-libXtst-devel
+#BuildRequires:	qt4-build
+BuildRequires:	xorg-lib-libXtst-devel
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
@@ -785,18 +793,26 @@ Statyczne biblioteki Obiektowego C.
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
 
 %patch30 -p0
 %patch31 -p0
 
 # because we distribute modified version of gcc...
-perl -pi -e 's/(version.*)";/$1 (PLD Linux)";/' gcc/version.c
+sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
 
 %build
 cd gcc
+%{__autoconf}
+cd ..
+cd libjava
 %{__autoconf}
 cd ..
 cp -f /usr/share/automake/config.sub .
@@ -818,11 +834,9 @@ TEXCONFIG=false \
 	--x-libraries=%{_libdir} \
 	--enable-shared \
 	--enable-threads=posix \
-	--enable-__cxa_atexit \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
-	--disable-libstdcxx-pch \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
 	--disable-werror \
@@ -831,13 +845,26 @@ TEXCONFIG=false \
 	--with-demangler-in-ld \
 	--with-system-zlib \
 	--with-slibdir=%{_slibdir} \
+%ifnarch ia64
+	--without-system-libunwind \
+%else
+	--with-system-libunwind \
+%endif
 	%{!?with_java:--without-x} \
 	%{?with_fortran:--enable-cmath} \
 	--with-long-double-128 \
 %ifarch ppc ppc64
 	--enable-secureplt \
 %endif
+%if %{with cxx}
+	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
+	--disable-libstdcxx-pch \
+	--enable-__cxa_atexit \
+	--enable-libstdcxx-allocator=mt \
+%endif
 %if %{with java}
+	--with-qt4dir=%{_libdir}/qt4 \
+	--disable-libjava-multilib \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
