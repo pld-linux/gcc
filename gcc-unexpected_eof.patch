@@ -1,0 +1,17 @@
+# /usr/include/bits/stdio-ldbl.h new in glibc-2.3.90, triggers a bug in gcc:
+# End of file detection is defunct directly at the end of a declaration.
+# stdio-ldbl.h is the first file to end with a declaration. 
+# 
+# jw@suse.de, 2006-01-19
+
+--- gcc/gcc/scan-decls.c.orig	2006-01-19 16:58:59.000000000 +0100
++++ gcc/gcc/scan-decls.c	2006-01-19 16:28:51.000000000 +0100
+@@ -202,6 +202,8 @@
+ 		 parameter list */
+ 	      while (token->type != CPP_SEMICOLON && token->type != CPP_EOF)
+ 		token = get_a_token (pfile);
++              if (token->type == CPP_EOF)
++	        continue;
+ 	      goto new_statement;
+ 	    }
+ 	  break;
