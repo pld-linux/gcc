@@ -1082,8 +1082,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /lib/cpp
 
 %attr(755,root,root) %{_slibdir}/lib*.so
+%{_libdir}/libssp.a
 %{_libdir}/libssp.la
-%attr(755,root,root) %{_libdir}/libssp.a
 %attr(755,root,root) %{_libdir}/libssp.so
 %{_libdir}/libssp_nonshared.a
 %{_libdir}/libssp_nonshared.la
@@ -1093,8 +1093,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/32/libgcov.a
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
+%{_libdir32}/libssp.a
 %{_libdir32}/libssp.la
-%attr(755,root,root) %{_libdir32}/libssp.a
 %attr(755,root,root) %{_libdir32}/libssp.so
 %{_libdir32}/libssp_nonshared.a
 %{_libdir32}/libssp_nonshared.la
