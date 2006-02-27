@@ -11,11 +11,6 @@
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
-%if %{with multilib}
-# the latest chrpath(64) can't handle 32-bit binaries :/
-%define		_noautochrpath	.*/lib/.*\\.so.*
-%endif
-
 %if %{without cxx}
 %undefine	with_java
 %undefine	with_objcxx
@@ -92,6 +87,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	binutils >= 2:2.15.94.0.1
 BuildRequires:	bison
+BuildRequires:	chrpath >= 0.13-2
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
