@@ -6,7 +6,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
-%bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
+%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
@@ -41,7 +41,7 @@ Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
 %define		_snap	20060223
-Release:	0.%{_snap}.4
+Release:	0.%{_snap}.5
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
