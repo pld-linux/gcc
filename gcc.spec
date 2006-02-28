@@ -36,7 +36,7 @@ Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
 %define		_snap	20060223
-Release:	0.%{_snap}.5
+Release:	0.%{_snap}.6
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
