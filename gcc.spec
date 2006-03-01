@@ -1059,6 +1059,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
 %dir %{_libdir}/gcc/*/*/include
+%dir %{_libdir}/gcc/*/*/include/ssp
 
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
@@ -1107,6 +1108,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 
 %{_libdir}/gcc/*/*/include/*.h
+%{_libdir}/gcc/*/*/include/ssp/*.h
 
 %files -n libgcc
 %defattr(644,root,root,755)
