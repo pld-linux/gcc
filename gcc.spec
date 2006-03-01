@@ -35,14 +35,15 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.0
 #define		_snap	20060218r111233
-%define		_snap	20060223
-Release:	0.%{_snap}.6
+#define		_snap	20060223
+#Release:	0.%{_snap}.5
+Release:	1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-# Source0-md5:	b6f748cec2eb6765a21b1863d8bc5f5b
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	88785071f29ed0e0b6b61057a1079442
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 #Source0:	gcc-4.1-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
@@ -85,7 +86,8 @@ URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
-BuildRequires:	binutils >= 2:2.15.94.0.1
+# binutils 2.16.91 or newer are required for compiling medium model now
+BuildRequires:	binutils >= 2:2.16.91.0.1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
 %{?with_tests:BuildRequires:	dejagnu}
@@ -758,8 +760,8 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-#setup -q -n gcc-%{version}
-%setup -q -n gcc-%{version}-%{_snap}
+%setup -q -n gcc-%{version}
+#setup -q -n gcc-%{version}-%{_snap}
 #setup -q -n gcc-4_1-branch
 
 %patch0 -p1
@@ -983,6 +985,7 @@ mkdir	$gccdir/tmp
 %{?with_java:mv $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv $gccdir/include/objc $gccdir/tmp}
 mv $gccdir/include/syslimits.h $gccdir/tmp
+mv $gccdir/include/ssp $gccdir/tmp
 rm -rf $gccdir/include
 mv $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
@@ -1051,8 +1054,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f gcc.lang
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS NEWS
-# bugs.html faq.html
-%doc gcc/{ChangeLog,ONEWS,README.Portability}
+%doc gcc/{ChangeLog,ONEWS,README.Portability} bugs.html faq.html
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
@@ -1064,8 +1066,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
 %attr(755,root,root) %{_bindir}/cpp
-
-%{_includedir}/ssp
 
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
