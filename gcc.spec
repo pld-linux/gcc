@@ -37,7 +37,7 @@ Version:	4.1.0
 #define		_snap	20060218r111233
 #define		_snap	20060223
 #Release:	0.%{_snap}.5
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -66,6 +66,7 @@ Patch13:	%{name}-pr24879.patch
 #Patch14:	%{name}-x87-mmx-switch.patch	NEEDS UPDATE
 #Patch15:	%{name}-x87-mmx-eh.patch	NEEDS UPDATE
 
+Patch16:	%{name}-pr26587.patch
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
@@ -787,6 +788,7 @@ Statyczne biblioteki Obiektowego C.
 #patch15 -p1
 %endif
 
+%patch16 -p1
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
