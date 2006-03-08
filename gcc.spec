@@ -1053,7 +1053,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -f gcc.lang
 %defattr(644,root,root,755)
 %doc ChangeLog.general MAINTAINERS NEWS
-%doc gcc/{ChangeLog,ONEWS,README.Portability} bugs.html faq.html
+# bugs.html faq.html
+%doc gcc/{ChangeLog,ONEWS,README.Portability}
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
