@@ -97,8 +97,8 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
+BuildRequires:	glibc-devel >= 6:2.4.0-1
 %if %{with multilib}
-BuildRequires:	glibc-devel >= 6:2.3.4-1.5
 %ifarch %{x8664}
 BuildRequires:	glibc-devel(i686)
 %endif
@@ -111,8 +111,6 @@ BuildRequires:	glibc-devel(s390)
 %ifarch sparc64
 BuildRequires:	glibc-devel(sparc)
 %endif
-%else
-BuildRequires:	glibc-devel >= 2.2.5-20
 %endif
 BuildRequires:	perl-devel
 BuildRequires:	rpmbuild(macros) >= 1.211
