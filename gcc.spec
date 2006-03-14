@@ -35,7 +35,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.1
 %define		_snap	20060308r111841
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -97,7 +97,7 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
-BuildRequires:	glibc-devel >= 6:2.4.0-1
+BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 %ifarch %{x8664}
 BuildRequires:	glibc-devel(i686)
@@ -857,7 +857,7 @@ TEXCONFIG=false \
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
-	--enable-libstdcxx-allocator=mt \
+	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
 	--with-qt4dir=%{_libdir}/qt4 \
