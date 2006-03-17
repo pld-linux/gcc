@@ -34,8 +34,8 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.1
-%define		_snap	20060308r111841
-Release:	0.%{_snap}.2
+%define		_snap	20060317r112165
+Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -44,7 +44,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	22396e7431ade8f25dde4e776b259955
+# Source0-md5:	8114235ed39dbf73e01c3fc345febc3b
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
