@@ -1,4 +1,27 @@
 #
+# TODO:
+#	/usr/include/omp.h
+#   <multilib>
+#	/usr/lib/libgcc-math.a
+#	/usr/lib/libgcc-math.la
+#	/usr/lib/libgcc-math.so.0.0.0
+#	/usr/lib/libgomp.a
+#	/usr/lib/libgomp.la
+#	/usr/lib/libgomp.so.1.0.0
+#   </multilib>
+#	/usr/lib/libgomp.spec
+#	/usr/lib64/classpath/libxmlj.la
+#	/usr/lib64/classpath/libxmlj.so.0.0.0
+#	/usr/lib64/gcc/x86_64-pld-linux/4.2.0/finclude/omp_lib.f90
+#	/usr/lib64/gcc/x86_64-pld-linux/4.2.0/finclude/omp_lib.h
+#	/usr/lib64/gcc/x86_64-pld-linux/4.2.0/finclude/omp_lib.mod
+#	/usr/lib64/gcc/x86_64-pld-linux/4.2.0/finclude/omp_lib_kinds.mod
+#	/usr/lib64/libgomp.a
+#	/usr/lib64/libgomp.la
+#	/usr/lib64/libgomp.so.1.0.0
+#	/usr/lib64/libgomp.spec
+#	/usr/share/classpath/tools/tools.zip
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
@@ -34,7 +57,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.2.0
-%define		_snap	20060322r112281
+%define		_snap	20060323r112317
 Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
@@ -44,7 +67,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	45080a202537aaf0347c04dd1c0be73f
+# Source0-md5:	96474977fd6ef96d75f8747525b6512e
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -112,6 +135,7 @@ BuildRequires:	pango-devel
 BuildRequires:	pkgconfig
 BuildRequires:	qt4-build
 BuildRequires:	xorg-lib-libXtst-devel
+BuildRequires:	zip
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
@@ -900,6 +924,8 @@ cp -f	libffi/README java-doc/README.libffi
 cp -f	libffi/LICENSE java-doc/LICENSE.libffi
 ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
+# tools.zip sources
+rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
 %endif
 %if %{with objc}
 cp -f	libobjc/README gcc/objc/README.libobjc
@@ -907,7 +933,7 @@ cp -f	libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libmudflap.la libmudflapth.la libssp.la \
+for f in libgomp.la libmudflap.la libmudflapth.la libssp.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
 	%{?with_java:libgcj.la libffi.la} \
@@ -917,7 +943,7 @@ do
 	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
 done
 %if %{with multilib}
-for f in libmudflap.la libmudflapth.la libssp.la \
+for f in libgcc-math.la libgomp.la libmudflap.la libmudflapth.la libssp.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
 	%{?with_objc:libobjc.la};
