@@ -34,7 +34,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.1
-%define		_snap	20060322r112277
+%define		_snap	20060405r112698
 Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
@@ -44,7 +44,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	023e9952950f4c6b07d2267c44c7ed32
+# Source0-md5:	313c2f3d4119ffd8250441dcf72340f8
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -70,7 +70,7 @@ Patch20:	%{name}-pr17390.patch
 Patch21:	%{name}-pr13676.patch
 Patch22:	%{name}-pr25626.patch
 Patch23:	%{name}-libstdcxx-bitset.patch
-Patch24:	%{name}-unexpected_eof.patch
+
 Patch25:	%{name}-libjava-multilib.patch
 Patch26:	%{name}-ppc64-m32-m64-multilib-only.patch
 Patch27:	%{name}-enable-java-awt-qt.patch
@@ -784,7 +784,7 @@ Statyczne biblioteki Obiektowego C.
 %patch21 -p1
 %patch22 -p1
 %patch23 -p1
-%patch24 -p1
+
 %patch25 -p1
 %patch26 -p1
 %patch27 -p1
