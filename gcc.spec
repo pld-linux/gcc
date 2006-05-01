@@ -35,7 +35,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.1.1
 %define		_snap	20060501r113407
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -62,6 +62,7 @@ Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr26565.patch
 Patch12:	%{name}-pr19606.patch
 Patch13:	%{name}-pr24879.patch
+Patch14:	%{name}-pr26912.patch
 
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
@@ -776,6 +777,7 @@ Statyczne biblioteki Obiektowego C.
 %patch11 -p1
 %patch12 -p0
 %patch13 -p0
+%patch14 -p1
 
 %patch17 -p1
 %patch18 -p1
