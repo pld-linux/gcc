@@ -111,7 +111,7 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparc)
 %endif
 %endif
-BuildRequires:	perl-devel
+BuildRequires:	perl-base
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
