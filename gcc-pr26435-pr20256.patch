@@ -1,7 +1,5 @@
-Index: tree-loop-linear.c
-===================================================================
-*** tree-loop-linear.c	(revision 113884)
---- tree-loop-linear.c	(working copy)
+*** gcc/gcc/tree-loop-linear.c	(revision 113884)
+--- gcc/gcc/tree-loop-linear.c	(working copy)
 ***************
 *** 1,5 ****
   /* Linear Loop transforms
@@ -85,10 +83,8 @@ Index: tree-loop-linear.c
 !   if (modified)
 !     rewrite_into_loop_closed_ssa (NULL, TODO_update_ssa_full_phi);
   }
-Index: lambda.h
-===================================================================
-*** lambda.h	(revision 113884)
---- lambda.h	(working copy)
+*** gcc/gcc/lambda.h	(revision 113884)
+--- gcc/gcc/lambda.h	(working copy)
 ***************
 *** 1,5 ****
   /* Lambda matrix and vector interface.
@@ -120,10 +116,8 @@ Index: lambda.h
   void lambda_loopnest_to_gcc_loopnest (struct loop *,
   				      VEC(tree,heap) *, VEC(tree,heap) *,
   				      lambda_loopnest, lambda_trans_matrix);
-Index: lambda-code.c
-===================================================================
-*** lambda-code.c	(revision 113884)
---- lambda-code.c	(working copy)
+*** gcc/gcc/lambda-code.c	(revision 113884)
+--- gcc/gcc/lambda-code.c	(working copy)
 ***************
 *** 1,5 ****
   /*  Loop transformation code generation
