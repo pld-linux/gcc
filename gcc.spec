@@ -62,6 +62,7 @@ Patch8:		%{name}-pr20218.patch
 Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr19606.patch
 Patch12:	%{name}-pr24879.patch
+Patch13:	%{name}-pr26435-pr20256.patch
 
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
@@ -775,7 +776,7 @@ Statyczne biblioteki Obiektowego C.
 %patch10 -p1
 %patch11 -p0
 %patch12 -p0
-#patch13 -p1
+%patch13 -p1
 
 %patch17 -p1
 %patch18 -p1
