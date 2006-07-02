@@ -17,8 +17,6 @@
 #	/usr/lib64/libgomp.so.1.0.0
 #	/usr/lib64/libgomp.spec
 #	/usr/share/classpath/tools/tools.zip
-#	/usr/lib64/classpath/libxmlj.la
-#	/usr/lib64/classpath/libxmlj.so.0.0.0
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -918,8 +916,6 @@ cd ..
 %if %{with java}
 install -d java-doc
 cp -f	libjava/READ* java-doc
-cp -f	libffi/README java-doc/README.libffi
-cp -f	libffi/LICENSE java-doc/LICENSE.libffi
 ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 # tools.zip sources
