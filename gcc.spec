@@ -2,9 +2,6 @@
 # TODO:
 #	/usr/include/omp.h
 #   <multilib>
-#	/usr/lib/libgcc-math.a
-#	/usr/lib/libgcc-math.la
-#	/usr/lib/libgcc-math.so.0.0.0
 #	/usr/lib/libgomp.a
 #	/usr/lib/libgomp.la
 #	/usr/lib/libgomp.so.1.0.0
@@ -57,8 +54,8 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.2.0
-%define		_snap	20060428r113350
-Release:	0.%{_snap}.1
+%define		_snap	20060702r115125
+Release:	0.%{_snap}.0.1
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -67,7 +64,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	c3dbbfb2405d1146477561ade91c061d
+# Source0-md5:	2c52e4d0b604dd0343260200a8bcfeaf
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -120,7 +117,7 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 %if %{with fortran}
 BuildRequires:	gmp-devel
-BuildRequires:	libmpfr-devel
+BuildRequires:	mpfr-devel
 %endif
 %if %{with java}
 BuildRequires:	QtGui-devel >= 4.0.1
@@ -850,12 +847,13 @@ TEXCONFIG=false \
 	--enable-alsa \
 	--enable-dssi \
 %endif
+	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
 	%{_target_platform}
 
 cd ..
 
 %{__make} -C builddir \
-	%{?with_bootstrap:%{?with_profiling:profiled}bootstrap} \
+	%{?with_bootstrap:%{?with_profiling:profiledbootstrap}} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
 	STAGE1_CFLAGS="%{rpmcflags} -O0" \
