@@ -1,8 +1,5 @@
 #
 # TODO:
-#	/usr/bin/gappletviewer
-#	/usr/bin/gjarsigner
-#	/usr/bin/gkeytool
 #	/usr/include/omp.h
 #   <multilib>
 #	/usr/lib/libgomp.a
@@ -1259,8 +1256,11 @@ rm -rf $RPM_BUILD_ROOT
 %files java
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
+%attr(755,root,root) %{_bindir}/gappletviewer
 %attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gjarsigner
 %attr(755,root,root) %{_bindir}/gjnih
+%attr(755,root,root) %{_bindir}/gkeytool
 %attr(755,root,root) %{_bindir}/grmi*
 %attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/jcf-dump
