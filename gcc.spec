@@ -831,7 +831,6 @@ TEXCONFIG=false \
 	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
-	--with-qt4dir=%{_libdir}/qt4 \
 	--disable-libjava-multilib \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
