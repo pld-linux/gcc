@@ -1,0 +1,4 @@
+- fastjar is not bundled anymore with gcc. to build libgcj, you will need
+  either InfoZIP (both zip and unzip) or an external jar program.
+  in the former case, the gcc build will install a jar shell script that
+  uses InfoZIP to provide the functionality of jar.
