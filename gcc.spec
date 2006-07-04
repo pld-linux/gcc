@@ -129,6 +129,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	qt4-build
 BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	zip
+BuildRequires:	unzip
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
