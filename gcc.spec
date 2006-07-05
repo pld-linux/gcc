@@ -1083,21 +1083,23 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
 %{_libdir}/gcc/*/*/include/decfloat.h
-%{_libdir}/gcc/*/*/include/emmintrin.h
 %{_libdir}/gcc/*/*/include/float.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
-%{_libdir}/gcc/*/*/include/mm3dnow.h
-%{_libdir}/gcc/*/*/include/mm_malloc.h
-%{_libdir}/gcc/*/*/include/mmintrin.h
-%{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/stdarg.h
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
 %{_libdir}/gcc/*/*/include/syslimits.h
 %{_libdir}/gcc/*/*/include/unwind.h
 %{_libdir}/gcc/*/*/include/varargs.h
+%ifarch %{ix86} %{x8664}
+%{_libdir}/gcc/*/*/include/emmintrin.h
+%{_libdir}/gcc/*/*/include/mm3dnow.h
+%{_libdir}/gcc/*/*/include/mm_malloc.h
+%{_libdir}/gcc/*/*/include/mmintrin.h
+%{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
+%endif
 
 %files -n libgcc
 %defattr(644,root,root,755)
