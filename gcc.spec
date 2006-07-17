@@ -51,7 +51,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.2.0
 %define		_snap	20060702r115125
-Release:	0.%{_snap}.0.2
+Release:	0.%{_snap}.0.3
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -76,8 +76,8 @@ Patch10:	%{name}-pr17390.patch
 Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
-Patch14:	%{name}-pr28150.patch
-Patch15:	%{name}-pr28187.patch
+Patch14:	%{name}-pr19664_gnu_internal.patch
+Patch15:	%{name}-pr19664_libstdc++.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
