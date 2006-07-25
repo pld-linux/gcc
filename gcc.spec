@@ -50,8 +50,8 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.2.0
-%define		_snap	20060702r115125
-Release:	0.%{_snap}.0.3
+%define		_snap	20060725r115734
+Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -60,7 +60,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	2c52e4d0b604dd0343260200a8bcfeaf
+# Source0-md5:	4a1609034f22de15e9a94e0938a6595b
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -76,8 +76,6 @@ Patch10:	%{name}-pr17390.patch
 Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
-Patch14:	%{name}-pr19664_gnu_internal.patch
-Patch15:	%{name}-pr19664_libstdc++.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -775,8 +773,6 @@ Statyczne biblioteki Obiektowego C.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
-%patch15 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
@@ -833,7 +829,7 @@ TEXCONFIG=false \
 	--enable-secureplt \
 %endif
 %if %{with cxx}
-	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
+	--with-gxx-include-dir=%{_includedir}/c++ \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
 	--enable-libstdcxx-allocator=new \
@@ -1201,12 +1197,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
 %{_includedir}/stdtr1c++.h
-%{_includedir}/c++/%{version}
+%{_includedir}/c++
 %if %{with java}
-%exclude %{_includedir}/c++/%{version}/java
-%exclude %{_includedir}/c++/%{version}/javax
-%exclude %{_includedir}/c++/%{version}/gcj
-%exclude %{_includedir}/c++/%{version}/gnu
+%exclude %{_includedir}/c++/java
+%exclude %{_includedir}/c++/javax
+%exclude %{_includedir}/c++/gcj
+%exclude %{_includedir}/c++/gnu
 %endif
 %if %{with multilib}
 %{_libdir32}/libstdc++.la
@@ -1308,10 +1304,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-%{_includedir}/c++/%{version}/java
-%{_includedir}/c++/%{version}/javax
-%{_includedir}/c++/%{version}/gcj
-%{_includedir}/c++/%{version}/gnu
+%{_includedir}/c++/java
+%{_includedir}/c++/javax
+%{_includedir}/c++/gcj
+%{_includedir}/c++/gnu
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
