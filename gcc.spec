@@ -7,8 +7,8 @@
 #	/usr/lib/libgomp.so.1.0.0
 #   </multilib>
 #	/usr/lib/libgomp.spec
-#	/usr/lib64/classpath/libxmlj.la
-#	/usr/lib64/classpath/libxmlj.so.0.0.0
+#	/usr/lib64/gcj-4.2.0/libxmlj.la
+#	/usr/lib64/gcj-4.2.0/libxmlj.so.0.0.0
 #	/usr/lib64/libgomp.a
 #	/usr/lib64/libgomp.la
 #	/usr/lib64/libgomp.so.1.0.0
@@ -76,6 +76,7 @@ Patch10:	%{name}-pr17390.patch
 Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
+Patch14:	%{name}-force_jar_wrapper.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -772,6 +773,7 @@ Statyczne biblioteki Obiektowego C.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
@@ -932,6 +934,7 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 %if %{with java}
 	libgcj.la libgcj-tools.la libffi.la lib-gnu-awt-xlib.la \
 	gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la gcj-%{version}/libjvm.la gcj-%{version}/libqtpeer.la \
+	gcj-%{version}/libgjsmalsa.la gcj-%{version}/libgjsmdssi.la gcj-%{version}/libxmlj.la \
 %endif
 	%{?with_objc:libobjc.la};
 do
@@ -1192,11 +1195,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
-%dir %{_includedir}/c++
+%{_includedir}/c++
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
 %{_includedir}/stdtr1c++.h
-%{_includedir}/c++
 %if %{with java}
 %exclude %{_includedir}/c++/java
 %exclude %{_includedir}/c++/javax
@@ -1288,15 +1290,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.7.0.0
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
-%dir %{_libdir}/classpath
-%attr(755,root,root) %{_libdir}/classpath/libgjsmalsa.so*
-%attr(755,root,root) %{_libdir}/classpath/libgjsmdssi.so*
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so.*.*.*
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so.*.*.*
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so.*.*.*
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so.*.*.*
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
 %{_mandir}/man1/gij*
@@ -1324,13 +1325,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgij.la
 %attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
 %{_libdir}/lib-gnu-awt-xlib.la
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so
+%{_libdir}/gcj-%{version}/libgjsmalsa.la
+%{_libdir}/gcj-%{version}/libgjsmdssi.la
 %{_libdir}/gcj-%{version}/libgtkpeer.la
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so
 %{_libdir}/gcj-%{version}/libjawt.la
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so
 %{_libdir}/gcj-%{version}/libjvm.la
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so
 %{_libdir}/gcj-%{version}/libqtpeer.la
 %{_pkgconfigdir}/libgcj.pc
 
