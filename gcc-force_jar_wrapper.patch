@@ -1,10 +1,11 @@
 --- trunk/libjava/configure.ac.orig	2006-07-06 11:12:25.000000000 +0200
 +++ trunk/libjava/configure.ac	2006-07-06 19:56:51.347768250 +0200
-@@ -143,14 +143,11 @@
+@@ -143,14 +143,12 @@
  AC_CHECK_TOOL(AR, ar)
  AC_CHECK_TOOL(RANLIB, ranlib, :)
  AC_PROG_AWK
 -AC_CHECK_PROGS([JAR], [jar fastjar], no)
++AC_SUBST([JAR])
  AC_PATH_PROG([ZIP], [zip], no)
  AC_PATH_PROG([UNZIP], [unzip], unzip)
 -AM_CONDITIONAL(BASH_JAR, test "$JAR" = no)
