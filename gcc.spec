@@ -34,7 +34,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.2
-%define		_snap	20060712r115366
+%define		_snap	20060817r116212
 #define		_snap	20060517
 Release:	0.%{_snap}.1
 #Release:	1
@@ -45,7 +45,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	a55ecd4f100b44cf41252221b6585098
+# Source0-md5:	c7fcaa9f2d9c8aa00bc0f3cf955bae76
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -63,6 +63,7 @@ Patch10:	%{name}-pr7776.patch
 Patch11:	%{name}-pr19606.patch
 Patch12:	%{name}-pr24879.patch
 Patch13:	%{name}-pr26435-pr20256.patch
+Patch14:	%{name}-pr28281.patch
 
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
@@ -777,6 +778,9 @@ Statyczne biblioteki Obiektowego C.
 %patch11 -p0
 %patch12 -p0
 %patch13 -p1
+%ifarch %{x8664}
+%patch14 -p1
+%endif
 
 %patch17 -p1
 %patch18 -p1
