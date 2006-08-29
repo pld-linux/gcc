@@ -36,7 +36,7 @@ Name:		gcc
 Version:	4.1.2
 %define		_snap	20060817r116212
 #define		_snap	20060517
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	1
 Epoch:		5
 License:	GPL v2+
@@ -64,6 +64,7 @@ Patch11:	%{name}-pr19606.patch
 Patch12:	%{name}-pr24879.patch
 Patch13:	%{name}-pr26435-pr20256.patch
 Patch14:	%{name}-pr28281.patch
+Patch15:	%{name}-unwind-through-signal-frames.patch
 
 Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
@@ -781,6 +782,7 @@ Statyczne biblioteki Obiektowego C.
 %ifarch %{x8664}
 %patch14 -p1
 %endif
+%patch15 -p0
 
 %patch17 -p1
 %patch18 -p1
