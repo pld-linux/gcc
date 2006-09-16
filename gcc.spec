@@ -9,6 +9,9 @@
 #	/usr/lib/libgomp.spec
 #	/usr/lib64/gcj-4.2.0/libxmlj.la
 #	/usr/lib64/gcj-4.2.0/libxmlj.so.0.0.0
+#	/usr/lib64/libgcj_bc.a
+#	/usr/lib64/libgcj_bc.so
+#	/usr/lib64/libgcj_bc.so.1.0.0
 #	/usr/lib64/libgomp.a
 #	/usr/lib64/libgomp.la
 #	/usr/lib64/libgomp.so.1.0.0
@@ -51,7 +54,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.2.0
 %define		_snap	20060916r116994
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -959,7 +962,7 @@ gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
 
 # we have to save these however
-%{?with_java:mv $gccdir/include/{gcj,libffi/ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
+%{?with_java:mv $gccdir/include/{gcj,ffi.h,ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv $gccdir/include/objc $gccdir/tmp}
 mv $gccdir/include/mf-runtime.h $gccdir/tmp
 mv $gccdir/include/syslimits.h $gccdir/tmp
@@ -1287,7 +1290,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
-%attr(755,root,root) %{_libdir}/libgcj-tools.so.7.0.0
+%attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
 %dir %{_libdir}/gcj-%{version}
@@ -1355,6 +1358,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/include/ffi.h
 %{_libdir}/gcc/*/*/include/ffitarget.h
 %if %{with multilib}
 %attr(755,root,root) %{_libdir32}/libffi.so
@@ -1362,7 +1366,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
-%{_includedir}/ffi.h
 
 %files -n libffi-static
 %defattr(644,root,root,755)
