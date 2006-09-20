@@ -66,7 +66,6 @@ Patch13:	%{name}-pr26435-pr20256.patch
 Patch14:	%{name}-pr28281.patch
 Patch15:	%{name}-unwind-through-signal-frames.patch
 
-Patch17:	%{name}-pr19505.patch
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
 Patch20:	%{name}-pr17390.patch
@@ -784,7 +783,6 @@ Statyczne biblioteki Obiektowego C.
 %endif
 %patch15 -p0
 
-%patch17 -p1
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
