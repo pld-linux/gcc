@@ -54,7 +54,7 @@ Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos comparti
 Name:		gcc
 Version:	4.2.0
 %define		_snap	20060916r116994
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -80,6 +80,7 @@ Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
 Patch14:	%{name}-force_jar_wrapper.patch
+Patch15:	%{name}-pr28230.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -777,6 +778,9 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+cd gcc
+%patch15
+cd ..
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
