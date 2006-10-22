@@ -25,7 +25,7 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
-%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
+%bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
@@ -52,7 +52,9 @@ Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartid
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	4.2.0
+%define		_major_ver	4.2
+%define		_minor_ver	0
+Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20061021r117925
 Release:	0.%{_snap}.1
 #Release:	2
@@ -933,7 +935,7 @@ cp -f	libobjc/README gcc/objc/README.libobjc
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
+	%{?with_fortran:libgfortran.la} \
 %if %{with java}
 	libgcj.la libgcj-tools.la libffi.la lib-gnu-awt-xlib.la \
 	gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la gcj-%{version}/libjvm.la gcj-%{version}/libqtpeer.la \
@@ -947,7 +949,7 @@ done
 %if %{with multilib}
 for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la libgfortranbegin.la} \
+	%{?with_fortran:libgfortran.la} \
 	%{?with_java:libffi.la} \
 	%{?with_objc:libobjc.la};
 do
@@ -1232,14 +1234,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*-gfortran
 %{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
+%{_libdir}/gcc/*/*/libgfortranbegin.a
 %if %{with multilib}
-%{_libdir32}/libgfortranbegin.a
-%{_libdir32}/libgfortranbegin.la
+%{_libdir}/gcc/*/*/32/libgfortranbegin.a
 %{_libdir32}/libgfortran.la
 %attr(755,root,root) %{_libdir32}/libgfortran.so
 %endif
-%{_libdir}/libgfortranbegin.a
-%{_libdir}/libgfortranbegin.la
 %{_libdir}/libgfortran.la
 %attr(755,root,root) %{_libdir}/libgfortran.so
 %{_mandir}/man1/g95.1*
@@ -1334,7 +1334,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcj-%{version}/libjawt.la
 %{_libdir}/gcj-%{version}/libjvm.la
 %{_libdir}/gcj-%{version}/libqtpeer.la
-%{_pkgconfigdir}/libgcj.pc
+%{_pkgconfigdir}/libgcj-%{_major_ver}.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
