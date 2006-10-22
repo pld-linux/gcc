@@ -82,6 +82,7 @@ Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
 Patch14:	%{name}-force_jar_wrapper.patch
+Patch15:	%{name}-pr29512.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -779,6 +780,7 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
@@ -835,7 +837,7 @@ TEXCONFIG=false \
 	--enable-secureplt \
 %endif
 %if %{with cxx}
-	--with-gxx-include-dir=%{_includedir}/c++ \
+	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
 	--enable-libstdcxx-allocator=new \
