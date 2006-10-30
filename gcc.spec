@@ -55,7 +55,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20061021r117925
+%define		_snap	20061030r118195
 Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
@@ -65,7 +65,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	c4bf499f1fd2f8534e6ef65b5bf22c80
+# Source0-md5:	5aa7973cf26b71a34a39431c9f9ecb7c
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -162,7 +162,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
-%define		filterout	-fwrapv -fno-strict-aliasing
+%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 
 %description
 A compiler aimed at integrating all the optimizations and features
