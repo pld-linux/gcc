@@ -1202,15 +1202,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
-%{_includedir}/c++
+%{_includedir}/c++/%{version}
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
 %{_includedir}/stdtr1c++.h
 %if %{with java}
-%exclude %{_includedir}/c++/java
-%exclude %{_includedir}/c++/javax
-%exclude %{_includedir}/c++/gcj
-%exclude %{_includedir}/c++/gnu
+%exclude %{_includedir}/c++/%{version}/java
+%exclude %{_includedir}/c++/%{version}/javax
+%exclude %{_includedir}/c++/%{version}/gcj
+%exclude %{_includedir}/c++/%{version}/gnu
 %endif
 %if %{with multilib}
 %{_libdir32}/libstdc++.la
@@ -1309,10 +1309,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-%{_includedir}/c++/java
-%{_includedir}/c++/javax
-%{_includedir}/c++/gcj
-%{_includedir}/c++/gnu
+%{_includedir}/c++/%{version}/java
+%{_includedir}/c++/%{version}/javax
+%{_includedir}/c++/%{version}/gcj
+%{_includedir}/c++/%{version}/gnu
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
