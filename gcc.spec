@@ -1,22 +1,6 @@
 #
 # TODO:
-#	/usr/include/omp.h
-#   <multilib>
-#	/usr/lib/libgomp.a
-#	/usr/lib/libgomp.la
-#	/usr/lib/libgomp.so.1.0.0
-#   </multilib>
-#	/usr/lib/libgomp.spec
-#	/usr/lib64/gcj-4.2.0/libxmlj.la
-#	/usr/lib64/gcj-4.2.0/libxmlj.so.0.0.0
-#	/usr/lib64/libgcj_bc.a
-#	/usr/lib64/libgcj_bc.so
-#	/usr/lib64/libgcj_bc.so.1.0.0
-#	/usr/lib64/libgomp.a
-#	/usr/lib64/libgomp.la
-#	/usr/lib64/libgomp.so.1.0.0
-#	/usr/lib64/libgomp.spec
-#	/usr/share/classpath/tools/tools.zip
+#		- libgomp subpackage.
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -1044,24 +1028,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/*
 %dir %{_libdir}/gcc/*/*
-
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/cc
 %attr(755,root,root) %{_bindir}/cpp
-
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
-
 %{_infodir}/cpp*
 %{_infodir}/gcc*
-
 %attr(755,root,root) /lib/cpp
-
 %attr(755,root,root) %{_slibdir}/lib*.so
 %{_libdir}/libssp.a
 %{_libdir}/libssp.la
@@ -1090,7 +1069,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/crt*.o
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
-
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
@@ -1292,8 +1270,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
-%attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgcj_bc.so
+%attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
 %dir %{_libdir}/gcj-%{version}
@@ -1304,6 +1284,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so
 %attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so
 %attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
 %{_mandir}/man1/gij*
@@ -1320,36 +1301,33 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/jni.h
 %{_libdir}/gcc/*/*/include/jni_md.h
 %{_libdir}/gcc/*/*/include/jvmpi.h
-%dir %{_libdir}/security
-%{_libdir}/security/*
-%{_libdir}/libgcj.spec
-%attr(755,root,root) %{_libdir}/libgcj.so
-%{_libdir}/libgcj.la
-%attr(755,root,root) %{_libdir}/libgcj-tools.so
-%{_libdir}/libgcj-tools.la
-%attr(755,root,root) %{_libdir}/libgij.so
-%{_libdir}/libgij.la
-%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
-%{_libdir}/lib-gnu-awt-xlib.la
 %{_libdir}/gcj-%{version}/libgjsmalsa.la
 %{_libdir}/gcj-%{version}/libgjsmdssi.la
 %{_libdir}/gcj-%{version}/libgtkpeer.la
 %{_libdir}/gcj-%{version}/libjawt.la
 %{_libdir}/gcj-%{version}/libjvm.la
 %{_libdir}/gcj-%{version}/libqtpeer.la
+%{_libdir}/gcj-%{version}/libxmlj.la
+%dir %{_libdir}/security
+%{_libdir}/security/*
+%{_libdir}/libgcj.spec
+%{_libdir}/libgcj-tools.la
+%attr(755,root,root) %{_libdir}/libgcj-tools.so
+%{_libdir}/libgcj.la
+%attr(755,root,root) %{_libdir}/libgcj.so
+%{_libdir}/libgij.la
+%attr(755,root,root) %{_libdir}/libgij.so
+%{_libdir}/lib-gnu-awt-xlib.la
+%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
 %{_pkgconfigdir}/libgcj-%{_major_ver}.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-%{_libdir}/libgcj.a
-%{_libdir}/libgcj-tools.a
-%{_libdir}/libgij.a
-%{_libdir}/lib-gnu-awt-xlib.a
 %{_libdir}/gcj-%{version}/libjvm.a
-# needs check.
-#{_libdir}/gcj-%{version}/libgtkpeer.a
-#{_libdir}/gcj-%{version}/libjawt.a
-#{_libdir}/gcj-%{version}/libqtpeer.a
+%{_libdir}/libgcj-tools.a
+%{_libdir}/libgcj.a
+%{_libdir}/libgcj_bc.a
+%{_libdir}/libgij.a
 
 %files -n libffi
 %defattr(644,root,root,755)
