@@ -56,7 +56,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20061030r118195
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -1202,6 +1202,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/docs/html
+%{_includedir}/c++
 %{_includedir}/c++/%{version}
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
