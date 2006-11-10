@@ -39,8 +39,8 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20061030r118195
-Release:	0.%{_snap}.3
+%define		_snap	20061110r118658
+Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -49,7 +49,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
 Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	5aa7973cf26b71a34a39431c9f9ecb7c
+# Source0-md5:	6da11e76c24d53cf37274b3114275043
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -104,7 +104,7 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 %if %{with fortran}
 BuildRequires:	gmp-devel
-BuildRequires:	mpfr-devel
+BuildRequires:	mpfr-devel >= 2.2
 %endif
 %if %{with java}
 BuildRequires:	QtGui-devel >= 4.0.1
@@ -847,7 +847,7 @@ cd ..
 	%{?with_bootstrap:%{?with_profiling:profiledbootstrap}} \
 	GCJFLAGS="%{rpmcflags}" \
 	BOOT_CFLAGS="%{rpmcflags}" \
-	STAGE1_CFLAGS="%{rpmcflags} -O0" \
+	STAGE1_CFLAGS="%{rpmcflags} -O0 -g0" \
 	GNATLIBCFLAGS="%{rpmcflags}" \
 	LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 	mandir=%{_mandir} \
