@@ -14,16 +14,16 @@
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
-%if %{without cxx}
+%if !%{with cxx}
 %undefine	with_java
 %undefine	with_objcxx
 %endif
 
-%if %{without objc}
+%if !%{with objc}
 %undefine	with_objcxx
 %endif
 
-%if %{without bootstrap}
+%if !%{with bootstrap}
 %undefine	with_profiling
 %endif
 
