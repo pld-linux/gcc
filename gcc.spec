@@ -777,7 +777,7 @@ Statyczne biblioteki Obiektowego C.
 %patch10 -p1
 %patch11 -p0
 %patch12 -p0
-%patch13 -p1
+%patch13 -p1 -l
 
 %ifarch %{x8664}
 %patch14 -p1
