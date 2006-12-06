@@ -104,7 +104,7 @@ BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 %if %{with fortran}
 BuildRequires:	gmp-devel
-BuildRequires:	mpfr-devel >= 2.2
+BuildRequires:	mpfr-devel >= 2.2.1
 %endif
 %if %{with java}
 BuildRequires:	QtGui-devel >= 4.0.1
@@ -761,7 +761,7 @@ Statyczne biblioteki Obiektowego C.
 %patch9 -p1
 #patch10 -p1	not quite correct / temp. disabled.
 %patch11 -p1
-%patch12 -p1
+%patch12 -p0
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
