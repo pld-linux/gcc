@@ -41,7 +41,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20061206r119598
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -147,7 +147,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
-%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
+%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char -O2
+%define		specflags	-O1
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -949,7 +950,6 @@ done
 # by fixincludes, we don't want former
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
 mkdir	$gccdir/tmp
-
 # we have to save these however
 %{?with_java:mv $gccdir/include/{gcj,ffi.h,ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
 %{?with_objc:mv $gccdir/include/objc $gccdir/tmp}
@@ -1090,6 +1090,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/mmintrin.h
 %{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
+%endif
+%ifarch powerpc ppc ppc64
+%{_libdir}/gcc/*/*/include/altivec.h
+%{_libdir}/gcc/*/*/include/ppc-asm.h
+%{_libdir}/gcc/*/*/include/spe.h
 %endif
 
 %files -n libgcc
