@@ -1,6 +1,7 @@
 #
 # TODO:
 #		- libgomp subpackage.
+#		- fix libtool(/usr/lib64/../lib64/libgcj.la)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
