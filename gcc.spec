@@ -147,8 +147,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
-%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char -O2
-%define		specflags	-O1
+%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 
 %description
 A compiler aimed at integrating all the optimizations and features
