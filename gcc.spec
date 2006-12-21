@@ -41,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	4
+Release:	5
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -103,16 +103,16 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparc)
 %endif
 %endif
+URL:		http://gcc.gnu.org/
 BuildRequires:	perl-devel
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.90.0.3
-Requires:	gcc-dirs
+Requires:	gcc-dirs(%{_target_platform})
 Requires:	libgcc = %{epoch}:%{GCC_VERSION}-%{release}
 %{?with_ada:Provides: gcc(ada)}
 Obsoletes:	gcc-chill
 Conflicts:	glibc-devel < 2.2.5-20
-URL:		http://gcc.gnu.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
@@ -394,8 +394,8 @@ kitaplýðý bu pakette yer almaz.
 Summary:	Objective C Libraries
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C
-License:	GPL v2+ + linking exception
 Version:	%{GCC_VERSION}
+License:	GPL v2+ + linking exception
 Group:		Libraries
 Obsoletes:	libobjc1
 
@@ -412,8 +412,8 @@ Biblioteki Obiektowego C.
 Summary:	Objective C Libraries - 32 bit version
 Summary(es):	Bibliotecas de Objective C
 Summary(pl):	Biblioteki Obiektowego C w wersji 32 bitowej
-License:	GPL v2+ + linking exception
 Version:	%{GCC_VERSION}
+License:	GPL v2+ + linking exception
 Group:		Libraries
 
 %description -n libobjc32
@@ -589,8 +589,8 @@ Summary(pl):	Obs³uga Javy dla gcc
 Version:	%{GCC_VERSION}
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	java-shared
+Requires:	libgcj-devel = %{epoch}:%{GCC_VERSION}-%{release}
 Provides:	gcj = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description java
@@ -844,8 +844,8 @@ Version:	%{GCC_VERSION}
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	glibc-devel
+Requires:	libstdc++ = %{epoch}:%{GCC_VERSION}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -880,8 +880,8 @@ Version:	%{GCC_VERSION}
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++32 = %{epoch}:%{GCC_VERSION}-%{release}
-Requires:	libstdc++32 = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	glibc-devel
+Requires:	libstdc++32 = %{epoch}:%{GCC_VERSION}-%{release}
 
 %description -n libstdc++32-devel
 This is the GNU implementation of the standard C++ libraries. This
@@ -1206,11 +1206,11 @@ como le convenga:
   cada línea.
 
 %description -n cpp -l pl
-Preprocesor C jest "makro procesorem" który jest automatycznie
-u¿ywany przez kompilator C do obróbki kompilowanego programu przed
-w³a¶ciw± kompilacj±. Jest on nazywany makroprocesorem, poniewa¿
-umo¿liwia definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie
-d³ugich konstrukcji w jêzyku C.
+Preprocesor C jest "makro procesorem" który jest automatycznie u¿ywany
+przez kompilator C do obróbki kompilowanego programu przed w³a¶ciw±
+kompilacj±. Jest on nazywany makroprocesorem, poniewa¿ umo¿liwia
+definiowanie i rozwijanie makr umo¿liwiaj±cych skracanie d³ugich
+konstrukcji w jêzyku C.
 
 Preprocesor C umo¿liwia wykonywanie czterech ró¿nych typów operacji:
 
