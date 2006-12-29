@@ -2,6 +2,7 @@
 # TODO:
 #	- fix libtool(/usr/lib64/../lib64/libgcj.la)
 #	  i.e. normalize libdir in *.la
+#	- gconf peer? (but libgcj needs split anyway)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -10,6 +11,10 @@
 %bcond_without	java		# build without Java support
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
+%bcond_without	alsa		# don't build libgcj ALSA MIDI interface
+%bcond_without	dssi		# don't build libgcj DSSI MIDI interface
+%bcond_without	gtk		# don't build libgcj GTK peer
+%bcond_without	qt		# don't build libgcj Qt peer
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
@@ -108,20 +113,26 @@ BuildRequires:	gmp-devel
 BuildRequires:	mpfr-devel >= 2.2.1
 %endif
 %if %{with java}
-BuildRequires:	QtGui-devel >= 4.0.1
-BuildRequires:	alsa-lib-devel
-BuildRequires:	cairo-devel >= 0.5.0
+%{?with_alsa:BuildRequires:	alsa-lib-devel}
+%if %{with dssi}
 BuildRequires:	dssi
 BuildRequires:	jack-audio-connection-kit-devel
-BuildRequires:	gtk+2-devel >= 2:2.4.0
-BuildRequires:	libart_lgpl-devel >= 2.1
-BuildRequires:	libxslt-devel
-BuildRequires:	pango-devel
+%endif
+BuildRequires:	libxml2-devel >= 1:2.6.8
+BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	pkgconfig
-BuildRequires:	qt4-build
-BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	zip
 BuildRequires:	unzip
+%if %{with gtk}
+BuildRequires:	cairo-devel >= 0.5.0
+BuildRequires:	pango-devel
+BuildRequires:	gtk+2-devel >= 2:2.4.0
+BuildRequires:	xorg-lib-libXtst-devel
+%endif
+%if %{with qt}
+BuildRequires:	QtGui-devel >= 4.0.1
+BuildRequires:	qt4-build >= 4.0.1
+%endif
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
@@ -867,15 +878,17 @@ TEXCONFIG=false \
 %endif
 %if %{with java}
 	--disable-libjava-multilib \
+	%{!?with_alsa:--disable-alsa} \
+	%{!?with_dssi:--disable-dssi} \
+	--disable-gconf-peer \
+	%{!?with_gtk_peer:--disable-gtk-peer} \
+	%{!?with_qt_peer:--disable-qt-peer} \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
-	--enable-gtk-cairo \
-	--enable-java-awt=qt,gtk,xlib \
+	%{?with_gtk:--enable-gtk-cairo} \
 	--enable-jni \
-	--enable-xmlj \
-	--enable-alsa \
-	--enable-dssi \
+	--enable-xmlj
 %endif
 	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
 	%{_target_platform}
@@ -963,8 +976,8 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 	%{?with_fortran:libgfortran.la} \
 %if %{with java}
 	libgcj.la libgcj-tools.la libffi.la lib-gnu-awt-xlib.la \
-	gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la gcj-%{version}/libjvm.la gcj-%{version}/libqtpeer.la \
-	gcj-%{version}/libgjsmalsa.la gcj-%{version}/libgjsmdssi.la gcj-%{version}/libxmlj.la \
+	gcj-%{version}/libgtkpeer.la %{?with_gtk:gcj-%{version}/libjawt.la} gcj-%{version}/libjvm.la %{?with_qt:gcj-%{version}/libqtpeer.la} \
+	%{?with_alsa:gcj-%{version}/libgjsmalsa.la} %{?with_dssi:gcj-%{version}/libgjsmdssi.la} gcj-%{version}/libxmlj.la \
 %endif
 	%{?with_objc:libobjc.la};
 do
@@ -1345,15 +1358,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
-%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so
+%{?with_alsa:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*}
+%{?with_dssi:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*}
+%{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so}
+%{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so}
 %attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so
+%{?with_qt:%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so}
 %attr(755,root,root) %{_libdir}/gcj-%{version}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
@@ -1371,12 +1383,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/jni.h
 %{_libdir}/gcc/*/*/include/jni_md.h
 %{_libdir}/gcc/*/*/include/jvmpi.h
-%{_libdir}/gcj-%{version}/libgjsmalsa.la
-%{_libdir}/gcj-%{version}/libgjsmdssi.la
-%{_libdir}/gcj-%{version}/libgtkpeer.la
-%{_libdir}/gcj-%{version}/libjawt.la
+%{?with_alsa:%{_libdir}/gcj-%{version}/libgjsmalsa.la}
+%{?with_dssi:%{_libdir}/gcj-%{version}/libgjsmdssi.la}
+%{?with_gtk:%{_libdir}/gcj-%{version}/libgtkpeer.la}
+%{?with_gtk:%{_libdir}/gcj-%{version}/libjawt.la}
 %{_libdir}/gcj-%{version}/libjvm.la
-%{_libdir}/gcj-%{version}/libqtpeer.la
+%{?with_qt:%{_libdir}/gcj-%{version}/libqtpeer.la}
 %{_libdir}/gcj-%{version}/libxmlj.la
 %dir %{_libdir}/security
 %{_libdir}/security/*
@@ -1387,8 +1399,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj.so
 %{_libdir}/libgij.la
 %attr(755,root,root) %{_libdir}/libgij.so
-%{_libdir}/lib-gnu-awt-xlib.la
-%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
 %{_pkgconfigdir}/libgcj-%{_major_ver}.pc
 
 %files -n libgcj-static
