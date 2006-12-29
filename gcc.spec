@@ -1,7 +1,7 @@
 #
 # TODO:
-#		- libgomp subpackage.
-#		- fix libtool(/usr/lib64/../lib64/libgcj.la)
+#	- fix libtool(/usr/lib64/../lib64/libgcj.la)
+#	  i.e. normalize libdir in *.la
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -199,6 +199,44 @@ Biblioteka dynamiczna gcc.
 
 %description -n libgcc -l pt_BR
 Biblioteca runtime para o GCC.
+
+%package -n libgomp
+Summary:	GNU OpenMP library
+Summary(pl):	Biblioteka GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+
+%description -n libgomp
+GNU OpenMP library.
+
+%description -n libgomp -l pl
+Biblioteka GNU OpenMP.
+
+%package -n libgomp-devel
+Summary:	Development files for GNU OpenMP library
+Summary(pl):	Pliki programistyczne biblioteki GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp = %{epoch}:%{version}-%{release}
+
+%description -n libgomp-devel
+Development files for GNU OpenMP library.
+
+%description -n libgomp-devel -l pl
+Pliki programistyczne biblioteki GNU OpenMP.
+
+%package -n libgomp-static
+Summary:	Static GNU OpenMP library
+Summary(pl):	Statyczna biblioteka GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgomp-static
+Static GNU OpenMP library.
+
+%description -n libgomp-static -l pl
+Statyczna biblioteka GNU OpenMP.
 
 %package -n libmudflap
 Summary:	GCC mudflap shared support library
@@ -1005,6 +1043,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
+%post	-p /sbin/ldconfig -n libgomp
+%postun	-p /sbin/ldconfig -n libgomp
 %post	-p /sbin/ldconfig -n libmudflap
 %postun	-p /sbin/ldconfig -n libmudflap
 %post	-p /sbin/ldconfig -n libgnat
@@ -1102,6 +1142,31 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 %endif
 %attr(755,root,root) %{_slibdir}/lib*.so.*
+
+%files -n libgomp
+%defattr(644,root,root,755)
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
+%endif
+%attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
+
+%files -n libgomp-devel
+%defattr(644,root,root,755)
+%if %{with multilib}
+%attr(755,root,root) %{_libdir32}/libgomp.so
+%{_libdir32}/libgomp.la
+%endif
+%attr(755,root,root) %{_libdir}/libgomp.so
+%{_libdir}/libgomp.la
+%{_libdir}/libgomp.spec
+%{_libdir}/gcc/*/*/finclude
+
+%files -n libgomp-static
+%defattr(644,root,root,755)
+%if %{with multilib}
+%{_libdir32}/libgomp.a
+%endif
+%{_libdir}/libgomp.a
 
 %files -n libmudflap
 %defattr(644,root,root,755)
