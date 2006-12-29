@@ -888,7 +888,7 @@ TEXCONFIG=false \
 	--enable-libgcj-database \
 	%{?with_gtk:--enable-gtk-cairo} \
 	--enable-jni \
-	--enable-xmlj
+	--enable-xmlj \
 %endif
 	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
 	%{_target_platform}
