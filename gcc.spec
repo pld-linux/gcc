@@ -920,6 +920,8 @@ cd builddir
 
 install gcc/specs $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}
 
+%if %{with multilib}
+# create links
 %ifarch sparc64
 ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
@@ -934,6 +936,26 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-g++ \
 %if %{with java}
 ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcj \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcj
+%endif
+%endif
+
+# this file differ (at least sparc/sparc64)
+%if %{with cxx}
+spath=builddir/%{_target_platform}
+sfile=libstdc++-v3/include/%{_target_platform}/bits/c++config.h
+dpath=$RPM_BUILD_ROOT%{_includedir}/c++/%{version}/%{_target_platform}/bits
+if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null ; then
+       cp -f $spath/$sfile $dpath/c++config64.h
+       cp -f $spath/32/$sfile $dpath/c++config32.h
+       cat > $dpath/c++config.h <<EOF
+#include <bits/wordsize.h>
+#if __WORDSIZE == 32
+#include <bits/c++config32.h>
+#else
+#include <bits/c++config64.h>
+#endif
+EOF
+fi
 %endif
 %endif
 
