@@ -1168,6 +1168,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %attr(755,root,root) %{_libdir32}/libgomp.so
 %{_libdir32}/libgomp.la
+%{_libdir32}/libgomp.spec
 %endif
 %attr(755,root,root) %{_libdir}/libgomp.so
 %{_libdir}/libgomp.la
