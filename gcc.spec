@@ -921,8 +921,20 @@ cd builddir
 install gcc/specs $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}
 
 %ifarch sparc64
-ln -sf	%{_bindir}/sparc64-pld-linux-gcc \
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc \
 	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcc-%{version} \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcc-%{version}
+%if %{with cxx}
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-c++ \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-c++
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-g++ \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-g++
+%endif
+%if %{with java}
+ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcj \
+	$RPM_BUILD_ROOT%{_bindir}/sparc-pld-linux-gcj
+%endif
 %endif
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
