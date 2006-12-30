@@ -975,7 +975,7 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
 %if %{with java}
-	libgcj.la libgcj-tools.la libffi.la lib-gnu-awt-xlib.la \
+	libgcj.la libgcj-tools.la libffi.la \
 	gcj-%{version}/libgtkpeer.la %{?with_gtk:gcj-%{version}/libjawt.la} gcj-%{version}/libjvm.la %{?with_qt:gcj-%{version}/libqtpeer.la} \
 	%{?with_alsa:gcj-%{version}/libgjsmalsa.la} %{?with_dssi:gcj-%{version}/libgjsmdssi.la} gcj-%{version}/libxmlj.la \
 %endif
