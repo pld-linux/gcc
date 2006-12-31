@@ -46,7 +46,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20061225r120195
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.3
 #Release:	2
 Epoch:		5
 License:	GPL v2+
