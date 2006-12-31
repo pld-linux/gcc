@@ -944,7 +944,7 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcj \
 
 # this file differ (at least sparc/sparc64)
 %if %{with cxx}
-spath=builddir/%{_target_platform}
+spath=%{_target_platform}
 sfile=libstdc++-v3/include/%{_target_platform}/bits/c++config.h
 dpath=$RPM_BUILD_ROOT%{_includedir}/c++/%{version}/%{_target_platform}/bits
 if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null ; then
