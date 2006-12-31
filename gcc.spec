@@ -854,6 +854,9 @@ TEXCONFIG=false \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
 	--disable-werror \
+%ifarch sparc64
+	--with-cpu=ultrasparc \
+%endif
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-demangler-in-ld \
