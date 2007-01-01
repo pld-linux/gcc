@@ -3,6 +3,11 @@
 #	- fix libtool(/usr/lib64/../lib64/libgcj.la)
 #	  i.e. normalize libdir in *.la
 #	- gconf peer? (but libgcj needs split anyway)
+#	- files:
+#	   /usr/lib/gcc/i686-pld-linux/4.2.0/libgfortranbegin.la
+#	   /usr/lib/lib-gnu-awt-xlib.a
+#	   /usr/lib/lib-gnu-awt-xlib.la
+#	   /usr/lib/lib-gnu-awt-xlib.so.8.0.0
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
