@@ -46,7 +46,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20061231r120298
-Release:	0.%{_snap}.3
+Release:	0.%{_snap}.4
 #Release:	2
 Epoch:		5
 License:	GPL v2+
@@ -884,6 +884,7 @@ TEXCONFIG=false \
 	%{!?with_alsa:--disable-alsa} \
 	%{!?with_dssi:--disable-dssi} \
 	--disable-gconf-peer \
+	--enable-java-awt="xlib%{?with_gtk:,gtk}%{?with_qt:,qt}" \
 	%{!?with_gtk:--disable-gtk-peer} \
 	%{!?with_qt:--disable-qt-peer} \
 	--enable-libgcj \
