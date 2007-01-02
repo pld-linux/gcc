@@ -1244,7 +1244,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/*.ali
 %{_libdir}/gcc/*/*/adalib/g-trasym.o
 %{_libdir}/gcc/*/*/adalib/libgccprefix.a
-%ifarch %{ix86}
+%ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
 %{_infodir}/gnat*
