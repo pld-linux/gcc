@@ -130,6 +130,7 @@ BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	libart_lgpl-devel >= 2.1
 BuildRequires:	libxslt-devel
 BuildRequires:	pango-devel
+BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
 BuildRequires:	qt4-build
 BuildRequires:	xorg-lib-libXtst-devel
