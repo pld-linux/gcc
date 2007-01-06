@@ -570,9 +570,9 @@ Summary(pl):	Obs³uga Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
+Requires:	jar
 Provides:	gcj = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
-Obsoletes:	fastjar
 Obsoletes:	gcc-java-tools
 
 %description java
@@ -989,6 +989,8 @@ ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 # tools.zip sources
 rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
+# we will use Requires: jar for now
+rm -f $RPM_BUILD_ROOT%{_bindir}/jar
 %endif
 %if %{with objc}
 cp -f	libobjc/README gcc/objc/README.libobjc
@@ -1361,7 +1363,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gjnih
 %attr(755,root,root) %{_bindir}/gkeytool
 %attr(755,root,root) %{_bindir}/grmi*
-%attr(755,root,root) %{_bindir}/jar
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/*-gcj*
