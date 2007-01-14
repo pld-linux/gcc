@@ -5,9 +5,6 @@
 #	- gconf peer? (but libgcj needs split anyway)
 #	- files:
 #	   /usr/lib/gcc/i686-pld-linux/4.2.0/libgfortranbegin.la
-#	   /usr/lib/lib-gnu-awt-xlib.a
-#	   /usr/lib/lib-gnu-awt-xlib.la
-#	   /usr/lib/lib-gnu-awt-xlib.so.8.0.0
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -20,6 +17,7 @@
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
 %bcond_without	qt		# don't build libgcj Qt peer
+%bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
@@ -36,6 +34,11 @@
 
 %if !%{with bootstrap}
 %undefine	with_profiling
+%endif
+
+%if !%{with x}
+%undefine	with_gtk
+%undefine	with_qt
 %endif
 
 %ifnarch %{x8664} ppc64 s390x sparc64
@@ -890,9 +893,9 @@ TEXCONFIG=false \
 	%{!?with_alsa:--disable-alsa} \
 	%{!?with_dssi:--disable-dssi} \
 	--disable-gconf-peer \
+%if %{with x}
 	--enable-java-awt="xlib%{?with_gtk:,gtk}%{?with_qt:,qt}" \
-	%{!?with_gtk:--disable-gtk-peer} \
-	%{!?with_qt:--disable-qt-peer} \
+%endif
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
@@ -1003,8 +1006,13 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 	%{?with_fortran:libgfortran.la} \
 %if %{with java}
 	libgcj.la libgcj-tools.la libffi.la \
-	%{?with_gtk:gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la} gcj-%{version}/libjvm.la %{?with_qt:gcj-%{version}/libqtpeer.la} \
-	%{?with_alsa:gcj-%{version}/libgjsmalsa.la} %{?with_dssi:gcj-%{version}/libgjsmdssi.la} gcj-%{version}/libxmlj.la \
+	gcj-%{version}/libjvm.la \
+	gcj-%{version}/libxmlj.la \
+	%{?with_x:lib-gnu-awt-xlib.la} \
+	%{?with_gtk:gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la} \
+	%{?with_qt:gcj-%{version}/libqtpeer.la} \
+	%{?with_alsa:gcj-%{version}/libgjsmalsa.la} \
+	%{?with_dssi:gcj-%{version}/libgjsmdssi.la} \
 %endif
 	%{?with_objc:libobjc.la};
 do
@@ -1385,6 +1393,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
+%{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
 %{?with_alsa:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*}
@@ -1426,6 +1435,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj.so
 %{_libdir}/libgij.la
 %attr(755,root,root) %{_libdir}/libgij.so
+%if %{with x}
+%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
+%{_libdir}/lib-gnu-awt-xlib.la
+%endif
 %{_pkgconfigdir}/libgcj-%{_major_ver}.pc
 
 %files -n libgcj-static
@@ -1435,6 +1448,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgcj.a
 %{_libdir}/libgcj_bc.a
 %{_libdir}/libgij.a
+%{?with_x:%{_libdir}/lib-gnu-awt-xlib.a}
 
 %files -n libffi
 %defattr(644,root,root,755)
