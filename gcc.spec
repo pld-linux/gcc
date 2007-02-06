@@ -55,6 +55,7 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-pr19664_gnu_internal.patch
 Patch7:		%{name}-pr19664_libstdc++.patch
 Patch8:		%{name}-pr20218.patch
+Patch9:		%{name}-ada.patch
 
 # PRs
 Patch10:	%{name}-pr7776.patch
@@ -766,6 +767,8 @@ Statyczne biblioteki Obiektowego C.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+
+%patch9 -p1
 
 # PRs
 %patch10 -p1
