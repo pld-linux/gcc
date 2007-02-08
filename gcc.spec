@@ -36,7 +36,7 @@ Name:		gcc
 Version:	4.1.2
 %define		_snap	20061201r119386
 #define		_snap	20060517
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	1
 Epoch:		5
 License:	GPL v2+
@@ -80,6 +80,9 @@ Patch27:	%{name}-enable-java-awt-qt.patch
 # 128-bit long double support for glibc 2.4
 Patch30:	%{name}-ldbl-default-libstdc++.patch
 Patch31:	%{name}-ldbl-default.patch
+
+# Needed too bootstrap with gcc 4.2
+Patch40:	%{name}-ada.patch
 
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -798,6 +801,8 @@ Statyczne biblioteki Obiektowego C.
 
 %patch30 -p0
 %patch31 -p0
+
+%patch40 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
