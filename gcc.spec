@@ -34,18 +34,16 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.2
-%define		_snap	20061201r119386
-#define		_snap	20060517
-Release:	0.%{_snap}.3
+%define		_snap	20070205
+Release:	0.%{_snap}.4
 #Release:	1
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
-Source0:	gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	7c6dda88021bab6be2abfcfce2577592
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
+# Source0-md5:	57c92e43187e323da136d84510277930
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -762,8 +760,8 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q -n gcc-%{version}
-#setup -q -n gcc-%{version}-%{_snap}
-%setup -q -n gcc-4_1-branch
+%setup -q -n gcc-4.1-%{_snap}
+#setup -q -n gcc-4_1-branch
 
 %patch0 -p1
 %patch1 -p1
@@ -1158,7 +1156,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/adalib/*.ali
 %{_libdir}/gcc/*/*/adalib/g-trasym.o
 %{_libdir}/gcc/*/*/adalib/libgccprefix.a
-%ifarch %{ix86}
+%ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
 %{_infodir}/gnat*
