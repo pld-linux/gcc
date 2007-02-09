@@ -818,7 +818,7 @@ Statyczne biblioteki Obiektowego C.
 %patch9 -p1
 #patch10 -p1	not quite correct / temp. disabled.
 %patch12 -p0
-%patch13 -p1
+#%patch13 -p1 # comment in bugreport indicates that this patch is broken
 %patch14 -p1
 %patch15 -p1
 
