@@ -53,17 +53,16 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20070126r121214
+%define		_snap	20070207
 Release:	0.%{_snap}.1
 #Release:	2
-Epoch:		5
+Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
-Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	76f4a0ec545b165ac2230a5c094bbf78
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
+# Source0-md5:	28d98b3dbf0f40423cc38ad8c1da5580
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -76,7 +75,6 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-pr13676.patch
 Patch10:	%{name}-pr17390.patch
-Patch11:	%{name}-pr19505.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
 Patch14:	%{name}-force_jar_wrapper.patch
@@ -807,7 +805,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q -n gcc-%{version}
-%setup -q -n gcc-4_2-branch
+%setup -q -n gcc-4.2-%{_snap}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -819,7 +817,6 @@ Statyczne biblioteki Obiektowego C.
 %patch8 -p1
 %patch9 -p1
 #patch10 -p1	not quite correct / temp. disabled.
-%patch11 -p1
 %patch12 -p0
 %patch13 -p1
 %patch14 -p1
