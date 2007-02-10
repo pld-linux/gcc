@@ -1206,6 +1206,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{_libdir}/gcc/*/*/finclude
+%{_infodir}/libgomp*
 
 %files -n libgomp-static
 %defattr(644,root,root,755)
