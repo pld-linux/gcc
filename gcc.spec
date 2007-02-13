@@ -46,9 +46,9 @@
 %endif
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
-Summary(es.UTF-8):   Colección de compiladores GNU: el compilador C y ficheros compartidos
-Summary(pl.UTF-8):   Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
-Summary(pt_BR.UTF-8):   Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
+Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
+Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
+Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
@@ -199,9 +199,9 @@ GNU Compiler Collection.
 
 %package -n libgcc
 Summary:	Shared gcc library
-Summary(es.UTF-8):   Biblioteca compartida de gcc
-Summary(pl.UTF-8):   Biblioteka gcc
-Summary(pt_BR.UTF-8):   Biblioteca runtime para o GCC
+Summary(es.UTF-8):	Biblioteca compartida de gcc
+Summary(pl.UTF-8):	Biblioteka gcc
+Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
 License:	GPL with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
@@ -220,7 +220,7 @@ Biblioteca runtime para o GCC.
 
 %package -n libgomp
 Summary:	GNU OpenMP library
-Summary(pl.UTF-8):   Biblioteka GNU OpenMP
+Summary(pl.UTF-8):	Biblioteka GNU OpenMP
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
@@ -232,7 +232,7 @@ Biblioteka GNU OpenMP.
 
 %package -n libgomp-devel
 Summary:	Development files for GNU OpenMP library
-Summary(pl.UTF-8):   Pliki programistyczne biblioteki GNU OpenMP
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp = %{epoch}:%{version}-%{release}
@@ -245,7 +245,7 @@ Pliki programistyczne biblioteki GNU OpenMP.
 
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
-Summary(pl.UTF-8):   Statyczna biblioteka GNU OpenMP
+Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
@@ -258,7 +258,7 @@ Statyczna biblioteka GNU OpenMP.
 
 %package -n libmudflap
 Summary:	GCC mudflap shared support library
-Summary(pl.UTF-8):   Współdzielona biblioteka wspomagająca GCC mudflap
+Summary(pl.UTF-8):	Współdzielona biblioteka wspomagająca GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
@@ -272,7 +272,7 @@ dereferencji wspaźników i tablic.
 
 %package -n libmudflap-devel
 Summary:	Development files for GCC mudflap library
-Summary(pl.UTF-8):   Pliki programistyczne biblioteki GCC mudflap
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap = %{epoch}:%{version}-%{release}
@@ -289,7 +289,7 @@ programistyczne.
 
 %package -n libmudflap-static
 Summary:	Static GCC mudflap library
-Summary(pl.UTF-8):   Statyczna biblioteka GCC mudflap
+Summary(pl.UTF-8):	Statyczna biblioteka GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
@@ -306,8 +306,8 @@ statyczne.
 
 %package ada
 Summary:	Ada support for gcc
-Summary(es.UTF-8):   Soporte de Ada para gcc
-Summary(pl.UTF-8):   Obsługa Ady do gcc
+Summary(es.UTF-8):	Soporte de Ada para gcc
+Summary(pl.UTF-8):	Obsługa Ady do gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgnat = %{epoch}:%{version}-%{release}
@@ -327,8 +327,8 @@ Adzie.
 
 %package -n libgnat
 Summary:	Ada standard libraries
-Summary(es.UTF-8):   Bibliotecas estándares de Ada
-Summary(pl.UTF-8):   Biblioteki standardowe dla Ady
+Summary(es.UTF-8):	Bibliotecas estándares de Ada
+Summary(pl.UTF-8):	Biblioteki standardowe dla Ady
 License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	gnat
@@ -348,7 +348,7 @@ napisanych w Adzie.
 
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
-Summary(pl.UTF-8):   Statyczne biblioteki standardowe dla Ady
+Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Obsoletes:	gnat-static
@@ -362,9 +362,9 @@ Adzie.
 
 %package c++
 Summary:	C++ support for gcc
-Summary(es.UTF-8):   Soporte de C++ para gcc
-Summary(pl.UTF-8):   Obsługa C++ dla gcc
-Summary(pt_BR.UTF-8):   Suporte C++ para o gcc
+Summary(es.UTF-8):	Soporte de C++ para gcc
+Summary(pl.UTF-8):	Obsługa C++ dla gcc
+Summary(pt_BR.UTF-8):	Suporte C++ para o gcc
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
@@ -410,9 +410,9 @@ C++ kitaplığı bu pakette yer almaz.
 
 %package -n libstdc++
 Summary:	GNU C++ library
-Summary(es.UTF-8):   Biblioteca C++ de GNU
-Summary(pl.UTF-8):   Biblioteki GNU C++
-Summary(pt_BR.UTF-8):   Biblioteca C++ GNU
+Summary(es.UTF-8):	Biblioteca C++ de GNU
+Summary(pl.UTF-8):	Biblioteki GNU C++
+Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
 License:	GPL v2+ with free software exception
 Group:		Libraries
 Obsoletes:	libg++
@@ -453,12 +453,12 @@ uygulamalarının koşturulması için gerekli kitaplıkları içerir.
 
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
-Summary(de.UTF-8):   Header-Dateien zur Entwicklung mit C++
-Summary(es.UTF-8):   Ficheros de cabecera y documentación para desarrollo C++
-Summary(fr.UTF-8):   Fichiers d'en-tête et biblitothèques pour développer en C++
-Summary(pl.UTF-8):   Pliki nagłówkowe i dokumentacja do biblioteki standardowej C++
-Summary(pt_BR.UTF-8):   Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
-Summary(tr.UTF-8):   C++ ile program geliştirmek için gerekli dosyalar
+Summary(de.UTF-8):	Header-Dateien zur Entwicklung mit C++
+Summary(es.UTF-8):	Ficheros de cabecera y documentación para desarrollo C++
+Summary(fr.UTF-8):	Fichiers d'en-tête et biblitothèques pour développer en C++
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki standardowej C++
+Summary(pt_BR.UTF-8):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
+Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
@@ -488,8 +488,8 @@ para desenvolvimento de programas C++.
 
 %package -n libstdc++-static
 Summary:	Static C++ standard library
-Summary(es.UTF-8):   Biblioteca estándar estática de C++
-Summary(pl.UTF-8):   Statyczna biblioteka standardowa C++
+Summary(es.UTF-8):	Biblioteca estándar estática de C++
+Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
@@ -505,9 +505,9 @@ Statyczna biblioteka standardowa C++.
 
 %package fortran
 Summary:	Fortran 95 support for gcc
-Summary(es.UTF-8):   Soporte de Fortran 95 para gcc
-Summary(pl.UTF-8):   Obsługa Fortranu 95 dla gcc
-Summary(pt_BR.UTF-8):   Suporte Fortran 95 para o GCC
+Summary(es.UTF-8):	Soporte de Fortran 95 para gcc
+Summary(pl.UTF-8):	Obsługa Fortranu 95 dla gcc
+Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
@@ -531,8 +531,8 @@ Suporte Fortran 95 para o GCC.
 
 %package -n libgfortran
 Summary:	Fortran 95 Libraries
-Summary(es.UTF-8):   Bibliotecas de Fortran 95
-Summary(pl.UTF-8):   Biblioteki Fortranu 95
+Summary(es.UTF-8):	Bibliotecas de Fortran 95
+Summary(pl.UTF-8):	Biblioteki Fortranu 95
 License:	LGPL v2+
 Group:		Libraries
 Obsoletes:	libg2c
@@ -548,8 +548,8 @@ Biblioteki Fortranu 95.
 
 %package -n libgfortran-static
 Summary:	Static Fortran 95 Libraries
-Summary(es.UTF-8):   Bibliotecas estáticas de Fortran 95
-Summary(pl.UTF-8):   Statyczne Biblioteki Fortranu 95
+Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
+Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
 License:	LGPL v2+
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
@@ -566,8 +566,8 @@ Statyczne biblioteki Fortranu 95.
 
 %package java
 Summary:	Java support for gcc
-Summary(es.UTF-8):   Soporte de Java para gcc
-Summary(pl.UTF-8):   Obsługa Javy dla gcc
+Summary(es.UTF-8):	Soporte de Java para gcc
+Summary(pl.UTF-8):	Obsługa Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
@@ -593,8 +593,8 @@ dodatkowo pakiet libgcj.
 
 %package -n libgcj
 Summary:	Java Class Libraries
-Summary(es.UTF-8):   Bibliotecas de clases de Java
-Summary(pl.UTF-8):   Biblioteki Klas Javy
+Summary(es.UTF-8):	Bibliotecas de clases de Java
+Summary(pl.UTF-8):	Biblioteki Klas Javy
 License:	GPL with limited linking exception
 Group:		Libraries
 Obsoletes:	libgcj3
@@ -610,8 +610,8 @@ Biblioteki Klas Javy.
 
 %package -n libgcj-devel
 Summary:	Development files for Java Class Libraries
-Summary(es.UTF-8):   Ficheros de desarrollo para las bibliotecas de clases de Java
-Summary(pl.UTF-8):   Pliki nagłówkowe dla Bibliotek Klas Javy
+Summary(es.UTF-8):	Ficheros de desarrollo para las bibliotecas de clases de Java
+Summary(pl.UTF-8):	Pliki nagłówkowe dla Bibliotek Klas Javy
 License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
@@ -629,8 +629,8 @@ Pliki nagłówkowe dla Bibliotek Klas Javy.
 
 %package -n libgcj-static
 Summary:	Static Java Class Libraries
-Summary(es.UTF-8):   Bibliotecas estáticas de clases de Java
-Summary(pl.UTF-8):   Statyczne Biblioteki Klas Javy
+Summary(es.UTF-8):	Bibliotecas estáticas de clases de Java
+Summary(pl.UTF-8):	Statyczne Biblioteki Klas Javy
 License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
@@ -647,8 +647,8 @@ Statyczne Biblioteki Klas Javy.
 
 %package -n libffi
 Summary:	Foreign Function Interface library
-Summary(es.UTF-8):   Biblioteca de interfaz de funciones ajenas
-Summary(pl.UTF-8):   Biblioteka zewnętrznych wywołań funkcji
+Summary(es.UTF-8):	Biblioteca de interfaz de funciones ajenas
+Summary(pl.UTF-8):	Biblioteka zewnętrznych wywołań funkcji
 License:	BSD-like
 Group:		Libraries
 
@@ -672,8 +672,8 @@ czasie wykonania.
 
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
-Summary(es.UTF-8):   Ficheros de desarrollo para libffi
-Summary(pl.UTF-8):   Pliki nagłówkowe dla libffi
+Summary(es.UTF-8):	Ficheros de desarrollo para libffi
+Summary(pl.UTF-8):	Pliki nagłówkowe dla libffi
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi = %{epoch}:%{version}-%{release}
@@ -689,8 +689,8 @@ Pliki nagłówkowe dla libffi.
 
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
-Summary(es.UTF-8):   Biblioteca libffi estática
-Summary(pl.UTF-8):   Statyczna biblioteka libffi
+Summary(es.UTF-8):	Biblioteca libffi estática
+Summary(pl.UTF-8):	Statyczna biblioteka libffi
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{version}-%{release}
@@ -706,11 +706,11 @@ Statyczna biblioteka libffi.
 
 %package objc
 Summary:	Objective C support for gcc
-Summary(de.UTF-8):   Objektive C-Unterstützung für gcc
-Summary(es.UTF-8):   Soporte de Objective C para gcc
-Summary(fr.UTF-8):   Gestion d'Objective C pour gcc
-Summary(pl.UTF-8):   Obsługa obiektowego C dla kompilatora gcc
-Summary(tr.UTF-8):   gcc için Objective C desteği
+Summary(de.UTF-8):	Objektive C-Unterstützung für gcc
+Summary(es.UTF-8):	Soporte de Objective C para gcc
+Summary(fr.UTF-8):	Gestion d'Objective C pour gcc
+Summary(pl.UTF-8):	Obsługa obiektowego C dla kompilatora gcc
+Summary(tr.UTF-8):	gcc için Objective C desteği
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
@@ -756,7 +756,7 @@ kitaplığı bu pakette yer almaz.
 
 %package objc++
 Summary:	Objective C++ support for gcc
-Summary(pl.UTF-8):   Obsługa języka Objective C++ dla gcc
+Summary(pl.UTF-8):	Obsługa języka Objective C++ dla gcc
 Group:		Development/Languages
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	%{name}-objc = %{epoch}:%{version}-%{release}
@@ -771,8 +771,8 @@ kompilatorów GNU Compiler Collection.
 
 %package -n libobjc
 Summary:	Objective C Libraries
-Summary(es.UTF-8):   Bibliotecas de Objective C
-Summary(pl.UTF-8):   Biblioteki Obiektowego C
+Summary(es.UTF-8):	Bibliotecas de Objective C
+Summary(pl.UTF-8):	Biblioteki Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	libobjc1
@@ -788,8 +788,8 @@ Biblioteki Obiektowego C.
 
 %package -n libobjc-static
 Summary:	Static Objective C Libraries
-Summary(es.UTF-8):   Bibliotecas estáticas de Objective C
-Summary(pl.UTF-8):   Statyczne Biblioteki Obiektowego C
+Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
+Summary(pl.UTF-8):	Statyczne Biblioteki Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{version}-%{release}
