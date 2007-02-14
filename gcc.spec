@@ -54,7 +54,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070207
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		6
 License:	GPL v2+
@@ -79,6 +79,7 @@ Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
 Patch14:	%{name}-force_jar_wrapper.patch
 Patch15:	%{name}-pr29512.patch
+Patch16:	%{name}-pr29943.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -821,6 +822,7 @@ Statyczne biblioteki Obiektowego C.
 #%patch13 -p1 # comment in bugreport indicates that this patch is broken
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
