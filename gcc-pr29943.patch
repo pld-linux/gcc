@@ -1,0 +1,46 @@
+This patch fixes a problem with -fsection-anchors and variables
+declared with "attribute ((alias ()))".  In some circumstances, both
+an alias (symbol equated to another symbol) and a normal definition
+(label plus space allocation) were being emitted.  See the PR for
+details.  This causes current glibc ld.so to fail on powerpc-linux
+where section anchors are enabled by default.
+
+The reduced testcatse from the PR looks like:
+
+extern char **_dl_argv __attribute__ ((section (".data.rel.ro")));
+extern char **_dl_argv_internal __attribute__ ((visibility ("hidden")))
+  __attribute__ ((section (".data.rel.ro")));
+
+char **_dl_argv __attribute__ ((section (".data.rel.ro"))) = ((void *)0);
+extern __typeof (_dl_argv) _dl_argv_internal
+  __attribute__ ((alias ("_dl_argv")));
+
+char* foo () { return _dl_argv_internal[0]; }
+
+The section attribute on _dl_argv_internal is one of the triggers
+for this bug.  I think glibc is doing something slightly dodgy in
+specifying a section on an aliased variable, but at least the section
+agrees with the real variable.
+
+:ADDPATCH target rs6000:
+
+Bootstrapped and regression tested powerpc-linux, all languages but
+ada.
+
+	PR target/29943
+	* varasm.c (use_blocks_for_decl_p): Return false for decls with
+	alias attribute.
+
+--- gcc/gcc/varasm.c	(revision 119100)
++++ gcc/gcc/varasm.c	(working copy)
+@@ -981,6 +981,10 @@ use_blocks_for_decl_p (tree decl)
+   if (DECL_INITIAL (decl) == decl)
+     return false;
+ 
++  /* If this decl is an alias, then we don't want to emit a definition.  */
++  if (lookup_attribute ("alias", DECL_ATTRIBUTES (decl)))
++    return false;
++
+   return true;
+ }
+ 
