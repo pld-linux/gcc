@@ -34,16 +34,12 @@ Summary(pl.UTF-8):   Kolekcja kompilatorów GNU: kompilator C i pliki współdzi
 Summary(pt_BR.UTF-8):   Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	4.1.2
-%define		_snap	20070205
-Release:	0.%{_snap}.1
-#Release:	1
+Release:	1
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.1-%{_snap}/gcc-4.1-%{_snap}.tar.bz2
-# Source0-md5:	57c92e43187e323da136d84510277930
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	a4a3eb15c96030906d8494959eeda23c
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -759,9 +755,7 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-#setup -q -n gcc-%{version}
-%setup -q -n gcc-4.1-%{_snap}
-#setup -q -n gcc-4_1-branch
+%setup -q
 
 %patch0 -p1
 %patch1 -p1
