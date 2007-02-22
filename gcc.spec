@@ -53,7 +53,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20070214
+%define		_snap	20070221
 Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		6
@@ -62,7 +62,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	e2bbcd0e837c790d16aad77cdf8aff7f
+# Source0-md5:	f45c60a8ce1c07087bf0d7aad0f097af
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -79,7 +79,6 @@ Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-pr24669.patch
 Patch14:	%{name}-force_jar_wrapper.patch
 Patch15:	%{name}-pr29512.patch
-Patch16:	%{name}-pr29943.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -822,7 +821,6 @@ Statyczne biblioteki Obiektowego C.
 #%patch13 -p1 # comment in bugreport indicates that this patch is broken
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
