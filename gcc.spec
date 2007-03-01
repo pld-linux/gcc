@@ -53,7 +53,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20070221
+%define		_snap	20070228
 Release:	0.%{_snap}.1
 #Release:	2
 Epoch:		6
@@ -62,7 +62,7 @@ Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	f45c60a8ce1c07087bf0d7aad0f097af
+# Source0-md5:	fc2def4121c8016f8381379ded1b58c4
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
