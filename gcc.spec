@@ -54,7 +54,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070316
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #Release:	2
 Epoch:		6
 License:	GPL v2+
@@ -74,9 +74,9 @@ Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-pr13676.patch
-Patch10:	%{name}-pr17390.patch
+Patch10:	%{name}-pr7302.patch
 Patch12:	%{name}-pr20218.patch
-Patch13:	%{name}-pr24669.patch
+
 Patch14:	%{name}-force_jar_wrapper.patch
 Patch15:	%{name}-pr29512.patch
 URL:		http://gcc.gnu.org/
@@ -817,9 +817,9 @@ Statyczne biblioteki Obiektowego C.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
-#patch10 -p1	not quite correct / temp. disabled.
+%patch10 -p1
 %patch12 -p0
-#%patch13 -p1 # comment in bugreport indicates that this patch is broken
+
 %patch14 -p1
 %patch15 -p1
 
@@ -916,7 +916,13 @@ cd ..
 	mandir=%{_mandir} \
 	infodir=%{_infodir}
 
-%{?with_tests:%{__make} -k -C builddir check 2>&1 ||:}
+%if %{with tests}
+if [ ! -r /dev/pts/0 ]; then
+	echo "You need to have /dev/pts mounted to avoid expect's spawn failures!"
+	exit 1
+fi
+%{__make} -k -C builddir check 2>&1 ||:
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
