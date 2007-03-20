@@ -1,0 +1,118 @@
+2007-03-20  Pawel Sikora  <pluto@pld-linux.org>
+
+	PR c++/7302
+	* cp/class.c (finish_struct_1): Warn when a class has virtual
+	functions and accessible non-virtual destructor.
+
+	* doc/invoke.texi (-Wnon-virtual-dtor): Update documentation.
+
+	* g++.dg/warn/Wnvdtor-2.C: New testcase.
+
+Index: trunk/gcc/cp/class.c
+===================================================================
+--- trunk/gcc/cp/class.c	(revision 123085)
++++ trunk/gcc/cp/class.c	(working copy)
+@@ -5105,17 +5105,19 @@
+       tree dtor;
+ 
+       dtor = CLASSTYPE_DESTRUCTORS (t);
+-      /* Warn only if the dtor is non-private or the class has
+-	 friends.  */
+       if (/* An implicitly declared destructor is always public.  And,
+ 	     if it were virtual, we would have created it by now.  */
+ 	  !dtor
+ 	  || (!DECL_VINDEX (dtor)
+-	      && (!TREE_PRIVATE (dtor)
+-		  || CLASSTYPE_FRIEND_CLASSES (t)
+-		  || DECL_FRIENDLIST (TYPE_MAIN_DECL (t)))))
+-	warning (0, "%q#T has virtual functions but non-virtual destructor",
+-		 t);
++	      && (/* public non-virtual */
++		  (!TREE_PRIVATE (dtor) && !TREE_PROTECTED (dtor))
++		   || (/* non-public non-virtual with friends */
++		       (TREE_PRIVATE (dtor) || TREE_PROTECTED (dtor))
++			&& (CLASSTYPE_FRIEND_CLASSES (t)
++			|| DECL_FRIENDLIST (TYPE_MAIN_DECL (t)))))))
++	warning (OPT_Wnon_virtual_dtor,
++		 "%q#T has virtual functions and accessible"
++		 " non-virtual destructor", t);
+     }
+ 
+   complete_vars (t);
+Index: trunk/gcc/doc/invoke.texi
+===================================================================
+--- trunk/gcc/doc/invoke.texi	(revision 123085)
++++ trunk/gcc/doc/invoke.texi	(working copy)
+@@ -1945,9 +1945,10 @@
+ 
+ @item -Wnon-virtual-dtor @r{(C++ only)}
+ @opindex Wnon-virtual-dtor
+-Warn when a class appears to be polymorphic, thereby requiring a virtual
+-destructor, yet it declares a non-virtual one.  This warning is also
+-enabled if -Weffc++ is specified.
++Warn when a class has virtual functions and accessible non-virtual
++destructor, in which case it would be possible but unsafe to delete
++an instance of a derived class through a pointer to the base class.
++This warning is also enabled if -Weffc++ is specified.
+ 
+ @item -Wreorder @r{(C++ only)}
+ @opindex Wreorder
+Index: trunk/gcc/testsuite/g++.dg/warn/Wnvdtor-2.C
+===================================================================
+--- trunk/gcc/testsuite/g++.dg/warn/Wnvdtor-2.C	(revision 0)
++++ trunk/gcc/testsuite/g++.dg/warn/Wnvdtor-2.C	(revision 0)
+@@ -0,0 +1,54 @@
++// PR c++/7302
++// { dg-do compile }
++// { dg-options "-Wnon-virtual-dtor" }
++
++// Warn when a class has virtual functions and accessible non-virtual
++// destructor, in which case it would be possible but unsafe to delete
++// an instance of a derived class through a pointer to the base class.
++
++struct A
++{ // { dg-bogus "non-virtual destructor" }
++protected:
++  ~A();
++public:
++  virtual void f() = 0;
++};
++
++struct B
++{ // { dg-bogus "non-virtual destructor" }
++private:
++  ~B();
++public:
++  virtual void f() = 0;
++};
++
++struct C
++{ // { dg-warning "non-virtual destructor" }
++  virtual void f() = 0;
++};
++
++struct D
++{ // { dg-warning "non-virtual destructor" }
++  ~D();
++  virtual void f() = 0;
++};
++
++struct E;
++
++struct F
++{ // { dg-warning "non-virtual destructor" }
++protected:
++  friend class E;
++  ~F();
++public:
++  virtual void f() = 0;
++};
++
++struct G
++{ // { dg-warning "non-virtual destructor" }
++private:
++  friend class E;
++  ~G();
++public:
++  virtual void f() = 0;
++};
