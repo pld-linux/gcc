@@ -53,18 +53,17 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap_full	20070403.r123448
-%define		_snap	%(echo %{_snap_full} | tr -d .)
-Release:	0.%{_snap_full}.1
+%define		_snap	20070316
+# Hack warning: do s/0.3./0./ when updating to new rc
+Release:	0.3.%{_snap}.3
 #Release:	2
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	27b316cc79f73ef7a416edd1cb50ae99
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
-Source0:	gcc-4.2-%{_snap}.tar.bz2
-# Source0-md5:	9172698a700be9eb5189a78632e80099
 Source1:	%{name}-optimize-la.pl
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -808,8 +807,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q -n gcc-%{version}
-#setup -q -n gcc-%{version}-%{_snap}
-%setup -q -n gcc-4_2-branch
+%setup -q -n gcc-%{version}-%{_snap}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
