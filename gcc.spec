@@ -54,8 +54,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070316
-# Hack warning: do s/0.3./0./ when updating to new rc
-Release:	0.3.%{_snap}.3
+Release:	0.%{_snap}.3
 #Release:	2
 Epoch:		6
 License:	GPL v2+
