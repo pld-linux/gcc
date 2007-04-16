@@ -54,7 +54,9 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070316
-Release:	0.%{_snap}.3
+#Release		0.%{_snap}.3
+%define		_bdiff	20070415
+Release:	0.%{_bdiff}.1
 #Release:	2
 Epoch:		6
 License:	GPL v2+
@@ -76,9 +78,9 @@ Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-pr13676.patch
 Patch10:	%{name}-pr7302.patch
 Patch12:	%{name}-pr20218.patch
-
-Patch14:	%{name}-force_jar_wrapper.patch
-Patch15:	%{name}-pr29512.patch
+Patch13:	%{name}-force_jar_wrapper.patch
+Patch14:	%{name}-pr29512.patch
+Patch15:	%{name}-branch.diff
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -819,7 +821,7 @@ Statyczne biblioteki Obiektowego C.
 %patch9 -p1
 %patch10 -p1
 %patch12 -p0
-
+%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 
