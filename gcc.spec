@@ -56,7 +56,7 @@ Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070316
 #Release		0.%{_snap}.3
 %define		_bdiff	20070415
-Release:	0.%{_bdiff}.1
+Release:	0.%{_bdiff}.2
 #Release:	2
 Epoch:		6
 License:	GPL v2+
@@ -66,6 +66,7 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 #Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
+Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -80,7 +81,7 @@ Patch10:	%{name}-pr7302.patch
 Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-force_jar_wrapper.patch
 Patch14:	%{name}-pr29512.patch
-Patch15:	%{name}-branch.diff
+Patch15:	%{name}-hash-style-gnu.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -143,6 +144,7 @@ BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	qt4-build >= 4.0.1
 %endif
+BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
@@ -809,6 +811,7 @@ Statyczne biblioteki Obiektowego C.
 %prep
 #setup -q -n gcc-%{version}
 %setup -q -n gcc-%{version}-%{_snap}
+%patch100 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -896,6 +899,7 @@ TEXCONFIG=false \
 %if %{with x}
 	--enable-java-awt="xlib%{?with_gtk:,gtk}%{?with_qt:,qt}" \
 %endif
+	--enable-plugin \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
@@ -1403,6 +1407,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
+%attr(755,root,root) %{_libdir}/gcj-%{version}/libgcjwebplugin.so
 %{?with_alsa:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*}
 %{?with_dssi:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*}
 %{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so}
