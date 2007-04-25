@@ -55,8 +55,8 @@ Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070316
 #Release		0.%{_snap}.3
-%define		_bdiff	20070415
-Release:	0.%{_bdiff}.2
+%define		_bdiff	20070425
+Release:	0.%{_bdiff}.1
 #Release:	2
 Epoch:		6
 License:	GPL v2+
