@@ -54,7 +54,7 @@ Name:		gcc
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
 %define		_snap	20070501
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 #define		_bdiff	20070429
 #Release:	0.%{_bdiff}.1
 #Release:	2
@@ -82,6 +82,7 @@ Patch12:	%{name}-pr20218.patch
 Patch13:	%{name}-force_jar_wrapper.patch
 Patch14:	%{name}-pr29512.patch
 Patch15:	%{name}-hash-style-gnu.patch
+Patch16:	%{name}-unnecessary_anonymous_warning.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -827,6 +828,7 @@ Statyczne biblioteki Obiektowego C.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c

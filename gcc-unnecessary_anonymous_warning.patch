@@ -1,0 +1,67 @@
+--- gcc-4.2.0-20070501/gcc/c-common.h.orig	2006-08-17 03:02:55.000000000 -0400
++++ gcc-4.2.0-20070501/gcc/c-common.h	2007-05-03 10:20:24.674526804 -0400
+@@ -698,6 +698,7 @@
+ extern int self_promoting_args_p (tree);
+ extern tree strip_array_types (tree);
+ extern tree strip_pointer_operator (tree);
++extern tree strip_pointer_or_array_types (tree);
+ extern HOST_WIDE_INT c_common_to_target_charset (HOST_WIDE_INT);
+ 
+ /* This is the basic parsing function.  */
+--- gcc-4.2.0-20070501/gcc/c-common.c.orig	2007-03-12 14:50:38.000000000 -0400
++++ gcc-4.2.0-20070501/gcc/c-common.c	2007-05-03 10:20:00.282869853 -0400
+@@ -3604,6 +3604,15 @@
+   return t;
+ }
+ 
++/* Recursively remove pointer or array type from TYPE. */
++tree
++strip_pointer_or_array_types (tree t)
++{
++  while (TREE_CODE (t) == ARRAY_TYPE || POINTER_TYPE_P (t))
++    t = TREE_TYPE (t);
++  return t;
++}
++
+ /* Used to compare case labels.  K1 and K2 are actually tree nodes
+    representing case labels, or NULL_TREE for a `default' label.
+    Returns -1 if K1 is ordered before K2, -1 if K1 is ordered after
+--- gcc-4.2.0-20070501/gcc/cp/decl2.c.orig	2006-12-06 12:41:29.000000000 -0500
++++ gcc-4.2.0-20070501/gcc/cp/decl2.c	2007-05-03 10:18:55.360665142 -0400
+@@ -1855,13 +1855,17 @@
+   for (t = TYPE_FIELDS (type); t; t = TREE_CHAIN (t))
+     if (TREE_CODE (t) == FIELD_DECL && TREE_TYPE (t) != error_mark_node)
+       {
+-	tree ftype = strip_array_types (TREE_TYPE (t));
++	tree ftype = strip_pointer_or_array_types (TREE_TYPE (t));
+ 	int subvis = type_visibility (ftype);
+ 
+ 	if (subvis == VISIBILITY_ANON)
+-	  warning (0, "\
++	  {
++	    if (strcmp (main_input_filename,
++	                DECL_SOURCE_FILE (TYPE_MAIN_DECL (ftype))))
++	      warning (0, "\
+ %qT has a field %qD whose type uses the anonymous namespace",
+-		   type, t);
++		       type, t);
++	  }
+ 	else if (IS_AGGR_TYPE (ftype)
+ 		 && vis < VISIBILITY_HIDDEN
+ 		 && subvis >= VISIBILITY_HIDDEN)
+@@ -1876,9 +1880,13 @@
+       int subvis = type_visibility (TREE_TYPE (t));
+ 
+       if (subvis == VISIBILITY_ANON)
+-	warning (0, "\
++        {
++	  if (strcmp (main_input_filename,
++	              DECL_SOURCE_FILE (TYPE_MAIN_DECL (TREE_TYPE (t)))))
++	    warning (0, "\
+ %qT has a base %qT whose type uses the anonymous namespace",
+-		 type, TREE_TYPE (t));
++		     type, TREE_TYPE (t));
++	}
+       else if (vis < VISIBILITY_HIDDEN
+ 	       && subvis >= VISIBILITY_HIDDEN)
+ 	warning (OPT_Wattributes, "\
