@@ -53,21 +53,14 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-#define		_snap	20070501
-#Release:	0.%{_snap}.2
 Release:	1
-#define		_bdiff	20070429
-#Release:	0.%{_bdiff}.1
-#Release:	2
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/prerelease-%{version}-%{_snap}/gcc-%{version}-%{_snap}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	4798c23548dc791ea12a139e18940684
-#Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.2-%{_snap}/gcc-4.2-%{_snap}.tar.bz2
 Source1:	%{name}-optimize-la.pl
-Patch100:	%{name}-branch.diff
+#Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -812,7 +805,6 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q -n gcc-%{version}
-#setup -q -n gcc-%{version}-%{_snap}
 #patch100 -p1
 %patch0 -p1
 %patch1 -p1
