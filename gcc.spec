@@ -16,6 +16,7 @@
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
+%bcond_without	mozilla		# don't build libgcjwebplugin
 %bcond_without	qt		# don't build libgcj Qt peer
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 %bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
@@ -139,7 +140,7 @@ BuildRequires:	xorg-lib-libXtst-devel
 BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	qt4-build >= 4.0.1
 %endif
-BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5
+%{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
 %endif
 # AS_NEEDED directive for dynamic linker
 # http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
@@ -894,7 +895,7 @@ TEXCONFIG=false \
 %if %{with x}
 	--enable-java-awt="xlib%{?with_gtk:,gtk}%{?with_qt:,qt}" \
 %endif
-	--enable-plugin \
+	%{?with_mozilla:--enable-plugin} \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
@@ -1402,7 +1403,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
 %dir %{_libdir}/gcj-%{version}
 %{_libdir}/gcj-%{version}/classmap.db
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libgcjwebplugin.so
+%{?with_mozilla:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgcjwebplugin.so}
 %{?with_alsa:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*}
 %{?with_dssi:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*}
 %{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so}
