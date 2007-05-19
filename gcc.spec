@@ -1011,7 +1011,7 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
 %if %{with java}
-	libgcj.la libgcj-tools.la libffi.la \
+	libffi.la libgcj.la libgcj-tools.la libgij.la \
 	gcj-%{version}/libjvm.la \
 	gcj-%{version}/libxmlj.la \
 	%{?with_x:lib-gnu-awt-xlib.la} \
