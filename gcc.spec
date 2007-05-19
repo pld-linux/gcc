@@ -3,8 +3,6 @@
 #	- fix libtool(/usr/lib64/../lib64/libgcj.la)
 #	  i.e. normalize libdir in *.la
 #	- gconf peer? (but libgcj needs split anyway)
-#	- files:
-#	   /usr/lib/gcc/i686-pld-linux/4.2.0/libgfortranbegin.la
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -1344,8 +1342,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
 %{_libdir}/gcc/*/*/libgfortranbegin.a
+%{_libdir}/gcc/*/*/libgfortranbegin.la
 %if %{with multilib}
 %{_libdir}/gcc/*/*/32/libgfortranbegin.a
+%{_libdir}/gcc/*/*/32/libgfortranbegin.la
 %{_libdir32}/libgfortran.la
 %attr(755,root,root) %{_libdir32}/libgfortran.so
 %endif
