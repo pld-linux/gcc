@@ -3961,7 +3961,11 @@
  
        /* With flag_argument_noalias greater than two means that the incoming
           argument cannot alias anything except for itself so create a HEAP
-@@ -4280,7 +4258,7 @@ intra_create_variable_infos (void)
+@@ -4276,11 +4254,10 @@ intra_create_variable_infos (void)
+ 	{
+ 	  varinfo_t vi;
+ 	  tree heapvar = heapvar_lookup (t);
+-	  unsigned int id;
  	  
  	  lhs.offset = 0;
  	  lhs.type = SCALAR;
@@ -3970,7 +3974,7 @@
  	  
  	  if (heapvar == NULL_TREE)
  	    {
-@@ -4291,8 +4269,8 @@ intra_create_variable_infos (void)
+@@ -4291,11 +4268,11 @@ intra_create_variable_infos (void)
  		add_referenced_var (heapvar);
  	      heapvar_insert (t, heapvar);
  	    }
@@ -3980,8 +3984,12 @@
 +	  vi = get_vi_for_tree (heapvar);
  	  vi->is_artificial_var = 1;
  	  vi->is_heap_var = 1;
- 	  rhs.var = id;
-@@ -4409,8 +4387,8 @@ static bool have_alias_info = false;
+-	  rhs.var = id;
++	  rhs.var = vi->id;
+ 	  rhs.type = ADDRESSOF;
+ 	  rhs.offset = 0;
+           for (p = get_varinfo (lhs.var); p; p = p->next)
+@@ -4409,8 +4386,8 @@ static bool have_alias_info = false;
  bool
  find_what_p_points_to (tree p)
  {
@@ -3991,7 +3999,7 @@
  
    if (!have_alias_info)
      return false;
-@@ -4422,10 +4400,10 @@ find_what_p_points_to (tree p)
+@@ -4422,10 +4399,10 @@ find_what_p_points_to (tree p)
        && default_def (SSA_NAME_VAR (p)) == p)
      lookup_p = SSA_NAME_VAR (p);
  
@@ -4005,7 +4013,7 @@
        if (vi->is_artificial_var)
  	return false;
  
-@@ -4447,7 +4425,7 @@ find_what_p_points_to (tree p)
+@@ -4447,7 +4424,7 @@ find_what_p_points_to (tree p)
  
  	  /* This variable may have been collapsed, let's get the real
  	     variable.  */
@@ -4014,7 +4022,7 @@
  	  
  	  /* Translate artificial variables into SSA_NAME_PTR_INFO
  	     attributes.  */
-@@ -4506,13 +4484,16 @@ dump_sa_points_to_info (FILE *outfile)
+@@ -4506,13 +4483,16 @@ dump_sa_points_to_info (FILE *outfile)
      {
        fprintf (outfile, "Stats:\n");
        fprintf (outfile, "Total vars:               %d\n", stats.total_vars);
@@ -4032,7 +4040,7 @@
      }
  
    for (i = 0; i < VEC_length (varinfo_t, varmap); i++)
-@@ -4540,8 +4521,8 @@ init_base_vars (void)
+@@ -4540,8 +4520,8 @@ init_base_vars (void)
    /* Create the NULL variable, used to represent that a variable points
       to NULL.  */
    nothing_tree = create_tmp_var_raw (void_type_node, "NULL");
@@ -4043,7 +4051,7 @@
    var_nothing->is_artificial_var = 1;
    var_nothing->offset = 0;
    var_nothing->size = ~0;
-@@ -4553,8 +4534,8 @@ init_base_vars (void)
+@@ -4553,8 +4533,8 @@ init_base_vars (void)
    /* Create the ANYTHING variable, used to represent that a variable
       points to some unknown piece of memory.  */
    anything_tree = create_tmp_var_raw (void_type_node, "ANYTHING");
@@ -4054,7 +4062,7 @@
    var_anything->is_artificial_var = 1;
    var_anything->size = ~0;
    var_anything->offset = 0;
-@@ -4573,7 +4554,6 @@ init_base_vars (void)
+@@ -4573,7 +4553,6 @@ init_base_vars (void)
    rhs.type = ADDRESSOF;
    rhs.var = anything_id;
    rhs.offset = 0;
@@ -4062,7 +4070,7 @@
  
    /* This specifically does not use process_constraint because
       process_constraint ignores all anything = anything constraints, since all
-@@ -4583,14 +4563,14 @@ init_base_vars (void)
+@@ -4583,14 +4562,14 @@ init_base_vars (void)
    /* Create the READONLY variable, used to represent that a variable
       points to readonly memory.  */
    readonly_tree = create_tmp_var_raw (void_type_node, "READONLY");
@@ -4079,7 +4087,7 @@
    readonly_id = 2;
    VEC_safe_push (varinfo_t, heap, varmap, var_readonly);
  
-@@ -4610,8 +4590,8 @@ init_base_vars (void)
+@@ -4610,8 +4589,8 @@ init_base_vars (void)
    /* Create the INTEGER variable, used to represent that a variable points
       to an INTEGER.  */
    integer_tree = create_tmp_var_raw (void_type_node, "INTEGER");
@@ -4090,7 +4098,7 @@
    var_integer->is_artificial_var = 1;
    var_integer->size = ~0;
    var_integer->fullsize = ~0;
-@@ -4634,8 +4614,8 @@ init_base_vars (void)
+@@ -4634,8 +4613,8 @@ init_base_vars (void)
    /* Create the ESCAPED_VARS variable used to represent variables that
       escape this function.  */
    escaped_vars_tree = create_tmp_var_raw (void_type_node, "ESCAPED_VARS");
@@ -4101,7 +4109,7 @@
    var_escaped_vars->is_artificial_var = 1;
    var_escaped_vars->size = ~0;
    var_escaped_vars->fullsize = ~0;
-@@ -4660,21 +4640,19 @@ init_base_vars (void)
+@@ -4660,21 +4639,19 @@ init_base_vars (void)
  static void
  init_alias_vars (void)
  {
@@ -4128,7 +4136,7 @@
    init_base_vars ();
  }
  
-@@ -4777,6 +4755,43 @@ find_escape_constraints (tree stmt)
+@@ -4777,6 +4754,43 @@ find_escape_constraints (tree stmt)
    VEC_free (ce_s, heap, rhsc);
  }
  
@@ -4172,7 +4180,7 @@
  /* Create points-to sets for the current function.  See the comments
     at the start of the file for an algorithmic overview.  */
  
-@@ -4784,11 +4799,13 @@ void
+@@ -4784,11 +4798,13 @@ void
  compute_points_to_sets (struct alias_info *ai)
  {
    basic_block bb;
@@ -4187,7 +4195,7 @@
    intra_create_variable_infos ();
  
    /* Now walk all statements and derive aliases.  */
-@@ -4824,36 +4841,42 @@ compute_points_to_sets (struct alias_inf
+@@ -4824,36 +4840,42 @@ compute_points_to_sets (struct alias_inf
  	}
      }
  
@@ -4240,7 +4248,7 @@
  /* Delete created points-to sets.  */
  
  void
-@@ -4861,33 +4884,27 @@ delete_points_to_sets (void)
+@@ -4861,33 +4883,27 @@ delete_points_to_sets (void)
  {
    varinfo_t v;
    int i;
@@ -4287,7 +4295,7 @@
    have_alias_info = false;
  }
  
-@@ -4905,6 +4922,7 @@ gate_ipa_pta (void)
+@@ -4905,6 +4921,7 @@ gate_ipa_pta (void)
  static unsigned int
  ipa_pta_execute (void)
  {
@@ -4295,7 +4303,7 @@
    struct cgraph_node *node;
    in_ipa_mode = 1;
    init_alias_heapvars ();
-@@ -4994,6 +5012,7 @@ ipa_pta_execute (void)
+@@ -4994,6 +5011,7 @@ ipa_pta_execute (void)
    in_ipa_mode = 0;
    delete_alias_heapvars ();
    delete_points_to_sets ();
@@ -4303,7 +4311,7 @@
    return 0;
  }
    
-@@ -5018,8 +5037,9 @@ struct tree_opt_pass pass_ipa_pta =
+@@ -5018,8 +5036,9 @@ struct tree_opt_pass pass_ipa_pta =
  void
  init_alias_heapvars (void)
  {
@@ -4315,7 +4323,7 @@
    nonlocal_all = NULL_TREE;
  }
  
-@@ -5028,7 +5048,7 @@ delete_alias_heapvars (void)
+@@ -5028,7 +5047,7 @@ delete_alias_heapvars (void)
  {
    nonlocal_all = NULL_TREE;
    htab_delete (heapvar_for_stmt);
