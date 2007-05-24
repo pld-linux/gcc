@@ -994,8 +994,8 @@ cd ..
 
 %if %{with java}
 install -d java-doc
-cp -f	libjava/READ* java-doc
-ln -sf	%{_javadir}/libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
+cp -f libjava/READ* java-doc
+ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 # tools.zip sources
 rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
