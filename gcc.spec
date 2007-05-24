@@ -52,7 +52,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
@@ -126,6 +126,7 @@ BuildRequires:	libxml2-devel >= 1:2.6.8
 BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
+BuildRequires:	rpm-javaprov
 BuildRequires:	zip
 BuildRequires:	unzip
 %if %{with gtk}
