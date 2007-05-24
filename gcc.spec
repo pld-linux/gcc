@@ -126,7 +126,6 @@ BuildRequires:	libxml2-devel >= 1:2.6.8
 BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
-BuildRequires:	rpm-javaprov
 BuildRequires:	zip
 BuildRequires:	unzip
 %if %{with gtk}
