@@ -71,7 +71,7 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-pr13676.patch
 Patch10:	%{name}-pr7302.patch
-Patch12:	%{name}-pr20218.patch
+
 Patch13:	%{name}-force_jar_wrapper.patch
 Patch14:	%{name}-pr29512.patch
 Patch15:	%{name}-hash-style-gnu.patch
@@ -81,8 +81,8 @@ URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake
-# binutils 2.16.91 or newer are required for compiling medium model now
-BuildRequires:	binutils >= 2:2.16.91.0.1
+# binutils 2.17.50.0.9 or newer are required for fixing PR middle-end/20218.
+BuildRequires:	binutils >= 2:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
 %{?with_tests:BuildRequires:	dejagnu}
@@ -141,10 +141,7 @@ BuildRequires:	qt4-build >= 4.0.1
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
 %endif
-# AS_NEEDED directive for dynamic linker
-# http://sources.redhat.com/ml/glibc-cvs/2005-q1/msg00614.html
-# http://sources.redhat.com/ml/binutils/2005-01/msg00288.html
-Requires:	binutils >= 2:2.16.90.0.1-0.3
+Requires:	binutils >= 2:2.17.50.0.9-1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
@@ -817,7 +814,7 @@ Statyczne biblioteki Obiektowego C.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch12 -p0
+
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
