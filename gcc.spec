@@ -204,6 +204,18 @@ Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos 
 License:	GPL v2+
 Group:		Development/Languages
 Requires:	%{name}
+%ifarch %{x8664}
+Requires:	glibc-devel(i686)
+%endif
+%ifarch ppc64
+Requires:	glibc-devel(ppc)
+%endif
+%ifarch s390x
+Requires:	glibc-devel(s390)
+%endif
+%ifarch sparc64
+Requires:	glibc-devel(sparc)
+%endif
 
 %description multilib
 A compiler aimed at integrating all the optimizations and features
