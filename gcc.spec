@@ -559,6 +559,7 @@ Summary(pl.UTF-8):	Obsługa C++ dla gcc
 Summary(pt_BR.UTF-8):	Suporte C++ para o gcc
 Group:		Development/Languages
 Requires:	%{name}-c++
+Requires:	%{name}-multilib
 
 %description c++-multilib
 This package adds C++ support to the GNU Compiler Collection. It
