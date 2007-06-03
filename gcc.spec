@@ -17,7 +17,7 @@
 %bcond_without	mozilla		# don't build libgcjwebplugin
 %bcond_without	qt		# don't build libgcj Qt peer
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
-%bcond_with	multilib	# build with multilib support (it needs glibc[32&64]-devel)
+%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
@@ -52,14 +52,14 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	4
+Release:	5
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	4798c23548dc791ea12a139e18940684
 Source1:	%{name}-optimize-la.pl
-#Patch100:	%{name}-branch.diff
+Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -76,7 +76,6 @@ Patch13:	%{name}-force_jar_wrapper.patch
 Patch14:	%{name}-pr29512.patch
 Patch15:	%{name}-hash-style-gnu.patch
 Patch16:	%{name}-unnecessary_anonymous_warning.patch
-Patch17:	%{name}-pr30052.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -194,6 +193,57 @@ z GCC, trzeba zainstalować odpowiedni podpakiet.
 Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
 GNU Compiler Collection.
 
+%package multilib
+Summary:	GNU Compiler Collection: the C compiler and shared files
+Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
+Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
+Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
+License:	GPL v2+
+Group:		Development/Languages
+Requires:	%{name}
+%ifarch %{x8664}
+Requires:	glibc-devel(i686)
+%endif
+%ifarch ppc64
+Requires:	glibc-devel(ppc)
+%endif
+%ifarch s390x
+Requires:	glibc-devel(s390)
+%endif
+%ifarch sparc64
+Requires:	glibc-devel(sparc)
+%endif
+
+%description multilib
+A compiler aimed at integrating all the optimizations and features
+necessary for a high-performance and stable development environment.
+
+This package contains the C compiler and some files shared by various
+parts of the GNU Compiler Collection. In order to use another GCC
+compiler you will need to install the appropriate subpackage.
+
+%description multilib -l es.UTF-8
+Un compilador que intenta integrar todas las optimalizaciones y
+características necesarias para un entorno de desarrollo eficaz y
+estable.
+
+Este paquete contiene el compilador de C y unos ficheros compartidos
+por varias partes de la colección de compiladores GNU (GCC). Para usar
+otro compilador de GCC será necesario que instale el subpaquete
+adecuado.
+
+%description multilib -l pl.UTF-8
+Kompilator, posiadający duże możliwości optymalizacyjne niezbędne do
+wyprodukowania szybkiego i stabilnego kodu wynikowego.
+
+Ten pakiet zawiera kompilator C i pliki współdzielone przez różne
+części kolekcji kompilatorów GNU (GCC). Żeby używać innego kompilatora
+z GCC, trzeba zainstalować odpowiedni podpakiet.
+
+%description multilib -l pt_BR.UTF-8
+Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
+GNU Compiler Collection.
+
 %package -n libgcc
 Summary:	Shared gcc library
 Summary(es.UTF-8):	Biblioteca compartida de gcc
@@ -215,6 +265,26 @@ Biblioteka dynamiczna gcc.
 %description -n libgcc -l pt_BR.UTF-8
 Biblioteca runtime para o GCC.
 
+%package -n libgcc-multilib
+Summary:	Shared gcc library
+Summary(es.UTF-8):	Biblioteca compartida de gcc
+Summary(pl.UTF-8):	Biblioteka gcc
+Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
+License:	GPL with unlimited link permission
+Group:		Libraries
+
+%description -n libgcc-multilib
+Shared gcc library.
+
+%description -n libgcc-multilib -l es.UTF-8
+Biblioteca compartida de gcc.
+
+%description -n libgcc-multilib -l pl.UTF-8
+Biblioteka dynamiczna gcc.
+
+%description -n libgcc-multilib -l pt_BR.UTF-8
+Biblioteca runtime para o GCC.
+
 %package -n libgomp
 Summary:	GNU OpenMP library
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP
@@ -225,6 +295,18 @@ Group:		Libraries
 GNU OpenMP library.
 
 %description -n libgomp -l pl.UTF-8
+Biblioteka GNU OpenMP.
+
+%package -n libgomp-multilib
+Summary:	GNU OpenMP library
+Summary(pl.UTF-8):	Biblioteka GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+
+%description -n libgomp-multilib
+GNU OpenMP library.
+
+%description -n libgomp-multilib -l pl.UTF-8
 Biblioteka GNU OpenMP.
 
 %package -n libgomp-devel
@@ -240,6 +322,19 @@ Development files for GNU OpenMP library.
 %description -n libgomp-devel -l pl.UTF-8
 Pliki programistyczne biblioteki GNU OpenMP.
 
+%package -n libgomp-multilib-devel
+Summary:	Development files for GNU OpenMP library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgomp-multilib-devel
+Development files for GNU OpenMP library.
+
+%description -n libgomp-multilib-devel -l pl.UTF-8
+Pliki programistyczne biblioteki GNU OpenMP.
+
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
@@ -253,6 +348,19 @@ Static GNU OpenMP library.
 %description -n libgomp-static -l pl.UTF-8
 Statyczna biblioteka GNU OpenMP.
 
+%package -n libgomp-multilib-static
+Summary:	Static GNU OpenMP library
+Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp-multilib-devel
+
+%description -n libgomp-multilib-static
+Static GNU OpenMP library.
+
+%description -n libgomp-multilib-static -l pl.UTF-8
+Statyczna biblioteka GNU OpenMP.
+
 %package -n libmudflap
 Summary:	GCC mudflap shared support library
 Summary(pl.UTF-8):	Współdzielona biblioteka wspomagająca GCC mudflap
@@ -264,6 +372,20 @@ The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations.
 
 %description -n libmudflap -l pl.UTF-8
+Biblioteki libmudflap są używane przez GCC do obsługi operacji
+dereferencji wspaźników i tablic.
+
+%package -n libmudflap-multilib
+Summary:	GCC mudflap shared support library
+Summary(pl.UTF-8):	Współdzielona biblioteka wspomagająca GCC mudflap
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+
+%description -n libmudflap-multilib
+The libmudflap libraries are used by GCC for instrumenting pointer and
+array dereferencing operations.
+
+%description -n libmudflap-multilib -l pl.UTF-8
 Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic.
 
@@ -284,6 +406,23 @@ Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
 programistyczne.
 
+%package -n libmudflap-multilib-devel
+Summary:	Development files for GCC mudflap library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GCC mudflap
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
+
+%description -n libmudflap-multilib-devel
+The libmudflap libraries are used by GCC for instrumenting pointer and
+array dereferencing operations. This package contains development
+files.
+
+%description -n libmudflap-multilib-devel -l pl.UTF-8
+Biblioteki libmudflap są używane przez GCC do obsługi operacji
+dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
+programistyczne.
+
 %package -n libmudflap-static
 Summary:	Static GCC mudflap library
 Summary(pl.UTF-8):	Statyczna biblioteka GCC mudflap
@@ -297,6 +436,23 @@ array dereferencing operations. This package contains static
 libraries.
 
 %description -n libmudflap-static -l pl.UTF-8
+Biblioteki libmudflap są używane przez GCC do obsługi operacji
+dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
+statyczne.
+
+%package -n libmudflap-multilib-static
+Summary:	Static GCC mudflap library
+Summary(pl.UTF-8):	Statyczna biblioteka GCC mudflap
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libmudflap-multilib-devel
+
+%description -n libmudflap-multilib-static
+The libmudflap libraries are used by GCC for instrumenting pointer and
+array dereferencing operations. This package contains static
+libraries.
+
+%description -n libmudflap-multilib-static -l pl.UTF-8
 Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
 statyczne.
@@ -405,6 +561,53 @@ Bu paket, GNU C derleyicisine C++ desteği ekler. 'Template'ler ve
 aykırı durum işleme gibi çoğu güncel C++ tanımlarına uyar. Standart
 C++ kitaplığı bu pakette yer almaz.
 
+%package c++-multilib
+Summary:	C++ support for gcc
+Summary(es.UTF-8):	Soporte de C++ para gcc
+Summary(pl.UTF-8):	Obsługa C++ dla gcc
+Summary(pt_BR.UTF-8):	Suporte C++ para o gcc
+Group:		Development/Languages
+Requires:	%{name}-c++
+Requires:	%{name}-multilib
+
+%description c++-multilib
+This package adds C++ support to the GNU Compiler Collection. It
+includes support for most of the current C++ specification, including
+templates and exception handling. It does not include a standard C++
+library, which is available separately.
+
+%description c++-multilib -l de.UTF-8
+Dieses Paket enthält die C++-Unterstützung für den
+GNU-Compiler-Collection. Es unterstützt die aktuelle
+C++-Spezifikation, inkl. Templates und Ausnahmeverarbeitung. Eine
+C++-Standard-Library ist nicht enthalten - sie ist getrennt
+erhältlich.
+
+%description c++-multilib -l es.UTF-8
+Este paquete añade soporte de C++ al GCC (colección de compiladores
+GNU). Ello incluye el soporte para la mayoría de la especificación
+actual de C++, incluyendo plantillas y manejo de excepciones. No
+incluye la biblioteca estándar de C++, la que es disponible separada.
+
+%description c++-multilib -l fr.UTF-8
+Ce package ajoute un support C++ a la collection de compilateurs GNU.
+Il comprend un support pour la plupart des spécifications actuelles de
+C++, dont les modéles et la gestion des exceptions. Il ne comprend pas
+une bibliothéque C++ standard, qui est disponible séparément.
+
+%description c++-multilib -l pl.UTF-8
+Ten pakiet dodaje obsługę C++ do kompilatora gcc. Ma wsparcie dla
+dużej ilości obecnych specyfikacji C++, nie zawiera natomiast
+standardowych bibliotek C++, które są w oddzielnym pakiecie.
+
+%description c++-multilib -l pt_BR.UTF-8
+Este pacote adiciona suporte C++ para o gcc.
+
+%description c++-multilib -l tr.UTF-8
+Bu paket, GNU C derleyicisine C++ desteği ekler. 'Template'ler ve
+aykırı durum işleme gibi çoğu güncel C++ tanımlarına uyar. Standart
+C++ kitaplığı bu pakette yer almaz.
+
 %package -n libstdc++
 Summary:	GNU C++ library
 Summary(es.UTF-8):	Biblioteca C++ de GNU
@@ -448,6 +651,47 @@ subconjunto do padrão ISO 14882.
 Bu paket, standart C++ kitaplıklarının GNU gerçeklemesidir ve C++
 uygulamalarının koşturulması için gerekli kitaplıkları içerir.
 
+%package -n libstdc++-multilib
+Summary:	GNU C++ library
+Summary(es.UTF-8):	Biblioteca C++ de GNU
+Summary(pl.UTF-8):	Biblioteki GNU C++
+Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
+License:	GPL v2+ with free software exception
+Group:		Libraries
+
+%description -n libstdc++-multilib
+This is the GNU implementation of the standard C++ libraries, along
+with additional GNU tools. This package includes the shared libraries
+necessary to run C++ applications.
+
+%description -n libstdc++-multilib -l de.UTF-8
+Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
+weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
+C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
+
+%description -n libstdc++-multilib -l es.UTF-8
+Este es el soporte de las bibliotecas padrón del C++, junto con
+herramientas GNU adicionales. El paquete incluye las bibliotecas
+compartidas necesarias para ejecutar aplicaciones C++.
+
+%description -n libstdc++-multilib -l fr.UTF-8
+Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
+des outils GNU supplémentaires. Ce package comprend les librairies
+partagées nécessaires à l'exécution d'application C++.
+
+%description -n libstdc++-multilib -l pl.UTF-8
+Pakiet ten zawiera biblioteki będące implementacją standardowych
+bibliotek C++. Znajdują się w nim biblioteki dynamiczne niezbędne do
+uruchomienia aplikacji napisanych w C++.
+
+%description -n libstdc++-multilib -l pt_BR.UTF-8
+Este pacote é uma implementação da biblioteca padrão C++ v3, um
+subconjunto do padrão ISO 14882.
+
+%description -n libstdc++-multilib -l tr.UTF-8
+Bu paket, standart C++ kitaplıklarının GNU gerçeklemesidir ve C++
+uygulamalarının koşturulması için gerekli kitaplıkları içerir.
+
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
 Summary(de.UTF-8):	Header-Dateien zur Entwicklung mit C++
@@ -483,6 +727,39 @@ programowaniu w języku C++ oraz dokumentacja biblioteki standardowej.
 Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
 para desenvolvimento de programas C++.
 
+%package -n libstdc++-multilib-devel
+Summary:	Header files and documentation for C++ development
+Summary(de.UTF-8):	Header-Dateien zur Entwicklung mit C++
+Summary(es.UTF-8):	Ficheros de cabecera y documentación para desarrollo C++
+Summary(fr.UTF-8):	Fichiers d'en-tête et biblitothèques pour développer en C++
+Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki standardowej C++
+Summary(pt_BR.UTF-8):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
+Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	%{name}-c++-multilib
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-multilib
+
+%description -n libstdc++-multilib-devel
+This is the GNU implementation of the standard C++ libraries. This
+package includes the header files needed for C++ development and
+library documentation.
+
+%description -n libstdc++-multilib-devel -l es.UTF-8
+Este es el soporte de las bibliotecas padrón del lenguaje C++. Este
+paquete incluye los archivos de inclusión y bibliotecas necesarios
+para desarrollo de programas en lenguaje C++.
+
+%description -n libstdc++-multilib-devel -l pl.UTF-8
+Pakiet ten zawiera biblioteki będące implementacją standardowych
+bibliotek C++. Znajdują się w nim pliki nagłówkowe wykorzystywane przy
+programowaniu w języku C++ oraz dokumentacja biblioteki standardowej.
+
+%description -n libstdc++-multilib-devel -l pt_BR.UTF-8
+Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
+para desenvolvimento de programas C++.
+
 %package -n libstdc++-static
 Summary:	Static C++ standard library
 Summary(es.UTF-8):	Biblioteca estándar estática de C++
@@ -498,6 +775,23 @@ Static C++ standard library.
 Biblioteca estándar estática de C++.
 
 %description -n libstdc++-static -l pl.UTF-8
+Statyczna biblioteka standardowa C++.
+
+%package -n libstdc++-multilib-static
+Summary:	Static C++ standard library
+Summary(es.UTF-8):	Biblioteca estándar estática de C++
+Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	libstdc++-multilib-devel
+
+%description -n libstdc++-multilib-static
+Static C++ standard library.
+
+%description -n libstdc++-multilib-static -l es.UTF-8
+Biblioteca estándar estática de C++.
+
+%description -n libstdc++-multilib-static -l pl.UTF-8
 Statyczna biblioteka standardowa C++.
 
 %package fortran
@@ -526,6 +820,30 @@ potrzebny do kompilowania programów pisanych w języku Fortran 95.
 %description fortran -l pt_BR.UTF-8
 Suporte Fortran 95 para o GCC.
 
+%package fortran-multilib
+Summary:	Fortran 95 support for gcc
+Summary(es.UTF-8):	Soporte de Fortran 95 para gcc
+Summary(pl.UTF-8):	Obsługa Fortranu 95 dla gcc
+Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
+Group:		Development/Languages/Fortran
+Requires:	%{name}-fortran
+Requires:	libgfortran-multilib
+
+%description fortran-multilib
+This package adds support for compiling Fortran 95 programs with the
+GNU compiler.
+
+%description fortran-multilib -l es.UTF-8
+Este paquete añade soporte para compilar programas escritos en Fortran
+95 con el compilador GNU.
+
+%description fortran-multilib -l pl.UTF-8
+Ten pakiet dodaje obsługę Fortranu 95 do kompilatora gcc. Jest
+potrzebny do kompilowania programów pisanych w języku Fortran 95.
+
+%description fortran-multilib -l pt_BR.UTF-8
+Suporte Fortran 95 para o GCC.
+
 %package -n libgfortran
 Summary:	Fortran 95 Libraries
 Summary(es.UTF-8):	Bibliotecas de Fortran 95
@@ -541,6 +859,22 @@ Fortran 95 Libraries.
 Bibliotecas de Fortran 95.
 
 %description -n libgfortran -l pl.UTF-8
+Biblioteki Fortranu 95.
+
+%package -n libgfortran-multilib
+Summary:	Fortran 95 Libraries
+Summary(es.UTF-8):	Bibliotecas de Fortran 95
+Summary(pl.UTF-8):	Biblioteki Fortranu 95
+License:	LGPL v2+
+Group:		Libraries
+
+%description -n libgfortran-multilib
+Fortran 95 Libraries.
+
+%description -n libgfortran-multilib -l es.UTF-8
+Bibliotecas de Fortran 95.
+
+%description -n libgfortran-multilib -l pl.UTF-8
 Biblioteki Fortranu 95.
 
 %package -n libgfortran-static
@@ -559,6 +893,23 @@ Static Fortran 95 Libraries.
 Bibliotecas estáticas de Fortran 95.
 
 %description -n libgfortran-static -l pl.UTF-8
+Statyczne biblioteki Fortranu 95.
+
+%package -n libgfortran-multilib-static
+Summary:	Static Fortran 95 Libraries
+Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
+Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
+License:	LGPL v2+
+Group:		Development/Libraries
+Requires:	libgfortran-multilib
+
+%description -n libgfortran-multilib-static
+Static Fortran 95 Libraries.
+
+%description -n libgfortran-multilib-static -l es.UTF-8
+Bibliotecas estáticas de Fortran 95.
+
+%description -n libgfortran-multilib-static -l pl.UTF-8
 Statyczne biblioteki Fortranu 95.
 
 %package java
@@ -667,6 +1018,31 @@ międzymordzia do różnych konwencji wywołań funkcji. Pozwala to
 programiście wywoływać dowolne funkcje podając konwencję wywołania w
 czasie wykonania.
 
+%package -n libffi-multilib
+Summary:	Foreign Function Interface library
+Summary(es.UTF-8):	Biblioteca de interfaz de funciones ajenas
+Summary(pl.UTF-8):	Biblioteka zewnętrznych wywołań funkcji
+License:	BSD-like
+Group:		Libraries
+
+%description -n libffi-multilib
+The libffi library provides a portable, high level programming
+interface to various calling conventions. This allows a programmer to
+call any function specified by a call interface description at run
+time.
+
+%description -n libffi-multilib -l es.UTF-8
+La biblioteca libffi provee una interfaz portable de programación de
+alto nivel para varias convenciones de llamada. Ello permite que un
+programador llame una función cualquiera especificada por una
+descripción de interfaz de llamada en el tiempo de ejecución.
+
+%description -n libffi-multilib -l pl.UTF-8
+Biblioteka libffi dostarcza przenośnego, wysokopoziomowego
+międzymordzia do różnych konwencji wywołań funkcji. Pozwala to
+programiście wywoływać dowolne funkcje podając konwencję wywołania w
+czasie wykonania.
+
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
 Summary(es.UTF-8):	Ficheros de desarrollo para libffi
@@ -684,6 +1060,24 @@ Ficheros de desarrollo para libffi.
 %description -n libffi-devel -l pl.UTF-8
 Pliki nagłówkowe dla libffi.
 
+%package -n libffi-multilib-devel
+Summary:	Development files for Foreign Function Interface library
+Summary(es.UTF-8):	Ficheros de desarrollo para libffi
+Summary(pl.UTF-8):	Pliki nagłówkowe dla libffi
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi-devel
+Requires:	libffi-multilib
+
+%description -n libffi-multilib-devel
+Development files for Foreign Function Interface library.
+
+%description -n libffi-multilib-devel -l es.UTF-8
+Ficheros de desarrollo para libffi.
+
+%description -n libffi-multilib-devel -l pl.UTF-8
+Pliki nagłówkowe dla libffi.
+
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
 Summary(es.UTF-8):	Biblioteca libffi estática
@@ -699,6 +1093,23 @@ Static Foreign Function Interface library.
 Biblioteca libffi estática.
 
 %description -n libffi-static -l pl.UTF-8
+Statyczna biblioteka libffi.
+
+%package -n libffi-multilib-static
+Summary:	Static Foreign Function Interface library
+Summary(es.UTF-8):	Biblioteca libffi estática
+Summary(pl.UTF-8):	Statyczna biblioteka libffi
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi-multilib-devel
+
+%description -n libffi-multilib-static
+Static Foreign Function Interface library.
+
+%description -n libffi-multilib-static -l es.UTF-8
+Biblioteca libffi estática.
+
+%description -n libffi-multilib-static -l pl.UTF-8
 Statyczna biblioteka libffi.
 
 %package objc
@@ -751,6 +1162,54 @@ C dilinin nesne yönelik bir türevidir ve NeXTSTEP altında çalışan
 sistemlerde yaygın olarak kullanılır. Standart Objective C nesne
 kitaplığı bu pakette yer almaz.
 
+%package objc-multilib
+Summary:	Objective C support for gcc
+Summary(de.UTF-8):	Objektive C-Unterstützung für gcc
+Summary(es.UTF-8):	Soporte de Objective C para gcc
+Summary(fr.UTF-8):	Gestion d'Objective C pour gcc
+Summary(pl.UTF-8):	Obsługa obiektowego C dla kompilatora gcc
+Summary(tr.UTF-8):	gcc için Objective C desteği
+Group:		Development/Languages
+Requires:	%{name}-multilib
+Requires:	libobjc-multilib
+
+%description objc-multilib
+This package adds Objective C support to the GNU Compiler Collection.
+Objective C is a object oriented derivative of the C language, mainly
+used on systems running NeXTSTEP. This package does not include the
+standard objective C object library.
+
+%description objc-multilib -l de.UTF-8
+Dieses Paket ergänzt den GNU-Compiler-Collection durch
+Objective-C-Support. Objective C ist ein objektorientiertes Derivat
+von C, das zur Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt.
+Die Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
+
+%description objc-multilib -l es.UTF-8
+Este paquete añade soporte de Objective C al GCC (colección de
+compiladores GNU). Objective C es un lenguaje orientado a objetos
+derivado de C, principalmente usado en sistemas que funcionan bajo
+NeXTSTEP. El paquete no incluye la biblioteca de objetos estándar de
+Objective C.
+
+%description objc-multilib -l fr.UTF-8
+Ce package ajoute un support Objective C a la collection de
+compilateurs GNU. L'Objective C est un langage orienté objetdérivé du
+langage C, principalement utilisé sur les systèmes NeXTSTEP. Ce
+package n'inclue pas la bibliothéque Objective C standard.
+
+%description objc-multilib -l pl.UTF-8
+Ten pakiet dodaje obsługę obiektowego C do kompilatora gcc. Obiektowe
+C (objc) jest zorientowaną obiektowo pochodną języka C, używaną
+głównie w systemach używających NeXTSTEP. W pakiecie nie ma
+standardowej biblioteki objc (która znajduje się w osobnym pakiecie).
+
+%description objc-multilib -l tr.UTF-8
+Bu paket, GNU C derleyicisine Objective C desteği ekler. Objective C,
+C dilinin nesne yönelik bir türevidir ve NeXTSTEP altında çalışan
+sistemlerde yaygın olarak kullanılır. Standart Objective C nesne
+kitaplığı bu pakette yer almaz.
+
 %package objc++
 Summary:	Objective C++ support for gcc
 Summary(pl.UTF-8):	Obsługa języka Objective C++ dla gcc
@@ -783,6 +1242,22 @@ Bibliotecas de Objective C.
 %description -n libobjc -l pl.UTF-8
 Biblioteki Obiektowego C.
 
+%package -n libobjc-multilib
+Summary:	Objective C Libraries
+Summary(es.UTF-8):	Bibliotecas de Objective C
+Summary(pl.UTF-8):	Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libobjc-multilib
+Objective C Libraries.
+
+%description -n libobjc-multilib -l es.UTF-8
+Bibliotecas de Objective C.
+
+%description -n libobjc-multilib -l pl.UTF-8
+Biblioteki Obiektowego C.
+
 %package -n libobjc-static
 Summary:	Static Objective C Libraries
 Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
@@ -800,9 +1275,26 @@ Bibliotecas estáticas de Objective C.
 %description -n libobjc-static -l pl.UTF-8
 Statyczne biblioteki Obiektowego C.
 
+%package -n libobjc-multilib-static
+Summary:	Static Objective C Libraries
+Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
+Summary(pl.UTF-8):	Statyczne Biblioteki Obiektowego C
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libobjc-multilib
+
+%description -n libobjc-multilib-static
+Static Objective C Libraries.
+
+%description -n libobjc-multilib-static -l es.UTF-8
+Bibliotecas estáticas de Objective C.
+
+%description -n libobjc-multilib-static -l pl.UTF-8
+Statyczne biblioteki Obiektowego C.
+
 %prep
 %setup -q -n gcc-%{version}
-#patch100 -p1
+%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -819,13 +1311,15 @@ Statyczne biblioteki Obiektowego C.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
-%patch17 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
 perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
+
+# override snapshot version.
+echo %{version} > gcc/BASE-VER
 
 %build
 cd gcc
@@ -1138,25 +1632,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libssp.so
 %{_libdir}/libssp_nonshared.a
 %{_libdir}/libssp_nonshared.la
-%if %{with multilib}
-%attr(755,root,root) %{_slibdir32}/lib*.so
-%dir %{_libdir}/gcc/*/*/32
-%{_libdir}/gcc/*/*/32/libgcov.a
-%{_libdir}/gcc/*/*/32/libgcc.a
-%{_libdir}/gcc/*/*/32/libgcc_eh.a
-%{_libdir32}/libssp.a
-%{_libdir32}/libssp.la
-%attr(755,root,root) %{_libdir32}/libssp.so
-%{_libdir32}/libssp_nonshared.a
-%{_libdir32}/libssp_nonshared.la
-%endif
 %{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
 %{_libdir}/gcc/*/*/specs
-%if %{with multilib}
-%{_libdir}/gcc/*/*/32/crt*.o
-%endif
 %{_libdir}/gcc/*/*/crt*.o
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
@@ -1187,63 +1666,100 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/spe.h
 %endif
 
+%if %{with multilib}
+%files multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdir32}/lib*.so
+%dir %{_libdir}/gcc/*/*/32
+%{_libdir}/gcc/*/*/32/crt*.o
+%{_libdir}/gcc/*/*/32/libgcov.a
+%{_libdir}/gcc/*/*/32/libgcc.a
+%{_libdir}/gcc/*/*/32/libgcc_eh.a
+%{_libdir32}/libssp.a
+%{_libdir32}/libssp.la
+%attr(755,root,root) %{_libdir32}/libssp.so
+%{_libdir32}/libssp_nonshared.a
+%{_libdir32}/libssp_nonshared.la
+%endif
+
 %files -n libgcc
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdir}/lib*.so.*
+
 %if %{with multilib}
+%files -n libgcc-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 %endif
-%attr(755,root,root) %{_slibdir}/lib*.so.*
 
 %files -n libgomp
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
+
 %if %{with multilib}
+%files -n libgomp-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
 
 %files -n libgomp-devel
 %defattr(644,root,root,755)
-%if %{with multilib}
-%attr(755,root,root) %{_libdir32}/libgomp.so
-%{_libdir32}/libgomp.la
-%{_libdir32}/libgomp.spec
-%endif
 %attr(755,root,root) %{_libdir}/libgomp.so
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{_libdir}/gcc/*/*/finclude
 %{_infodir}/libgomp*
 
+%if %{with multilib}
+%files -n libgomp-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgomp.so
+%{_libdir32}/libgomp.la
+%{_libdir32}/libgomp.spec
+%endif
+
 %files -n libgomp-static
 %defattr(644,root,root,755)
+%{_libdir}/libgomp.a
+
 %if %{with multilib}
+%files -n libgomp-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libgomp.a
 %endif
-%{_libdir}/libgomp.a
 
 %files -n libmudflap
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
+
 %if %{with multilib}
+%files -n libmudflap-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libmudflap*.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
 
 %files -n libmudflap-devel
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/include/mf-runtime.h
-%if %{with multilib}
-%{_libdir32}/libmudflap*.la
-%attr(755,root,root) %{_libdir32}/libmudflap*.so
-%endif
 %{_libdir}/libmudflap*.la
 %attr(755,root,root) %{_libdir}/libmudflap*.so
 
+%if %{with multilib}
+%files -n libmudflap-multilib-devel
+%defattr(644,root,root,755)
+%{_libdir32}/libmudflap*.la
+%attr(755,root,root) %{_libdir32}/libmudflap*.so
+%endif
+
 %files -n libmudflap-static
 %defattr(644,root,root,755)
+%{_libdir}/libmudflap*.a
+
 %if %{with multilib}
+%files -n libmudflap-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libmudflap*.a
 %endif
-%{_libdir}/libmudflap*.a
 
 %if %{with ada}
 %files ada
@@ -1284,21 +1800,27 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
-%if %{with multilib}
-%{_libdir32}/libsupc++.a
-%{_libdir32}/libsupc++.la
-%endif
 %{_libdir}/libsupc++.a
 %{_libdir}/libsupc++.la
 %{_mandir}/man1/g++.1*
 
+%if %{with multilib}
+%files c++-multilib
+%defattr(644,root,root,755)
+%{_libdir32}/libsupc++.a
+%{_libdir32}/libsupc++.la
+%endif
+
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
+%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+
 %if %{with multilib}
+%files -n libstdc++-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
@@ -1314,19 +1836,25 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/gcj
 %exclude %{_includedir}/c++/%{version}/gnu
 %endif
-%if %{with multilib}
-%{_libdir32}/libstdc++.la
-%attr(755,root,root) %{_libdir32}/libstdc++.so
-%endif
 %{_libdir}/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.so
 
+%if %{with multilib}
+%files -n libstdc++-multilib-devel
+%defattr(644,root,root,755)
+%{_libdir32}/libstdc++.la
+%attr(755,root,root) %{_libdir32}/libstdc++.so
+%endif
+
 %files -n libstdc++-static
 %defattr(644,root,root,755)
+%{_libdir}/libstdc++.a
+
 %if %{with multilib}
+%files -n libstdc++-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libstdc++.a
 %endif
-%{_libdir}/libstdc++.a
 %endif
 
 %if %{with fortran}
@@ -1340,31 +1868,40 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
 %{_libdir}/gcc/*/*/libgfortranbegin.a
 %{_libdir}/gcc/*/*/libgfortranbegin.la
-%if %{with multilib}
-%{_libdir}/gcc/*/*/32/libgfortranbegin.a
-%{_libdir}/gcc/*/*/32/libgfortranbegin.la
-%{_libdir32}/libgfortran.la
-%attr(755,root,root) %{_libdir32}/libgfortran.so
-%endif
 %{_libdir}/libgfortran.la
 %attr(755,root,root) %{_libdir}/libgfortran.so
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
 
+%if %{with multilib}
+%files fortran-multilib
+%defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/32/libgfortranbegin.a
+%{_libdir}/gcc/*/*/32/libgfortranbegin.la
+%{_libdir32}/libgfortran.la
+%attr(755,root,root) %{_libdir32}/libgfortran.so
+%endif
+
 %files -n libgfortran
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
+%attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
+
 %if %{with multilib}
+%files -n libgfortran-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
 
 %files -n libgfortran-static
 %defattr(644,root,root,755)
+%{_libdir}/libgfortran.a
+
 %if %{with multilib}
+%files -n libgfortran-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libgfortran.a
 %endif
-%{_libdir}/libgfortran.a
 %endif
 
 %if %{with java}
@@ -1460,28 +1997,37 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
+%attr(755,root,root) %{_libdir}/libffi.so.*.*.*
+
 %if %{with multilib}
+%files -n libffi-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libffi.so.*.*.*
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/include/ffi.h
 %{_libdir}/gcc/*/*/include/ffitarget.h
-%if %{with multilib}
-%attr(755,root,root) %{_libdir32}/libffi.so
-%{_libdir32}/libffi.la
-%endif
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
 
+%if %{with multilib}
+%files -n libffi-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libffi.so
+%{_libdir32}/libffi.la
+%endif
+
 %files -n libffi-static
 %defattr(644,root,root,755)
+%{_libdir}/libffi.a
+
 %if %{with multilib}
+%files -n libffi-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libffi.a
 %endif
-%{_libdir}/libffi.a
 %endif
 
 %if %{with objc}
@@ -1489,28 +2035,37 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/objc/README
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
-%if %{with multilib}
-%attr(755,root,root) %{_libdir32}/libobjc.so
-%{_libdir32}/libobjc.la
-%endif
 %attr(755,root,root) %{_libdir}/libobjc.so
 %{_libdir}/libobjc.la
 %{_libdir}/gcc/*/*/include/objc
 
+%if %{with multilib}
+%files objc-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libobjc.so
+%{_libdir32}/libobjc.la
+%endif
+
 %files -n libobjc
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
+%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+
 %if %{with multilib}
+%files -n libobjc-multilib
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %endif
-%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
+%{_libdir}/libobjc.a
+
 %if %{with multilib}
+%files -n libobjc-multilib-static
+%defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
 %endif
-%{_libdir}/libobjc.a
 %endif
 
 %if %{with objcxx}
