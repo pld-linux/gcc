@@ -52,7 +52,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	5
+Release:	6
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
@@ -201,6 +201,7 @@ Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos 
 License:	GPL v2+
 Group:		Development/Languages
 Requires:	%{name}
+Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
 %ifarch %{x8664}
 Requires:	glibc-devel(i686)
 %endif
