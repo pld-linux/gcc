@@ -144,7 +144,6 @@ Requires:	binutils >= 2:2.17.50.0.9-1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
-%{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	cpp
 Obsoletes:	egcs-cpp
 Obsoletes:	gcc-chill
@@ -200,6 +199,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 License:	GPL v2+
 Group:		Development/Languages
+%{?with_multilib:Provides:      gcc(multilib)}
 Requires:	%{name}
 Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
 %ifarch %{x8664}
