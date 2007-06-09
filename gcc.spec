@@ -94,6 +94,7 @@ BuildRequires:	gcc-ada
 BuildRequires:	gettext-devel
 BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
+BuildRequires:	gcc(multilib)
 %ifarch %{x8664}
 BuildRequires:	glibc-devel(i686)
 %endif
