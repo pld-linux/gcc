@@ -1378,6 +1378,7 @@ TEXCONFIG=false \
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
+	--enable-concept-checks \
 	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
