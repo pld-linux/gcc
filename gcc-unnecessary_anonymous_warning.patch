@@ -28,7 +28,7 @@
     Returns -1 if K1 is ordered before K2, -1 if K1 is ordered after
 --- gcc-4.2.0-20070501/gcc/cp/decl2.c.orig	2006-12-06 12:41:29.000000000 -0500
 +++ gcc-4.2.0-20070501/gcc/cp/decl2.c	2007-05-03 10:18:55.360665142 -0400
-@@ -1855,13 +1855,17 @@
+@@ -1856,13 +1856,19 @@
    for (t = TYPE_FIELDS (type); t; t = TREE_CHAIN (t))
      if (TREE_CODE (t) == FIELD_DECL && TREE_TYPE (t) != error_mark_node)
        {
@@ -40,7 +40,9 @@
 -	  warning (0, "\
 +	  {
 +	    if (strcmp (main_input_filename,
-+	                DECL_SOURCE_FILE (TYPE_MAIN_DECL (ftype))))
++	                DECL_SOURCE_FILE (TYPE_MAIN_DECL (ftype)))
++	        && !(CLASS_TYPE_P (ftype)
++	             && CLASSTYPE_USE_TEMPLATE (ftype)))
 +	      warning (0, "\
  %qT has a field %qD whose type uses the anonymous namespace",
 -		   type, t);
@@ -49,14 +51,16 @@
  	else if (IS_AGGR_TYPE (ftype)
  		 && vis < VISIBILITY_HIDDEN
  		 && subvis >= VISIBILITY_HIDDEN)
-@@ -1876,9 +1880,13 @@
+@@ -1877,9 +1883,15 @@
        int subvis = type_visibility (TREE_TYPE (t));
  
        if (subvis == VISIBILITY_ANON)
 -	warning (0, "\
 +        {
 +	  if (strcmp (main_input_filename,
-+	              DECL_SOURCE_FILE (TYPE_MAIN_DECL (TREE_TYPE (t)))))
++	              DECL_SOURCE_FILE (TYPE_MAIN_DECL (TREE_TYPE (t))))
++	        && !(CLASS_TYPE_P (TREE_TYPE (t))
++	             && CLASSTYPE_USE_TEMPLATE (TREE_TYPE (t))))
 +	    warning (0, "\
  %qT has a base %qT whose type uses the anonymous namespace",
 -		 type, TREE_TYPE (t));
