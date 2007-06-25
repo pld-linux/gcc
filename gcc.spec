@@ -52,7 +52,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	6
+Release:	7
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
@@ -1322,6 +1322,7 @@ mv ChangeLog ChangeLog.general
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
+echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
