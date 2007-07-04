@@ -52,7 +52,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	7
+Release:	8
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
