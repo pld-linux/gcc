@@ -20,6 +20,7 @@
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
+%bcond_with	conceptchecks	# concept checks
 %bcond_with	tests		# torture gcc
 
 %if !%{with cxx}
@@ -52,7 +53,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	0
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	8
+Release:	9
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
@@ -1379,7 +1380,7 @@ TEXCONFIG=false \
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
-	--enable-concept-checks \
+	%{?with_conceptchecks:--enable-concept-checks} \
 	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
