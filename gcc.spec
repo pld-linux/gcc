@@ -51,14 +51,14 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 %define		_major_ver	4.2
-%define		_minor_ver	0
+%define		_minor_ver	1
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	9
+Release:	1
 Epoch:		6
 License:	GPL v2+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	4798c23548dc791ea12a139e18940684
+# Source0-md5:	cba410e6ff70f7d7f4be7a0267707fd0
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
@@ -1297,7 +1297,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q -n gcc-%{version}
-%patch100 -p0
+#patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
