@@ -55,7 +55,7 @@ Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
 Release:	0.rc1.1
 Epoch:		6
-License:	GPL v2+
+License:	GPL v3+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-20070909/gcc-%{version}-RC-20070909.tar.bz2
@@ -199,7 +199,7 @@ Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
-License:	GPL v2+
+License:	GPL v3+
 Group:		Development/Languages
 %{?with_multilib:Provides:      gcc(multilib)}
 Requires:	%{name}
@@ -252,7 +252,7 @@ Summary:	Shared gcc library
 Summary(es.UTF-8):	Biblioteca compartida de gcc
 Summary(pl.UTF-8):	Biblioteka gcc
 Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
-License:	GPL with unlimited link permission
+License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
 
@@ -273,7 +273,7 @@ Summary:	Shared gcc library
 Summary(es.UTF-8):	Biblioteca compartida de gcc
 Summary(pl.UTF-8):	Biblioteka gcc
 Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
-License:	GPL with unlimited link permission
+License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgcc-multilib
@@ -291,7 +291,7 @@ Biblioteca runtime para o GCC.
 %package -n libgomp
 Summary:	GNU OpenMP library
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgomp
@@ -303,7 +303,7 @@ Biblioteka GNU OpenMP.
 %package -n libgomp-multilib
 Summary:	GNU OpenMP library
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgomp-multilib
@@ -315,7 +315,7 @@ Biblioteka GNU OpenMP.
 %package -n libgomp-devel
 Summary:	Development files for GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp = %{epoch}:%{version}-%{release}
 
@@ -328,7 +328,7 @@ Pliki programistyczne biblioteki GNU OpenMP.
 %package -n libgomp-multilib-devel
 Summary:	Development files for GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 
@@ -341,7 +341,7 @@ Pliki programistyczne biblioteki GNU OpenMP.
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 
@@ -354,7 +354,7 @@ Statyczna biblioteka GNU OpenMP.
 %package -n libgomp-multilib-static
 Summary:	Static GNU OpenMP library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
-License:	GPL v2+ with unlimited link permission
+License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-multilib-devel
 
@@ -851,7 +851,7 @@ Suporte Fortran 95 para o GCC.
 Summary:	Fortran 95 Libraries
 Summary(es.UTF-8):	Bibliotecas de Fortran 95
 Summary(pl.UTF-8):	Biblioteki Fortranu 95
-License:	LGPL v2+
+License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Obsoletes:	libg2c
 
@@ -868,7 +868,7 @@ Biblioteki Fortranu 95.
 Summary:	Fortran 95 Libraries
 Summary(es.UTF-8):	Bibliotecas de Fortran 95
 Summary(pl.UTF-8):	Biblioteki Fortranu 95
-License:	LGPL v2+
+License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgfortran-multilib
@@ -884,7 +884,7 @@ Biblioteki Fortranu 95.
 Summary:	Static Fortran 95 Libraries
 Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
 Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
-License:	LGPL v2+
+License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c-static
@@ -902,7 +902,7 @@ Statyczne biblioteki Fortranu 95.
 Summary:	Static Fortran 95 Libraries
 Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
 Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
-License:	LGPL v2+
+License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran-multilib
 
@@ -946,7 +946,7 @@ dodatkowo pakiet libgcj.
 Summary:	Java Class Libraries
 Summary(es.UTF-8):	Bibliotecas de clases de Java
 Summary(pl.UTF-8):	Biblioteki Klas Javy
-License:	GPL with limited linking exception
+License:	GPL v2+ with limited linking exception
 Group:		Libraries
 Obsoletes:	libgcj3
 
@@ -963,7 +963,7 @@ Biblioteki Klas Javy.
 Summary:	Development files for Java Class Libraries
 Summary(es.UTF-8):	Ficheros de desarrollo para las bibliotecas de clases de Java
 Summary(pl.UTF-8):	Pliki nagłówkowe dla Bibliotek Klas Javy
-License:	GPL with limited linking exception
+License:	GPL v2+ with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
 Requires:	zlib-devel
@@ -982,7 +982,7 @@ Pliki nagłówkowe dla Bibliotek Klas Javy.
 Summary:	Static Java Class Libraries
 Summary(es.UTF-8):	Bibliotecas estáticas de clases de Java
 Summary(pl.UTF-8):	Statyczne Biblioteki Klas Javy
-License:	GPL with limited linking exception
+License:	GPL v2+ with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
