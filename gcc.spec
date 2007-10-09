@@ -53,13 +53,12 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	2
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.rc2.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-20070927/gcc-%{version}-RC-20070927.tar.bz2
-# Source0-md5:	728b6872497c4b7f6c7b6e9e2e756f2e
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	7ae33781417a35a2eb03ee098a9f4490
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
@@ -1296,7 +1295,7 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q -n gcc-%{version}-RC-20070927
+%setup -q
 #patch100 -p0
 %patch0 -p1
 %patch1 -p1
