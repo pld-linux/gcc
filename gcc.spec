@@ -53,7 +53,7 @@ Name:		gcc
 %define		_major_ver	4.2
 %define		_minor_ver	2
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1296,7 +1296,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q
-#patch100 -p0
+%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1321,7 +1321,7 @@ mv ChangeLog ChangeLog.general
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
-#echo "release" > gcc/DEV-PHASE
+echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
