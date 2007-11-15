@@ -51,6 +51,7 @@ Patch5:		%{name}-alpha-ada_fix.patch
 Patch6:		%{name}-pr19664_gnu_internal.patch
 Patch7:		%{name}-pr19664_libstdc++.patch
 Patch8:		%{name}-pr20218.patch
+Patch9:		%{name}-4.1-texinfo.patch
 
 # PRs
 Patch10:	%{name}-pr7776.patch
@@ -59,6 +60,7 @@ Patch12:	%{name}-pr24879.patch
 Patch13:	%{name}-pr29512.patch
 Patch14:	%{name}-pr28281.patch
 Patch15:	%{name}-unwind-through-signal-frames.patch
+Patch16:	%{name}-4.1-pr29826.patch
 
 Patch18:	%{name}-pr24419.patch
 Patch19:	%{name}-pr24669.patch
@@ -75,7 +77,7 @@ Patch27:	%{name}-enable-java-awt-qt.patch
 Patch30:	%{name}-ldbl-default-libstdc++.patch
 Patch31:	%{name}-ldbl-default.patch
 
-# Needed too bootstrap with gcc 4.2
+# Needed to bootstrap with gcc 4.2
 Patch40:	%{name}-ada.patch
 
 URL:		http://gcc.gnu.org/
@@ -763,6 +765,7 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch0 -p1
 
 # -fvisbility fixes...
 %patch6 -p1
@@ -795,6 +798,10 @@ Statyczne biblioteki Obiektowego C.
 %patch31 -p0
 
 %patch40 -p1
+
+cd gcc
+%patch16 -p0
+cd ..
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
