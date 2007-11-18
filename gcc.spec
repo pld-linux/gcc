@@ -765,7 +765,7 @@ Statyczne biblioteki Obiektowego C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch0 -p1
+%patch9 -p1
 
 # -fvisbility fixes...
 %patch6 -p1
