@@ -45,13 +45,13 @@
 %undefine	with_multilib
 %endif
 
+%define		_major_ver	4.2
+%define		_minor_ver	2
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-%define		_major_ver	4.2
-%define		_minor_ver	2
 Version:	%{_major_ver}.%{_minor_ver}
 Release:	2
 Epoch:		6
@@ -126,8 +126,8 @@ BuildRequires:	libxml2-devel >= 1:2.6.8
 BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
-BuildRequires:	zip
 BuildRequires:	unzip
+BuildRequires:	zip
 %if %{with gtk}
 BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
@@ -200,9 +200,9 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 License:	GPL v3+
 Group:		Development/Languages
-%{?with_multilib:Provides:      gcc(multilib)}
 Requires:	%{name}
 Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
+%{?with_multilib:Provides:      gcc(multilib)}
 %ifarch %{x8664}
 Requires:	glibc-devel(i686)
 %endif
@@ -705,8 +705,8 @@ Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
-Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
 
@@ -920,10 +920,10 @@ Summary(es.UTF-8):	Soporte de Java para gcc
 Summary(pl.UTF-8):	Obsługa Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Requires:	jar
-Provides:	gcj = %{epoch}:%{version}-%{release}
+Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
+Provides:	gcj = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-java-tools
 
 %description java
@@ -947,6 +947,7 @@ Summary(es.UTF-8):	Bibliotecas de clases de Java
 Summary(pl.UTF-8):	Biblioteki Klas Javy
 License:	GPL v2+ with limited linking exception
 Group:		Libraries
+Requires:	jpackage-utils
 Obsoletes:	libgcj3
 
 %description -n libgcj
@@ -1224,8 +1225,8 @@ This package adds Objective C++ support to the GNU Compiler
 Collection.
 
 %description objc++ -l pl.UTF-8
-Ten pakiet dodaje obsługę języka Objective C++ do zestawu
-kompilatorów GNU Compiler Collection.
+Ten pakiet dodaje obsługę języka Objective C++ do zestawu kompilatorów
+GNU Compiler Collection.
 
 %package -n libobjc
 Summary:	Objective C Libraries
