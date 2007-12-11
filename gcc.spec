@@ -41,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	5
+Release:	6
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -105,6 +105,7 @@ BuildRequires:	glibc-devel(sparc)
 %endif
 URL:		http://gcc.gnu.org/
 BuildRequires:	perl-devel
+BuildRequires:	rpmbuild(macros) >= 1.300
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 Requires:	binutils >= 2:2.15.90.0.3
@@ -675,6 +676,7 @@ Version:	%{GCC_VERSION}
 License:	GPL with limited linking exception
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{GCC_VERSION}-%{release}
+Requires:	jpackage-utils
 Requires:	libgcj = %{epoch}:%{GCC_VERSION}-%{release}
 Requires:	zlib-devel
 Obsoletes:	libgcj3-devel
@@ -1808,8 +1810,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc-lib/*/*/include/gcj
 %dir %{_libdir}/security
 %{_libdir}/security/*
-%dir %{_datadir}/java
-%{_datadir}/java/libgcj*.jar
 %{_libdir}/lib*cj.spec
 %attr(755,root,root) %{_libdir}/lib*cj*.so
 %attr(755,root,root) %{_libdir}/lib-org-*.so
@@ -1821,6 +1821,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/nof/lib*cj*.la
 %{_libdir}/nof/lib-org-*.la
 %endif
+%{_javadir}/libgcj*.jar
 %{_includedir}/java
 %{_includedir}/javax
 %{_includedir}/gcj
