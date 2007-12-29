@@ -23,20 +23,20 @@
 %bcond_with	conceptchecks	# concept checks
 %bcond_with	tests		# torture gcc
 
-%if !%{with cxx}
+%if %{without cxx}
 %undefine	with_java
 %undefine	with_objcxx
 %endif
 
-%if !%{with objc}
+%if %{without objc}
 %undefine	with_objcxx
 %endif
 
-%if !%{with bootstrap}
+%if %{without bootstrap}
 %undefine	with_profiling
 %endif
 
-%if !%{with x}
+%if %{without x}
 %undefine	with_gtk
 %undefine	with_qt
 %endif
@@ -53,7 +53,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -150,6 +150,7 @@ Obsoletes:	egcs-cpp
 Obsoletes:	gcc-chill
 Obsoletes:	gcc-cpp
 Obsoletes:	gcc-ksi
+Obsoletes:	gcc4
 Obsoletes:	gont
 Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -254,6 +255,7 @@ Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Obsoletes:	libgcc1
+Obsoletes:	libgcc4
 
 %description -n libgcc
 Shared gcc library.
@@ -524,6 +526,7 @@ Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Obsoletes:	egcc-c++
 Obsoletes:	egcs-c++
+Obsoletes:	gcc4-c++
 
 %description c++
 This package adds C++ support to the GNU Compiler Collection. It
@@ -619,6 +622,7 @@ License:	GPL v2+ with free software exception
 Group:		Libraries
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
+Obsoletes:	libstdc++4
 
 %description -n libstdc++
 This is the GNU implementation of the standard C++ libraries, along
@@ -709,6 +713,7 @@ Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
 Obsoletes:	libstdc++3-devel
+Obsoletes:	libstdc++4-devel
 
 %description -n libstdc++-devel
 This is the GNU implementation of the standard C++ libraries. This
@@ -769,6 +774,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
+Obsoletes:	libstdc++4-static
 
 %description -n libstdc++-static
 Static C++ standard library.
