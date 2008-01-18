@@ -620,6 +620,8 @@ Summary(pl.UTF-8):	Biblioteki GNU C++
 Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
 License:	GPL v2+ with free software exception
 Group:		Libraries
+# >= instead of = to allow keeping older libstdc++ (with different soname)
+Requires:	libgcc >= %{epoch}:%{version}-%{release}
 Obsoletes:	libg++
 Obsoletes:	libstdc++3
 Obsoletes:	libstdc++4
@@ -664,6 +666,8 @@ Summary(pl.UTF-8):	Biblioteki GNU C++
 Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
 License:	GPL v2+ with free software exception
 Group:		Libraries
+# >= instead of = to allow keeping older libstdc++ (with different soname)
+Requires:	libgcc-multilib >= %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib
 This is the GNU implementation of the standard C++ libraries, along
