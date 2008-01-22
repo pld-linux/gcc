@@ -1474,6 +1474,13 @@ fi
 %find_lang libstdc\+\+
 %endif
 
+# not packaged anywhere
+rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+rm -f $RPM_BUILD_ROOT%{_mandir}/man7/fsf-funding.7
+rm -f $RPM_BUILD_ROOT%{_mandir}/man7/gfdl.7
+rm -f $RPM_BUILD_ROOT%{_mandir}/man7/gpl.7
+rm -f $RPM_BUILD_ROOT%{_libdir}/libiberty.a
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -1614,14 +1621,17 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.5
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nof/libstdc++.so.5
 %endif
 
 %if %{with multilib}
 %files -n libstdc++32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.5
 %endif
 
 %files -n libstdc++-devel
@@ -1680,14 +1690,17 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libobjc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libobjc.so.1
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libobjc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nof/libobjc.so.1
 %endif
 
 %if %{with multilib}
 %files -n libobjc32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.1
 %endif
 
 %files -n libobjc-static
@@ -1736,8 +1749,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libg2c
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libg2c.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libg2c.so.0
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/libg2c.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nof/libg2c.so.0
 %endif
 
 %if %{with multilib}
@@ -1792,17 +1807,22 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/LIBGCJ_LICENSE
 %attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_libdir}/lib*cj*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/lib*cj*.so.4
 %attr(755,root,root) %{_libdir}/lib-org*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/lib-org*.so.0
 %ifarch ppc
 %attr(755,root,root) %{_libdir}/nof/lib*cj*.so.*
-%attr(755,root,root) %{_libdir}/nof/lib-org*.so.*
+%attr(755,root,root) %ghost %{_libdir}/nof/lib*cj*.so.4
+%attr(755,root,root) %{_libdir}/nof/lib-org*.so.*.*.*
 %endif
 
 %if %{with multilib}
 %files -n libgcj32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/lib*cj*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/lib*cj*.so.4
 %attr(755,root,root) %{_libdir32}/lib-org*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/lib-org*.so.0
 %endif
 
 %files -n libgcj-devel
