@@ -41,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	7
+Release:	8
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1594,6 +1594,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgcc_s.so.%{version}
+%ifarch ppc
+%attr(755,root,root) %{_slibdir}/libgcc_s_nof.so.%{version}
+%endif
 
 %if %{with multilib}
 %files -n libgcc32
