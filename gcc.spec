@@ -41,7 +41,7 @@ Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{GCC_VERSION}
-Release:	6
+Release:	7
 Epoch:		5
 License:	GPL v2+
 Group:		Development/Languages
@@ -1446,15 +1446,23 @@ cp $gccdir/install-tools/include/*.h $gccdir/include
 # but we don't want anything more from install-tools
 rm -rf $gccdir/install-tools
 
+# make soname being a symlink, so we can have alternative implementation (gcc4.spec)
+mv $RPM_BUILD_ROOT%{_slibdir}/libgcc_s.so.{1,%{version}}
+ln -s libgcc_s.so.%{version} $RPM_BUILD_ROOT%{_slibdir}/libgcc_s.so.1
+
 %if %{with multilib}
 ln -sf %{_slibdir}/libgcc_s.so.1 $gccdir/libgcc_s.so
 ln -sf %{_slibdir32}/libgcc_s.so.1 $gccdir/libgcc_s_32.so
+
+# make soname being a symlink, so we can have alternative implementation (gcc4.spec)
+mv $RPM_BUILD_ROOT%{_slibdir32}/libgcc_s.so.{1,%{version}}
+ln -s libgcc_s.so.%{version} $RPM_BUILD_ROOT%{_slibdir32}/libgcc_s.so.1
 
 %if %{with cxx}
 spath=obj-%{_target_platform}/%{_target_platform}
 sfile=libstdc++-v3/include/%{_target_platform}/bits/c++config.h
 dpath=$RPM_BUILD_ROOT%{_includedir}/c++/%{GCC_VERSION}/%{_target_platform}/bits
-if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null ; then
+if ! cmp $spath/$sfile $spath/32/$sfile > /dev/null; then
 	cp -f $spath/$sfile $dpath/c++config64.h
 	cp -f $spath/32/$sfile $dpath/c++config32.h
 	cat > $dpath/c++config.h <<EOF
@@ -1585,13 +1593,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/lib*.so.*
+%attr(755,root,root) %{_slibdir}/libgcc_s.so.%{version}
 
 %if %{with multilib}
 %files -n libgcc32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/lib*.so.*
-#%attr(755,root,root) %{_libdir}/gcc-lib/*/*/libgcc*.so
+%attr(755,root,root) %{_slibdir32}/libgcc_s.so.%{version}
 %endif
 
 %if %{with cxx}
