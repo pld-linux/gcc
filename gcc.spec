@@ -20,7 +20,6 @@
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
 %bcond_without	bootstrap	# omit 3-stage bootstrap
-%bcond_with	conceptchecks	# concept checks
 %bcond_with	tests		# torture gcc
 
 %if %{without cxx}
@@ -46,19 +45,19 @@
 %endif
 
 %define		_major_ver	4.2
-%define		_minor_ver	2
+%define		_minor_ver	3
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	3
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	7ae33781417a35a2eb03ee098a9f4490
+# Source0-md5:	ef2a4d9991b3644115456ea05b2b8163
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
@@ -72,10 +71,10 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-pr13676.patch
 Patch10:	%{name}-pr7302.patch
-
+Patch11:	%{name}-pr34212.patch
+Patch12:	%{name}-pr29512.patch
 Patch13:	%{name}-force_jar_wrapper.patch
-Patch14:	%{name}-pr29512.patch
-Patch15:	%{name}-hash-style-gnu.patch
+Patch14:	%{name}-hash-style-gnu.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1307,7 +1306,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q
-%patch100 -p0
+#patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1319,10 +1318,10 @@ Statyczne biblioteki Obiektowego C.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-
+%patch11 -p1
+%patch12 -p1
 %patch13 -p1
 %patch14 -p1
-%patch15 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
@@ -1389,7 +1388,6 @@ TEXCONFIG=false \
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
-	%{?with_conceptchecks:--enable-concept-checks} \
 	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
