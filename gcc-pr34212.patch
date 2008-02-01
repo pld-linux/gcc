@@ -1,0 +1,12 @@
+--- gcc-4.2.3/gcc/cp/cvt.c.orig	2007-08-31 10:27:50.000000000 +0200
++++ gcc-4.2.3/gcc/cp/cvt.c	2008-02-01 20:48:44.000000000 +0100
+@@ -964,7 +964,8 @@
+ 		 conversions.  Do not use STRIP_NOPs because it will
+ 		 not strip conversions to "void", as that is not a
+ 		 mode-preserving conversion.  */
+-	      while (TREE_CODE (e) == NOP_EXPR)
++	      while (TREE_CODE (e) == NOP_EXPR
++	           || TREE_CODE (e) == NON_LVALUE_EXPR)
+ 		e = TREE_OPERAND (e, 0);
+ 
+ 	      code = TREE_CODE (e);
