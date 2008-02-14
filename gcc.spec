@@ -1600,22 +1600,36 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
+%post	-p /sbin/ldconfig -n libgcc-multilib
+%postun	-p /sbin/ldconfig -n libgcc-multilib
 %post	-p /sbin/ldconfig -n libgomp
 %postun	-p /sbin/ldconfig -n libgomp
+%post	-p /sbin/ldconfig -n libgomp-multilib
+%postun	-p /sbin/ldconfig -n libgomp-multilib
 %post	-p /sbin/ldconfig -n libmudflap
 %postun	-p /sbin/ldconfig -n libmudflap
+%post	-p /sbin/ldconfig -n libmudflap-multilib
+%postun	-p /sbin/ldconfig -n libmudflap-multilib
 %post	-p /sbin/ldconfig -n libgnat
 %postun	-p /sbin/ldconfig -n libgnat
 %post	-p /sbin/ldconfig -n libstdc++
 %postun	-p /sbin/ldconfig -n libstdc++
+%post	-p /sbin/ldconfig -n libstdc++-multilib
+%postun	-p /sbin/ldconfig -n libstdc++-multilib
 %post	-p /sbin/ldconfig -n libgfortran
 %postun	-p /sbin/ldconfig -n libgfortran
+%post	-p /sbin/ldconfig -n libgfortran-multilib
+%postun	-p /sbin/ldconfig -n libgfortran-multilib
 %post	-p /sbin/ldconfig -n libgcj
 %postun	-p /sbin/ldconfig -n libgcj
 %post	-p /sbin/ldconfig -n libffi
 %postun	-p /sbin/ldconfig -n libffi
+%post	-p /sbin/ldconfig -n libffi-multilib
+%postun	-p /sbin/ldconfig -n libffi-multilib
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
+%post	-p /sbin/ldconfig -n libobjc-multilib
+%postun	-p /sbin/ldconfig -n libobjc-multilib
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
