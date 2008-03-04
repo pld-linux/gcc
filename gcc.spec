@@ -44,20 +44,22 @@
 %undefine	with_multilib
 %endif
 
-%define		_major_ver	4.2
-%define		_minor_ver	3
+%define		_major_ver	4.3
+%define		_minor_ver	0
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	1
+Release:	0.rc2.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	ef2a4d9991b3644115456ea05b2b8163
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+%define		_rc_snap	20080301
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-%{_rc_snap}/%{name}-%{version}-RC-%{_rc_snap}.tar.bz2
+# Source0-md5:	d91b90c2eb094c16facc670c9c73beeb
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
@@ -65,16 +67,13 @@ Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
-Patch5:		%{name}-alpha-ada_fix.patch
+#Patch5:		%{name}-alpha-ada_fix.patch	needs retest on th-alpha.
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-pr13676.patch
-Patch10:	%{name}-pr7302.patch
+Patch9:		%{name}-force_jar_wrapper.patch
+Patch10:	%{name}-hash-style-gnu.patch
 Patch11:	%{name}-pr34212.patch
-Patch12:	%{name}-pr29512.patch
-Patch13:	%{name}-force_jar_wrapper.patch
-Patch14:	%{name}-hash-style-gnu.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -107,7 +106,6 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparc)
 %endif
 %endif
-BuildRequires:	perl-base
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -1305,33 +1303,26 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-RC-%{_rc_snap}
 #patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-
-# because we distribute modified version of gcc...
-sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
-perl -pi -e 's@(bug_report_url.*<URL:).*";@$1http://bugs.pld-linux.org/>";@' gcc/version.c
 
 mv ChangeLog ChangeLog.general
 
 # override snapshot version.
-echo %{version} > gcc/BASE-VER
-echo "release" > gcc/DEV-PHASE
+#echo %{version} > gcc/BASE-VER
+#echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
@@ -1407,6 +1398,8 @@ TEXCONFIG=false \
 	--enable-xmlj \
 %endif
 	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
+	--with-pkgversion="PLD-Linux" \
+	--with-bugurl="http://bugs.pld-linux.org" \
 	%{_target_platform}
 
 cd ..
