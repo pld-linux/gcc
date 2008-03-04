@@ -1478,11 +1478,11 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.2.so.1
-ln -sf	libgnat-4.2.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.2.so
-ln -sf	libgnarl-4.2.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.2.so
-ln -sf	libgnat-4.2.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf	libgnarl-4.2.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.3.so.1
+ln -sf	libgnat-4.3.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.3.so
+ln -sf	libgnarl-4.3.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.3.so
+ln -sf	libgnat-4.3.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf	libgnarl-4.3.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %endif
 
 cd ..
@@ -1498,23 +1498,27 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
 rm -f $RPM_BUILD_ROOT%{_bindir}/jar
 %endif
 %if %{with objc}
-cp -f	libobjc/README gcc/objc/README.libobjc
+cp -f libobjc/README gcc/objc/README.libobjc
 %endif
+
+# gcj-$version-$gcjsonamever
+%define	gcjdbexecdir	gcj-%{version}-9
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
+# TODO: fix .so linking.
+#{?with_qt:%{gcjdbexecdir}/libqtpeer.la}
 for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
 %if %{with java}
 	libffi.la libgcj.la libgcj-tools.la libgij.la \
-	gcj-%{version}/libjvm.la \
-	gcj-%{version}/libxmlj.la \
+	%{gcjdbexecdir}/libjvm.la \
+	%{gcjdbexecdir}/libxmlj.la \
 	%{?with_x:lib-gnu-awt-xlib.la} \
-	%{?with_gtk:gcj-%{version}/libgtkpeer.la gcj-%{version}/libjawt.la} \
-	%{?with_qt:gcj-%{version}/libqtpeer.la} \
-	%{?with_alsa:gcj-%{version}/libgjsmalsa.la} \
-	%{?with_dssi:gcj-%{version}/libgjsmdssi.la} \
+	%{?with_gtk:%{gcjdbexecdir}/libgtkpeer.la %{gcjdbexecdir}/libjawt.la} \
+	%{?with_alsa:%{gcjdbexecdir}/libgjsmalsa.la} \
+	%{?with_dssi:%{gcjdbexecdir}/libgjsmdssi.la} \
 %endif
 	%{?with_objc:libobjc.la};
 do
@@ -1533,21 +1537,11 @@ do
 done
 %endif
 
-# include/ contains install-tools/include/* and headers that were fixed up
-# by fixincludes, we don't want former
 gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
-mkdir	$gccdir/tmp
-# we have to save these however
-%{?with_java:mv $gccdir/include/{gcj,ffi.h,ffitarget.h,jawt.h,jawt_md.h,jni.h,jni_md.h,jvmpi.h} $gccdir/tmp}
-%{?with_objc:mv $gccdir/include/objc $gccdir/tmp}
-mv $gccdir/include/mf-runtime.h $gccdir/tmp
-mv $gccdir/include/syslimits.h $gccdir/tmp
-mv $gccdir/include/ssp $gccdir/tmp
-rm -rf $gccdir/include
-mv $gccdir/tmp $gccdir/include
 cp $gccdir/install-tools/include/*.h $gccdir/include
-# but we don't want anything more from install-tools
+mv $gccdir/install-tools/gsyslimits.h $gccdir/include
 rm -rf $gccdir/install-tools
+rm -rf $gccdir/include-fixed
 
 %find_lang gcc
 %find_lang cpplib
@@ -1661,22 +1655,29 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
-%{_libdir}/gcc/*/*/include/decfloat.h
 %{_libdir}/gcc/*/*/include/float.h
+%{_libdir}/gcc/*/*/include/gsyslimits.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
 %{_libdir}/gcc/*/*/include/stdarg.h
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
-%{_libdir}/gcc/*/*/include/syslimits.h
+%{_libdir}/gcc/*/*/include/stdfix.h
 %{_libdir}/gcc/*/*/include/unwind.h
 %{_libdir}/gcc/*/*/include/varargs.h
 %ifarch %{ix86} %{x8664}
+%{_libdir}/gcc/*/*/include/ammintrin.h
+%{_libdir}/gcc/*/*/include/bmmintrin.h
+%{_libdir}/gcc/*/*/include/cpuid.h
 %{_libdir}/gcc/*/*/include/emmintrin.h
 %{_libdir}/gcc/*/*/include/mm3dnow.h
 %{_libdir}/gcc/*/*/include/mm_malloc.h
+%{_libdir}/gcc/*/*/include/mmintrin-common.h
 %{_libdir}/gcc/*/*/include/mmintrin.h
+%{_libdir}/gcc/*/*/include/nmmintrin.h
 %{_libdir}/gcc/*/*/include/pmmintrin.h
+%{_libdir}/gcc/*/*/include/smmintrin.h
+%{_libdir}/gcc/*/*/include/tmmintrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
 %endif
 %ifarch powerpc ppc ppc64
@@ -1727,6 +1728,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{_libdir}/gcc/*/*/finclude
+%{_libdir}/gcc/*/*/include/omp.h
 %{_infodir}/libgomp*
 
 %if %{with multilib}
@@ -1785,7 +1787,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/ada/ChangeLog
 %attr(755,root,root) %{_bindir}/gnat*
-%attr(755,root,root) %{_bindir}/gpr*
+%exclude %{_bindir}/gnative2ascii
 %attr(755,root,root) %{_libdir}/libgnarl*.so
 %attr(755,root,root) %{_libdir}/libgnat*.so
 %attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
@@ -1806,6 +1808,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/adalib/libgnala.a
 %{_libdir}/gcc/*/*/adalib/libgnarl.a
 %{_libdir}/gcc/*/*/adalib/libgnat.a
 %endif
@@ -1843,7 +1846,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
-%doc libstdc++-v3/docs/html
+%doc libstdc++-v3/doc/html
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
 %{_includedir}/extc++.h
@@ -1928,20 +1931,35 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gappletviewer
+%attr(755,root,root) %{_bindir}/gc-analyze
 %attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gjar
 %attr(755,root,root) %{_bindir}/gjarsigner
-%attr(755,root,root) %{_bindir}/gjnih
+%attr(755,root,root) %{_bindir}/gjavah
 %attr(755,root,root) %{_bindir}/gkeytool
+%attr(755,root,root) %{_bindir}/gnative2ascii
+%attr(755,root,root) %{_bindir}/gorbd
 %attr(755,root,root) %{_bindir}/grmi*
+%attr(755,root,root) %{_bindir}/gserialver
+%attr(755,root,root) %{_bindir}/gtnameserv
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/*-gcj*
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
+%{_infodir}/cp-tools*
 %{_infodir}/gcj*
+%{_mandir}/man1/gappletviewer*
+%{_mandir}/man1/gc-analyze*
 %{_mandir}/man1/gcj*
-%{_mandir}/man1/gjnih*
+%{_mandir}/man1/gjar*
+%{_mandir}/man1/gjavah*
+%{_mandir}/man1/gkeytool*
+%{_mandir}/man1/gnative2ascii*
+%{_mandir}/man1/gorbd*
 %{_mandir}/man1/grmi*
+%{_mandir}/man1/gserialver*
+%{_mandir}/man1/gtnameserv*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
 
@@ -1956,16 +1974,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
-%dir %{_libdir}/gcj-%{version}
-%{_libdir}/gcj-%{version}/classmap.db
-%{?with_mozilla:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgcjwebplugin.so}
-%{?with_alsa:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmalsa.so*}
-%{?with_dssi:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgjsmdssi.so*}
-%{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libgtkpeer.so}
-%{?with_gtk:%attr(755,root,root) %{_libdir}/gcj-%{version}/libjawt.so}
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libjvm.so
-%{?with_qt:%attr(755,root,root) %{_libdir}/gcj-%{version}/libqtpeer.so}
-%attr(755,root,root) %{_libdir}/gcj-%{version}/libxmlj.so*
+%dir %{_libdir}/%{gcjdbexecdir}
+%{_libdir}/%{gcjdbexecdir}/classmap.db
+%{?with_mozilla:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.so}
+%{?with_alsa:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgjsmalsa.so*}
+%{?with_dssi:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgjsmdssi.so*}
+%{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgtkpeer.so}
+%{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjawt.so}
+%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjvm.so
+#{?with_qt:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libqtpeer.so}
+%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
 %{_mandir}/man1/gij*
@@ -1982,13 +2000,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/jni.h
 %{_libdir}/gcc/*/*/include/jni_md.h
 %{_libdir}/gcc/*/*/include/jvmpi.h
-%{?with_alsa:%{_libdir}/gcj-%{version}/libgjsmalsa.la}
-%{?with_dssi:%{_libdir}/gcj-%{version}/libgjsmdssi.la}
-%{?with_gtk:%{_libdir}/gcj-%{version}/libgtkpeer.la}
-%{?with_gtk:%{_libdir}/gcj-%{version}/libjawt.la}
-%{_libdir}/gcj-%{version}/libjvm.la
-%{?with_qt:%{_libdir}/gcj-%{version}/libqtpeer.la}
-%{_libdir}/gcj-%{version}/libxmlj.la
+%{?with_alsa:%{_libdir}/%{gcjdbexecdir}/libgjsmalsa.la}
+%{?with_dssi:%{_libdir}/%{gcjdbexecdir}/libgjsmdssi.la}
+%{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libgtkpeer.la}
+%{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libjawt.la}
+%{_libdir}/%{gcjdbexecdir}/libjvm.la
+#{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
+%{_libdir}/%{gcjdbexecdir}/libxmlj.la
 %dir %{_libdir}/security
 %{_libdir}/security/*
 %{_libdir}/libgcj.spec
@@ -2006,7 +2024,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-%{_libdir}/gcj-%{version}/libjvm.a
+%{_libdir}/%{gcjdbexecdir}/libjvm.a
 %{_libdir}/libgcj-tools.a
 %{_libdir}/libgcj.a
 %{_libdir}/libgcj_bc.a
