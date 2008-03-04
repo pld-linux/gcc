@@ -1659,6 +1659,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/gsyslimits.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
+%{_libdir}/gcc/*/*/include/omp.h
 %{_libdir}/gcc/*/*/include/stdarg.h
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
@@ -1728,7 +1729,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{_libdir}/gcc/*/*/finclude
-%{_libdir}/gcc/*/*/include/omp.h
 %{_infodir}/libgomp*
 
 %if %{with multilib}
@@ -1857,6 +1857,8 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/javax
 %exclude %{_includedir}/c++/%{version}/gcj
 %exclude %{_includedir}/c++/%{version}/gnu
+%exclude %{_includedir}/c++/%{version}/org
+%exclude %{_includedir}/c++/%{version}/sun
 %endif
 %{_libdir}/libstdc++.la
 %attr(755,root,root) %{_libdir}/libstdc++.so
@@ -1994,6 +1996,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/c++/%{version}/javax
 %{_includedir}/c++/%{version}/gcj
 %{_includedir}/c++/%{version}/gnu
+%{_includedir}/c++/%{version}/org
+%{_includedir}/c++/%{version}/sun
 %{_libdir}/gcc/*/*/include/gcj
 %{_libdir}/gcc/*/*/include/jawt.h
 %{_libdir}/gcc/*/*/include/jawt_md.h
