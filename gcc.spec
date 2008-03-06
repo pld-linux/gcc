@@ -52,7 +52,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1504,8 +1504,6 @@ cp -f libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-# TODO: fix .so linking.
-#{?with_qt:%{gcjdbexecdir}/libqtpeer.la}
 for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
@@ -1515,6 +1513,7 @@ for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la 
 	%{gcjdbexecdir}/libxmlj.la \
 	%{?with_x:lib-gnu-awt-xlib.la} \
 	%{?with_gtk:%{gcjdbexecdir}/libgtkpeer.la %{gcjdbexecdir}/libjawt.la} \
+	%{?with_qt:%{gcjdbexecdir}/libqtpeer.la} \
 	%{?with_alsa:%{gcjdbexecdir}/libgjsmalsa.la} \
 	%{?with_dssi:%{gcjdbexecdir}/libgjsmdssi.la} \
 %endif
@@ -1982,7 +1981,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgtkpeer.so}
 %{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjawt.so}
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjvm.so
-#{?with_qt:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libqtpeer.so}
+%{?with_qt:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libqtpeer.so}
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
@@ -2007,7 +2006,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libgtkpeer.la}
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libjawt.la}
 %{_libdir}/%{gcjdbexecdir}/libjvm.la
-#{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
+%{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
 %{_libdir}/%{gcjdbexecdir}/libxmlj.la
 %dir %{_libdir}/security
 %{_libdir}/security/*
