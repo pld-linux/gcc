@@ -1534,9 +1534,9 @@ do
 done
 %endif
 
-gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*/)
+gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*)
 cp $gccdir/install-tools/include/*.h $gccdir/include
-mv $gccdir/install-tools/gsyslimits.h $gccdir/include
+cp $gccdir/include-fixed/syslimits.h $gccdir/include
 rm -rf $gccdir/install-tools
 rm -rf $gccdir/include-fixed
 
@@ -1653,7 +1653,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
 %{_libdir}/gcc/*/*/include/float.h
-%{_libdir}/gcc/*/*/include/gsyslimits.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
 %{_libdir}/gcc/*/*/include/omp.h
@@ -1661,6 +1660,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
 %{_libdir}/gcc/*/*/include/stdfix.h
+%{_libdir}/gcc/*/*/include/syslimits.h
 %{_libdir}/gcc/*/*/include/unwind.h
 %{_libdir}/gcc/*/*/include/varargs.h
 %ifarch %{ix86} %{x8664}
