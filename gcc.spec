@@ -1680,8 +1680,13 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %ifarch powerpc ppc ppc64
 %{_libdir}/gcc/*/*/include/altivec.h
+%{_libdir}/gcc/*/*/include/paired.h
 %{_libdir}/gcc/*/*/include/ppc-asm.h
+%{_libdir}/gcc/*/*/include/ppu_intrinsics.h
+%{_libdir}/gcc/*/*/include/si2vmx.h
 %{_libdir}/gcc/*/*/include/spe.h
+%{_libdir}/gcc/*/*/include/spu2vmx.h
+%{_libdir}/gcc/*/*/include/vec_types.h
 %endif
 
 %if %{with multilib}
