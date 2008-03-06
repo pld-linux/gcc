@@ -1348,6 +1348,7 @@ TEXCONFIG=false \
 	--x-libraries=%{_libdir} \
 	--enable-shared \
 	--enable-threads=posix \
+	--enable-linux-futex \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
 	--enable-c99 \
 	--enable-long-long \
