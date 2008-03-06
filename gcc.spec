@@ -1335,6 +1335,7 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf builddir && install -d builddir && cd builddir
 
+CC="%{__cc}" \
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
 TEXCONFIG=false \
