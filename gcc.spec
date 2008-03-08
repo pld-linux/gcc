@@ -104,13 +104,11 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparc)
 %endif
 %endif
+BuildRequires:	gmp-devel >= 4.1
+BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
-%if %{with fortran}
-BuildRequires:	gmp-devel
-BuildRequires:	mpfr-devel >= 2.2.1
-%endif
 %if %{with java}
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %if %{with dssi}
