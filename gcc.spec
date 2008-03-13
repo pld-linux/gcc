@@ -1316,6 +1316,10 @@ Statyczne biblioteki Obiektowego C.
 
 mv ChangeLog ChangeLog.general
 
+# override snapshot version.
+echo %{version} > gcc/BASE-VER
+echo "release" > gcc/DEV-PHASE
+
 %build
 cd gcc
 %{__autoconf}
