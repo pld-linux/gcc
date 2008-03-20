@@ -75,6 +75,7 @@ Patch11:	%{name}-pr34212.patch
 Patch12:	%{name}-pr29512.patch
 Patch13:	%{name}-force_jar_wrapper.patch
 Patch14:	%{name}-hash-style-gnu.patch
+Patch15:	%{name}-moresparcs.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1322,6 +1323,7 @@ Statyczne biblioteki Obiektowego C.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 # because we distribute modified version of gcc...
 sed -i 's:#define VERSUFFIX.*:#define VERSUFFIX " (PLD-Linux)":' gcc/version.c
