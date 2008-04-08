@@ -59,7 +59,7 @@ Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	197ed8468b38db1d3481c3111691d85b
 Source1:	%{name}-optimize-la.pl
-Patch100:	%{name}-branch.diff
+Patch100:	%{name}-branch.diff.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
