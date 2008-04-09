@@ -8,7 +8,9 @@
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
 %bcond_without	fortran		# build without Fortran support
+%bcond_without	gomp		# build without OpenMP support
 %bcond_without	java		# build without Java support
+%bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
@@ -1349,6 +1351,8 @@ TEXCONFIG=false \
 	--enable-threads=posix \
 	--enable-linux-futex \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
+	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
+	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
 	--enable-c99 \
 	--enable-long-long \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
@@ -1504,9 +1508,11 @@ cp -f libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
+for f in libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
+	%{?with_gomp:libgomp.la} \
+	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 %if %{with java}
 	libffi.la libgcj.la libgcj-tools.la libgij.la \
 	%{gcjdbexecdir}/libjvm.la \
@@ -1523,9 +1529,11 @@ do
 	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
 done
 %if %{with multilib}
-for f in libgomp.la libmudflap.la libmudflapth.la libssp.la libssp_nonshared.la \
+for f in libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la} \
+	%{?with_gomp:libgomp.la} \
+	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 	%{?with_java:libffi.la} \
 	%{?with_objc:libobjc.la};
 do
@@ -1655,7 +1663,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/float.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
-%{_libdir}/gcc/*/*/include/omp.h
+%{?with_gomp:%{_libdir}/gcc/*/*/include/omp.h}
 %{_libdir}/gcc/*/*/include/stdarg.h
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
@@ -1715,6 +1723,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/lib*.so.*
 %endif
 
+%if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
@@ -1750,7 +1759,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libgomp.a
 %endif
+%endif
 
+%if %{with mudflap}
 %files -n libmudflap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
@@ -1782,6 +1793,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libmudflap-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libmudflap*.a
+%endif
 %endif
 
 %if %{with ada}
