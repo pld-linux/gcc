@@ -1799,7 +1799,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/ada/ChangeLog
 %attr(755,root,root) %{_bindir}/gnat*
+%if %{with java}
 %exclude %{_bindir}/gnative2ascii
+%endif
 %attr(755,root,root) %{_libdir}/libgnarl*.so
 %attr(755,root,root) %{_libdir}/libgnat*.so
 %attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
