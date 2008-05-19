@@ -45,7 +45,7 @@
 %endif
 
 %define		_major_ver	4.2
-%define		_minor_ver	3
+%define		_minor_ver	4
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
@@ -57,7 +57,7 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	ef2a4d9991b3644115456ea05b2b8163
+# Source0-md5:	d79f553e7916ea21c556329eacfeaa16
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
