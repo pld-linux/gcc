@@ -1,6 +1,12 @@
 #
 # TODO:
 #	- gconf peer? (but libgcj needs split anyway)
+#	- libtool breakage:
+#	/home/users/builder/rpm/BUILD/gcc-4.3.1-RC-20080529/builddir/x86_64-pld-linux/libjava/classpath/libtool: line 154: CDPATH: command not found
+#	libtool: Version mismatch error.  This is libtool 2.1a, but the
+#	libtool: definition of this LT_INIT comes from an older release.
+#	libtool: You should recreate aclocal.m4 with macros from libtool 2.1a
+#	libtool: and run autoconf again.
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -52,13 +58,13 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.rc1.1
+Release:	0.rc2.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-20080523/%{name}-%{version}-RC-20080523.tar.bz2
-# Source0-md5:	cfe4edb8969584459260e9744adce3b5
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-20080529/%{name}-%{version}-RC-20080529.tar.bz2
+# Source0-md5:	117b52c99ffc6a1a8c6ce0fb13a0748f
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff.bz2
 Patch0:		%{name}-info.patch
@@ -1301,7 +1307,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 #setup -q
-%setup -q -n %{name}-%{version}-RC-20080523
+%setup -q -n %{name}-%{version}-RC-20080529
 #patch100 -p0
 %patch0 -p1
 %patch1 -p1
