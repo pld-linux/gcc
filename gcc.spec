@@ -58,13 +58,12 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.rc2.1
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-20080529/%{name}-%{version}-RC-20080529.tar.bz2
-# Source0-md5:	117b52c99ffc6a1a8c6ce0fb13a0748f
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	4afa0290cc3a41ac8822666f1110de98
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff.bz2
 Patch0:		%{name}-info.patch
@@ -1306,8 +1305,7 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-#setup -q
-%setup -q -n %{name}-%{version}-RC-20080529
+%setup -q
 #patch100 -p0
 %patch0 -p1
 %patch1 -p1
@@ -1326,8 +1324,7 @@ mv ChangeLog ChangeLog.general
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
-#echo "release" > gcc/DEV-PHASE
-echo "release candidate" > gcc/DEV-PHASE
+echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
