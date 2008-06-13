@@ -1,12 +1,6 @@
 #
 # TODO:
 #	- gconf peer? (but libgcj needs split anyway)
-#	- libtool breakage:
-#	/home/users/builder/rpm/BUILD/gcc-4.3.1-RC-20080529/builddir/x86_64-pld-linux/libjava/classpath/libtool: line 154: CDPATH: command not found
-#	libtool: Version mismatch error.  This is libtool 2.1a, but the
-#	libtool: definition of this LT_INIT comes from an older release.
-#	libtool: You should recreate aclocal.m4 with macros from libtool 2.1a
-#	libtool: and run autoconf again.
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
