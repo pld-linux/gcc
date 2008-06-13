@@ -1327,6 +1327,8 @@ echo %{version} > gcc/BASE-VER
 echo "release" > gcc/DEV-PHASE
 
 %build
+%{__libtoolize}
+install /usr/share/aclocal/{libtool,lt*}.m4 .
 cd gcc
 %{__autoconf}
 cd ..
@@ -1335,6 +1337,13 @@ cd libjava
 cd classpath
 %{__autoconf}
 cd ../..
+for dir in libffi libjava libssp libmudflap libgfortran zlib boehm-gc libstdc++-v3 libobjc; do
+cdir=$(pwd)
+	cd $dir
+	[ "$dir" = "libjava" ] && %{__libtoolize} --ltdl
+	autoreconf --force --install --warnings=no-portability 
+	cd $cdir
+done
 cp -f /usr/share/automake/config.sub .
 
 rm -rf builddir && install -d builddir && cd builddir
