@@ -15,7 +15,7 @@
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
 %bcond_without	mozilla		# don't build libgcjwebplugin
-%bcond_without	qt		# don't build libgcj Qt peer
+%bcond_with	qt		# build libgcj Qt peer (currently doesn't build with libtool-2.x)
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
@@ -52,7 +52,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -60,12 +60,13 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.ta
 # Source0-md5:	4afa0290cc3a41ac8822666f1110de98
 Source1:	%{name}-optimize-la.pl
 Patch100:	%{name}-branch.diff.bz2
+Patch101:	%{name}-ix86-branch.diff.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
-
+Patch5:		%{name}-pr36519.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
@@ -1300,16 +1301,19 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q
-#patch100 -p0
+%patch100 -p0
+%patch101 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-
+%patch5 -p0
 %patch6 -p1
-%patch7 -p1
+%patch7 -p0
+%if %{with qt}
 %patch8 -p1
+%endif
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
@@ -1321,23 +1325,14 @@ echo %{version} > gcc/BASE-VER
 echo "release" > gcc/DEV-PHASE
 
 %build
-%{__libtoolize}
-install /usr/share/aclocal/{libtool,lt*}.m4 .
 cd gcc
 %{__autoconf}
 cd ..
-cd libjava
-%{__autoconf}
-cd classpath
+%if %{with qt}
+cd libjava/classpath
 %{__autoconf}
 cd ../..
-for dir in libffi libjava libssp libmudflap libgfortran zlib boehm-gc libstdc++-v3 libobjc; do
-cdir=$(pwd)
-	cd $dir
-	[ "$dir" = "libjava" ] && %{__libtoolize} --ltdl
-	autoreconf --force --install --warnings=no-portability 
-	cd $cdir
-done
+%endif
 cp -f /usr/share/automake/config.sub .
 
 rm -rf builddir && install -d builddir && cd builddir
@@ -1394,7 +1389,7 @@ TEXCONFIG=false \
 	--enable-libstdcxx-allocator=new \
 %endif
 %if %{with java}
-	--disable-libjava-multilib \
+	--enable-libjava-multilib=no \
 	%{!?with_alsa:--disable-alsa} \
 	%{!?with_dssi:--disable-dssi} \
 	--disable-gconf-peer \
@@ -1694,6 +1689,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/smmintrin.h
 %{_libdir}/gcc/*/*/include/tmmintrin.h
+%{_libdir}/gcc/*/*/include/wmmintrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
 %endif
 %ifarch powerpc ppc ppc64
