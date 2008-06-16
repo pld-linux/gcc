@@ -134,9 +134,9 @@ BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	qt4-build >= 4.0.1
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
-%endif
 # http://www.mailinglistarchive.com/java%40gcc.gnu.org/msg02751.html
 BuildConflicts:	jar
+%endif
 Requires:	binutils >= 2:2.17.50.0.9-1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
