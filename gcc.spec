@@ -70,9 +70,8 @@ Patch5:		%{name}-pr36519.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-force_jar_wrapper.patch
-Patch10:	%{name}-hash-style-gnu.patch
-Patch11:	%{name}-moresparcs.patch
+Patch9:		%{name}-hash-style-gnu.patch
+Patch10:	%{name}-moresparcs.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -134,8 +133,6 @@ BuildRequires:	QtGui-devel >= 4.0.1
 BuildRequires:	qt4-build >= 4.0.1
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
-# http://www.mailinglistarchive.com/java%40gcc.gnu.org/msg02751.html
-BuildConflicts:	jar
 %endif
 Requires:	binutils >= 2:2.17.50.0.9-1
 Requires:	libgcc = %{epoch}:%{version}-%{release}
@@ -1318,7 +1315,6 @@ Statyczne biblioteki Obiektowego C.
 %endif
 %patch9 -p1
 %patch10 -p1
-%patch11 -p1
 
 mv ChangeLog ChangeLog.general
 
@@ -1339,6 +1335,8 @@ cp -f /usr/share/automake/config.sub .
 
 rm -rf builddir && install -d builddir && cd builddir
 
+# http://www.mailinglistarchive.com/java%40gcc.gnu.org/msg02751.html
+JAR=no \
 CC="%{__cc}" \
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
