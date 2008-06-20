@@ -923,7 +923,6 @@ Summary(es.UTF-8):	Soporte de Java para gcc
 Summary(pl.UTF-8):	Obsługa Javy dla gcc
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	jar
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
 Provides:	gcj = %{epoch}:%{version}-%{release}
@@ -1336,7 +1335,8 @@ cp -f /usr/share/automake/config.sub .
 rm -rf builddir && install -d builddir && cd builddir
 
 # http://www.mailinglistarchive.com/java%40gcc.gnu.org/msg02751.html
-JAR=no \
+export JAR=no
+
 CC="%{__cc}" \
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
@@ -1501,8 +1501,6 @@ ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 # tools.zip sources
 rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
-# we will use Requires: jar for now
-rm -f $RPM_BUILD_ROOT%{_bindir}/jar
 %endif
 %if %{with objc}
 cp -f libobjc/README gcc/objc/README.libobjc
