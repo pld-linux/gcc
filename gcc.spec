@@ -117,6 +117,7 @@ BuildRequires:	jack-audio-connection-kit-devel
 %endif
 BuildRequires:	libxml2-devel >= 1:2.6.8
 BuildRequires:	libxslt-devel >= 1.1.11
+BuildRequires:	perl-base
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
 BuildRequires:	unzip
