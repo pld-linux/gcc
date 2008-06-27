@@ -1,0 +1,1 @@
+- Call SOURCE1 via perl so it will work even if source file doesn't have executable bit set.
