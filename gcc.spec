@@ -1528,7 +1528,7 @@ for f in libssp.la libssp_nonshared.la \
 %endif
 	%{?with_objc:libobjc.la};
 do
-	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/$f %{_libdir} > $RPM_BUILD_ROOT%{_libdir}/$f.fixed
+	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/$f %{_libdir} > $RPM_BUILD_ROOT%{_libdir}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
 done
 %if %{with multilib}
@@ -1540,7 +1540,7 @@ for f in libssp.la libssp_nonshared.la \
 	%{?with_java:libffi.la} \
 	%{?with_objc:libobjc.la};
 do
-	%{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
+	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
 done
 %endif
