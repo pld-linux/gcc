@@ -59,10 +59,8 @@ Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	4afa0290cc3a41ac8822666f1110de98
 Source1:	%{name}-optimize-la.pl
-%if %{with java}
 Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
-%endif
 Patch100:	%{name}-branch.diff.bz2
 Patch101:	%{name}-ix86-branch.diff.bz2
 Patch0:		%{name}-info.patch
