@@ -52,13 +52,17 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	4afa0290cc3a41ac8822666f1110de98
 Source1:	%{name}-optimize-la.pl
+%if %{with java}
+Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
+# Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
+%endif
 Patch100:	%{name}-branch.diff.bz2
 Patch101:	%{name}-ix86-branch.diff.bz2
 Patch0:		%{name}-info.patch
@@ -127,6 +131,7 @@ BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	pango-devel
+BuildRequires:	readline-devel 
 BuildRequires:	xorg-lib-libXtst-devel
 %endif
 %if %{with qt}
@@ -1318,6 +1323,11 @@ Statyczne biblioteki Obiektowego C.
 
 mv ChangeLog ChangeLog.general
 
+%if %{with java}
+# see contrib/download_ecj
+install %{SOURCE2} ecj.jar
+%endif
+
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
 echo "release" > gcc/DEV-PHASE
@@ -1968,6 +1978,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jcf-dump
 %attr(755,root,root) %{_bindir}/jv-*
 %attr(755,root,root) %{_bindir}/*-gcj*
+%attr(755,root,root) %{_libdir}/gcc/*/*/ecj1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
 %{_infodir}/cp-tools*
@@ -2009,6 +2020,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
+%{_javadir}/ecj.jar
 %{_mandir}/man1/gij*
 
 %files -n libgcj-devel
@@ -2031,6 +2043,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libjawt.la}
 %{_libdir}/%{gcjdbexecdir}/libjvm.la
 %{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
+%{?with_mozilla:%{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.la}
 %{_libdir}/%{gcjdbexecdir}/libxmlj.la
 %dir %{_libdir}/security
 %{_libdir}/security/*
