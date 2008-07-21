@@ -129,7 +129,6 @@ BuildRequires:	cairo-devel >= 0.5.0
 BuildRequires:	gtk+2-devel >= 2:2.4.0
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	pango-devel
-BuildRequires:	readline-devel 
 BuildRequires:	xorg-lib-libXtst-devel
 %endif
 %if %{with qt}
