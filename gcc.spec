@@ -930,6 +930,7 @@ Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
 Provides:	gcj = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-java-tools
+Obsoletes:	eclipse-ecj
 
 %description java
 This package adds experimental support for compiling Java(TM) programs
