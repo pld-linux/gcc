@@ -46,13 +46,16 @@
 
 %define		_major_ver	4.3
 %define		_minor_ver	1
+# class data version seen with file(1) that this jvm is able to load
+%define		_classdataversion 49.0
+
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -954,6 +957,7 @@ Summary(pl.UTF-8):	Biblioteki Klas Javy
 License:	GPL v2+ with limited linking exception
 Group:		Libraries
 Requires:	jpackage-utils
+Provides:	java(ClassDataVersion) = %{_classdataversion}
 Obsoletes:	libgcj3
 
 %description -n libgcj
