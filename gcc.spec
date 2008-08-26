@@ -45,7 +45,7 @@
 %endif
 
 %define		_major_ver	4.3
-%define		_minor_ver	1
+%define		_minor_ver	2
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
 
@@ -55,12 +55,14 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	4
+Release:	0.rc1.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	4afa0290cc3a41ac8822666f1110de98
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+%define		_snap	20080819
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-%{_snap}/gcc-%{version}-RC-%{_snap}.tar.bz2
+# Source0-md5:	2d6fa3583493a848ccb1463f3640e9df
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
@@ -1306,8 +1308,8 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q
-%patch100 -p0
+%setup -q -n gcc-%{version}-RC-%{_snap}
+#patch100 -p0
 %patch101 -p0
 %patch0 -p1
 %patch1 -p1
@@ -1332,7 +1334,8 @@ install %{SOURCE2} ecj.jar
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
-echo "release" > gcc/DEV-PHASE
+#echo "release" > gcc/DEV-PHASE
+echo "release candidate" > gcc/DEV-PHASE
 
 %build
 cd gcc
