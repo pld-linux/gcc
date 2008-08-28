@@ -1332,8 +1332,7 @@ install %{SOURCE2} ecj.jar
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
-#echo "release" > gcc/DEV-PHASE
-echo "release candidate" > gcc/DEV-PHASE
+echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
