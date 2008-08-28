@@ -55,14 +55,12 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	0.rc1.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-%define		_snap	20080819
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{version}-RC-%{_snap}/gcc-%{version}-RC-%{_snap}.tar.bz2
-# Source0-md5:	2d6fa3583493a848ccb1463f3640e9df
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	5dfac5da961ecd5f227c3175859a486d
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
@@ -1308,8 +1306,8 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q -n gcc-%{version}-RC-%{_snap}
-#patch100 -p0
+%setup -q
+%patch100 -p0
 %patch101 -p0
 %patch0 -p1
 %patch1 -p1
