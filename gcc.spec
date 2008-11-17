@@ -749,7 +749,7 @@ License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++-multilib
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
-Requires:	libstdc++-multilib
+Requires:	libstdc++-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib-devel
 This is the GNU implementation of the standard C++ libraries. This
