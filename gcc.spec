@@ -44,8 +44,8 @@
 %undefine	with_multilib
 %endif
 
-%define		_major_ver	4.3
-%define		_minor_ver	2
+%define		_major_ver	4.4
+%define		_minor_ver	0
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
 
@@ -55,17 +55,19 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	5
+%define		_snap	20090102
+Release:	0.%{_snap}.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	5dfac5da961ecd5f227c3175859a486d
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_major_ver}-%{_snap}/%{name}-%{_major_ver}-%{_snap}.tar.bz2
+# NoSource0-md5:	2d63fb4a274077522ffcdf3a7e4f131e
 Source1:	%{name}-optimize-la.pl
-Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
+#Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
+Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
 Patch100:	%{name}-branch.diff.bz2
-Patch101:	%{name}-ix86-branch.diff.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -162,6 +164,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
+%define		filterout_ld	-Wl,--as-needed
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -481,6 +484,25 @@ Ada.
 Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
 Adzie.
 
+%package ada-multilib
+Summary:	Ada support for gcc
+Summary(es.UTF-8):	Soporte de Ada para gcc
+Summary(pl.UTF-8):	Obsługa Ady do gcc
+Group:		Development/Languages
+Requires:	%{name}-ada = %{epoch}:%{version}-%{release}
+Requires:	libgnat-multilib = %{epoch}:%{version}-%{release}
+
+%description ada-multilib
+This package adds experimental support for compiling Ada programs.
+
+%description ada-multilib -l es.UTF-8
+Este paquete añade soporte experimental para compilar programas en
+Ada.
+
+%description ada-multilib -l pl.UTF-8
+Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
+Adzie.
+
 %package -n libgnat
 Summary:	Ada standard libraries
 Summary(es.UTF-8):	Bibliotecas estándares de Ada
@@ -502,6 +524,25 @@ ejecutar programas escritos en Ada.
 Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
 napisanych w Adzie.
 
+%package -n libgnat-multilib
+Summary:	Ada standard libraries
+Summary(es.UTF-8):	Bibliotecas estándares de Ada
+Summary(pl.UTF-8):	Biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libgnat-multilib
+This package contains shared libraries needed to run programs written
+in Ada.
+
+%description -n libgnat-multilib -l es.UTF-8
+Este paquete contiene las bibliotecas compartidas necesarias para
+ejecutar programas escritos en Ada.
+
+%description -n libgnat-multilib -l pl.UTF-8
+Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
+napisanych w Adzie.
+
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
@@ -513,6 +554,19 @@ Obsoletes:	gnat-static
 This package contains static libraries for programs written in Ada.
 
 %description -n libgnat-static -l pl.UTF-8
+Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
+Adzie.
+
+%package -n libgnat-multilib-static
+Summary:	Static Ada standard libraries
+Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+
+%description -n libgnat-multilib-static
+This package contains static libraries for programs written in Ada.
+
+%description -n libgnat-multilib-static -l pl.UTF-8
 Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
 
@@ -1306,9 +1360,8 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q
-%patch100 -p0
-%patch101 -p0
+%setup -q -n gcc-%{_major_ver}-%{_snap}
+#patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1321,7 +1374,7 @@ Statyczne biblioteki Obiektowego C.
 %patch8 -p1
 %endif
 %patch9 -p1
-%patch10 -p1
+#patch10 -p1
 
 mv ChangeLog ChangeLog.general
 
@@ -1331,12 +1384,12 @@ install %{SOURCE2} ecj.jar
 %endif
 
 # override snapshot version.
-echo %{version} > gcc/BASE-VER
-echo "release" > gcc/DEV-PHASE
+#echo %{version} > gcc/BASE-VER
+#echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
-%{__autoconf}
+#{__autoconf}
 cd ..
 %if %{with qt}
 cd libjava/classpath
@@ -1498,11 +1551,21 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.3.so.1
-ln -sf	libgnat-4.3.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.3.so
-ln -sf	libgnarl-4.3.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.3.so
-ln -sf	libgnat-4.3.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf	libgnarl-4.3.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.4.so.1
+ln -sf	libgnat-4.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.4.so
+ln -sf	libgnarl-4.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.4.so
+ln -sf	libgnat-4.4.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf	libgnarl-4.4.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+%if %{with multilib}
+mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/32/adalib/*.so.1 \
+	$RPM_BUILD_ROOT%{_libdir32}
+# check if symlink to be made is valid
+test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-4.4.so.1
+ln -sf	libgnat-4.4.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-4.4.so
+ln -sf	libgnarl-4.4.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-4.4.so
+ln -sf	libgnat-4.4.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
+ln -sf	libgnarl-4.4.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
+%endif
 %endif
 
 cd ..
@@ -1520,7 +1583,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # gcj-$version-$gcjsonamever
-%define	gcjdbexecdir	gcj-%{version}-9
+%define	gcjdbexecdir	gcj-%{version}-10
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
@@ -1620,6 +1683,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libmudflap-multilib
 %post	-p /sbin/ldconfig -n libgnat
 %postun	-p /sbin/ldconfig -n libgnat
+%post	-p /sbin/ldconfig -n libgnat-multilib
+%postun	-p /sbin/ldconfig -n libgnat-multilib
 %post	-p /sbin/ldconfig -n libstdc++
 %postun	-p /sbin/ldconfig -n libstdc++
 %post	-p /sbin/ldconfig -n libstdc++-multilib
@@ -1676,6 +1741,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
+%{_libdir}/gcc/*/*/include/cross-stdarg.h
 %{_libdir}/gcc/*/*/include/float.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
@@ -1689,9 +1755,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/varargs.h
 %ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/include/ammintrin.h
+%{_libdir}/gcc/*/*/include/avxintrin.h
 %{_libdir}/gcc/*/*/include/bmmintrin.h
 %{_libdir}/gcc/*/*/include/cpuid.h
 %{_libdir}/gcc/*/*/include/emmintrin.h
+%{_libdir}/gcc/*/*/include/immintrin.h
 %{_libdir}/gcc/*/*/include/mm3dnow.h
 %{_libdir}/gcc/*/*/include/mm_malloc.h
 %{_libdir}/gcc/*/*/include/mmintrin-common.h
@@ -1701,6 +1769,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/smmintrin.h
 %{_libdir}/gcc/*/*/include/tmmintrin.h
 %{_libdir}/gcc/*/*/include/wmmintrin.h
+%{_libdir}/gcc/*/*/include/x86intrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
 %endif
 %ifarch powerpc ppc ppc64
@@ -1834,16 +1903,46 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_infodir}/gnat*
 
+%if %{with multilib}
+%files ada-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgnarl*.so
+%attr(755,root,root) %{_libdir32}/libgnat*.so
+%{_libdir}/gcc/*/*/32/adainclude
+%dir %{_libdir}/gcc/*/*/32/adalib
+%{_libdir}/gcc/*/*/32/adalib/*.ali
+%{_libdir}/gcc/*/*/32/adalib/g-trasym.o
+%{_libdir}/gcc/*/*/32/adalib/libgccprefix.a
+%ifarch %{ix86} %{x8664}
+%{_libdir}/gcc/*/*/32/adalib/libgmem.a
+%endif
+%endif
+
 %files -n libgnat
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgnarl*.so.1
 %attr(755,root,root) %{_libdir}/libgnat*.so.1
+
+%if %{with multilib}
+%files -n libgnat-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgnarl*.so.1
+%attr(755,root,root) %{_libdir32}/libgnat*.so.1
+%endif
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/adalib/libgnala.a
 %{_libdir}/gcc/*/*/adalib/libgnarl.a
 %{_libdir}/gcc/*/*/adalib/libgnat.a
+
+%if %{with multilib}
+%files -n libgnat-multilib-static
+%defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/32/adalib/libgnala.a
+%{_libdir}/gcc/*/*/32/adalib/libgnarl.a
+%{_libdir}/gcc/*/*/32/adalib/libgnat.a
+%endif
 %endif
 
 %if %{with cxx}
@@ -2017,6 +2116,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_dssi:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgjsmdssi.so*}
 %{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgtkpeer.so}
 %{?with_gtk:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjawt.so}
+%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjavamath.so
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libjvm.so
 %{?with_qt:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libqtpeer.so}
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
@@ -2043,6 +2143,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_dssi:%{_libdir}/%{gcjdbexecdir}/libgjsmdssi.la}
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libgtkpeer.la}
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libjawt.la}
+%{_libdir}/%{gcjdbexecdir}/libjavamath.la
 %{_libdir}/%{gcjdbexecdir}/libjvm.la
 %{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
 %{?with_mozilla:%{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.la}
