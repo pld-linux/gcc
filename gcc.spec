@@ -1370,6 +1370,7 @@ TEXCONFIG=false \
 	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
 	--enable-c99 \
 	--enable-long-long \
+	--enable-decimal-float=yes \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
 	--disable-werror \
