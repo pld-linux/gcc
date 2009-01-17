@@ -45,7 +45,7 @@
 %endif
 
 %define		_major_ver	4.3
-%define		_minor_ver	2
+%define		_minor_ver	3
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
 
@@ -59,8 +59,9 @@ Release:	5
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	5dfac5da961ecd5f227c3175859a486d
+#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.3.3-RC-20090117/gcc-4.3.3-RC-20090117.tar.bz2
+# NoSource0-md5:	239155e75be8a5eeb4e6f37e6a10b468
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
@@ -1306,8 +1307,9 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q
-%patch100 -p0
+#setup -q
+%setup -q -n gcc-4.3.3-RC-20090117
+#patch100 -p0
 %patch101 -p0
 %patch0 -p1
 %patch1 -p1
