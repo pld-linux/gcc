@@ -61,7 +61,7 @@ License:	GPL v3+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/4.3.3-RC-20090117/gcc-4.3.3-RC-20090117.tar.bz2
-# NoSource0-md5:	239155e75be8a5eeb4e6f37e6a10b468
+# Source0-md5:	239155e75be8a5eeb4e6f37e6a10b468
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
