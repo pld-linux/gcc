@@ -55,14 +55,14 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-%define		_snap	20090102
+%define		_snap	20090123
 Release:	0.%{_snap}.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{_major_ver}-%{_snap}/%{name}-%{_major_ver}-%{_snap}.tar.bz2
-# NoSource0-md5:	2d63fb4a274077522ffcdf3a7e4f131e
+# NoSource0-md5:	fa549ab44088d2d6db4b26119af1a80a
 Source1:	%{name}-optimize-la.pl
 #Source2:	ftp://sourceware.org/pub/java/ecj-%{_major_ver}.jar
 Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
@@ -1423,6 +1423,7 @@ TEXCONFIG=false \
 	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
 	--enable-c99 \
 	--enable-long-long \
+	--enable-decimal-float=yes \
 	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
 	--enable-nls \
 	--disable-werror \
