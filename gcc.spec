@@ -55,7 +55,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{_major_ver}.%{_minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -811,6 +811,7 @@ Summary(es.UTF-8):	Soporte de Fortran 95 para gcc
 Summary(pl.UTF-8):	Obsługa Fortranu 95 dla gcc
 Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
