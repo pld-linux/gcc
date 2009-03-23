@@ -79,6 +79,7 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-hash-style-gnu.patch
 Patch10:	%{name}-moresparcs.patch
+Patch11:	%{name}-build-id.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1377,6 +1378,7 @@ Statyczne biblioteki Obiektowego C.
 %endif
 %patch9 -p1
 #patch10 -p1
+%patch11 -p0
 
 mv ChangeLog ChangeLog.general
 
