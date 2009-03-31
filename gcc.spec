@@ -66,8 +66,9 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ver}.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
 # svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_3_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_3-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# svn diff what what ?
-Patch101:	%{name}-ix86-branch.diff.bz2
+# svn diff svn://gcc.gnu.org/svn/gcc/branches/gcc-4_3-branch@145062 svn://gcc.gnu.org/svn/gcc/branches/ix86/gcc-4_3-branch > gcc-ix86-branch.diff
+# The goal of this branch is to add support for newer ix86 processors such as AMD's Barcelona and Intel's Westmere to GCC 4.3.x.
+Patch101:	%{name}-ix86-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
