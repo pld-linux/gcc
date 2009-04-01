@@ -46,7 +46,7 @@
 
 %define		major_ver	4.4
 %define		minor_ver	0
-%define		snap	20090123
+%define		snap	20090331
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
 
@@ -56,24 +56,23 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	0.%{snap}.3
+Release:	0.%{snap}.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 #Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{major_ver}-%{snap}/%{name}-%{major_ver}-%{snap}.tar.bz2
-# NoSource0-md5:	fa549ab44088d2d6db4b26119af1a80a
 Source1:	%{name}-optimize-la.pl
 #Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ver}.jar
 Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
-Patch100:	%{name}-branch.diff.bz2
+#Patch100:	%{name}-branch.diff.bz2
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
-
+Patch5:		%{name}-pr14912.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
@@ -1370,7 +1369,7 @@ Statyczne biblioteki Obiektowego C.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-
+%patch5 -p1
 %patch6 -p1
 %patch7 -p0
 %if %{with qt}
