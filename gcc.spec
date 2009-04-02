@@ -2105,7 +2105,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcj
 %defattr(644,root,root,755)
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
-%attr(755,root,root) %{_bindir}/addr2name.awk
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
