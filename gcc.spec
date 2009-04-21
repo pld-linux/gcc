@@ -1755,7 +1755,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
-%{_libdir}/gcc/*/*/include/cross-stdarg.h
 %{_libdir}/gcc/*/*/include/float.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
@@ -1772,6 +1771,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/avxintrin.h
 %{_libdir}/gcc/*/*/include/bmmintrin.h
 %{_libdir}/gcc/*/*/include/cpuid.h
+%{_libdir}/gcc/*/*/include/cross-stdarg.h
 %{_libdir}/gcc/*/*/include/emmintrin.h
 %{_libdir}/gcc/*/*/include/immintrin.h
 %{_libdir}/gcc/*/*/include/mm3dnow.h
