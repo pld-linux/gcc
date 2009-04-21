@@ -74,6 +74,8 @@ Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
 #Patch100:	%{name}-branch.diff.bz2
+# The goal of this ix86-branch is to add support for newer ix86 processors such as AMD's Shanghai and Intel's Atom to GCC 4.4.x.
+Patch101:	%{name}-ix86-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -1371,6 +1373,7 @@ Statyczne biblioteki Obiektowego C.
 %prep
 %setup -q
 #patch100 -p0
+%patch101 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1647,7 +1650,7 @@ cat cpplib.lang >> gcc.lang
 install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
 
-# cvs snap doesn't contain (release does) below files,
+# svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
 [ ! -f NEWS ] && touch NEWS
 [ ! -f libgfortran/AUTHORS ] && touch libgfortran/AUTHORS
