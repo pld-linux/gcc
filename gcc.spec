@@ -1,6 +1,14 @@
 #
 # TODO:
-#	- gconf peer? (but libgcj needs split anyway)
+# - gconf peer? (but libgcj needs split anyway)
+# - package?
+#   /usr/bin/aot-compile                                                                                                                                    
+#   /usr/bin/gjdoc
+#   /usr/share/man/man1/aot-compile.1.gz
+#   /usr/share/man/man1/gjdoc.1.gz
+#   /usr/share/man/man1/rebuild-gcj-db.1.gz
+#   /usr/share/python/aotcompile.py
+#   /usr/share/python/classfile.py
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -46,7 +54,6 @@
 
 %define		major_ver	4.4
 %define		minor_ver	0
-%define		snap	20090331
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 49.0
 
@@ -56,12 +63,12 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	0.%{snap}.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-#Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-Source0:	ftp://gcc.gnu.org/pub/gcc/snapshots/%{major_ver}-%{snap}/%{name}-%{major_ver}-%{snap}.tar.bz2
+Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	cf5d787bee57f38168b74d65a7c0e6fd
 Source1:	%{name}-optimize-la.pl
 #Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ver}.jar
 Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
@@ -1362,7 +1369,7 @@ Bibliotecas estáticas de Objective C.
 Statyczne biblioteki Obiektowego C.
 
 %prep
-%setup -q -n gcc-%{major_ver}-%{snap}
+%setup -q
 #patch100 -p0
 %patch0 -p1
 %patch1 -p1
@@ -1387,8 +1394,8 @@ install %{SOURCE2} ecj.jar
 %endif
 
 # override snapshot version.
-#echo %{version} > gcc/BASE-VER
-#echo "release" > gcc/DEV-PHASE
+echo %{version} > gcc/BASE-VER
+echo "release" > gcc/DEV-PHASE
 
 %build
 cd gcc
