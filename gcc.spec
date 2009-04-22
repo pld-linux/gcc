@@ -6,7 +6,6 @@
 #   /usr/bin/gjdoc
 #   /usr/share/man/man1/aot-compile.1.gz
 #   /usr/share/man/man1/gjdoc.1.gz
-#   /usr/share/man/man1/rebuild-gcj-db.1.gz
 #   /usr/share/python/aotcompile.py
 #   /usr/share/python/classfile.py
 #
@@ -1983,11 +1982,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.6
 
 %if %{with multilib}
 %files -n libstdc++-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.6
 %endif
 
 %files -n libstdc++-devel
@@ -2111,17 +2112,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gtnameserv*
 %{_mandir}/man1/jcf-*
 %{_mandir}/man1/jv-*
+%{_mandir}/man1/rebuild-gcj-db*
 
 %files -n libgcj
 %defattr(644,root,root,755)
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.10
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgcj.so.10
 %attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgcj_bc.so.1
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgij.so.10
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
+%{?with_x:%attr(755,root,root) %ghost %{_libdir}/lib-gnu-awt-xlib.so.10}
 %dir %{_libdir}/%{gcjdbexecdir}
 %{_libdir}/%{gcjdbexecdir}/classmap.db
 %{?with_mozilla:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.so}
