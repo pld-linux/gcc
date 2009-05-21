@@ -51,6 +51,10 @@
 %undefine	with_multilib
 %endif
 
+%ifarch sparc64
+%undefine	with_ada
+%endif
+
 %define		major_ver	4.4
 %define		minor_ver	0
 # class data version seen with file(1) that this jvm is able to load
