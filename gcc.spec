@@ -1391,7 +1391,7 @@ Statyczne biblioteki Obiektowego C.
 %patch8 -p1
 %endif
 %patch9 -p1
-#patch10 -p1
+%patch10 -p0
 %patch11 -p0
 
 mv ChangeLog ChangeLog.general
