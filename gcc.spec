@@ -58,7 +58,7 @@
 %define		major_ver	4.4
 %define		minor_ver	0
 # class data version seen with file(1) that this jvm is able to load
-%define		_classdataversion 49.0
+%define		_classdataversion 50.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -66,7 +66,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1004,6 +1004,7 @@ Provides:	gcc-java-tools
 Provides:	gcj = %{epoch}:%{version}-%{release}
 Obsoletes:	eclipse-ecj
 Obsoletes:	gcc-java-tools
+Obsoletes:	java-gnu-classpath-tools
 
 %description java
 This package adds experimental support for compiling Java(TM) programs
