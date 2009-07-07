@@ -122,7 +122,7 @@ BuildRequires:	glibc-devel(ppc)
 BuildRequires:	glibc-devel(s390)
 %endif
 %ifarch sparc64
-BuildRequires:	glibc-devel(sparc)
+BuildRequires:	glibc-devel(sparcv9)
 %endif
 %endif
 BuildRequires:	gmp-devel >= 4.1
