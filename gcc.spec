@@ -231,7 +231,7 @@ Requires:	glibc-devel(ppc)
 Requires:	glibc-devel(s390)
 %endif
 %ifarch sparc64
-Requires:	glibc-devel(sparc)
+Requires:	glibc-devel(sparcv9)
 %endif
 
 %description multilib
