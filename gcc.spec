@@ -66,7 +66,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	6
+Release:	7
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -78,9 +78,6 @@ Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
 # svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_4_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# svn diff svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch@??? svn://gcc.gnu.org/svn/gcc/branches/ix86/gcc-4_4-branch > gcc-ix86-branch.diff
-# The goal of this ix86-branch is to add support for newer ix86 processors such as AMD's Shanghai and Intel's Atom to GCC 4.4.x.
-Patch101:	%{name}-ix86-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -1379,7 +1376,6 @@ Statyczne biblioteki Obiektowego C.
 %prep
 %setup -q
 %patch100 -p0
-%patch101 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
