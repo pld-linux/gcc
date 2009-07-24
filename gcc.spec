@@ -1430,6 +1430,7 @@ TEXCONFIG=false \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--x-libraries=%{_libdir} \
+	--enable-checking=release \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-linux-futex \
