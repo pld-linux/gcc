@@ -56,7 +56,7 @@
 %endif
 
 %define		major_ver	4.4
-%define		minor_ver	1
+%define		minor_ver	2
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 
@@ -66,17 +66,17 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	927eaac3d44b22f31f9c83df82f26436
+# Source0-md5:	70f5ac588a79e3c9901d5b34f58d896d
 Source1:	%{name}-optimize-la.pl
 #Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ver}.jar
 Source2:	ftp://sourceware.org/pub/java/ecj-latest.jar
 # Source2-md5:	fd299f26c02268878b5d6c0e86f57c43
-# svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_4_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch > gcc-branch.diff
+# svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_4_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
