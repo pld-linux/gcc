@@ -1,14 +1,231 @@
+Index: gcc/DATESTAMP
+===================================================================
+--- gcc/DATESTAMP	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/DATESTAMP	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1 +1 @@
+-20091015
++20091021
+Index: gcc/configure
+===================================================================
+--- gcc/configure	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/configure	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -21680,6 +21680,42 @@
+ _ACEOF
+ 
+ 
++echo "$as_me:$LINENO: checking assembler for cfi sections directive" >&5
++echo $ECHO_N "checking assembler for cfi sections directive... $ECHO_C" >&6
++if test "${gcc_cv_as_cfi_sections_directive+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  gcc_cv_as_cfi_sections_directive=no
++  if test x$gcc_cv_as != x; then
++    echo '	.text
++	.cfi_sections .debug_frame, .eh_frame
++	.cfi_startproc
++	.cfi_endproc' > conftest.s
++    if { ac_try='$gcc_cv_as  -o conftest.o conftest.s >&5'
++  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
++  (eval $ac_try) 2>&5
++  ac_status=$?
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); }; }
++    then
++	gcc_cv_as_cfi_sections_directive=yes
++    else
++      echo "configure: failed program was" >&5
++      cat conftest.s >&5
++    fi
++    rm -f conftest.o conftest.s
++  fi
++fi
++echo "$as_me:$LINENO: result: $gcc_cv_as_cfi_sections_directive" >&5
++echo "${ECHO_T}$gcc_cv_as_cfi_sections_directive" >&6
++
++
++cat >>confdefs.h <<_ACEOF
++#define HAVE_GAS_CFI_SECTIONS_DIRECTIVE `if test $gcc_cv_as_cfi_sections_directive = yes;
++    then echo 1; else echo 0; fi`
++_ACEOF
++
++
+ # GAS versions up to and including 2.11.0 may mis-optimize
+ # .eh_frame data.
+ echo "$as_me:$LINENO: checking assembler for eh_frame optimization" >&5
+Index: gcc/vmsdbgout.c
+===================================================================
+--- gcc/vmsdbgout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/vmsdbgout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -166,6 +166,7 @@
+ 
+ static void vmsdbgout_init (const char *);
+ static void vmsdbgout_finish (const char *);
++static void vmsdbgout_assembly_start (void);
+ static void vmsdbgout_define (unsigned int, const char *);
+ static void vmsdbgout_undef (unsigned int, const char *);
+ static void vmsdbgout_start_source_file (unsigned int, const char *);
+@@ -188,6 +189,7 @@
+ const struct gcc_debug_hooks vmsdbg_debug_hooks
+ = {vmsdbgout_init,
+    vmsdbgout_finish,
++   vmsdbgout_assembly_start,
+    vmsdbgout_define,
+    vmsdbgout_undef,
+    vmsdbgout_start_source_file,
+@@ -1636,6 +1638,15 @@
+ /* Not implemented in VMS Debug.  */
+ 
+ static void
++vmsdbgout_assembly_start (void)
++{
++  if (write_symbols == VMS_AND_DWARF2_DEBUG)
++    (*dwarf2_debug_hooks.assembly_start) ();
++}
++
++/* Not implemented in VMS Debug.  */
++
++static void
+ vmsdbgout_define (unsigned int lineno, const char *buffer)
+ {
+   if (write_symbols == VMS_AND_DWARF2_DEBUG)
+Index: gcc/debug.c
+===================================================================
+--- gcc/debug.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/debug.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -27,6 +27,7 @@
+ {
+   debug_nothing_charstar,
+   debug_nothing_charstar,
++  debug_nothing_void,
+   debug_nothing_int_charstar,
+   debug_nothing_int_charstar,
+   debug_nothing_int_charstar,
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_4_2_release)	(wersja 152845)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 152845)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 153054)
 @@ -0,0 +1 @@
 +prerelease
+Index: gcc/debug.h
+===================================================================
+--- gcc/debug.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/debug.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -31,6 +31,10 @@
+   /* Output debug symbols.  */
+   void (* finish) (const char *main_filename);
+ 
++  /* Called from cgraph_optimize before starting to assemble
++     functions/variables/toplevel asms.  */
++  void (* assembly_start) (void);
++
+   /* Macro defined on line LINE with name and expansion TEXT.  */
+   void (* define) (unsigned int line, const char *text);
+ 
+Index: gcc/cgraphunit.c
+===================================================================
+--- gcc/cgraphunit.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cgraphunit.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1293,6 +1293,7 @@
+   timevar_pop (TV_CGRAPHOPT);
+ 
+   /* Output everything.  */
++  (*debug_hooks->assembly_start) ();
+   if (!quiet_flag)
+     fprintf (stderr, "Assembling functions:\n");
+ #ifdef ENABLE_CHECKING
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 152845)
-+++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 152845)
-@@ -1,3 +1,17 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,3 +1,105 @@
++2009-10-20  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++        Backport from mainline:
++	2009-10-15  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	PR target/41702
++	* pa.md (casesi): Use sign extended index in call to
++	gen_casesi64p.
++	(casesi64p): Update pattern to reflect above.
++
++2009-10-20  Joseph Myers  <joseph@codesourcery.com>
++
++	* config/arm/arm.c (output_move_neon): Use DImode in call to
++	adjust_address.
++
++2009-10-19  Jakub Jelinek  <jakub@redhat.com>
++
++	* unwind-dw2.c (execute_stack_op): Fix operand order for
++	DW_OP_le, DW_OP_ge, DW_OP_lt and DW_OP_gt.
++
++2009-10-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
++
++	* config/s390/s390.c (s390_z10_optimize_cmp): Don't touch FP compares.
++
++2009-10-19  Andreas Krebbel  <Andreas.Krebbel@de.ibm.com>
++
++	* config/s390/s390.c (s390_z10_optimize_cmp): Skip notes and debug
++	insns when investigating previous or next insns.
++
++2009-10-19  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline:
++	2009-10-16  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/40521
++	* debug.h (struct gcc_debug_hooks): Add assembly_start hook.
++	* cgraphunit.c (cgraph_optimize): Call it.
++	* dwarf2out.c (dwarf2out_init): Move .cfi_sections printing into...
++	(dwarf2out_assembly_start): ... here.  New hook.
++	(dwarf2out_debug_hooks): Add dwarf2out_assembly_start.
++	* debug.c (do_nothing_debug_hooks): Do nothing for assembly_start
++	hook.
++	* dbxout.c (dbx_debug_hooks, xcoff_debug_hooks): Likewise.
++	* sdbout.c (sdb_debug_hooks): Likewise.
++	* vmsdbgout.c (vmsdbg_debug_hooks): Add vmsdbgout_assembly_start.
++	(vmsdbgout_assembly_start): New hook.
++
++	2009-10-09  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/40521
++	* dwarf2out.c (dwarf2out_init): Test whether
++	HAVE_GAS_CFI_SECTIONS_DIRECTIVE is non-zero instead of checking
++	it is defined.
++
++	2009-10-02  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/40521
++	* configure.ac (HAVE_GAS_CFI_SECTIONS_DIRECTIVE): New test.
++	* configure: Regenerated.
++	* config.in: Regenerated.
++	* dwarf2out.c (dwarf2out_do_cfi_asm): Return false if
++	!HAVE_GAS_CFI_SECTIONS_DIRECTIVE and not emitting .eh_frame.
++	(dwarf2out_init): If HAVE_GAS_CFI_SECTIONS_DIRECTIVE and
++	not emitting .eh_frame, emit .cfi_sections .debug_frame
++	directive.
++
++2009-10-15  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	Backport from mainline
++	2009-09-17  Michael Haubenwallner  <michael.haubenwallner@salomon.at>
++
++	PR target/40913
++	* config/pa/t-hpux-shlib: Set soname in libgcc_s.sl.
++
++	Backport from mainline
++	2009-05-05  Ben Elliston  <bje@au.ibm.com>
++
++	* config/pa/linux-atomic.c: Eliminate conditional include of
++	errno.h on non-LP64 systems to simplify build requirements.
++
++2009-10-15  Uros Bizjak  <ubizjak@gmail.com>
++
++	Backport from mainline:
++	2009-10-07  Vladimir Makarov  <vmakarov@redhat.com>
++
++	PR middle-end/22072
++	* ira-lives.c (check_and_make_def_conflict): Process all operands.
++
 +2009-10-15  H.J. Lu  <hongjiu.lu@intel.com>
 +
 +	Backport from mainline:
@@ -26,17 +243,1884 @@ Index: gcc/ChangeLog
  2009-10-15  Release Manager
  
  	* GCC 4.4.2 released.
+@@ -43,8 +145,8 @@
+ 2009-10-05  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
+ 
+ 	Backport from mainline.
+-        * config/arm/arm.c (arm_override_options): Really initialize
+-        flag_dwarf2_cfi_asm to 0.
++	* config/arm/arm.c (arm_override_options): Really initialize
++	flag_dwarf2_cfi_asm to 0.
+ 
+ 2009-10-02  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
+ 
+@@ -113,7 +215,7 @@
+ 	premark_types_used_by_global_vars): New functions.
+ 	(prune_unused_types): Do not prune types used by global variables.
+ 
+-2009-09-23 Uros Bizjak <ubizjak@gmail.com>
++2009-09-23  Uros Bizjak  <ubizjak@gmail.com>
+ 
+ 	PR c/39779
+ 	* c-typeck.c (build_binary_op) <short_shift>: Check that integer
+Index: gcc/testsuite/gcc.c-torture/compile/pr41634.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr41634.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.c-torture/compile/pr41634.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,19 @@
++extern int _xgetw();
++extern int foo(char*);
++
++void test_readmode( int ascii_mode )
++{
++  static const char outbuffer[]
++    = "0,1,2,3,4,5,6,7,8,9\r\n\r\nA,B,C,D,E\r\nX,Y,Z";
++  char buffer[2*512 +256];
++  int i, j, ao;
++  unsigned int fp;
++
++  foo(buffer);
++
++  for (i=0, j=0; i<6; i++) {
++      if (ao==0 || outbuffer[fp-3+i] != '\r')
++	buffer[j++] = outbuffer[fp-3+i];
++  }
++  _xgetw();
++}
+Index: gcc/testsuite/gcc.c-torture/compile/pr41661.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr41661.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.c-torture/compile/pr41661.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,20 @@
++/* PR tree-optimization/41661 */
++/* { dg-do compile } */
++/* { dg-options "-fno-early-inlining" } */
++
++int g;
++
++void foo (int x)
++{
++  g = x;
++}
++
++void bar (double d)
++{
++  foo (d == 1);
++}
++
++void baz (int a)
++{
++  bar (1);
++}
+Index: gcc/testsuite/gcc.c-torture/compile/pr41182-1.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr41182-1.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.c-torture/compile/pr41182-1.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,6 @@
++typedef long unsigned int size_t;
++int _lae_process_opts(char *pr, char *pe)
++{ 
++  return (strlen ("on") < ((size_t) ((pe-&pr[2])>(strlen("on"))                
++                                     ? (pe-&pr[2]) : (strlen("on")))));
++}
+Index: gcc/testsuite/gcc.target/arm/neon-thumb2-move.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon-thumb2-move.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/arm/neon-thumb2-move.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,98 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target arm_neon_ok } */
++/* { dg-options "-O2 -mthumb -march=armv7-a -mfloat-abi=softfp -mfpu=neon" } */
++
++#include <arm_neon.h>
++#include <stddef.h>
++
++void *
++memset (DST, C, LENGTH)
++     void *DST;
++     int C;
++     size_t LENGTH;
++{
++  void* DST0 = DST;
++  unsigned char C_BYTE = C;
++
++
++  if (__builtin_expect(LENGTH < 4, 1)) {
++    size_t i = 0;
++    while (i < LENGTH) {
++      ((char*)DST)[i] = C_BYTE;
++      i++;
++    }
++    return DST;
++  }
++
++  const char* DST_end = (char*)DST + LENGTH;
++
++
++  while ((uintptr_t)DST % 4 != 0) {
++    *(char*) (DST++) = C_BYTE;
++  }
++
++
++  uint32_t C_SHORTWORD = (uint32_t)(unsigned char)(C_BYTE) * 0x01010101;
++
++
++  if (__builtin_expect(DST_end - (char*)DST >= 16, 0)) {
++    while ((uintptr_t)DST % 16 != 0) {
++      *((uint32_t*)((char*)(DST) + (0))) = C_SHORTWORD;
++      DST += 4;
++    }
++
++
++    uint8x16_t C_WORD = vdupq_n_u8(C_BYTE);
++
++
++
++
++
++    size_t i = 0;
++    LENGTH = DST_end - (char*)DST;
++    while (i + 16 * 16 <= LENGTH) {
++      *((uint8x16_t*)((char*)(DST) + (i))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 1))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 2))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 3))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 4))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 5))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 6))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 7))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 8))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 9))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 10))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 11))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 12))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 13))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 14))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 15))) = C_WORD;
++      i += 16 * 16;
++    }
++    while (i + 16 * 4 <= LENGTH) {
++      *((uint8x16_t*)((char*)(DST) + (i))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 1))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 2))) = C_WORD;
++      *((uint8x16_t*)((char*)(DST) + (i + 16 * 3))) = C_WORD;
++      i += 16 * 4;
++    }
++    while (i + 16 <= LENGTH) {
++      *((uint8x16_t*)((char*)(DST) + (i))) = C_WORD;
++      i += 16;
++    }
++    DST += i;
++  }
++
++  while (4 <= DST_end - (char*)DST) {
++    *((uint32_t*)((char*)(DST) + (0))) = C_SHORTWORD;
++    DST += 4;
++  }
++
++
++  while ((char*)DST < DST_end) {
++    *((char*)DST) = C_BYTE;
++    DST++;
++  }
++
++  return DST0;
++}
+Index: gcc/testsuite/gcc.dg/torture/pr41555.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr41555.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr41555.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,119 @@
++/* { dg-do run } */
++/* { dg-options "-std=c99" } */
++
++#include <stdint.h>
++#include <limits.h>
++
++extern void abort (void);
++
++static uint64_t safe_div_func_uint64_t_u_u (uint64_t _ui1, uint64_t _ui2)
++{
++  if (_ui2==0) return _ui1;
++  return _ui1 / _ui2;
++}
++
++static int64_t safe_div_func_int64_t_s_s (int64_t _si1, int64_t _si2)
++{
++  if (_si2==0 || (_si1==INT64_MIN && _si2==-1)) return _si1;
++  return _si1 / _si2;
++}
++
++#define safe_add_macro_int8_t_s_s(si1,si2) \
++                ((((((int8_t)(si1))>((int8_t)0)) && (((int8_t)(si2))>((int8_t)0)) && (((int8_t)(si1)) > ((INT8_MAX)-((int8_t)(si2))))) \
++                  || ((((int8_t)(si1))<((int8_t)0)) && (((int8_t)(si2))<((int8_t)0)) && (((int8_t)(si1)) < ((INT8_MIN)-((int8_t)(si2)))))) \
++                 ? ((int8_t)(si1)) \
++                 : (((int8_t)(si1)) + ((int8_t)(si2))) \
++                 ) 
++
++static int8_t
++safe_add_func_int8_t_s_s(int8_t _si1, int8_t _si2)
++{
++  return safe_add_macro_int8_t_s_s(_si1,_si2);
++}
++
++#define safe_rshift_macro_uint64_t_u_s(left,right) \
++        (((((int)(right)) < ((uint64_t)0)) \
++                         || (((int)(right)) >= sizeof(uint64_t)*CHAR_BIT)) \
++                        ? ((uint64_t)(left)) \
++                        : (((uint64_t)(left)) >> ((int)(right))))
++
++static uint64_t
++safe_rshift_func_uint64_t_u_s(uint64_t _left, int _right)
++{
++  return safe_rshift_macro_uint64_t_u_s(_left,_right);
++}
++
++#define safe_mul_macro_int32_t_s_s(si1,si2) \
++  ((((((int32_t)(si1)) > ((int32_t)0)) && (((int32_t)(si2)) > ((int32_t)0)) && (((int32_t)(si1)) > ((INT32_MAX) / ((int32_t)(si2))))) || \
++  ((((int32_t)(si1)) > ((int32_t)0)) && (((int32_t)(si2)) <= ((int32_t)0)) && (((int32_t)(si2)) < ((INT32_MIN) / ((int32_t)(si1))))) || \
++  ((((int32_t)(si1)) <= ((int32_t)0)) && (((int32_t)(si2)) > ((int32_t)0)) && (((int32_t)(si1)) < ((INT32_MIN) / ((int32_t)(si2))))) || \
++  ((((int32_t)(si1)) <= ((int32_t)0)) && (((int32_t)(si2)) <= ((int32_t)0)) && (((int32_t)(si1)) != ((int32_t)0)) && (((int32_t)(si2)) < ((INT32_MAX) / ((int32_t)(si1)))))) \
++  ? ((int32_t)(si1)) \
++  : ((int32_t)(si1)) * ((int32_t)(si2)))
++
++static int32_t
++safe_mul_func_int32_t_s_s (int32_t _si1, int32_t _si2)
++{
++  return safe_mul_macro_int32_t_s_s(_si1,_si2);
++}
++
++static int8_t g_39;
++static volatile uint8_t g_46;
++static uint8_t g_47;
++static uint8_t *g_62;
++static uint8_t g_79;
++static int8_t g_101 = -1L;
++static uint8_t *g_114;
++static uint8_t *g_126;
++static uint8_t g_133;
++
++static uint16_t func_35 (int32_t * p_36, uint64_t p_37, uint32_t p_38);
++static uint16_t func_35 (int32_t * p_36, uint64_t p_37, uint32_t p_38)
++{
++  if (g_62 != 0)
++    abort ();
++  for (g_39 = 1; g_39 < 0; g_39 = 1)
++    {
++    }
++  return 1;
++}
++
++static int32_t func_19 (int32_t p_20);
++static int32_t func_19 (int32_t p_20)
++{
++  if (1 !=
++      safe_div_func_uint64_t_u_u ((safe_div_func_int64_t_s_s (p_20, 1)),
++                                  g_101))
++    {
++      func_35 (0, 1 <= (safe_add_func_int8_t_s_s (g_47, g_46)) > p_20 < 1, 1);
++      g_133 = 1;
++      if (g_114 != 0)
++	abort ();
++      if (g_126 != 0)
++	abort ();
++    }
++  return 1;
++}
++
++static uint8_t func_2 (int32_t p_6);
++static uint8_t func_2 (int32_t p_6)
++{
++  for (1; p_6 > 1; 1)
++    return 0;
++  func_19 (g_79);
++  if (safe_mul_func_int32_t_s_s
++      ((0, 1 < (safe_rshift_func_uint64_t_u_s (1 ^ p_6, 1))),
++       (func_35 (&p_6, 1, 1) < 1)))
++    {
++    }
++  return 1;
++}
++
++int main (void)
++{
++  func_2 (1);
++  if (g_133 != 1)
++    abort ();
++  return 0;
++}
++
+Index: gcc/testsuite/gcc.dg/pr41573.c
+===================================================================
+--- gcc/testsuite/gcc.dg/pr41573.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/pr41573.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,15 @@
++/* { dg-do compile } */
++/* { dg-options "-O2" } */
++__inline __attribute__ ((__always_inline__)) char *
++strcpy (char *__dest, __const char *__src)
++{
++  return __builtin___strcpy_chk (__dest, __src, __builtin_object_size (__dest, 2 > 1));
++}
++
++const char* get_attr(unsigned attr)
++{
++    static char tmp[256];
++
++    strcpy(tmp, "");
++    return tmp;
++}
+Index: gcc/testsuite/gcc.dg/cleanup-13.c
+===================================================================
+--- gcc/testsuite/gcc.dg/cleanup-13.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/cleanup-13.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,319 @@
++/* HP-UX libunwind.so doesn't provide _UA_END_OF_STACK */
++/* { dg-do run } */
++/* { dg-options "-fexceptions" } */
++/* { dg-skip-if "" { "ia64-*-hpux11.*" }  { "*" } { "" } } */
++/* Verify DW_OP_* handling in the unwinder.  */
++
++#include <unwind.h>
++#include <stdlib.h>
++#include <string.h>
++
++/* #define OP_addr(x) 0x06, ... */
++#define OP_deref 0x06,
++#define SLEB128(x) (x)&0x7f	/* Assume here the value is -0x40 ... 0x3f.  */
++#define ULEB128(x) (x)&0x7f	/* Assume here the value is 0 ... 0x7f.  */
++#define VAL1(x) (x)&0xff
++#if defined (__BIG_ENDIAN__)
++#define VAL2(x) ((x)>>8)&0xff,(x)&0xff
++#define VAL4(x) ((x)>>24)&0xff,((x)>>16)&0xff,((x)>>8)&0xff,(x)&0xff
++#define VAL8(x) ((x)>>56)&0xff,((x)>>48)&0xff,((x)>>40)&0xff,((x)>>32)&0xff,((x)>>24)&0xff,((x)>>16)&0xff,((x)>>8)&0xff,(x)&0xff
++#elif defined(__LITTLE_ENDIAN__) || defined(__x86_64__) || defined(__i386__)
++#define VAL2(x) (x)&0xff,((x)>>8)&0xff
++#define VAL4(x) (x)&0xff,((x)>>8)&0xff,((x)>>16)&0xff,((x)>>24)&0xff
++#define VAL8(x) (x)&0xff,((x)>>8)&0xff,((x)>>16)&0xff,((x)>>24)&0xff,((x)>>32)&0xff,((x)>>40)&0xff,((x)>>48)&0xff,((x)>>56)&0xff
++#endif
++#define OP_const1u(x) 0x08,VAL1(x),
++#define OP_const1s(x) 0x09,VAL1(x),
++#define OP_const2u(x) 0x0a,VAL2(x),
++#define OP_const2s(x) 0x0b,VAL2(x),
++#define OP_const4u(x) 0x0c,VAL4(x),
++#define OP_const4s(x) 0x0d,VAL4(x),
++#define OP_const8u(x) 0x0e,VAL8(x),
++#define OP_const8s(x) 0x0f,VAL8(x),
++#define OP_constu(x) 0x10,ULEB128(x),
++#define OP_consts(x) 0x11,SLEB128(x),
++#define OP_dup 0x12,
++#define OP_drop 0x13,
++#define OP_over 0x14,
++#define OP_pick(x) 0x15,VAL1(x),
++#define OP_swap 0x16,
++#define OP_rot 0x17,
++#define OP_xderef 0x18,
++#define OP_abs 0x19,
++#define OP_and 0x1a,
++#define OP_div 0x1b,
++#define OP_minus 0x1c,
++#define OP_mod 0x1d,
++#define OP_mul 0x1e,
++#define OP_neg 0x1f,
++#define OP_not 0x20,
++#define OP_or 0x21,
++#define OP_plus 0x22,
++#define OP_plus_uconst(x) 0x23,ULEB128(x),
++#define OP_shl 0x24,
++#define OP_shr 0x25,
++#define OP_shra 0x26,
++#define OP_xor 0x27,
++#define OP_bra(x) 0x28,VAL2(x),
++#define OP_eq 0x29,
++#define OP_ge 0x2a,
++#define OP_gt 0x2b,
++#define OP_le 0x2c,
++#define OP_lt 0x2d,
++#define OP_ne 0x2e,
++#define OP_skip(x) 0x2f,VAL2(x),
++#define OP_lit0 0x30,
++#define OP_lit1 0x31,
++#define OP_lit2 0x32,
++#define OP_lit3 0x33,
++#define OP_lit4 0x34,
++#define OP_lit5 0x35,
++#define OP_lit6 0x36,
++#define OP_lit7 0x37,
++#define OP_lit8 0x38,
++#define OP_lit9 0x39,
++#define OP_lit10 0x3a,
++#define OP_lit11 0x3b,
++#define OP_lit12 0x3c,
++#define OP_lit13 0x3d,
++#define OP_lit14 0x3e,
++#define OP_lit15 0x3f,
++#define OP_lit16 0x40,
++#define OP_lit17 0x41,
++#define OP_lit18 0x42,
++#define OP_lit19 0x43,
++#define OP_lit20 0x44,
++#define OP_lit21 0x45,
++#define OP_lit22 0x46,
++#define OP_lit23 0x47,
++#define OP_lit24 0x48,
++#define OP_lit25 0x49,
++#define OP_lit26 0x4a,
++#define OP_lit27 0x4b,
++#define OP_lit28 0x4c,
++#define OP_lit29 0x4d,
++#define OP_lit30 0x4e,
++#define OP_lit31 0x4f,
++#define OP_reg0 0x50,
++#define OP_reg1 0x51,
++#define OP_reg2 0x52,
++#define OP_reg3 0x53,
++#define OP_reg4 0x54,
++#define OP_reg5 0x55,
++#define OP_reg6 0x56,
++#define OP_reg7 0x57,
++#define OP_reg8 0x58,
++#define OP_reg9 0x59,
++#define OP_reg10 0x5a,
++#define OP_reg11 0x5b,
++#define OP_reg12 0x5c,
++#define OP_reg13 0x5d,
++#define OP_reg14 0x5e,
++#define OP_reg15 0x5f,
++#define OP_reg16 0x60,
++#define OP_reg17 0x61,
++#define OP_reg18 0x62,
++#define OP_reg19 0x63,
++#define OP_reg20 0x64,
++#define OP_reg21 0x65,
++#define OP_reg22 0x66,
++#define OP_reg23 0x67,
++#define OP_reg24 0x68,
++#define OP_reg25 0x69,
++#define OP_reg26 0x6a,
++#define OP_reg27 0x6b,
++#define OP_reg28 0x6c,
++#define OP_reg29 0x6d,
++#define OP_reg30 0x6e,
++#define OP_reg31 0x6f,
++#define OP_breg0(x) 0x70,SLEB128(x),
++#define OP_breg1(x) 0x71,SLEB128(x),
++#define OP_breg2(x) 0x72,SLEB128(x),
++#define OP_breg3(x) 0x73,SLEB128(x),
++#define OP_breg4(x) 0x74,SLEB128(x),
++#define OP_breg5(x) 0x75,SLEB128(x),
++#define OP_breg6(x) 0x76,SLEB128(x),
++#define OP_breg7(x) 0x77,SLEB128(x),
++#define OP_breg8(x) 0x78,SLEB128(x),
++#define OP_breg9(x) 0x79,SLEB128(x),
++#define OP_breg10(x) 0x7a,SLEB128(x),
++#define OP_breg11(x) 0x7b,SLEB128(x),
++#define OP_breg12(x) 0x7c,SLEB128(x),
++#define OP_breg13(x) 0x7d,SLEB128(x),
++#define OP_breg14(x) 0x7e,SLEB128(x),
++#define OP_breg15(x) 0x7f,SLEB128(x),
++#define OP_breg16(x) 0x80,SLEB128(x),
++#define OP_breg17(x) 0x81,SLEB128(x),
++#define OP_breg18(x) 0x82,SLEB128(x),
++#define OP_breg19(x) 0x83,SLEB128(x),
++#define OP_breg20(x) 0x84,SLEB128(x),
++#define OP_breg21(x) 0x85,SLEB128(x),
++#define OP_breg22(x) 0x86,SLEB128(x),
++#define OP_breg23(x) 0x87,SLEB128(x),
++#define OP_breg24(x) 0x88,SLEB128(x),
++#define OP_breg25(x) 0x89,SLEB128(x),
++#define OP_breg26(x) 0x8a,SLEB128(x),
++#define OP_breg27(x) 0x8b,SLEB128(x),
++#define OP_breg28(x) 0x8c,SLEB128(x),
++#define OP_breg29(x) 0x8d,SLEB128(x),
++#define OP_breg30(x) 0x8e,SLEB128(x),
++#define OP_breg31(x) 0x8f,SLEB128(x),
++#define OP_regx(x) 0x90,SLEB128(x),
++#define OP_fbreg(x) 0x91,SLEB128(x),
++#define OP_bregx(x,y) 0x92,ULEB128(x),SLEB128(y),
++#define OP_piece(x) 0x93,ULEB128(x),
++#define OP_deref_size(x) 0x94,VAL1(x),
++#define OP_xderef_size(x) 0x95,VAL1(x),
++#define OP_nop 0x96,
++#define OP_nop_termination 0x96
++#define OP_push_object_address 0x97,
++#define OP_call2(x) 0x98,VAL2(x),
++#define OP_call4(x) 0x99,VAL4(x),
++/* #define OP_call_ref(x) 0x9a,... */
++#define OP_form_tls_address(x) 0x9b,
++#define OP_call_frame_cfa 0x9c,
++#define OP_bit_piece(x) 0x9d,ULEB128(x),
++/* #define OP_implicit_value(x...) 0x9e,... */
++#define OP_stack_value 0x9f,
++#define OP_GNU_push_tls_address 0xe0,
++/* #define OP_GNU_encoded_addr(x...) 0xf1, */
++
++#define ASSERT_TOS_NON0 OP_bra(3) OP_skip(-3)
++#define ASSERT_TOS_0 OP_lit0 OP_eq ASSERT_TOS_NON0
++
++/* Initially there is CFA value on the stack, we want to
++   keep it there at the end.  */
++#define CFI_PROGRAM \
++OP_lit0 OP_nop ASSERT_TOS_0						\
++OP_lit1 ASSERT_TOS_NON0							\
++OP_lit1 OP_const1u(1) OP_eq ASSERT_TOS_NON0				\
++OP_lit16 OP_const2u(16) OP_eq ASSERT_TOS_NON0				\
++OP_lit31 OP_const4u(31) OP_ne ASSERT_TOS_0				\
++OP_lit1 OP_neg OP_const1s(-1) OP_eq ASSERT_TOS_NON0			\
++OP_lit16 OP_neg OP_const2s(-16) OP_ne ASSERT_TOS_0			\
++OP_lit31 OP_const4s(-31) OP_neg OP_ne ASSERT_TOS_0			\
++OP_lit7 OP_dup OP_plus_uconst(2) OP_lit9 OP_eq ASSERT_TOS_NON0		\
++  OP_lit7 OP_eq ASSERT_TOS_NON0						\
++OP_lit20 OP_lit1 OP_drop OP_lit20 OP_eq ASSERT_TOS_NON0			\
++OP_lit17 OP_lit19 OP_over OP_lit17 OP_eq ASSERT_TOS_NON0		\
++  OP_lit19 OP_eq ASSERT_TOS_NON0 OP_lit17 OP_eq ASSERT_TOS_NON0		\
++OP_lit1 OP_lit2 OP_lit3 OP_lit4 OP_pick(2) OP_lit2 OP_eq ASSERT_TOS_NON0\
++  OP_lit4 OP_eq ASSERT_TOS_NON0 OP_lit3 OP_eq ASSERT_TOS_NON0		\
++  OP_pick(0) OP_lit2 OP_eq ASSERT_TOS_NON0				\
++  OP_lit2 OP_eq ASSERT_TOS_NON0 OP_lit1 OP_eq ASSERT_TOS_NON0		\
++OP_lit6 OP_lit12 OP_swap OP_lit6 OP_eq ASSERT_TOS_NON0			\
++  OP_lit12 OP_eq ASSERT_TOS_NON0					\
++OP_lit7 OP_lit8 OP_lit9 OP_rot OP_lit8 OP_eq ASSERT_TOS_NON0		\
++  OP_lit7 OP_eq ASSERT_TOS_NON0 OP_lit9 OP_eq ASSERT_TOS_NON0		\
++OP_lit7 OP_abs OP_lit7 OP_eq ASSERT_TOS_NON0				\
++OP_const1s(-123) OP_abs OP_const1u(123) OP_eq ASSERT_TOS_NON0		\
++OP_lit3 OP_lit6 OP_and OP_lit2 OP_eq ASSERT_TOS_NON0			\
++OP_lit3 OP_lit6 OP_or OP_lit7 OP_eq ASSERT_TOS_NON0			\
++OP_lit17 OP_lit2 OP_minus OP_lit15 OP_eq ASSERT_TOS_NON0		\
++OP_const1s(-6) OP_const1s(-2) OP_div OP_lit3 OP_eq ASSERT_TOS_NON0	\
++OP_const1s(-6) OP_const1s(-4) OP_mod OP_const1s(-2)			\
++  OP_eq ASSERT_TOS_NON0							\
++OP_lit16 OP_lit31 OP_plus_uconst(1) OP_mul OP_const2u(512)		\
++  OP_eq ASSERT_TOS_NON0							\
++OP_lit5 OP_not OP_lit31 OP_and OP_lit26 OP_eq ASSERT_TOS_NON0		\
++OP_lit12 OP_lit31 OP_plus OP_const1u(43) OP_eq ASSERT_TOS_NON0		\
++OP_const1s(-6) OP_lit2 OP_plus OP_const1s(-4) OP_eq ASSERT_TOS_NON0	\
++OP_const1s(-6) OP_plus_uconst(3) OP_const1s(-3) OP_eq ASSERT_TOS_NON0	\
++OP_lit16 OP_lit4 OP_shl OP_const2u(256) OP_eq ASSERT_TOS_NON0		\
++OP_lit16 OP_lit3 OP_shr OP_lit2 OP_eq ASSERT_TOS_NON0			\
++OP_const1s(-16) OP_lit3 OP_shra OP_const1s(-2) OP_eq ASSERT_TOS_NON0	\
++OP_lit3 OP_lit6 OP_xor OP_lit5 OP_eq ASSERT_TOS_NON0			\
++OP_lit3 OP_lit6 OP_le ASSERT_TOS_NON0					\
++OP_lit3 OP_lit3 OP_le ASSERT_TOS_NON0					\
++OP_lit6 OP_lit3 OP_le ASSERT_TOS_0					\
++OP_lit3 OP_lit6 OP_lt ASSERT_TOS_NON0					\
++OP_lit3 OP_lit3 OP_lt ASSERT_TOS_0					\
++OP_lit6 OP_lit3 OP_lt ASSERT_TOS_0					\
++OP_lit3 OP_lit6 OP_ge ASSERT_TOS_0					\
++OP_lit3 OP_lit3 OP_ge ASSERT_TOS_NON0					\
++OP_lit6 OP_lit3 OP_ge ASSERT_TOS_NON0					\
++OP_lit3 OP_lit6 OP_gt ASSERT_TOS_0					\
++OP_lit3 OP_lit3 OP_gt ASSERT_TOS_0					\
++OP_lit6 OP_lit3 OP_gt ASSERT_TOS_NON0					\
++OP_const1s(-6) OP_lit1 OP_shr OP_lit0 OP_gt ASSERT_TOS_NON0		\
++OP_const1s(-6) OP_lit1 OP_shra OP_lit0 OP_lt ASSERT_TOS_NON0
++
++#define CFI_ESCAPE_VAL_2(VALUES...) #VALUES
++#define CFI_ESCAPE_VAL_1(VALUES...) CFI_ESCAPE_VAL_2(VALUES)
++#define CFI_ESCAPE_VAL(VALUES...) CFI_ESCAPE_VAL_1(VALUES)
++#define CFI_ESCAPE do { } while (0)
++#define CFI_ARCH_PROGRAM OP_nop_termination
++#ifdef __GCC_HAVE_DWARF2_CFI_ASM
++#if defined (__x86_64__)
++#undef CFI_ESCAPE
++#undef CFI_ARCH_PROGRAM
++#define CFI_ARCH_PROGRAM CFI_PROGRAM OP_lit8 OP_minus OP_nop_termination
++unsigned char cfi_arch_program[] = { CFI_ARCH_PROGRAM };
++extern char verify_it[sizeof (cfi_arch_program) - 0x80 < 0x3f80 ? 1 : -1];
++/* DW_CFA_expression %rip, uleb128(l2-l1), l1: program DW_OP_lit8 DW_OP_minus DW_OP_nop l2: */
++#define CFI_ESCAPE \
++  asm volatile (".cfi_escape 0x10, 0x10, (%P0&0x7f)+0x80, %P0>>7, " \
++		CFI_ESCAPE_VAL (CFI_ARCH_PROGRAM) \
++		: : "i" (sizeof (cfi_arch_program)))
++#elif defined (__i386__)
++#undef CFI_ESCAPE
++#undef CFI_ARCH_PROGRAM
++#define CFI_ARCH_PROGRAM CFI_PROGRAM OP_lit4 OP_minus OP_nop_termination
++unsigned char cfi_arch_program[] = { CFI_ARCH_PROGRAM };
++extern char verify_it[sizeof (cfi_arch_program) - 0x80 < 0x3f80 ? 1 : -1];
++/* DW_CFA_expression %eip, uleb128(l2-l1), l1: program DW_OP_lit4 DW_OP_minus DW_OP_nop l2: */
++#define CFI_ESCAPE \
++  asm volatile (".cfi_escape 0x10, 8, (%P0&0x7f)+0x80, %P0>>7, " \
++		CFI_ESCAPE_VAL (CFI_ARCH_PROGRAM) \
++		: : "i" (sizeof (cfi_arch_program)))
++#endif
++#endif
++static _Unwind_Reason_Code
++force_unwind_stop (int version, _Unwind_Action actions,
++		   _Unwind_Exception_Class exc_class,
++		   struct _Unwind_Exception *exc_obj,
++		   struct _Unwind_Context *context,
++		   void *stop_parameter)
++{
++  if (actions & _UA_END_OF_STACK)
++    abort ();
++  return _URC_NO_REASON;
++}
++
++static void force_unwind ()
++{
++  struct _Unwind_Exception *exc = malloc (sizeof (*exc));
++  memset (&exc->exception_class, 0, sizeof (exc->exception_class));
++  exc->exception_cleanup = 0;
++
++#ifndef __USING_SJLJ_EXCEPTIONS__
++  _Unwind_ForcedUnwind (exc, force_unwind_stop, 0);
++#else
++  _Unwind_SjLj_ForcedUnwind (exc, force_unwind_stop, 0);
++#endif
++
++  abort ();
++}
++
++static void handler (void *p __attribute__((unused)))
++{
++  exit (0);
++}
++
++__attribute__((noinline)) static void callme ()
++{
++  CFI_ESCAPE;
++  force_unwind ();
++}
++
++__attribute__((noinline)) static void doit ()
++{
++  char dummy __attribute__((cleanup (handler)));
++  callme ();
++}
++
++int main()
++{ 
++  doit ();
++  abort ();
++}
+Index: gcc/testsuite/ChangeLog
+===================================================================
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,3 +1,80 @@
++2009-10-20  Joseph Myers  <joseph@codesourcery.com>
++
++	* gcc.target/arm/neon-thumb2-move.c: New test.
++
++2009-10-19  Jakub Jelinek  <jakub@redhat.com>
++
++	* gcc.dg/cleanup-13.c: New test.
++
++2009-10-19  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/41755
++	* gfortran.dg/equiv_8.f90: New test.
++
++2009-10-15  Jason Merrill  <jason@redhat.com>
++
++	PR c++/38798
++	* g++.dg/cpp0x/trailing5.C: New.
++
++2009-10-14  Larry Evans  <cppljevans@suddenlink.net>
++
++	* g++.dg/cpp0x/vt-40092.C: New.
++
++2009-10-12  Jason Merrill  <jason@redhat.com>
++
++	PR c++/37875
++	* g++.dg/cpp0x/decltype18.C: New.
++
++	PR c++/37766
++	* g++.dg/cpp0x/fntmpdefarg1.C: New.
++
++2009-10-11  Jason Merrill  <jason@redhat.com>
++
++	PR c++/37204
++	* g++.dg/cpp0x/rv-reinterpret.C: New.
++
++2009-10-16  H.J. Lu  <hongjiu.lu@intel.com>
++
++	* g++.dg/debug/dwarf2/template-params-7.C: Removed.
++	* gfortran.dg/fmt_error_9.f: Likewise.
++
++2009-10-15  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from mainline:
++	2009-10-13  Martin Jambor  <mjambor@suse.cz>
++
++	* gcc.c-torture/compile/pr41661.c: New test.
++
++	2009-10-12  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
++
++	PR libgfortran/41683
++	* gfortran.dg/fmt_error_9.f: Add check for repeat count after P.
++
++	2009-10-12  Dodji Seketeli  <dodji@redhat.com>
++
++	PR c++/41570
++	* g++.dg/debug/dwarf2/template-params-7.C: New test.
++
++	2009-10-11  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/41555
++	* gcc.dg/torture/pr41555.c: New testcase.
++
++	2009-10-09  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/41634
++	* gcc.c-torture/compile/pr41634.c: New testcase.
++
++	2009-10-08  Michael Matz  <matz@suse.de>
++
++	PR middle-end/41573
++	* gcc.dg/pr41573.c: New test.
++
++	2009-10-07  Joseph Myers  <joseph@codesourcery.com>
++
++	PR c/41182
++	* gcc.c-torture/compile/pr41182-1.c: New.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: gcc/testsuite/g++.dg/cpp0x/auto13.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,11 +0,0 @@
+-// PR c++/38597
+-// { dg-options "-std=c++0x" }
+-
+-template<class T, class U>
+-auto f(T,U) -> decltype(T() + U())
+-{ return T() + U(); }
+-
+-template<class T> void g(T){}
+-
+-int main() { g(f); }		// { dg-error "no matching function" }
+-
+Index: gcc/testsuite/g++.dg/cpp0x/auto6.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,118 +0,0 @@
+-// Tests for late-specified return type.
+-// { dg-options "-std=c++0x" }
+-
+-auto f() -> int
+-{
+-  return 0;
+-}
+-
+-template<class T, class U>
+-auto add(T t, U u) -> decltype (t+u)
+-{
+-  return t+u;
+-}
+-
+-template<class T, class U>
+-decltype(T()+U()) add2(T t, U u)
+-{
+-  return t+u;
+-}
+-
+-template <class T, class U>
+-U ag (T, U)
+-{
+-  return U();
+-}
+-
+-template<class T, class U>
+-auto add3(T t, U u) -> decltype (ag(t,u))
+-{
+-  return ag(t,u);
+-}
+-
+-template<class T, class U>
+-decltype(*(T*)0+*(U*)0) add4(T t, U u)
+-{
+-  return t+u;
+-}
+-
+-template <class T>
+-struct A
+-{
+-  T f() {}
+-  template <class U>
+-  T g() {}
+-  template <class V>
+-  struct B
+-  {
+-    int MEM;
+-  };
+-};
+-
+-template <class T>
+-auto f(T* t) -> decltype (t->f())
+-{
+-  return t->f();
+-}
+-
+-template <class T>
+-auto g(T t) -> decltype (t.f())
+-{
+-  return t.f();
+-}
+-
+-template <class T, class U>
+-auto h(T t, U u) -> decltype (t.template g<U>())
+-{
+-  return t.template g<U>();
+-}
+-
+-struct D { };
+-struct C: public A<int>::B<D>
+-{
+-};
+-
+-template <class T, class U, class V>
+-auto k(T t, U u, V v) -> decltype (t.U::template B<V>::MEM)
+-{
+-  return t.U::template B<V>::MEM;
+-}
+-
+-// For these two examples we can elide the 'decltype' and just mangle the type.
+-template <class T>
+-auto l(T t) -> decltype (t)
+-{
+-  return t;
+-}
+-
+-template <class T, T u>
+-auto m(T t) -> decltype (u)
+-{
+-  return t;
+-}
+-
+-A<int> a, *p;
+-
+-int main()
+-{
+-  // { dg-final { scan-assembler  "_Z3addIidEDTplfp_fp0_ET_T0_" } }
+-  auto i = add(1, 2.0);
+-  // { dg-final { scan-assembler "_Z4add4IidEDTpldecvPT_Li0EdecvPT0_Li0EES0_S2_" } }
+-  auto i4 = add4(1, 2.0);
+-  // { dg-final { scan-assembler "_Z4add2IidEDTplcvT__EcvT0__EES0_S1_" } }
+-  auto i2 = add2(1, 2.0);
+-  // { dg-final { scan-assembler "_Z4add3IidEDTcl2agfp_fp0_EET_T0_" } }
+-  auto i3 = add3(1, 2.0);
+-  // { dg-final { scan-assembler "_Z1fI1AIiEEDTclptfp_1fEEPT_" } }
+-  f(p);
+-  // { dg-final { scan-assembler "_Z1gI1AIiEEDTcldtfp_1fEET_" } }
+-  g(a);
+-  // { dg-final { scan-assembler "_Z1hI1AIiEdEDTcldtfp_1gIT0_EEET_S2_" } }
+-  h(a,1.0);
+-  // { dg-final { scan-assembler "_Z1kI1C1AIiE1DEDtdtfp_srNT0_1BIT1_EE3MEMET_S4_S6_" } }
+-  k( C(), A<int>(), D() );
+-  // { dg-final { scan-assembler "_Z1lIiET_S0_" } }
+-  l(1);
+-  // { dg-final { scan-assembler "_Z1mIiLi1EET_S0_" } }
+-  m<int,1>(1);
+-}
+Index: gcc/testsuite/g++.dg/cpp0x/auto8.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,16 +0,0 @@
+-// PR c++/37967
+-// Negative test for auto
+-// { dg-options "-std=c++0x" }
+-
+-auto f1 () -> int;
+-auto f2 ();		// { dg-error "without late return type" }
+-int f3 () -> int;	// { dg-error "late return type" }
+-auto *f4 () -> int;	// { dg-error "late return type" }
+-
+-struct A
+-{
+-  auto f5 () const -> int;
+-  auto f6 ();		// { dg-error "without late return type" }
+-  int f7 () -> int;	// { dg-error "late return type" }
+-  auto *f8 () -> int;	// { dg-error "late return type" }
+-};
+Index: gcc/testsuite/g++.dg/cpp0x/auto12.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,63 +0,0 @@
+-// More auto/decltype mangling tests.
+-// { dg-options "-std=c++0x" }
+-
+-template <class T>
+-struct B
+-{
+-  static int i;
+-};
+-
+-int&& x();
+-
+-template <class T>
+-struct A
+-{
+-  static int i;
+-  static int &ir;
+-  static int &&irr;
+-  template <class U>
+-  auto f(U u) -> decltype (u + i);
+-  template <class U>
+-  auto fr(U u) -> decltype (u + ir);
+-  template <class U>
+-  auto frr(U u) -> decltype (u + irr);
+-  template <class U>
+-  auto g(U u) -> decltype (u + sizeof (i));
+-  template <class U>
+-  auto h(U u) -> decltype (u + B<U>::i);
+-  template <class U>
+-  auto j(U u) -> decltype (u + x());
+-};
+-
+-template<class T> template<class U>
+-auto A<T>::f(U u) -> decltype (u + i)
+-{
+-  return u + i;
+-}
+-
+-template <class... Args>
+-int f (Args... args);
+-
+-template <class... Args>
+-auto g (Args... args) -> decltype (f ((args+1)...))
+-{
+-  return (f ((args+1)...));
+-}
+-
+-int main()
+-{
+-  // { dg-final { scan-assembler  "_ZN1AIiE1fIiEEDTplfp_L_ZNS0_1iEEET_" } }
+-  A<int>().f(1);
+-  // { dg-final { scan-assembler  "_ZN1AIiE2frIiEEDTplfp_L_ZNS0_2irEEET_" } }
+-  A<int>().fr(1);
+-  // { dg-final { scan-assembler  "_ZN1AIiE3frrIiEEDTplfp_L_ZNS0_3irrEEET_" } }
+-  A<int>().frr(1);
+-  // { dg-final { scan-assembler  "_ZN1AIiE1gIiEEDTplfp_szL_ZNS0_1iEEET_" } }
+-  A<int>().g(1);
+-  // { dg-final { scan-assembler  "_ZN1AIiE1hIiEEDTplfp_sr1BIT_E1iES3_" } }
+-  A<int>().h(1);
+-  // { dg-final { scan-assembler  "_ZN1AIiE1jIiEEDTplfp_clL_Z1xvEEET_" } }
+-  A<int>().j(1);
+-  // { dg-final { scan-assembler  "_Z1gIIidEEDTcl1fspplfp_Li1EEEDpT_" } }  
+-  g(42, 1.0);
+-}
+Index: gcc/testsuite/g++.dg/cpp0x/decltype18.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/decltype18.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/decltype18.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,5 @@
++// PR c++/37875
++// { dg-options "-std=c++0x" }
++
++template <typename> struct X {};
++X<decltype(1 > 2)> x;
+Index: gcc/testsuite/g++.dg/cpp0x/trailing1.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/trailing1.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/trailing1.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,118 @@
++// Tests for late-specified return type.
++// { dg-options "-std=c++0x" }
++
++auto f() -> int
++{
++  return 0;
++}
++
++template<class T, class U>
++auto add(T t, U u) -> decltype (t+u)
++{
++  return t+u;
++}
++
++template<class T, class U>
++decltype(T()+U()) add2(T t, U u)
++{
++  return t+u;
++}
++
++template <class T, class U>
++U ag (T, U)
++{
++  return U();
++}
++
++template<class T, class U>
++auto add3(T t, U u) -> decltype (ag(t,u))
++{
++  return ag(t,u);
++}
++
++template<class T, class U>
++decltype(*(T*)0+*(U*)0) add4(T t, U u)
++{
++  return t+u;
++}
++
++template <class T>
++struct A
++{
++  T f() {}
++  template <class U>
++  T g() {}
++  template <class V>
++  struct B
++  {
++    int MEM;
++  };
++};
++
++template <class T>
++auto f(T* t) -> decltype (t->f())
++{
++  return t->f();
++}
++
++template <class T>
++auto g(T t) -> decltype (t.f())
++{
++  return t.f();
++}
++
++template <class T, class U>
++auto h(T t, U u) -> decltype (t.template g<U>())
++{
++  return t.template g<U>();
++}
++
++struct D { };
++struct C: public A<int>::B<D>
++{
++};
++
++template <class T, class U, class V>
++auto k(T t, U u, V v) -> decltype (t.U::template B<V>::MEM)
++{
++  return t.U::template B<V>::MEM;
++}
++
++// For these two examples we can elide the 'decltype' and just mangle the type.
++template <class T>
++auto l(T t) -> decltype (t)
++{
++  return t;
++}
++
++template <class T, T u>
++auto m(T t) -> decltype (u)
++{
++  return t;
++}
++
++A<int> a, *p;
++
++int main()
++{
++  // { dg-final { scan-assembler  "_Z3addIidEDTplfp_fp0_ET_T0_" } }
++  auto i = add(1, 2.0);
++  // { dg-final { scan-assembler "_Z4add4IidEDTpldecvPT_Li0EdecvPT0_Li0EES0_S2_" } }
++  auto i4 = add4(1, 2.0);
++  // { dg-final { scan-assembler "_Z4add2IidEDTplcvT__EcvT0__EES0_S1_" } }
++  auto i2 = add2(1, 2.0);
++  // { dg-final { scan-assembler "_Z4add3IidEDTcl2agfp_fp0_EET_T0_" } }
++  auto i3 = add3(1, 2.0);
++  // { dg-final { scan-assembler "_Z1fI1AIiEEDTclptfp_1fEEPT_" } }
++  f(p);
++  // { dg-final { scan-assembler "_Z1gI1AIiEEDTcldtfp_1fEET_" } }
++  g(a);
++  // { dg-final { scan-assembler "_Z1hI1AIiEdEDTcldtfp_1gIT0_EEET_S2_" } }
++  h(a,1.0);
++  // { dg-final { scan-assembler "_Z1kI1C1AIiE1DEDtdtfp_srNT0_1BIT1_EE3MEMET_S4_S6_" } }
++  k( C(), A<int>(), D() );
++  // { dg-final { scan-assembler "_Z1lIiET_S0_" } }
++  l(1);
++  // { dg-final { scan-assembler "_Z1mIiLi1EET_S0_" } }
++  m<int,1>(1);
++}
+Index: gcc/testsuite/g++.dg/cpp0x/trailing2.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/trailing2.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/trailing2.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,16 @@
++// PR c++/37967
++// Negative test for auto
++// { dg-options "-std=c++0x" }
++
++auto f1 () -> int;
++auto f2 ();		// { dg-error "without late return type" }
++int f3 () -> int;	// { dg-error "late return type" }
++auto *f4 () -> int;	// { dg-error "late return type" }
++
++struct A
++{
++  auto f5 () const -> int;
++  auto f6 ();		// { dg-error "without late return type" }
++  int f7 () -> int;	// { dg-error "late return type" }
++  auto *f8 () -> int;	// { dg-error "late return type" }
++};
+Index: gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,7 @@
++// PR c++/37766
++// { dg-options -std=c++0x }
++
++int a = 1;
++template<int& b = a> void f() {
++  f<>();
++}
+Index: gcc/testsuite/g++.dg/cpp0x/trailing3.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/trailing3.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/trailing3.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,63 @@
++// More auto/decltype mangling tests.
++// { dg-options "-std=c++0x" }
++
++template <class T>
++struct B
++{
++  static int i;
++};
++
++int&& x();
++
++template <class T>
++struct A
++{
++  static int i;
++  static int &ir;
++  static int &&irr;
++  template <class U>
++  auto f(U u) -> decltype (u + i);
++  template <class U>
++  auto fr(U u) -> decltype (u + ir);
++  template <class U>
++  auto frr(U u) -> decltype (u + irr);
++  template <class U>
++  auto g(U u) -> decltype (u + sizeof (i));
++  template <class U>
++  auto h(U u) -> decltype (u + B<U>::i);
++  template <class U>
++  auto j(U u) -> decltype (u + x());
++};
++
++template<class T> template<class U>
++auto A<T>::f(U u) -> decltype (u + i)
++{
++  return u + i;
++}
++
++template <class... Args>
++int f (Args... args);
++
++template <class... Args>
++auto g (Args... args) -> decltype (f ((args+1)...))
++{
++  return (f ((args+1)...));
++}
++
++int main()
++{
++  // { dg-final { scan-assembler  "_ZN1AIiE1fIiEEDTplfp_L_ZNS0_1iEEET_" } }
++  A<int>().f(1);
++  // { dg-final { scan-assembler  "_ZN1AIiE2frIiEEDTplfp_L_ZNS0_2irEEET_" } }
++  A<int>().fr(1);
++  // { dg-final { scan-assembler  "_ZN1AIiE3frrIiEEDTplfp_L_ZNS0_3irrEEET_" } }
++  A<int>().frr(1);
++  // { dg-final { scan-assembler  "_ZN1AIiE1gIiEEDTplfp_szL_ZNS0_1iEEET_" } }
++  A<int>().g(1);
++  // { dg-final { scan-assembler  "_ZN1AIiE1hIiEEDTplfp_sr1BIT_E1iES3_" } }
++  A<int>().h(1);
++  // { dg-final { scan-assembler  "_ZN1AIiE1jIiEEDTplfp_clL_Z1xvEEET_" } }
++  A<int>().j(1);
++  // { dg-final { scan-assembler  "_Z1gIIidEEDTcl1fspplfp_Li1EEEDpT_" } }  
++  g(42, 1.0);
++}
+Index: gcc/testsuite/g++.dg/cpp0x/trailing4.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/trailing4.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/trailing4.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,11 @@
++// PR c++/38597
++// { dg-options "-std=c++0x" }
++
++template<class T, class U>
++auto f(T,U) -> decltype(T() + U())
++{ return T() + U(); }
++
++template<class T> void g(T){}
++
++int main() { g(f); }		// { dg-error "no matching function" }
++
+Index: gcc/testsuite/g++.dg/cpp0x/vt-40092.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/vt-40092.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/vt-40092.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,21 @@
++// { dg-do "compile" }
++// { dg-options "-std=c++0x" }
++
++template <typename... Types> struct package {};
++
++template <int ArgGen> struct wrapper_gen {};
++
++template <int ArgNest> struct wrapper_nest
++{
++  typedef wrapper_gen<ArgNest> type_nest;
++};
++
++template <int... ArgPack>
++struct wrapper_pack
++{
++  typedef package<wrapper_gen <ArgPack>...> type_pack;
++  // incorrect error: expansion pattern 'wrapper_gen<ArgNest>'
++  //    contains no argument packs
++};
++
++
+Index: gcc/testsuite/g++.dg/cpp0x/trailing5.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/trailing5.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/trailing5.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,10 @@
++// PR c++/38798, DR 770
++// { dg-options -std=c++0x }
++
++struct A {};
++auto foo() -> struct A {}
++
++enum B {};
++auto bar() -> enum B {}
++
++auto baz() -> struct C {} {}	// { dg-error "" }
+Index: gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,11 @@
++// { dg-options -std=c++0x }
++// { dg-do compile }
++
++void f(int &);
++void f(int &&ir) { ir = 42; }
++int main()
++{
++  int x;
++  f(reinterpret_cast<int&&>(x));
++  return (x != 42);
++}
+Index: gcc/testsuite/gfortran.dg/equiv_8.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/equiv_8.f90	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/equiv_8.f90	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,7 @@
++! { dg-do compile }
++!
++! PR fortran/41755
++!
++      common /uno/ aa
++      equivalence (aa,aaaaa)   (bb,cc) ! { dg-error "Expecting a comma in EQUIVALENCE" }
++      end
+Index: gcc/cp/typeck.c
+===================================================================
+--- gcc/cp/typeck.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cp/typeck.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -5463,12 +5463,17 @@
+ 		 intype, type);
+ 
+       expr = cp_build_unary_op (ADDR_EXPR, expr, 0, complain);
++
++      if (warn_strict_aliasing > 2)
++	strict_aliasing_warning (TREE_TYPE (expr), type, expr);
++
+       if (expr != error_mark_node)
+ 	expr = build_reinterpret_cast_1
+ 	  (build_pointer_type (TREE_TYPE (type)), expr, c_cast_p,
+ 	   valid_p, complain);
+       if (expr != error_mark_node)
+-	expr = cp_build_indirect_ref (expr, 0, complain);
++	/* cp_build_indirect_ref isn't right for rvalue refs.  */
++	expr = convert_from_reference (fold_convert (type, expr));
+       return expr;
+     }
+ 
+Index: gcc/cp/tree.c
+===================================================================
+--- gcc/cp/tree.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cp/tree.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1909,6 +1909,8 @@
+     case TEMPLATE_PARM_INDEX:
+       return (TEMPLATE_PARM_IDX (t1) == TEMPLATE_PARM_IDX (t2)
+ 	      && TEMPLATE_PARM_LEVEL (t1) == TEMPLATE_PARM_LEVEL (t2)
++	      && (TEMPLATE_PARM_PARAMETER_PACK (t1)
++		  == TEMPLATE_PARM_PARAMETER_PACK (t2))
+ 	      && same_type_p (TREE_TYPE (TEMPLATE_PARM_DECL (t1)),
+ 			      TREE_TYPE (TEMPLATE_PARM_DECL (t2))));
+ 
+Index: gcc/cp/ChangeLog
+===================================================================
+--- gcc/cp/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cp/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,3 +1,37 @@
++2009-10-15  Jason Merrill  <jason@redhat.com>
++
++	PR c++/38798
++	* parser.c (CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS): New.
++	(cp_parser_type_specifier): Don't try to parse a class-specifier
++	or enum-specifier in that case.
++	(cp_parser_trailing_type_id): New.
++	(cp_parser_late_return_type_opt): Call it.
++	(cp_parser_type_id_1): Add is_trailing_return parm.
++	(cp_parser_type_specifier_seq): Likewise.
++
++2009-10-14  Larry Evans  <cppljevans@suddenlink.net>
++
++	PR c++/40092
++	* tree.c (cp_tree_equal): Add test for TEMPLATE_PARM_PARAMETER_PACK
++	equality.
++
++2009-10-12  Jason Merrill  <jason@redhat.com>
++
++	PR c++/37875
++	* parser.c (cp_parser_decltype): Set greater_than_is_operator_p.
++
++	PR c++/37766
++	* pt.c (type_unification_real): Call convert_template_argument
++	for function default template arguments.
++	(check_default_tmpl_args): Suggest -std=c++0x when function default
++	template args seen in C++98 mode.
++
++2009-10-11  Jason Merrill  <jason@redhat.com>
++
++	PR c++/37204
++	* typeck.c (build_reinterpret_cast_1): Handle rvalue refs
++	properly.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: gcc/cp/pt.c
+===================================================================
+--- gcc/cp/pt.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cp/pt.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -3670,7 +3670,8 @@
+   else if (is_friend_decl)
+     msg = "default template arguments may not be used in function template friend declarations";
+   else if (TREE_CODE (decl) == FUNCTION_DECL && (cxx_dialect == cxx98))
+-    msg = "default template arguments may not be used in function templates";
++    msg = ("default template arguments may not be used in function templates "
++	   "without -std=c++0x or -std=gnu++0x");
+   else if (is_partial)
+     msg = "default template arguments may not be used in partial specializations";
+   else
+@@ -12657,9 +12658,11 @@
+ 	     to explicitly check cxx_dialect here.  */
+           if (TREE_PURPOSE (TREE_VEC_ELT (tparms, i)))
+             {
+-              tree arg = tsubst_template_arg
+-				(TREE_PURPOSE (TREE_VEC_ELT (tparms, i)),
+-				 targs, tf_none, NULL_TREE);
++	      tree parm = TREE_VALUE (TREE_VEC_ELT (tparms, i));
++	      tree arg = TREE_PURPOSE (TREE_VEC_ELT (tparms, i));
++              arg = tsubst_template_arg (arg, targs, tf_none, NULL_TREE);
++	      arg = convert_template_argument (parm, arg, targs, tf_none,
++					       i, NULL_TREE);
+               if (arg == error_mark_node)
+                 return 1;
+               else
+Index: gcc/cp/parser.c
+===================================================================
+--- gcc/cp/parser.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/cp/parser.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1198,8 +1198,12 @@
+   /* The construct is optional.  If it is not present, then no error
+      should be issued.  */
+   CP_PARSER_FLAGS_OPTIONAL = 0x1,
+-  /* When parsing a type-specifier, do not allow user-defined types.  */
+-  CP_PARSER_FLAGS_NO_USER_DEFINED_TYPES = 0x2
++  /* When parsing a type-specifier, treat user-defined type-names
++     as non-type identifiers.  */
++  CP_PARSER_FLAGS_NO_USER_DEFINED_TYPES = 0x2,
++  /* When parsing a type-specifier, do not try to parse a class-specifier
++     or enum-specifier.  */
++  CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS = 0x4
+ } cp_parser_flags;
+ 
+ /* The different kinds of declarators we want to parse.  */
+@@ -1735,10 +1739,11 @@
+   (cp_parser *);
+ static tree cp_parser_template_type_arg
+   (cp_parser *);
++static tree cp_parser_trailing_type_id (cp_parser *);
+ static tree cp_parser_type_id_1
+-  (cp_parser *, bool);
++  (cp_parser *, bool, bool);
+ static void cp_parser_type_specifier_seq
+-  (cp_parser *, bool, cp_decl_specifier_seq *);
++  (cp_parser *, bool, bool, cp_decl_specifier_seq *);
+ static tree cp_parser_parameter_declaration_clause
+   (cp_parser *);
+ static tree cp_parser_parameter_declaration_list
+@@ -5740,6 +5745,7 @@
+     = "types may not be defined in a new-type-id";
+   /* Parse the type-specifier-seq.  */
+   cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++				/*is_trailing_return=*/false,
+ 				&type_specifier_seq);
+   /* Restore the old message.  */
+   parser->type_definition_forbidden_message = saved_message;
+@@ -7414,6 +7420,7 @@
+     = "types may not be defined in conditions";
+   /* Parse the type-specifier-seq.  */
+   cp_parser_type_specifier_seq (parser, /*is_condition==*/true,
++				/*is_trailing_return=*/false,
+ 				&type_specifiers);
+   /* Restore the saved message.  */
+   parser->type_definition_forbidden_message = saved_message;
+@@ -8918,12 +8925,25 @@
+     cp_parser_parse_definitely (parser);
+   else
+     {
++      bool saved_greater_than_is_operator_p;
++
+       /* Abort our attempt to parse an id-expression or member access
+          expression.  */
+       cp_parser_abort_tentative_parse (parser);
+ 
++      /* Within a parenthesized expression, a `>' token is always
++	 the greater-than operator.  */
++      saved_greater_than_is_operator_p
++	= parser->greater_than_is_operator_p;
++      parser->greater_than_is_operator_p = true;
++
+       /* Parse a full expression.  */
+       expr = cp_parser_expression (parser, /*cast_p=*/false, NULL);
++
++      /* The `>' token might be the end of a template-id or
++	 template-parameter-list now.  */
++      parser->greater_than_is_operator_p
++	= saved_greater_than_is_operator_p;
+     }
+ 
+   /* Go back to evaluating expressions.  */
+@@ -9032,6 +9052,7 @@
+   attributes = cp_parser_attributes_opt (parser);
+   /* Parse the type-specifiers.  */
+   cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++				/*is_trailing_return=*/false,
+ 				&type_specifiers);
+   /* If that didn't work, stop.  */
+   if (type_specifiers.type == error_mark_node)
+@@ -10994,6 +11015,9 @@
+   switch (keyword)
+     {
+     case RID_ENUM:
++      if ((flags & CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS))
++	goto elaborated_type_specifier;
++
+       /* Look for the enum-specifier.  */
+       type_spec = cp_parser_enum_specifier (parser);
+       /* If that worked, we're done.  */
+@@ -11016,6 +11040,9 @@
+     case RID_CLASS:
+     case RID_STRUCT:
+     case RID_UNION:
++      if ((flags & CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS))
++	goto elaborated_type_specifier;
++
+       /* Parse tentatively so that we can back up if we don't find a
+ 	 class-specifier.  */
+       cp_parser_parse_tentatively (parser);
+@@ -11882,6 +11909,7 @@
+ 
+       /* Parse the type-specifier-seq.  */
+       cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++				    /*is_trailing_return=*/false,
+                                     &type_specifiers);
+ 
+       /* At this point this is surely not elaborated type specifier.  */
+@@ -13713,7 +13741,7 @@
+ /* Parse a late-specified return type, if any.  This is not a separate
+    non-terminal, but part of a function declarator, which looks like
+ 
+-   -> type-id
++   -> trailing-type-specifier-seq abstract-declarator(opt)
+ 
+    Returns the type indicated by the type-id.  */
+ 
+@@ -13731,7 +13759,7 @@
+   /* Consume the ->.  */
+   cp_lexer_consume_token (parser->lexer);
+ 
+-  return cp_parser_type_id (parser);
++  return cp_parser_trailing_type_id (parser);
+ }
+ 
+ /* Parse a declarator-id.
+@@ -13784,13 +13812,15 @@
+    Returns the TYPE specified.  */
+ 
+ static tree
+-cp_parser_type_id_1 (cp_parser* parser, bool is_template_arg)
++cp_parser_type_id_1 (cp_parser* parser, bool is_template_arg,
++		     bool is_trailing_return)
+ {
+   cp_decl_specifier_seq type_specifier_seq;
+   cp_declarator *abstract_declarator;
+ 
+   /* Parse the type-specifier-seq.  */
+   cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++				is_trailing_return,
+ 				&type_specifier_seq);
+   if (type_specifier_seq.type == error_mark_node)
+     return error_mark_node;
+@@ -13828,14 +13858,19 @@
+ 
+ static tree cp_parser_type_id (cp_parser *parser)
+ {
+-  return cp_parser_type_id_1 (parser, false);
++  return cp_parser_type_id_1 (parser, false, false);
+ }
+ 
+ static tree cp_parser_template_type_arg (cp_parser *parser)
+ {
+-  return cp_parser_type_id_1 (parser, true);
++  return cp_parser_type_id_1 (parser, true, false);
+ }
+ 
++static tree cp_parser_trailing_type_id (cp_parser *parser)
++{
++  return cp_parser_type_id_1 (parser, false, true);
++}
++
+ /* Parse a type-specifier-seq.
+ 
+    type-specifier-seq:
+@@ -13849,11 +13884,15 @@
+    If IS_CONDITION is true, we are at the start of a "condition",
+    e.g., we've just seen "if (".
+ 
++   If IS_TRAILING_RETURN is true, we are in a trailing-return-type,
++   i.e. we've just seen "->".
++
+    Sets *TYPE_SPECIFIER_SEQ to represent the sequence.  */
+ 
+ static void
+ cp_parser_type_specifier_seq (cp_parser* parser,
+ 			      bool is_condition,
++			      bool is_trailing_return,
+ 			      cp_decl_specifier_seq *type_specifier_seq)
+ {
+   bool seen_type_specifier = false;
+@@ -13863,6 +13902,12 @@
+   /* Clear the TYPE_SPECIFIER_SEQ.  */
+   clear_decl_specs (type_specifier_seq);
+ 
++  /* In the context of a trailing return type, enum E { } is an
++     elaborated-type-specifier followed by a function-body, not an
++     enum-specifier.  */
++  if (is_trailing_return)
++    flags |= CP_PARSER_FLAGS_NO_TYPE_DEFINITIONS;
++
+   /* Parse the type-specifiers and attributes.  */
+   while (true)
+     {
+@@ -16566,6 +16611,7 @@
+ 
+   /* Parse the type-specifier-seq.  */
+   cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++				/*is_trailing_return=*/false,
+ 				&type_specifiers);
+   /* If it's a `)', then there is no declarator.  */
+   if (cp_lexer_next_token_is (parser->lexer, CPP_CLOSE_PAREN))
+@@ -21250,6 +21296,7 @@
+ 
+ 	  cp_parser_parse_tentatively (parser);
+ 	  cp_parser_type_specifier_seq (parser, /*is_condition=*/false,
++					/*is_trailing_return=*/false,
+ 					&type_specifiers);
+ 	  if (cp_parser_parse_definitely (parser))
+ 	    {
+Index: gcc/dbxout.c
+===================================================================
+--- gcc/dbxout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/dbxout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -349,6 +349,7 @@
+ {
+   dbxout_init,
+   dbxout_finish,
++  debug_nothing_void,
+   debug_nothing_int_charstar,
+   debug_nothing_int_charstar,
+   dbxout_start_source_file,
+@@ -385,6 +386,7 @@
+ {
+   dbxout_init,
+   dbxout_finish,
++  debug_nothing_void,
+   debug_nothing_int_charstar,
+   debug_nothing_int_charstar,
+   dbxout_start_source_file,
+Index: gcc/config.in
+===================================================================
+--- gcc/config.in	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config.in	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -839,6 +839,12 @@
+ #endif
+ 
+ 
++/* Define 0/1 if your assembler supports .cfi_sections. */
++#ifndef USED_FOR_TARGET
++#undef HAVE_GAS_CFI_SECTIONS_DIRECTIVE
++#endif
++
++
+ /* Define if your assembler uses the new HImode fild and fist notation. */
+ #ifndef USED_FOR_TARGET
+ #undef HAVE_GAS_FILDS_FISTS
+Index: gcc/dwarf2out.c
+===================================================================
+--- gcc/dwarf2out.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/dwarf2out.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -145,8 +145,19 @@
+ #endif
+   if (!flag_dwarf2_cfi_asm || !dwarf2out_do_frame ())
+     return false;
+-  if (saved_do_cfi_asm || !eh_personality_libfunc)
++  if (saved_do_cfi_asm)
+     return true;
++  if (!HAVE_GAS_CFI_SECTIONS_DIRECTIVE)
++    {
++#ifdef TARGET_UNWIND_INFO
++      return false;
++#else
++      if (USING_SJLJ_EXCEPTIONS || (!flag_unwind_tables && !flag_exceptions))
++	return false;
++#endif
++    }
++  if (!eh_personality_libfunc)
++    return true;
+   if (!HAVE_GAS_CFI_PERSONALITY_DIRECTIVE)
+     return false;
+ 
+@@ -4583,6 +4594,7 @@
+ 
+ static void dwarf2out_init (const char *);
+ static void dwarf2out_finish (const char *);
++static void dwarf2out_assembly_start (void);
+ static void dwarf2out_define (unsigned int, const char *);
+ static void dwarf2out_undef (unsigned int, const char *);
+ static void dwarf2out_start_source_file (unsigned, const char *);
+@@ -4605,6 +4617,7 @@
+ {
+   dwarf2out_init,
+   dwarf2out_finish,
++  dwarf2out_assembly_start,
+   dwarf2out_define,
+   dwarf2out_undef,
+   dwarf2out_start_source_file,
+@@ -16187,8 +16200,24 @@
+       switch_to_section (cold_text_section);
+       ASM_OUTPUT_LABEL (asm_out_file, cold_text_section_label);
+     }
++
+ }
+ 
++/* Called before cgraph_optimize starts outputtting functions, variables
++   and toplevel asms into assembly.  */
++
++static void
++dwarf2out_assembly_start (void)
++{
++  if (HAVE_GAS_CFI_SECTIONS_DIRECTIVE && dwarf2out_do_cfi_asm ())
++    {
++#ifndef TARGET_UNWIND_INFO
++      if (USING_SJLJ_EXCEPTIONS || (!flag_unwind_tables && !flag_exceptions))
++#endif
++	fprintf (asm_out_file, "\t.cfi_sections\t.debug_frame\n");
++    }
++}
++
+ /* A helper function for dwarf2out_finish called through
+    ht_forall.  Emit one queued .debug_str string.  */
+ 
+Index: gcc/unwind-dw2.c
+===================================================================
+--- gcc/unwind-dw2.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/unwind-dw2.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -789,22 +789,22 @@
+ 		result = second ^ first;
+ 		break;
+ 	      case DW_OP_le:
+-		result = (_Unwind_Sword) first <= (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second <= (_Unwind_Sword) first;
+ 		break;
+ 	      case DW_OP_ge:
+-		result = (_Unwind_Sword) first >= (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second >= (_Unwind_Sword) first;
+ 		break;
+ 	      case DW_OP_eq:
+-		result = (_Unwind_Sword) first == (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second == (_Unwind_Sword) first;
+ 		break;
+ 	      case DW_OP_lt:
+-		result = (_Unwind_Sword) first < (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second < (_Unwind_Sword) first;
+ 		break;
+ 	      case DW_OP_gt:
+-		result = (_Unwind_Sword) first > (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second > (_Unwind_Sword) first;
+ 		break;
+ 	      case DW_OP_ne:
+-		result = (_Unwind_Sword) first != (_Unwind_Sword) second;
++		result = (_Unwind_Sword) second != (_Unwind_Sword) first;
+ 		break;
+ 
+ 	      default:
+Index: gcc/fortran/symbol.c
+===================================================================
+--- gcc/fortran/symbol.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/fortran/symbol.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -2693,7 +2693,7 @@
+       if (p->gfc_new)
+ 	{
+ 	  /* Symbol was new.  */
+-	  if (p->attr.in_common && p->common_block->head)
++	  if (p->attr.in_common && p->common_block && p->common_block->head)
+ 	    {
+ 	      /* If the symbol was added to any common block, it
+ 		 needs to be removed to stop the resolver looking
+Index: gcc/fortran/ChangeLog
+===================================================================
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,3 +1,11 @@
++2009-10-19  Tobias Burnus  <burnus@net-b.de>
++	    Steven G. Kargl  <kargl@gcc.gnu.org>
++
++	PR fortran/41755
++	* symbol.c (gfc_undo_symbols): Add NULL check.
++	* match.c (gfc_match_equivalence): Add check for
++	missing comma.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: gcc/fortran/match.c
+===================================================================
+--- gcc/fortran/match.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/fortran/match.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -3269,7 +3269,10 @@
+       if (gfc_match_eos () == MATCH_YES)
+ 	break;
+       if (gfc_match_char (',') != MATCH_YES)
+-	goto syntax;
++	{
++	  gfc_error ("Expecting a comma in EQUIVALENCE at %C");
++	  goto cleanup;
++	}
+     }
+ 
+   return MATCH_YES;
+Index: gcc/ira-lives.c
+===================================================================
+--- gcc/ira-lives.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/ira-lives.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -500,7 +500,7 @@
+   for (use = 0; use < recog_data.n_operands; use++)
+     {
+       if (use == def || recog_data.operand_type[use] == OP_OUT)
+-	return;
++	continue;
+       
+       if (recog_op_alt[use][alt].anything_ok)
+ 	use_cl = ALL_REGS;
+@@ -513,7 +513,7 @@
+       if ((use_match = recog_op_alt[use][alt].matches) >= 0)
+ 	{
+ 	  if (use_match == def)
+-	    return;
++	    continue;
+ 	  
+ 	  if (recog_op_alt[use_match][alt].anything_ok)
+ 	    use_cl = ALL_REGS;
+Index: gcc/configure.ac
+===================================================================
+--- gcc/configure.ac	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/configure.ac	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -2297,6 +2297,17 @@
+     then echo 1; else echo 0; fi`],
+   [Define 0/1 if your assembler supports .cfi_personality.])
+ 
++gcc_GAS_CHECK_FEATURE([cfi sections directive],
++  gcc_cv_as_cfi_sections_directive, ,,
++[	.text
++	.cfi_sections .debug_frame, .eh_frame
++	.cfi_startproc
++	.cfi_endproc])
++AC_DEFINE_UNQUOTED(HAVE_GAS_CFI_SECTIONS_DIRECTIVE,
++  [`if test $gcc_cv_as_cfi_sections_directive = yes;
++    then echo 1; else echo 0; fi`],
++  [Define 0/1 if your assembler supports .cfi_sections.])
++
+ # GAS versions up to and including 2.11.0 may mis-optimize
+ # .eh_frame data.
+ gcc_GAS_CHECK_FEATURE(eh_frame optimization, gcc_cv_as_eh_frame,
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_4_2_release)	(wersja 152845)
-+++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 152845)
+--- gcc/BASE-VER	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 153054)
 @@ -1 +1 @@
 -4.4.2
 +4.4.3
+Index: gcc/sdbout.c
+===================================================================
+--- gcc/sdbout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/sdbout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -307,6 +307,7 @@
+ {
+   sdbout_init,			         /* init */
+   sdbout_finish,		         /* finish */
++  debug_nothing_void,			 /* assembly_start */
+   debug_nothing_int_charstar,	         /* define */
+   debug_nothing_int_charstar,	         /* undef */
+   sdbout_start_source_file,	         /* start_source_file */
+Index: gcc/config/s390/s390.c
+===================================================================
+--- gcc/config/s390/s390.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/s390/s390.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -9799,9 +9799,12 @@
+   if (!REG_P (*op0) || !REG_P (*op1))
+     return false;
+ 
++  if (GET_MODE_CLASS (GET_MODE (*op0)) != MODE_INT)
++    return false;
++
+   /* Swap the COMPARE arguments and its mask if there is a
+      conflicting access in the previous insn.  */
+-  prev_insn = PREV_INSN (insn);
++  prev_insn = prev_active_insn (insn);
+   if (prev_insn != NULL_RTX && INSN_P (prev_insn)
+       && reg_referenced_p (*op1, PATTERN (prev_insn)))
+     s390_swap_cmp (cond, op0, op1, insn);
+@@ -9812,7 +9815,7 @@
+      the operands, or if swapping them would cause a conflict
+      with the previous insn, issue a NOP after the COMPARE in
+      order to separate the two instuctions.  */
+-  next_insn = NEXT_INSN (insn);
++  next_insn = next_active_insn (insn);
+   if (next_insn != NULL_RTX && INSN_P (next_insn)
+       && s390_non_addr_reg_read_p (*op1, next_insn))
+     {
 Index: gcc/config/i386/i386.md
 ===================================================================
---- gcc/config/i386/i386.md	(.../tags/gcc_4_4_2_release)	(wersja 152845)
-+++ gcc/config/i386/i386.md	(.../branches/gcc-4_4-branch)	(wersja 152845)
+--- gcc/config/i386/i386.md	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/i386/i386.md	(.../branches/gcc-4_4-branch)	(wersja 153054)
 @@ -6487,7 +6487,7 @@
    switch (get_attr_type (insn))
      {
@@ -46,3 +2130,319 @@ Index: gcc/config/i386/i386.md
        return "lea{l}\t{%a2, %k0|%k0, %a2}";
  
      case TYPE_INCDEC:
+Index: gcc/config/arm/arm.c
+===================================================================
+--- gcc/config/arm/arm.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/arm/arm.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -10975,7 +10975,7 @@
+ 	  {
+ 	    /* We're only using DImode here because it's a convenient size.  */
+ 	    ops[0] = gen_rtx_REG (DImode, REGNO (reg) + 2 * i);
+-	    ops[1] = adjust_address (mem, SImode, 8 * i);
++	    ops[1] = adjust_address (mem, DImode, 8 * i);
+ 	    if (reg_overlap_mentioned_p (ops[0], mem))
+ 	      {
+ 		gcc_assert (overlap == -1);
+Index: gcc/config/pa/t-hpux-shlib
+===================================================================
+--- gcc/config/pa/t-hpux-shlib	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/pa/t-hpux-shlib	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -8,6 +8,7 @@
+ SHLIB_SLIBDIR_QUAL = @shlib_slibdir_qual@
+ 
+ SHLIB_LINK = $(GCC_FOR_TARGET) $(LIBGCC2_CFLAGS) -shared  -nodefaultlibs \
++	-Wl,+h -Wl,$(SHLIB_SONAME) \
+ 	-o $(SHLIB_DIR)/$(SHLIB_NAME).tmp @multilib_flags@ $(SHLIB_OBJS) && \
+         rm -f $(SHLIB_DIR)/$(SHLIB_SONAME) && \
+ 	if [ -f $(SHLIB_DIR)/$(SHLIB_NAME) ]; then \
+Index: gcc/config/pa/linux-atomic.c
+===================================================================
+--- gcc/config/pa/linux-atomic.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/pa/linux-atomic.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -24,14 +24,9 @@
+ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ <http://www.gnu.org/licenses/>.  */
+ 
+-/* FIXME: work around build failure for hppa64-linux-gnu target. */
+-#ifndef _LP64
+-#include <errno.h>
+-#else 
+ #define EFAULT  14 
+ #define EBUSY   16
+ #define ENOSYS 251 
+-#endif 
+ 
+ /* All PA-RISC implementations supported by linux have strongly
+    ordered loads and stores.  Only cache flushes and purges can be
+Index: gcc/config/pa/pa.md
+===================================================================
+--- gcc/config/pa/pa.md	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ gcc/config/pa/pa.md	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -7503,17 +7503,6 @@
+       operands[0] = index;
+     }
+ 
+-  /* In 64bit mode we must make sure to wipe the upper bits of the register
+-     just in case the addition overflowed or we had random bits in the
+-     high part of the register.  */
+-  if (TARGET_64BIT)
+-    {
+-      rtx index = gen_reg_rtx (DImode);
+-
+-      emit_insn (gen_extendsidi2 (index, operands[0]));
+-      operands[0] = gen_rtx_SUBREG (SImode, index, 4);
+-    }
+-
+   if (!INT_5_BITS (operands[2]))
+     operands[2] = force_reg (SImode, operands[2]);
+ 
+@@ -7530,6 +7519,17 @@
+   emit_insn (gen_cmpsi (operands[0], operands[2]));
+   emit_jump_insn (gen_bgtu (operands[4]));
+ 
++  /* In 64bit mode we must make sure to wipe the upper bits of the register
++     just in case the addition overflowed or we had random bits in the
++     high part of the register.  */
++  if (TARGET_64BIT)
++    {
++      rtx index = gen_reg_rtx (DImode);
++
++      emit_insn (gen_extendsidi2 (index, operands[0]));
++      operands[0] = index;
++    }
++
+   if (TARGET_BIG_SWITCH)
+     {
+       if (TARGET_64BIT)
+@@ -7590,8 +7590,7 @@
+ ;;; 64-bit code, 32-bit relative branch table.
+ (define_insn "casesi64p"
+   [(set (pc) (mem:DI (plus:DI
+-		       (mult:DI (sign_extend:DI
+-				  (match_operand:SI 0 "register_operand" "r"))
++		       (mult:DI (match_operand:DI 0 "register_operand" "r")
+ 				(const_int 8))
+ 		       (label_ref (match_operand 1 "" "")))))
+    (clobber (match_scratch:DI 2 "=&r"))
+Index: libstdc++-v3/include/bits/atomic_0.h
+===================================================================
+--- libstdc++-v3/include/bits/atomic_0.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ libstdc++-v3/include/bits/atomic_0.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -82,14 +82,15 @@
+     __r; })
+ 
+   /// atomic_flag
+-  struct atomic_flag : private __atomic_flag_base
++  struct atomic_flag : public __atomic_flag_base
+   {
+     atomic_flag() = default;
+     ~atomic_flag() = default;
+     atomic_flag(const atomic_flag&) = delete;
+     atomic_flag& operator=(const atomic_flag&) = delete;
+ 
+-    atomic_flag(bool __i) { _M_i = __i; } // XXX deleted copy ctor != agg
++    // Conversion to ATOMIC_FLAG_INIT.
++    atomic_flag(bool __i): __atomic_flag_base({ __i }) { }
+ 
+     bool
+     test_and_set(memory_order __m = memory_order_seq_cst) volatile;
+Index: libstdc++-v3/include/bits/atomic_2.h
+===================================================================
+--- libstdc++-v3/include/bits/atomic_2.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ libstdc++-v3/include/bits/atomic_2.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -44,14 +44,15 @@
+ namespace __atomic2
+ {
+   /// atomic_flag
+-  struct atomic_flag : private __atomic_flag_base
++  struct atomic_flag : public __atomic_flag_base
+   {
+     atomic_flag() = default;
+     ~atomic_flag() = default;
+     atomic_flag(const atomic_flag&) = delete;
+     atomic_flag& operator=(const atomic_flag&) = delete;
+ 
+-    atomic_flag(bool __i) { _M_i = __i; } // XXX deleted copy ctor != agg
++    // Conversion to ATOMIC_FLAG_INIT.
++    atomic_flag(bool __i): __atomic_flag_base({ __i }) { }
+ 
+     bool
+     test_and_set(memory_order __m = memory_order_seq_cst) volatile
+Index: libstdc++-v3/include/c_compatibility/stdatomic.h
+===================================================================
+--- libstdc++-v3/include/c_compatibility/stdatomic.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ libstdc++-v3/include/c_compatibility/stdatomic.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -186,8 +186,11 @@
+ _GLIBCXX_END_EXTERN_C
+ _GLIBCXX_END_NAMESPACE
+ 
+-// Inject into global namespace. XXX
+-#if defined(__cplusplus) && !defined(_GLIBCXX_STDATOMIC)
++// Inject into global namespace.
++#ifdef __cplusplus
++
++#include <cstdatomic>
++
+ using std::memory_order;
+ using std::memory_order_relaxed;
+ using std::memory_order_consume;
+Index: libstdc++-v3/src/atomic.cc
+===================================================================
+--- libstdc++-v3/src/atomic.cc	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ libstdc++-v3/src/atomic.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -80,16 +80,16 @@
+     atomic_flag_test_and_set_explicit(volatile __atomic_flag_base* __a,
+ 				      memory_order __m)
+     {
+-      volatile atomic_flag d(__a->_M_i);
+-      return d.test_and_set(__m);
++      volatile atomic_flag* d = static_cast<volatile atomic_flag*>(__a);
++      return d->test_and_set(__m);
+     }
+ 
+     void
+     atomic_flag_clear_explicit(volatile __atomic_flag_base* __a,
+ 			       memory_order __m)
+     {
+-      volatile atomic_flag d(__a->_M_i);
+-      return d.clear(__m);
++      volatile atomic_flag* d = static_cast<volatile atomic_flag*>(__a);
++      return d->clear(__m);
+     }
+ 
+     void
+Index: libstdc++-v3/ChangeLog
+===================================================================
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -1,3 +1,21 @@
++2009-10-16  Benjamin Kosnik  <bkoz@redhat.com>
++
++        * include/c_compatibility/stdatomic.h: Include cstdatomic if
++        __cplusplus.
++
++2009-10-15  Benjamin Kosnik  <bkoz@redhat.com>
++
++        PR libstdc++/40654
++        PR libstdc++/40826
++        * src/atomic.cc (atomic_flag_test_and_set_explicit): Add
++        static_cast from base to derived.
++        (atomic_flag_clear_explicit): Same.
++        * include/bits/atomic_2.h (__atomic2::atomic_flag): Public derivation.
++        Remove value type constructor.
++        * include/bits/atomic_0.h (__atomic0::atomic_flag): Same.
++        * include/std/future (_Future_state): Use ATOMIC_FLAG_INIT to
++        initialized the atomic_flag member.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc
+===================================================================
+--- libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,27 @@
++// { dg-options "-std=gnu++0x" }
++// { dg-do compile }
++
++// Copyright (C) 2008, 2009 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++#include <stdatomic.h>
++
++void test01()
++{
++  using namespace std;
++  atomic_flag af = ATOMIC_FLAG_INIT;
++}
+Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c
+===================================================================
+--- libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,34 @@
++// { dg-options "-x c -shared-libgcc -lstdc++" }
++
++// Copyright (C) 2009 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++#include <cassert>
++#include <stdatomic.h>
++
++// libstdc++/40826
++// libstdc++/40654
++int main()
++{
++  atomic_flag f = ATOMIC_FLAG_INIT;
++
++  atomic_flag_clear(&f); // set to false
++  assert( false == atomic_flag_test_and_set(&f) ); // return previous false, set to true
++  assert( true == atomic_flag_test_and_set(&f) ); // return true
++
++  return 0;
++}
+Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc
+===================================================================
+--- libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
+@@ -0,0 +1,33 @@
++// { dg-options "-std=gnu++0x" }
++
++// Copyright (C) 2009 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++#include <cstdatomic>
++#include <testsuite_hooks.h>
++
++int main()
++{
++  bool test __attribute__((unused)) = true;
++  std::atomic_flag f = ATOMIC_FLAG_INIT;
++
++  f.clear(); // set to false
++  VERIFY( false == f.test_and_set() ); // return previous false, set to true
++  VERIFY( true == f.test_and_set() ); // return true
++
++  return 0;
++}
