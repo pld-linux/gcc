@@ -2,7 +2,7 @@
 # TODO:
 # - gconf peer? (but libgcj needs split anyway)
 # - package?
-#   /usr/bin/aot-compile                                                                                                                                    
+#   /usr/bin/aot-compile
 #   /usr/bin/gjdoc
 #   /usr/share/man/man1/aot-compile.1.gz
 #   /usr/share/man/man1/gjdoc.1.gz
@@ -153,7 +153,7 @@ BuildRequires:	qt4-build >= 4.0.1
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
 %endif
-Requires:	binutils >= 2:2.17.50.0.9-1
+Requires:	binutils >= 2:2.20.51.0.2
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
@@ -216,7 +216,7 @@ License:	GPL v3+
 Group:		Development/Languages
 Requires:	%{name}
 Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
-%{?with_multilib:Provides:      gcc(multilib)}
+%{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	libgcc32
 %ifarch %{x8664}
 Requires:	glibc-devel(i686)
