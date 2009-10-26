@@ -1,14 +1,35 @@
+Index: gcc/doc/invoke.texi
+===================================================================
+--- gcc/doc/invoke.texi	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/doc/invoke.texi	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -7817,6 +7817,7 @@
+ compilation.
+ 
+ @table @gcctabopt
++@item -Wp,@var{option}
+ @opindex Wp
+ You can use @option{-Wp,@var{option}} to bypass the compiler driver
+ and pass @var{option} directly through to the preprocessor.  If
+@@ -7829,7 +7830,7 @@
+ options instead.
+ 
+ @item -Xpreprocessor @var{option}
+-@opindex preprocessor
++@opindex Xpreprocessor
+ Pass @var{option} as an option to the preprocessor.  You can use this to
+ supply system-specific preprocessor options which GCC does not know how to
+ recognize.
 Index: gcc/DATESTAMP
 ===================================================================
---- gcc/DATESTAMP	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/DATESTAMP	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/DATESTAMP	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/DATESTAMP	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1 +1 @@
 -20091015
-+20091021
++20091026
 Index: gcc/configure
 ===================================================================
---- gcc/configure	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/configure	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/configure	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/configure	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -21680,6 +21680,42 @@
  _ACEOF
  
@@ -54,8 +75,8 @@ Index: gcc/configure
  echo "$as_me:$LINENO: checking assembler for eh_frame optimization" >&5
 Index: gcc/vmsdbgout.c
 ===================================================================
---- gcc/vmsdbgout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/vmsdbgout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/vmsdbgout.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/vmsdbgout.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -166,6 +166,7 @@
  
  static void vmsdbgout_init (const char *);
@@ -90,8 +111,8 @@ Index: gcc/vmsdbgout.c
    if (write_symbols == VMS_AND_DWARF2_DEBUG)
 Index: gcc/debug.c
 ===================================================================
---- gcc/debug.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/debug.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/debug.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/debug.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -27,6 +27,7 @@
  {
    debug_nothing_charstar,
@@ -102,14 +123,14 @@ Index: gcc/debug.c
    debug_nothing_int_charstar,
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/debug.h
 ===================================================================
---- gcc/debug.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/debug.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/debug.h	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/debug.h	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -31,6 +31,10 @@
    /* Output debug symbols.  */
    void (* finish) (const char *main_filename);
@@ -123,8 +144,8 @@ Index: gcc/debug.h
  
 Index: gcc/cgraphunit.c
 ===================================================================
---- gcc/cgraphunit.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cgraphunit.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/cgraphunit.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cgraphunit.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1293,6 +1293,7 @@
    timevar_pop (TV_CGRAPHOPT);
  
@@ -135,9 +156,27 @@ Index: gcc/cgraphunit.c
  #ifdef ENABLE_CHECKING
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
-@@ -1,3 +1,105 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,123 @@
++2009-10-23  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	Backport from mainline:
++	2009-08-19  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	* pa.md (reload_inhi, reload_outhi, reload_inqi, reload_outqi): New
++	patterns.
++	* pa.c (emit_move_sequence): Check if address of operand1 is valid
++	for mode mode of operand0 when doing secondary reload for SAR.
++
++2009-10-21  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline:
++	2009-06-13  Joerg Sonnenberger  <joerg@britannica.bec.de>
++
++	* doc/invoke.texi: Add missing option -Wp,OPTION in list,
++	fix index entry for -Xpreprocessor.
++
 +2009-10-20  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 +
 +        Backport from mainline:
@@ -243,7 +282,7 @@ Index: gcc/ChangeLog
  2009-10-15  Release Manager
  
  	* GCC 4.4.2 released.
-@@ -43,8 +145,8 @@
+@@ -43,8 +163,8 @@
  2009-10-05  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
  
  	Backport from mainline.
@@ -254,7 +293,7 @@ Index: gcc/ChangeLog
  
  2009-10-02  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
  
-@@ -113,7 +215,7 @@
+@@ -113,7 +233,7 @@
  	premark_types_used_by_global_vars): New functions.
  	(prune_unused_types): Do not prune types used by global variables.
  
@@ -263,10 +302,96 @@ Index: gcc/ChangeLog
  
  	PR c/39779
  	* c-typeck.c (build_binary_op) <short_shift>: Check that integer
+Index: gcc/testsuite/gcc.c-torture/compile/pr33009.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr33009.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/gcc.c-torture/compile/pr33009.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,41 +0,0 @@
+-/* { dg-do compile } */
+-/* Currently ICEs for Alpha, IA64, HPPA, MIPS, CRIS, Xtensa, PowerPC, SH and SPARC; see PR33642.  */
+-/* { dg-xfail-if "PR33642" { alpha*-*-* hppa*-*-* mips*-*-* powerpc*-*-* cris-*-* crisv32-*-* ia64-*-* xtensa*-*-* sh*-*-* sparc*-*-* s390*-*-* } { "*" } { "" } } */
+-/* Currently ICEs for (x86 && ilp32 && pic).  */
+-/* { dg-xfail-if "PR33642/36240" { { i?86-*-* x86_64-*-* } && { ilp32 && { ! nonpic } } } { "*" } { "" } } */
+-/* { dg-prune-output ".*internal compiler error.*" }
+-/* { dg-options "-frtl-abstract-sequences" } */
+-
+-char *progName;
+-int bar0 (char *, ...);
+-void bar1 (char *);
+-void exit (int);
+-
+-
+-#define SAME \
+- bar0 ("%s: Bad flag `%s'\n", argv[i], argv[i] );\
+- bar1 ( progName ); \
+- exit ( 1 );
+-
+-
+-int foo ( int argc, char *argv[] )
+-{
+-    int i;
+-    for (i = 0; i < argc; i++) {
+-	switch (argv[i][0]) {
+-	case 'c':
+-	    break;
+-	default: 
+-	
+-	    SAME
+-	    
+-	    break;
+-	}
+-    }
+-    for (i = 0; i < argc; i++) {
+-    
+-	SAME
+-	
+-    }
+-    return 0;
+-}
+Index: gcc/testsuite/gcc.c-torture/compile/pr11832.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr11832.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/gcc.c-torture/compile/pr11832.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,35 +0,0 @@
+-/* { dg-do compile } */
+-/* Currently ICEs for Alpha, IA64, HPPA, MIPS, CRIS, Xtensa, PowerPC, SH and SPARC; see PR33642.  */
+-/* { dg-xfail-if "PR33642" { alpha*-*-* hppa*-*-* mips*-*-* powerpc*-*-* cris-*-* crisv32-*-* ia64-*-* xtensa*-*-* sh*-*-* sparc*-*-* s390*-*-* } { "*" } { "" } } */
+-/* Currently ICEs for (x86 && ilp32 && pic).  */
+-/* { dg-xfail-if "PR33642/36240" { { i?86-*-* x86_64-*-* } && { ilp32 && { ! nonpic } } } { "*" } { "" } } */
+-/* { dg-prune-output ".*internal compiler error.*" }
+-/* { dg-options "-frtl-abstract-sequences" } */
+-
+-int a, b, e;
+-unsigned char *c;
+-void foo()
+-{
+-  int d = 13;
+-  b = -1;   
+-  switch (e) {
+-    case 1:
+-      b++; c[b] = (unsigned char)d;
+-      break;
+-    case 2:
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-      break;
+-    case 3:
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-      break;
+-    default:
+-      a = 1;
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-      b++; c[b] = (unsigned char)d;
+-  }
+-}
 Index: gcc/testsuite/gcc.c-torture/compile/pr41634.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/compile/pr41634.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/compile/pr41634.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.c-torture/compile/pr41634.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,19 @@
 +extern int _xgetw();
 +extern int foo(char*);
@@ -290,7 +415,7 @@ Index: gcc/testsuite/gcc.c-torture/compile/pr41634.c
 Index: gcc/testsuite/gcc.c-torture/compile/pr41661.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/compile/pr41661.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/compile/pr41661.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.c-torture/compile/pr41661.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,20 @@
 +/* PR tree-optimization/41661 */
 +/* { dg-do compile } */
@@ -315,7 +440,7 @@ Index: gcc/testsuite/gcc.c-torture/compile/pr41661.c
 Index: gcc/testsuite/gcc.c-torture/compile/pr41182-1.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/compile/pr41182-1.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/compile/pr41182-1.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.c-torture/compile/pr41182-1.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,6 @@
 +typedef long unsigned int size_t;
 +int _lae_process_opts(char *pr, char *pe)
@@ -323,10 +448,27 @@ Index: gcc/testsuite/gcc.c-torture/compile/pr41182-1.c
 +  return (strlen ("on") < ((size_t) ((pe-&pr[2])>(strlen("on"))                
 +                                     ? (pe-&pr[2]) : (strlen("on")))));
 +}
+Index: gcc/testsuite/gcc.c-torture/compile/pr41728.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr41728.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.c-torture/compile/pr41728.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -0,0 +1,12 @@
++int a[8];
++int s244(void)
++{
++  int lrc, j;
++  lrc = 0;
++  for (j=0; j<7; j++)
++    if(a[j] != a[j+1])
++      lrc = 1;
++  if (lrc != 0)
++    return 0;
++  return 1;
++}
 Index: gcc/testsuite/gcc.target/arm/neon-thumb2-move.c
 ===================================================================
 --- gcc/testsuite/gcc.target/arm/neon-thumb2-move.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/arm/neon-thumb2-move.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.target/arm/neon-thumb2-move.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,98 @@
 +/* { dg-do compile } */
 +/* { dg-require-effective-target arm_neon_ok } */
@@ -429,7 +571,7 @@ Index: gcc/testsuite/gcc.target/arm/neon-thumb2-move.c
 Index: gcc/testsuite/gcc.dg/torture/pr41555.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/torture/pr41555.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/torture/pr41555.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.dg/torture/pr41555.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,119 @@
 +/* { dg-do run } */
 +/* { dg-options "-std=c99" } */
@@ -550,10 +692,25 @@ Index: gcc/testsuite/gcc.dg/torture/pr41555.c
 +  return 0;
 +}
 +
+Index: gcc/testsuite/gcc.dg/debug/pr41717.c
+===================================================================
+--- gcc/testsuite/gcc.dg/debug/pr41717.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/debug/pr41717.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -0,0 +1,10 @@
++/* PR debug/41717 */
++/* { dg-do compile } */
++
++void
++foo (void)
++{
++  _Complex float v[1], w;
++  v[1] = 0.0f + 0.8fi;
++  w = __builtin_conjf (v[1] * v[1]);
++}
 Index: gcc/testsuite/gcc.dg/pr41573.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/pr41573.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/pr41573.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.dg/pr41573.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,15 @@
 +/* { dg-do compile } */
 +/* { dg-options "-O2" } */
@@ -573,7 +730,7 @@ Index: gcc/testsuite/gcc.dg/pr41573.c
 Index: gcc/testsuite/gcc.dg/cleanup-13.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/cleanup-13.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/cleanup-13.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gcc.dg/cleanup-13.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,319 @@
 +/* HP-UX libunwind.so doesn't provide _UA_END_OF_STACK */
 +/* { dg-do run } */
@@ -896,9 +1053,35 @@ Index: gcc/testsuite/gcc.dg/cleanup-13.c
 +}
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
-@@ -1,3 +1,80 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,106 @@
++2009-10-23  Dodji Seketeli  <dodji@redhat.com>
++
++	PR c++/40808
++	* g++.dg/abi/mangle33.C: New test
++
++2009-10-23  Mikael Pettersson  <mikpe@it.uu.se>
++
++	* gcc.c-torture/compile/pr11832.c: Delete.
++	* gcc.c-torture/compile/pr33009.c: Likewise.
++
++2009-10-21  H.J. Lu  <hongjiu.lu@intel.com>
++
++	2009-10-16  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/41728
++	* gcc.c-torture/compile/pr41728.c: New testcase.
++
++	2009-10-15  Jakub Jelinek  <jakub@redhat.com>
++
++	PR debug/41717
++	* gcc.dg/debug/pr41717.c: New test.
++
++2009-10-21  Jakub Jelinek  <jakub@redhat.com>
++
++	* g++.dg/abi/mangle33.C: New test.
++
 +2009-10-20  Joseph Myers  <joseph@codesourcery.com>
 +
 +	* gcc.target/arm/neon-thumb2-move.c: New test.
@@ -981,8 +1164,8 @@ Index: gcc/testsuite/ChangeLog
  	* GCC 4.4.2 released.
 Index: gcc/testsuite/g++.dg/cpp0x/auto13.C
 ===================================================================
---- gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/g++.dg/cpp0x/auto13.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,11 +0,0 @@
 -// PR c++/38597
 -// { dg-options "-std=c++0x" }
@@ -997,8 +1180,8 @@ Index: gcc/testsuite/g++.dg/cpp0x/auto13.C
 -
 Index: gcc/testsuite/g++.dg/cpp0x/auto6.C
 ===================================================================
---- gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/g++.dg/cpp0x/auto6.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,118 +0,0 @@
 -// Tests for late-specified return type.
 -// { dg-options "-std=c++0x" }
@@ -1120,8 +1303,8 @@ Index: gcc/testsuite/g++.dg/cpp0x/auto6.C
 -}
 Index: gcc/testsuite/g++.dg/cpp0x/auto8.C
 ===================================================================
---- gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/g++.dg/cpp0x/auto8.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,16 +0,0 @@
 -// PR c++/37967
 -// Negative test for auto
@@ -1141,8 +1324,8 @@ Index: gcc/testsuite/g++.dg/cpp0x/auto8.C
 -};
 Index: gcc/testsuite/g++.dg/cpp0x/auto12.C
 ===================================================================
---- gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/testsuite/g++.dg/cpp0x/auto12.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,63 +0,0 @@
 -// More auto/decltype mangling tests.
 -// { dg-options "-std=c++0x" }
@@ -1210,7 +1393,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/auto12.C
 Index: gcc/testsuite/g++.dg/cpp0x/decltype18.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/decltype18.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/decltype18.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/decltype18.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,5 @@
 +// PR c++/37875
 +// { dg-options "-std=c++0x" }
@@ -1220,7 +1403,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/decltype18.C
 Index: gcc/testsuite/g++.dg/cpp0x/trailing1.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/trailing1.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/trailing1.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/trailing1.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,118 @@
 +// Tests for late-specified return type.
 +// { dg-options "-std=c++0x" }
@@ -1343,7 +1526,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/trailing1.C
 Index: gcc/testsuite/g++.dg/cpp0x/trailing2.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/trailing2.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/trailing2.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/trailing2.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,16 @@
 +// PR c++/37967
 +// Negative test for auto
@@ -1364,7 +1547,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/trailing2.C
 Index: gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,7 @@
 +// PR c++/37766
 +// { dg-options -std=c++0x }
@@ -1376,7 +1559,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/fntmpdefarg1.C
 Index: gcc/testsuite/g++.dg/cpp0x/trailing3.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/trailing3.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/trailing3.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/trailing3.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,63 @@
 +// More auto/decltype mangling tests.
 +// { dg-options "-std=c++0x" }
@@ -1444,7 +1627,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/trailing3.C
 Index: gcc/testsuite/g++.dg/cpp0x/trailing4.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/trailing4.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/trailing4.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/trailing4.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,11 @@
 +// PR c++/38597
 +// { dg-options "-std=c++0x" }
@@ -1460,7 +1643,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/trailing4.C
 Index: gcc/testsuite/g++.dg/cpp0x/vt-40092.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/vt-40092.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/vt-40092.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/vt-40092.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,21 @@
 +// { dg-do "compile" }
 +// { dg-options "-std=c++0x" }
@@ -1486,7 +1669,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/vt-40092.C
 Index: gcc/testsuite/g++.dg/cpp0x/trailing5.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/trailing5.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/trailing5.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/trailing5.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,10 @@
 +// PR c++/38798, DR 770
 +// { dg-options -std=c++0x }
@@ -1501,7 +1684,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/trailing5.C
 Index: gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,11 @@
 +// { dg-options -std=c++0x }
 +// { dg-do compile }
@@ -1514,10 +1697,81 @@ Index: gcc/testsuite/g++.dg/cpp0x/rv-reinterpret.C
 +  f(reinterpret_cast<int&&>(x));
 +  return (x != 42);
 +}
+Index: gcc/testsuite/g++.dg/abi/mangle33.C
+===================================================================
+--- gcc/testsuite/g++.dg/abi/mangle33.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/abi/mangle33.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -0,0 +1,19 @@
++// Testcase for mangling very long names.
++
++#define N \
++abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm
++
++namespace N {
++  int i;
++}
++
++#undef N
++#define N \
++abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk
++
++namespace N {
++  int j;
++}
++
++// { dg-final { scan-assembler "_ZN4043abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm1iE" } }
++// { dg-final { scan-assembler "_ZN4041abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk1jE" } }
+Index: gcc/testsuite/g++.dg/abi/mangle34.C
+===================================================================
+--- gcc/testsuite/g++.dg/abi/mangle34.C	(.../tags/gcc_4_4_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/abi/mangle34.C	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -0,0 +1,42 @@
++// Contributed by Dodji Seketeli <dodji@redhat.com>
++// Origin PR c++/40808
++// { dg-do compile }
++// This tests the mangling of empty template argument list in a template
++// id.
++// { dg-final {scan-assembler "_ZNK5DummyclI3GenEENT_3SigIE10ResultTypeERKS2_" } }
++
++
++struct Void {};
++
++template <class R> struct FunType {
++  typedef R ResultType;
++};
++
++struct WrongNumberOfSigArgs {};
++
++template <typename R> struct CFunType {
++  template <class Dummy1=Void, class Dummy2=Void> struct Sig : public
++FunType<WrongNumberOfSigArgs> {};
++  template <class Dummy> struct Sig<Void,Dummy> : public FunType<R> {};
++};
++
++struct Dummy {
++  template <typename F> typename F::template Sig<>::ResultType operator()(F
++const& f) const {
++    return typename F::template Sig<>::ResultType(0);
++  }
++};
++
++struct Gen: public CFunType<int> {
++  int operator()() const {return 0;}
++  Gen() {}
++};
++
++int myfunction() {
++  return Dummy()(Gen());
++}
++
++int main() {
++  myfunction();
++}
++
 Index: gcc/testsuite/gfortran.dg/equiv_8.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/equiv_8.f90	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/equiv_8.f90	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ gcc/testsuite/gfortran.dg/equiv_8.f90	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,7 @@
 +! { dg-do compile }
 +!
@@ -1528,8 +1782,8 @@ Index: gcc/testsuite/gfortran.dg/equiv_8.f90
 +      end
 Index: gcc/cp/typeck.c
 ===================================================================
---- gcc/cp/typeck.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cp/typeck.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/cp/typeck.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/typeck.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -5463,12 +5463,17 @@
  		 intype, type);
  
@@ -1551,8 +1805,8 @@ Index: gcc/cp/typeck.c
  
 Index: gcc/cp/tree.c
 ===================================================================
---- gcc/cp/tree.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cp/tree.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/cp/tree.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/tree.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1909,6 +1909,8 @@
      case TEMPLATE_PARM_INDEX:
        return (TEMPLATE_PARM_IDX (t1) == TEMPLATE_PARM_IDX (t2)
@@ -1562,11 +1816,62 @@ Index: gcc/cp/tree.c
  	      && same_type_p (TREE_TYPE (TEMPLATE_PARM_DECL (t1)),
  			      TREE_TYPE (TEMPLATE_PARM_DECL (t2))));
  
+Index: gcc/cp/mangle.c
+===================================================================
+--- gcc/cp/mangle.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/mangle.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -2071,21 +2071,22 @@
+ /* Non-terminal <template-args>.  ARGS is a TREE_VEC of template
+    arguments.
+ 
+-     <template-args> ::= I <template-arg>+ E  */
++     <template-args> ::= I <template-arg>* E  */
+ 
+ static void
+ write_template_args (tree args)
+ {
+   int i;
+-  int length = TREE_VEC_LENGTH (args);
++  int length = 0;
+ 
+   MANGLE_TRACE_TREE ("template-args", args);
+ 
+   write_char ('I');
+ 
+-  gcc_assert (length > 0);
++  if (args)
++    length = TREE_VEC_LENGTH (args);
+ 
+-  if (TREE_CODE (TREE_VEC_ELT (args, 0)) == TREE_VEC)
++  if (args && TREE_CODE (TREE_VEC_ELT (args, 0)) == TREE_VEC)
+     {
+       /* We have nested template args.  We want the innermost template
+ 	 argument list.  */
+@@ -2748,7 +2749,7 @@
+   finish_mangling_internal (warn);
+   /* Don't obstack_finish here, and the next start_mangling will
+      remove the identifier.  */
+-  return get_identifier ((const char *) name_base);
++  return get_identifier ((const char *) obstack_base (mangle_obstack));
+ }
+ 
+ /* Initialize data structures for mangling.  */
 Index: gcc/cp/ChangeLog
 ===================================================================
---- gcc/cp/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cp/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
-@@ -1,3 +1,37 @@
+--- gcc/cp/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,48 @@
++2009-10-23  Dodji Seketeli  <dodji@redhat.com>
++
++	PR c++/40808
++	* mangle.c (write_template_args): Allow mangling of empty template
++	argument list. Updated function comments.
++
++2009-10-21  Jakub Jelinek  <jakub@redhat.com>
++
++	* mangle.c (finish_mangling_get_identifier): Use
++	obstack_base (mangle_obstack) instead of name_base.
++
 +2009-10-15  Jason Merrill  <jason@redhat.com>
 +
 +	PR c++/38798
@@ -1606,8 +1911,8 @@ Index: gcc/cp/ChangeLog
  	* GCC 4.4.2 released.
 Index: gcc/cp/pt.c
 ===================================================================
---- gcc/cp/pt.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cp/pt.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/cp/pt.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/pt.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -3670,7 +3670,8 @@
    else if (is_friend_decl)
      msg = "default template arguments may not be used in function template friend declarations";
@@ -1635,8 +1940,8 @@ Index: gcc/cp/pt.c
                else
 Index: gcc/cp/parser.c
 ===================================================================
---- gcc/cp/parser.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/cp/parser.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/cp/parser.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/cp/parser.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1198,8 +1198,12 @@
    /* The construct is optional.  If it is not present, then no error
       should be issued.  */
@@ -1848,8 +2153,8 @@ Index: gcc/cp/parser.c
  	    {
 Index: gcc/dbxout.c
 ===================================================================
---- gcc/dbxout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/dbxout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/dbxout.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/dbxout.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -349,6 +349,7 @@
  {
    dbxout_init,
@@ -1868,8 +2173,8 @@ Index: gcc/dbxout.c
    dbxout_start_source_file,
 Index: gcc/config.in
 ===================================================================
---- gcc/config.in	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config.in	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config.in	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config.in	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -839,6 +839,12 @@
  #endif
  
@@ -1885,8 +2190,8 @@ Index: gcc/config.in
  #undef HAVE_GAS_FILDS_FISTS
 Index: gcc/dwarf2out.c
 ===================================================================
---- gcc/dwarf2out.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/dwarf2out.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/dwarf2out.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/dwarf2out.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -145,8 +145,19 @@
  #endif
    if (!flag_dwarf2_cfi_asm || !dwarf2out_do_frame ())
@@ -1951,8 +2256,8 @@ Index: gcc/dwarf2out.c
  
 Index: gcc/unwind-dw2.c
 ===================================================================
---- gcc/unwind-dw2.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/unwind-dw2.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/unwind-dw2.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/unwind-dw2.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -789,22 +789,22 @@
  		result = second ^ first;
  		break;
@@ -1982,10 +2287,189 @@ Index: gcc/unwind-dw2.c
  		break;
  
  	      default:
+Index: gcc/ada/init.c
+===================================================================
+--- gcc/ada/init.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/ada/init.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -290,28 +290,21 @@
+ extern void __gnat_set_code_loc (struct sigcontext *, char *);
+ extern size_t __gnat_machine_state_length (void);
+ 
+-/* __gnat_adjust_context_for_raise - see comments along with the default
+-   version later in this file.  */
+-
+ #define HAVE_GNAT_ADJUST_CONTEXT_FOR_RAISE
+ 
+ void
+-__gnat_adjust_context_for_raise (int signo, void *context)
++__gnat_adjust_context_for_raise (int signo, void *ucontext)
+ {
+-  struct sigcontext * sigcontext = (struct sigcontext *) context;
++  struct sigcontext *sigcontext = (struct sigcontext *) ucontext;
+ 
+-  /* The fallback code fetches the faulting insn address from sc_pc, so
+-     adjust that when need be.  For SIGFPE, the required adjustment depends
+-     on the trap shadow situation (see man ieee).  */
++  /* The unwinder expects the signal context to contain the address of the
++     faulting instruction.  For SIGFPE, this depends on the trap shadow
++     situation (see man ieee).  We nonetheless always compensate for it,
++     considering that PC designates the instruction following the one that
++     trapped.  This is not necessarily true but corresponds to what we have
++     always observed.  */
+   if (signo == SIGFPE)
+-    {
+-      /* ??? We never adjust here, considering that sc_pc always
+-	 designates the instruction following the one which trapped.
+-	 This is not necessarily true but corresponds to what we have
+-	 always observed.  */
+-    }
+-  else
+-    sigcontext->sc_pc ++;
++    sigcontext->sc_pc--;
+ }
+ 
+ static void
+@@ -2154,8 +2147,11 @@
+ 				 void *ucontext ATTRIBUTE_UNUSED)
+ {
+   /* We used to compensate here for the raised from call vs raised from signal
+-     exception discrepancy with the GCC ZCX scheme, but this is now dealt with
+-     generically (except for the Alpha and IA-64), see GCC PR other/26208.
++     exception discrepancy with the GCC ZCX scheme, but this now can be dealt
++     with generically in the unwinder (see GCC PR other/26208).  This however
++     requires the use of the _Unwind_GetIPInfo routine in raise-gcc.c, which
++     is predicated on the definition of HAVE_GETIPINFO at compile time.  Only
++     the VMS ports still do the compensation described in the few lines below.
+ 
+      *** Call vs signal exception discrepancy with GCC ZCX scheme ***
+ 
+Index: gcc/ada/ChangeLog
+===================================================================
+--- gcc/ada/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/ada/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,13 @@
++2009-10-24  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* init.c (__gnat_adjust_context_for_raise): Mention _Unwind_GetIPInfo.
++	* gcc-interface/Makefile.in (GNATLIBCFLAGS_FOR_C): Add HAVE_GETIPINFO.
++	Pass GNATLIBCFLAGS_FOR_C to recursive invocations.
++
++	Backport from mainline:
++	2009-04-10  Eric Botcazou  <ebotcazou@adacore.com>
++	* init.c: Adjust EH support code on Alpha/Tru64.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: gcc/ada/gcc-interface/Makefile.in
+===================================================================
+--- gcc/ada/gcc-interface/Makefile.in	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/ada/gcc-interface/Makefile.in	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -106,8 +106,11 @@
+ FORCE_DEBUG_ADAFLAGS = -g
+ GNATLIBFLAGS = -gnatpg -nostdinc
+ GNATLIBCFLAGS = -g -O2
++# Pretend that _Unwind_GetIPInfo is available for the target by default.  This
++# should be autodetected during the configuration of libada and passed down to
++# here, but we need something for --disable-libada and hope for the best.
+ GNATLIBCFLAGS_FOR_C = $(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -fexceptions \
+-	-DIN_RTS
++	-DIN_RTS -DHAVE_GETIPINFO
+ ALL_ADAFLAGS = $(CFLAGS) $(ADA_CFLAGS) $(ADAFLAGS)
+ MOST_ADAFLAGS = $(CFLAGS) $(ADA_CFLAGS) $(SOME_ADAFLAGS)
+ THREAD_KIND = native
+@@ -2074,6 +2077,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib
+@@ -2099,6 +2103,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib-shared-default
+@@ -2107,6 +2112,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib
+@@ -2116,6 +2122,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib-shared-win32
+@@ -2124,6 +2131,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib
+@@ -2137,6 +2145,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib
+@@ -2156,6 +2165,7 @@
+ 	     GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) \
+ 	                    -fno-common" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C) -fno-common" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+ 	     gnatlib
+@@ -2179,6 +2189,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+              gnatlib
+@@ -2207,6 +2218,7 @@
+ 	$(MAKE) $(FLAGS_TO_PASS) \
+              GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+ 	     TARGET_LIBGCC2_CFLAGS="$(TARGET_LIBGCC2_CFLAGS)" \
+@@ -2220,6 +2232,7 @@
+ 	     EH_MECHANISM="" \
+ 	     GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+ 	     TARGET_LIBGCC2_CFLAGS="$(TARGET_LIBGCC2_CFLAGS)" gnatlib
+@@ -2232,6 +2245,7 @@
+ 	     EH_MECHANISM="-gcc" \
+ 	     GNATLIBFLAGS="$(GNATLIBFLAGS)" \
+ 	     GNATLIBCFLAGS="$(GNATLIBCFLAGS)" \
++	     GNATLIBCFLAGS_FOR_C="$(GNATLIBCFLAGS_FOR_C)" \
+ 	     MULTISUBDIR="$(MULTISUBDIR)" \
+ 	     THREAD_KIND="$(THREAD_KIND)" \
+ 	     TARGET_LIBGCC2_CFLAGS="$(TARGET_LIBGCC2_CFLAGS)" gnatlib
 Index: gcc/fortran/symbol.c
 ===================================================================
---- gcc/fortran/symbol.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/fortran/symbol.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/fortran/symbol.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/fortran/symbol.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -2693,7 +2693,7 @@
        if (p->gfc_new)
  	{
@@ -1997,8 +2481,8 @@ Index: gcc/fortran/symbol.c
  		 needs to be removed to stop the resolver looking
 Index: gcc/fortran/ChangeLog
 ===================================================================
---- gcc/fortran/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/fortran/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,3 +1,11 @@
 +2009-10-19  Tobias Burnus  <burnus@net-b.de>
 +	    Steven G. Kargl  <kargl@gcc.gnu.org>
@@ -2013,8 +2497,8 @@ Index: gcc/fortran/ChangeLog
  	* GCC 4.4.2 released.
 Index: gcc/fortran/match.c
 ===================================================================
---- gcc/fortran/match.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/fortran/match.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/fortran/match.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/fortran/match.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -3269,7 +3269,10 @@
        if (gfc_match_eos () == MATCH_YES)
  	break;
@@ -2029,8 +2513,8 @@ Index: gcc/fortran/match.c
    return MATCH_YES;
 Index: gcc/ira-lives.c
 ===================================================================
---- gcc/ira-lives.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/ira-lives.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/ira-lives.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/ira-lives.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -500,7 +500,7 @@
    for (use = 0; use < recog_data.n_operands; use++)
      {
@@ -2051,8 +2535,8 @@ Index: gcc/ira-lives.c
  	    use_cl = ALL_REGS;
 Index: gcc/configure.ac
 ===================================================================
---- gcc/configure.ac	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/configure.ac	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/configure.ac	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/configure.ac	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -2297,6 +2297,17 @@
      then echo 1; else echo 0; fi`],
    [Define 0/1 if your assembler supports .cfi_personality.])
@@ -2073,15 +2557,15 @@ Index: gcc/configure.ac
  gcc_GAS_CHECK_FEATURE(eh_frame optimization, gcc_cv_as_eh_frame,
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/BASE-VER	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1 +1 @@
 -4.4.2
 +4.4.3
 Index: gcc/sdbout.c
 ===================================================================
---- gcc/sdbout.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/sdbout.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/sdbout.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/sdbout.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -307,6 +307,7 @@
  {
    sdbout_init,			         /* init */
@@ -2092,8 +2576,8 @@ Index: gcc/sdbout.c
    sdbout_start_source_file,	         /* start_source_file */
 Index: gcc/config/s390/s390.c
 ===================================================================
---- gcc/config/s390/s390.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/s390/s390.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config/s390/s390.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/s390/s390.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -9799,9 +9799,12 @@
    if (!REG_P (*op0) || !REG_P (*op1))
      return false;
@@ -2119,8 +2603,8 @@ Index: gcc/config/s390/s390.c
      {
 Index: gcc/config/i386/i386.md
 ===================================================================
---- gcc/config/i386/i386.md	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/i386/i386.md	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config/i386/i386.md	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/i386/i386.md	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -6487,7 +6487,7 @@
    switch (get_attr_type (insn))
      {
@@ -2132,8 +2616,8 @@ Index: gcc/config/i386/i386.md
      case TYPE_INCDEC:
 Index: gcc/config/arm/arm.c
 ===================================================================
---- gcc/config/arm/arm.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/arm/arm.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config/arm/arm.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/arm/arm.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -10975,7 +10975,7 @@
  	  {
  	    /* We're only using DImode here because it's a convenient size.  */
@@ -2145,8 +2629,8 @@ Index: gcc/config/arm/arm.c
  		gcc_assert (overlap == -1);
 Index: gcc/config/pa/t-hpux-shlib
 ===================================================================
---- gcc/config/pa/t-hpux-shlib	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/pa/t-hpux-shlib	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config/pa/t-hpux-shlib	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/pa/t-hpux-shlib	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -8,6 +8,7 @@
  SHLIB_SLIBDIR_QUAL = @shlib_slibdir_qual@
  
@@ -2157,8 +2641,8 @@ Index: gcc/config/pa/t-hpux-shlib
  	if [ -f $(SHLIB_DIR)/$(SHLIB_NAME) ]; then \
 Index: gcc/config/pa/linux-atomic.c
 ===================================================================
---- gcc/config/pa/linux-atomic.c	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/pa/linux-atomic.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- gcc/config/pa/linux-atomic.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/pa/linux-atomic.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -24,14 +24,9 @@
  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
  <http://www.gnu.org/licenses/>.  */
@@ -2176,9 +2660,91 @@ Index: gcc/config/pa/linux-atomic.c
     ordered loads and stores.  Only cache flushes and purges can be
 Index: gcc/config/pa/pa.md
 ===================================================================
---- gcc/config/pa/pa.md	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ gcc/config/pa/pa.md	(.../branches/gcc-4_4-branch)	(wersja 153054)
-@@ -7503,17 +7503,6 @@
+--- gcc/config/pa/pa.md	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/pa/pa.md	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -3191,6 +3191,40 @@
+     DONE;
+ }")
+ 
++;; Handle HImode input reloads requiring a general register as a
++;; scratch register.
++(define_expand "reload_inhi"
++  [(set (match_operand:HI 0 "register_operand" "=Z")
++	(match_operand:HI 1 "non_hard_reg_operand" ""))
++   (clobber (match_operand:HI 2 "register_operand" "=&r"))]
++  ""
++  "
++{
++  if (emit_move_sequence (operands, HImode, operands[2]))
++    DONE;
++
++  /* We don't want the clobber emitted, so handle this ourselves.  */
++  emit_insn (gen_rtx_SET (VOIDmode, operands[0], operands[1]));
++  DONE;
++}")
++
++;; Handle HImode output reloads requiring a general register as a
++;; scratch register.
++(define_expand "reload_outhi"
++  [(set (match_operand:HI 0 "non_hard_reg_operand" "")
++	(match_operand:HI 1  "register_operand" "Z"))
++   (clobber (match_operand:HI 2 "register_operand" "=&r"))]
++  ""
++  "
++{
++  if (emit_move_sequence (operands, HImode, operands[2]))
++    DONE;
++
++  /* We don't want the clobber emitted, so handle this ourselves.  */
++  emit_insn (gen_rtx_SET (VOIDmode, operands[0], operands[1]));
++  DONE;
++}")
++
+ (define_insn ""
+   [(set (match_operand:HI 0 "move_dest_operand"
+ 	 		  "=r,r,r,r,r,Q,!*q,!r")
+@@ -3315,6 +3349,40 @@
+     DONE;
+ }")
+ 
++;; Handle QImode input reloads requiring a general register as a
++;; scratch register.
++(define_expand "reload_inqi"
++  [(set (match_operand:QI 0 "register_operand" "=Z")
++	(match_operand:QI 1 "non_hard_reg_operand" ""))
++   (clobber (match_operand:QI 2 "register_operand" "=&r"))]
++  ""
++  "
++{
++  if (emit_move_sequence (operands, QImode, operands[2]))
++    DONE;
++
++  /* We don't want the clobber emitted, so handle this ourselves.  */
++  emit_insn (gen_rtx_SET (VOIDmode, operands[0], operands[1]));
++  DONE;
++}")
++
++;; Handle QImode output reloads requiring a general register as a
++;; scratch register.
++(define_expand "reload_outqi"
++  [(set (match_operand:QI 0 "non_hard_reg_operand" "")
++	(match_operand:QI 1  "register_operand" "Z"))
++   (clobber (match_operand:QI 2 "register_operand" "=&r"))]
++  ""
++  "
++{
++  if (emit_move_sequence (operands, QImode, operands[2]))
++    DONE;
++
++  /* We don't want the clobber emitted, so handle this ourselves.  */
++  emit_insn (gen_rtx_SET (VOIDmode, operands[0], operands[1]));
++  DONE;
++}")
++
+ (define_insn ""
+   [(set (match_operand:QI 0 "move_dest_operand"
+ 			  "=r,r,r,r,r,Q,!*q,!r")
+@@ -7503,17 +7571,6 @@
        operands[0] = index;
      }
  
@@ -2196,7 +2762,7 @@ Index: gcc/config/pa/pa.md
    if (!INT_5_BITS (operands[2]))
      operands[2] = force_reg (SImode, operands[2]);
  
-@@ -7530,6 +7519,17 @@
+@@ -7530,6 +7587,17 @@
    emit_insn (gen_cmpsi (operands[0], operands[2]));
    emit_jump_insn (gen_bgtu (operands[4]));
  
@@ -2214,7 +2780,7 @@ Index: gcc/config/pa/pa.md
    if (TARGET_BIG_SWITCH)
      {
        if (TARGET_64BIT)
-@@ -7590,8 +7590,7 @@
+@@ -7590,8 +7658,7 @@
  ;;; 64-bit code, 32-bit relative branch table.
  (define_insn "casesi64p"
    [(set (pc) (mem:DI (plus:DI
@@ -2224,10 +2790,23 @@ Index: gcc/config/pa/pa.md
  				(const_int 8))
  		       (label_ref (match_operand 1 "" "")))))
     (clobber (match_scratch:DI 2 "=&r"))
+Index: gcc/config/pa/pa.c
+===================================================================
+--- gcc/config/pa/pa.c	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ gcc/config/pa/pa.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1620,7 +1620,7 @@
+       /* D might not fit in 14 bits either; for such cases load D into
+ 	 scratch reg.  */
+       if (GET_CODE (operand1) == MEM
+-	  && !memory_address_p (Pmode, XEXP (operand1, 0)))
++	  && !memory_address_p (GET_MODE (operand0), XEXP (operand1, 0)))
+ 	{
+ 	  /* We are reloading the address into the scratch register, so we
+ 	     want to make sure the scratch register is a full register.  */
 Index: libstdc++-v3/include/bits/atomic_0.h
 ===================================================================
---- libstdc++-v3/include/bits/atomic_0.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ libstdc++-v3/include/bits/atomic_0.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- libstdc++-v3/include/bits/atomic_0.h	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libstdc++-v3/include/bits/atomic_0.h	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -82,14 +82,15 @@
      __r; })
  
@@ -2248,8 +2827,8 @@ Index: libstdc++-v3/include/bits/atomic_0.h
      test_and_set(memory_order __m = memory_order_seq_cst) volatile;
 Index: libstdc++-v3/include/bits/atomic_2.h
 ===================================================================
---- libstdc++-v3/include/bits/atomic_2.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ libstdc++-v3/include/bits/atomic_2.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- libstdc++-v3/include/bits/atomic_2.h	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libstdc++-v3/include/bits/atomic_2.h	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -44,14 +44,15 @@
  namespace __atomic2
  {
@@ -2270,8 +2849,8 @@ Index: libstdc++-v3/include/bits/atomic_2.h
      test_and_set(memory_order __m = memory_order_seq_cst) volatile
 Index: libstdc++-v3/include/c_compatibility/stdatomic.h
 ===================================================================
---- libstdc++-v3/include/c_compatibility/stdatomic.h	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ libstdc++-v3/include/c_compatibility/stdatomic.h	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- libstdc++-v3/include/c_compatibility/stdatomic.h	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libstdc++-v3/include/c_compatibility/stdatomic.h	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -186,8 +186,11 @@
  _GLIBCXX_END_EXTERN_C
  _GLIBCXX_END_NAMESPACE
@@ -2288,8 +2867,8 @@ Index: libstdc++-v3/include/c_compatibility/stdatomic.h
  using std::memory_order_consume;
 Index: libstdc++-v3/src/atomic.cc
 ===================================================================
---- libstdc++-v3/src/atomic.cc	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ libstdc++-v3/src/atomic.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- libstdc++-v3/src/atomic.cc	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libstdc++-v3/src/atomic.cc	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -80,16 +80,16 @@
      atomic_flag_test_and_set_explicit(volatile __atomic_flag_base* __a,
  				      memory_order __m)
@@ -2313,8 +2892,8 @@ Index: libstdc++-v3/src/atomic.cc
      void
 Index: libstdc++-v3/ChangeLog
 ===================================================================
---- libstdc++-v3/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153054)
-+++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153054)
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -1,3 +1,21 @@
 +2009-10-16  Benjamin Kosnik  <bkoz@redhat.com>
 +
@@ -2340,7 +2919,7 @@ Index: libstdc++-v3/ChangeLog
 Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc
 ===================================================================
 --- libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,27 @@
 +// { dg-options "-std=gnu++0x" }
 +// { dg-do compile }
@@ -2372,7 +2951,7 @@ Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/cons/1.cc
 Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c
 ===================================================================
 --- libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,34 @@
 +// { dg-options "-x c -shared-libgcc -lstdc++" }
 +
@@ -2411,7 +2990,7 @@ Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.c
 Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc
 ===================================================================
 --- libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc	(.../tags/gcc_4_4_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153054)
++++ libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc	(.../branches/gcc-4_4-branch)	(wersja 153570)
 @@ -0,0 +1,33 @@
 +// { dg-options "-std=gnu++0x" }
 +
@@ -2446,3 +3025,190 @@ Index: libstdc++-v3/testsuite/29_atomics/atomic_flag/clear/1.cc
 +
 +  return 0;
 +}
+Index: libada/configure
+===================================================================
+--- libada/configure	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libada/configure	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -272,7 +272,7 @@
+ PACKAGE_BUGREPORT=
+ 
+ ac_unique_file="Makefile.in"
+-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os target_noncanonical build_libsubdir build_subdir host_subdir target_subdir MAINT multi_basedir toolexecdir toolexeclibdir CC ac_ct_CC EXEEXT OBJEXT CFLAGS enable_shared LN_S default_gnatlib_target LDFLAGS CPPFLAGS warn_cflags LIBOBJS LTLIBOBJS'
++ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os target_noncanonical build_libsubdir build_subdir host_subdir target_subdir MAINT multi_basedir toolexecdir toolexeclibdir CC ac_ct_CC EXEEXT OBJEXT CFLAGS enable_shared LN_S default_gnatlib_target have_getipinfo LDFLAGS CPPFLAGS warn_cflags LIBOBJS LTLIBOBJS'
+ ac_subst_files=''
+ ac_pwd=`pwd`
+ 
+@@ -815,6 +815,7 @@
+   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+   --with-build-libsubdir=DIR  Directory where to find libraries for build system
++  --with-system-libunwind use installed libunwind
+ 
+ Some influential environment variables:
+   CC          C compiler command
+@@ -2527,6 +2528,51 @@
+ fi
+ 
+ 
++# Check for _Unwind_GetIPInfo
++
++
++# Check whether --with-system-libunwind or --without-system-libunwind was given.
++if test "${with_system_libunwind+set}" = set; then
++  withval="$with_system_libunwind"
++
++fi;
++  # If system-libunwind was not specifically set, pick a default setting.
++  if test x$with_system_libunwind = x; then
++    case ${target} in
++      ia64-*-hpux*) with_system_libunwind=yes ;;
++      *) with_system_libunwind=no ;;
++    esac
++  fi
++  # Based on system-libunwind and target, do we have ipinfo?
++  if  test x$with_system_libunwind = xyes; then
++    case ${target} in
++      ia64-*-*) have_unwind_getipinfo=no ;;
++      *) have_unwind_getipinfo=yes ;;
++    esac
++  else
++    # Darwin before version 9 does not have _Unwind_GetIPInfo.
++
++    case ${target} in
++      *-*-darwin[3-8]|*-*-darwin[3-8].*) have_unwind_getipinfo=no ;;
++      *) have_unwind_getipinfo=yes ;;
++    esac
++
++  fi
++
++  if test x$have_unwind_getipinfo = xyes; then
++
++cat >>confdefs.h <<\_ACEOF
++#define HAVE_GETIPINFO 1
++_ACEOF
++
++  fi
++
++have_getipinfo=
++if test x$have_unwind_getipinfo = xyes; then
++  have_getipinfo=-DHAVE_GETIPINFO
++fi
++
++
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
+ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+@@ -3953,6 +3999,7 @@
+ s,@enable_shared@,$enable_shared,;t t
+ s,@LN_S@,$LN_S,;t t
+ s,@default_gnatlib_target@,$default_gnatlib_target,;t t
++s,@have_getipinfo@,$have_getipinfo,;t t
+ s,@LDFLAGS@,$LDFLAGS,;t t
+ s,@CPPFLAGS@,$CPPFLAGS,;t t
+ s,@warn_cflags@,$warn_cflags,;t t
+Index: libada/Makefile.in
+===================================================================
+--- libada/Makefile.in	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libada/Makefile.in	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -56,6 +56,8 @@
+ 
+ TARGET_LIBGCC2_CFLAGS=
+ GNATLIBCFLAGS= -g -O2
++GNATLIBCFLAGS_FOR_C = $(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -fexceptions \
++	-DIN_RTS @have_getipinfo@
+ 
+ # Get target-specific overrides for TARGET_LIBGCC2_CFLAGS.
+ host_subdir = @host_subdir@
+@@ -78,6 +80,7 @@
+         "SHELL=$(SHELL)" \
+         "GNATLIBFLAGS=$(GNATLIBFLAGS) $(MULTIFLAGS)" \
+         "GNATLIBCFLAGS=$(GNATLIBCFLAGS) $(MULTIFLAGS)" \
++        "GNATLIBCFLAGS_FOR_C=$(GNATLIBCFLAGS_FOR_C) $(MULTIFLAGS)" \
+         "TARGET_LIBGCC2_CFLAGS=$(TARGET_LIBGCC2_CFLAGS)" \
+         "THREAD_KIND=$(THREAD_KIND)" \
+         "TRACE=$(TRACE)" \
+Index: libada/configure.ac
+===================================================================
+--- libada/configure.ac	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libada/configure.ac	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -18,6 +18,7 @@
+ sinclude(../config/acx.m4)
+ sinclude(../config/multi.m4)
+ sinclude(../config/override.m4)
++sinclude(../config/unwind_ipinfo.m4)
+ 
+ AC_INIT
+ AC_PREREQ([2.59])
+@@ -130,6 +131,14 @@
+ fi
+ AC_SUBST([default_gnatlib_target])
+ 
++# Check for _Unwind_GetIPInfo
++GCC_CHECK_UNWIND_GETIPINFO
++have_getipinfo=
++if test x$have_unwind_getipinfo = xyes; then
++  have_getipinfo=-DHAVE_GETIPINFO
++fi
++AC_SUBST(have_getipinfo)
++
+ AC_PROG_CC
+ warn_cflags=
+ if test "x$GCC" = "xyes"; then
+Index: libada/ChangeLog
+===================================================================
+--- libada/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libada/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,11 @@
++2009-10-24  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* Makefile.in (GNATLIBCFLAGS_FOR_C): New variable.
++	(LIBADA_FLAGS_TO_PASS): Add GNATLIBCFLAGS_FOR_C.
++	* configure.ac: Include config/unwind_ipinfo.m4.
++	Check for _Unwind_GetIPInfo.
++	* configure: Regenerate.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
+Index: libjava/classpath/tools/gnu/classpath/tools/jar/Creator.java
+===================================================================
+--- libjava/classpath/tools/gnu/classpath/tools/jar/Creator.java	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libjava/classpath/tools/gnu/classpath/tools/jar/Creator.java	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -216,11 +216,14 @@
+     manifest = createManifest(parameters);
+     /* If no version is specified, provide the same manifest version default
+      * as Sun's jar tool */
+-    Attributes attr = manifest.getMainAttributes();
+-    if (attr.getValue(Attributes.Name.MANIFEST_VERSION) == null)
+-      attr.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
+-    attr.putValue("Created-By", System.getProperty("java.version") +
++    if (parameters.wantManifest)
++      {
++	  Attributes attr = manifest.getMainAttributes();
++	  if (attr.getValue(Attributes.Name.MANIFEST_VERSION) == null)
++	      attr.putValue(Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
++	  attr.putValue("Created-By", System.getProperty("java.version") +
+ 		  " (" + System.getProperty("java.vendor") + ")");
++      }
+     outputStream = new JarOutputStream(os, manifest);
+     // FIXME: this sets the method too late for the manifest file.
+     outputStream.setMethod(parameters.storageMode);
+Index: libjava/classpath/tools/classes/gnu/classpath/tools/jar/Creator.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/ChangeLog
+===================================================================
+--- libjava/classpath/ChangeLog	(.../tags/gcc_4_4_2_release)	(wersja 153570)
++++ libjava/classpath/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 153570)
+@@ -1,3 +1,10 @@
++2009-10-22  Richard Guenther  <rguenther@suse.de>
++
++	PR cp-tools/39177
++	* tools/gnu/classpath/tools/jar/Creator.java (writeCommandLineEntries):
++	Do not use uninitialized manifest.
++	* tools/classes/gnu/classpath/tools/jar/Creator.class: Re-generated.
++
+ 2009-10-15  Release Manager
+ 
+ 	* GCC 4.4.2 released.
