@@ -40,9 +40,9 @@
  GNATLIBFLAGS = -gnatpg -nostdinc
 -GNATLIBCFLAGS = -g -O2
 +GNATLIBCFLAGS = -O2
- GNATLIBCFLAGS_FOR_C = $(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -fexceptions \
- 	-DIN_RTS
- ALL_ADAFLAGS = $(CFLAGS) $(ADA_CFLAGS) $(ADAFLAGS)
+ # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
+ # should be autodetected during the configuration of libada and passed down to
+ # here, but we need something for --disable-libada and hope for the best.
 --- a/libada/Makefile.in	2005-11-04 13:49:08.000000000 +0000
 +++ b/libada/Makefile.in	2005-11-24 23:52:14.739531296 +0000
 @@ -49,13 +49,13 @@
@@ -58,9 +58,9 @@
  TARGET_LIBGCC2_CFLAGS=
 -GNATLIBCFLAGS= -g -O2
 +GNATLIBCFLAGS= -O2
+ GNATLIBCFLAGS_FOR_C = $(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -fexceptions \
+ 	-DIN_RTS @have_getipinfo@
  
- # Get target-specific overrides for TARGET_LIBGCC2_CFLAGS.
- host_subdir = @host_subdir@
 --- a/libffi/Makefile.in	2004-08-30 17:42:59.000000000 +0200
 +++ b/libffi/Makefile.in	2004-09-26 11:44:10.789340112 +0200
 @@ -453,7 +453,7 @@
