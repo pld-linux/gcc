@@ -129,7 +129,7 @@ BuildRequires:	zlib-devel
 %if %{with java}
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 %if %{with dssi}
-BuildRequires:	dssi
+BuildRequires:	dssi-devel
 BuildRequires:	jack-audio-connection-kit-devel
 %endif
 BuildRequires:	libxml2-devel >= 1:2.6.8
