@@ -21,7 +21,7 @@
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
-%bcond_without	mozilla		# don't build libgcjwebplugin
+%bcond_with	mozilla		# don't build libgcjwebplugin (needs fix for new xulrunner)
 %bcond_with	qt		# build libgcj Qt peer (currently doesn't build with libtool-2.x)
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
@@ -66,7 +66,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages

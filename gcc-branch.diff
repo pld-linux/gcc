@@ -1,14 +1,137 @@
+Index: libgomp/ChangeLog
+===================================================================
+--- libgomp/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libgomp/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,8 @@
++2010-01-26  Jakub Jelinek  <jakub@redhat.com>
++
++	PR fortran/42866
++	* testsuite/libgomp.fortran/allocatable5.f90: New test.
++
+ 2010-01-21  Release Manager
+ 
+ 	* GCC 4.4.3 released.
+Index: libgomp/testsuite/libgomp.fortran/allocatable5.f90
+===================================================================
+--- libgomp/testsuite/libgomp.fortran/allocatable5.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ libgomp/testsuite/libgomp.fortran/allocatable5.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,17 @@
++! PR fortran/42866
++! { dg-do run }
++
++program pr42866
++  integer, allocatable :: a(:)
++  allocate (a(16))
++  a = 0
++  !$omp parallel
++    !$omp sections reduction(+:a)
++      a = a + 1
++    !$omp section
++      a = a + 2
++    !$omp end sections
++  !$omp end parallel
++  if (any (a.ne.3)) call abort
++  deallocate (a)
++end
+Index: gcc/DATESTAMP
+===================================================================
+--- gcc/DATESTAMP	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/DATESTAMP	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1 +1 @@
+-20100121
++20100205
+Index: gcc/omp-low.c
+===================================================================
+--- gcc/omp-low.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/omp-low.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -4606,7 +4606,7 @@
+   l2_bb = region->exit;
+   if (exit_reachable)
+     {
+-      if (single_pred (l2_bb) == l0_bb)
++      if (single_pred_p (l2_bb) && single_pred (l2_bb) == l0_bb)
+ 	l2 = gimple_block_label (l2_bb);
+       else
+ 	{
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_4_3_release)	(wersja 156153)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 156153)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_4-branch)	(wersja 156526)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156153)
-+++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156153)
-@@ -1,3 +1,8 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,76 @@
++2010-02-04  Richard Guenther  <rguenther@suse.de>
++
++	PR rtl-optimization/42952
++	* dse.c (const_or_frame_p): Remove MEM handling.
++
++2010-01-31  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR middle-end/42898
++	Backport from mainline:
++	2009-04-23  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gimplify.c (gimplify_modify_expr_rhs) <VAR_DECL>: Do not do a direct
++	assignment from the constructor either if the target is volatile.
++
++2010-01-31  Richard Guenther  <rguenther@suse.de>
++
++	PR middle-end/42898
++	* gimplify.c (gimplify_init_constructor): For volatile LHS
++	initialize a temporary.
++
++2010-01-26  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* config/sparc/sparc.c (sparc_elf_asm_named_section): Test for
++	HAVE_GNU_AS value.
++	* config/sparc/sysv4.h [HAVE_GNU_AS] (TARGET_ASM_NAMED_SECTION):
++	Test for HAVE_GNU_AS value.
++
++2010-01-26  Jakub Jelinek  <jakub@redhat.com>
++
++	PR fortran/42866
++	* omp-low.c (expand_omp_sections): Only use single_pred if
++	l2_bb is single_pred_p.
++
++2010-01-25  Christian Bruel  <christian.bruel@st.com>
++
++	PR target/42841
++	* config/sh/sh.c (find_barrier): Increase length for non delayed
++	conditional branches.
++	(sh_insn_length_adjustment): Use JUMP_TABLE_DATA_P.
++	
++2010-01-25  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
++
++	Backport from trunk.
++	2010-01-19  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
++
++	PR target/38697
++	* config/arm/neon-testgen.m (emit_automatics): New parameter
++	features. Adjust for Fixed_return_reg feature.
++	(test_intrinsic): Call emit_automatics with new feature.
++	* config/arm/neon.ml: Update copyright years.
++	(features): New Fixed_return_reg feature.
++	(ops): Update feature for Vget_low.
++
++2010-01-24  David S. Miller  <davem@davemloft.net>
++
++	* config/sparc/sysv4.h (TARGET_ASM_NAMED_SECTION): Only
++	define if not using GAS.
++	* config/sparc/sparc.c (sparc_elf_asm_named_section):
++	Likewise.  Delete SECTION_MERGE code, which is only applicable
++	when using GAS.
++
++2010-01-21  Felyza Wishbringer  <fwishbringer@gmail.com>
++
++	PR bootstrap/42786
++	* config.gcc (i[34567]86-*-*): Fix handling of athlon64 and athlon-fx
++	cpu types.  Add support for *-sse3 cpu types.
++	(x86_64-*-*): Ditto.
++
 +2010-01-21  Jakub Jelinek  <jakub@redhat.com>
 +
 +	* BASE-VER: Set to 4.4.4.
@@ -17,10 +140,1755 @@ Index: gcc/ChangeLog
  2010-01-21  Release Manager
  
  	* GCC 4.4.3 released.
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowp8.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowp8.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowp8.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowp8 (void)
+ {
+-  poly8x8_t out_poly8x8_t;
++  register poly8x8_t out_poly8x8_t asm ("d18");
+   poly8x16_t arg0_poly8x16_t;
+ 
+   out_poly8x8_t = vget_low_p8 (arg0_poly8x16_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lows64.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lows64.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lows64.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -15,5 +15,4 @@
+   out_int64x1_t = vget_low_s64 (arg0_int64x2_t);
+ }
+ 
+-/* { dg-final { scan-assembler "vmov\[ 	\]+\[dD\]\[0-9\]+, \[dD\]\[0-9\]+!?\(\[ 	\]+@\[a-zA-Z0-9 \]+\)?\n" } } */
+ /* { dg-final { cleanup-saved-temps } } */
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowu64.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowu64.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowu64.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -15,5 +15,4 @@
+   out_uint64x1_t = vget_low_u64 (arg0_uint64x2_t);
+ }
+ 
+-/* { dg-final { scan-assembler "vmov\[ 	\]+\[dD\]\[0-9\]+, \[dD\]\[0-9\]+!?\(\[ 	\]+@\[a-zA-Z0-9 \]+\)?\n" } } */
+ /* { dg-final { cleanup-saved-temps } } */
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowp16.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowp16.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowp16.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowp16 (void)
+ {
+-  poly16x4_t out_poly16x4_t;
++  register poly16x4_t out_poly16x4_t asm ("d18");
+   poly16x8_t arg0_poly16x8_t;
+ 
+   out_poly16x4_t = vget_low_p16 (arg0_poly16x8_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lows8.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lows8.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lows8.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lows8 (void)
+ {
+-  int8x8_t out_int8x8_t;
++  register int8x8_t out_int8x8_t asm ("d18");
+   int8x16_t arg0_int8x16_t;
+ 
+   out_int8x8_t = vget_low_s8 (arg0_int8x16_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowu8.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowu8.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowu8.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowu8 (void)
+ {
+-  uint8x8_t out_uint8x8_t;
++  register uint8x8_t out_uint8x8_t asm ("d18");
+   uint8x16_t arg0_uint8x16_t;
+ 
+   out_uint8x8_t = vget_low_u8 (arg0_uint8x16_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lows32.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lows32.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lows32.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lows32 (void)
+ {
+-  int32x2_t out_int32x2_t;
++  register int32x2_t out_int32x2_t asm ("d18");
+   int32x4_t arg0_int32x4_t;
+ 
+   out_int32x2_t = vget_low_s32 (arg0_int32x4_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lows16.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lows16.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lows16.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lows16 (void)
+ {
+-  int16x4_t out_int16x4_t;
++  register int16x4_t out_int16x4_t asm ("d18");
+   int16x8_t arg0_int16x8_t;
+ 
+   out_int16x4_t = vget_low_s16 (arg0_int16x8_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowu32.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowu32.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowu32.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowu32 (void)
+ {
+-  uint32x2_t out_uint32x2_t;
++  register uint32x2_t out_uint32x2_t asm ("d18");
+   uint32x4_t arg0_uint32x4_t;
+ 
+   out_uint32x2_t = vget_low_u32 (arg0_uint32x4_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowu16.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowu16.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowu16.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowu16 (void)
+ {
+-  uint16x4_t out_uint16x4_t;
++  register uint16x4_t out_uint16x4_t asm ("d18");
+   uint16x8_t arg0_uint16x8_t;
+ 
+   out_uint16x4_t = vget_low_u16 (arg0_uint16x8_t);
+Index: gcc/testsuite/gcc.target/arm/neon/vget_lowf32.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/neon/vget_lowf32.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gcc.target/arm/neon/vget_lowf32.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -9,7 +9,7 @@
+ 
+ void test_vget_lowf32 (void)
+ {
+-  float32x2_t out_float32x2_t;
++  register float32x2_t out_float32x2_t asm ("d18");
+   float32x4_t arg0_float32x4_t;
+ 
+   out_float32x2_t = vget_low_f32 (arg0_float32x4_t);
+Index: gcc/testsuite/ada/acats/run_all.sh
+===================================================================
+--- gcc/testsuite/ada/acats/run_all.sh	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/ada/acats/run_all.sh	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -129,6 +129,7 @@
+ 
+ cp $testdir/tests/cd/*.c $dir/support
+ cp $testdir/tests/cxb/*.c $dir/support
++grep -v '^#' $testdir/norun.lst | sort > $dir/support/norun.lst
+ 
+ rm -rf $dir/run
+ mv $dir/tests $dir/tests.$$ 2> /dev/null
+@@ -206,7 +207,7 @@
+ 
+    cd $dir/tests/$chapter
+    ls *.a *.ada *.adt *.am *.dep 2> /dev/null | sed -e 's/\(.*\)\..*/\1/g' | \
+-   cut -c1-7 | sort | uniq | comm -23 - $testdir/norun.lst \
++   cut -c1-7 | sort | uniq | comm -23 - $dir/support/norun.lst \
+      > $dir/tests/$chapter/${chapter}.lst 
+    countn=`wc -l < $dir/tests/$chapter/${chapter}.lst`
+    glob_countn=`expr $glob_countn + $countn`
+Index: gcc/testsuite/gcc.dg/torture/pr42952.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr42952.c	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr42952.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,19 @@
++/* { dg-do run } */
++/* { dg-options "-fno-tree-ccp -fno-tree-fre" } */
++
++extern void abort (void);
++
++static int g[1];
++
++static int * const p = &g[0];
++static int * const q = &g[0];
++
++int main(void)
++{
++  g[0] = 1;
++  *p = 0;
++  *p = *q;
++  if (g[0] != 0)
++    abort ();
++  return 0;
++}
+Index: gcc/testsuite/gcc.dg/torture/pr42898-2.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr42898-2.c	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr42898-2.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,25 @@
++/* { dg-do compile } */
++/* { dg-options "-fdump-tree-optimized" } */
++
++struct hardware {
++  int parm1:8;
++  int :4;
++  int parm2:4;
++  int parm3:15;
++  int parm4:1;
++};
++
++const struct hardware h = {
++  .parm1=42,
++  .parm2=13,
++  .parm3=11850,
++  .parm4=1,
++};
++
++void f1(volatile struct hardware *ptr)
++{
++  *ptr = h;
++}
++
++/* { dg-final { scan-tree-dump-times "\\*ptr" 1 "optimized" } } */
++/* { dg-final { cleanup-tree-dump "optimized" } } */
+Index: gcc/testsuite/gcc.dg/torture/pr42898.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr42898.c	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr42898.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,23 @@
++/* { dg-do compile } */
++/* { dg-options "-fdump-tree-optimized" } */
++
++struct hardware {
++  int parm1:8;
++  int :4;
++  int parm2:4;
++  int parm3:15;
++  int parm4:1;
++};
++
++void f1(volatile struct hardware *ptr)
++{
++  *ptr=(struct hardware) {
++    .parm1=42,
++    .parm2=13,
++    .parm3=11850,
++    .parm4=1,
++  };
++}
++
++/* { dg-final { scan-tree-dump-times "\\*ptr" 1 "optimized" } } */
++/* { dg-final { cleanup-tree-dump "optimized" } } */
+Index: gcc/testsuite/ChangeLog
+===================================================================
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,84 @@
++2010-02-04  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
++
++	PR libfortran/42901
++	*gfortran.dg/namelist_60.f90: New test.
++	*gfortran.dg/namelist_59.f90: New test.
++
++2010-02-04  Richard Guenther  <rguenther@suse.de>
++
++	PR rtl-optimization/42952
++	* gcc.dg/torture/pr42952.c: New testcase.
++
++2010-02-02  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/42650
++	* gfortran.dg/func_result_5.f90: New test.
++
++2010-02-01  Uros Bizjak  <ubizjak@gmail.com>
++
++	Backport from mainline:
++	2009-12-17  Uros Bizjak  <ubizjak@gmail.com>
++
++	* objc/execute/forward-1.x: XFAIL for -fgnu-runtime on
++	x86_64-*-darwin*, powerpc*-*-darwin* and alpha*-*-linux* targets.
++
++2010-01-31  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR middle-end/42898
++	* gcc.dg/torture/pr42898-2.c: New test.
++
++2010-01-31  Richard Guenther  <rguenther@suse.de>
++
++	PR middle-end/42898
++	* gcc.dg/torture/pr42898.c: New testcase.
++
++2010-01-31  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/38324
++	* gfortran.dg/alloc_comp_basics_1.f90: Remove option -O2.
++	* gfortran.dg/alloc_comp_bounds_1.f90: New test.
++
++2010-01-30  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/41044
++	* gfortran.dg/parameter_array_ref_2.f90 : New test.
++
++	PR fortran/41167
++	* gfortran.dg/char_array_arg_1.f90 : New test.
++
++2010-01-27  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/42736
++	* gfortran.dg/dependency_25.f90 : New test.
++
++2010-01-26  Jakub Jelinek  <jakub@redhat.com>
++
++	* ada/acats/run_all.sh: Make sure norun.lst is sorted using the
++	current collation.
++
++	Backport from mainline:
++	2009-12-17  Arnaud Charlet  <charlet@adacore.com>
++
++	* ada/acats/run_all.sh: Strip comments from norun.lst.
++
++2010-01-25  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
++
++	Backport from mainline.
++	2010-01-19  Ramana Radhakrishnan  <ramana.radhakrishnan@arm.com>
++
++	PR target/38697.
++	* gcc.target/arm/neon/vget_lowf32.c: Regenerate.
++	* gcc.target/arm/neon/vget_lowp16.c: Likewise.
++	* gcc.target/arm/neon/vget_lowp8.c:  Likewise.
++	* gcc.target/arm/neon/vget_lows16.c: Likewise.
++	* gcc.target/arm/neon/vget_lows32.c: Likewise.
++	* gcc.target/arm/neon/vget_lows64.c: Likewise.
++	* gcc.target/arm/neon/vget_lows8.c: Likewise.
++	* gcc.target/arm/neon/vget_lowu16.c: Likewise.
++	* gcc.target/arm/neon/vget_lowu32.c: Likewise.
++	* gcc.target/arm/neon/vget_lowu64.c: Likewise.
++	* gcc.target/arm/neon/vget_lowu8.c: Likewise.
++
+ 2010-01-21  Release Manager
+ 
+ 	* GCC 4.4.3 released.
+Index: gcc/testsuite/gfortran.dg/alloc_comp_bounds_1.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/alloc_comp_bounds_1.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/alloc_comp_bounds_1.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,50 @@
++! { dg-do run }
++! Test the fix for PR38324, in which the bounds were not set correctly for
++! constructor assignments with allocatable components.
++!
++! Contributed by Dominique d'Humieres <dominiq@lps.ens.fr>
++!
++  integer, parameter :: ik4 = 4
++  integer, parameter :: ik8 = 8
++  integer, parameter :: from = -1, to = 2
++  call foo
++  call bar
++contains
++  subroutine foo
++    type :: struct
++      integer(4), allocatable :: ib(:)
++    end type struct
++    integer(ik4), allocatable :: ia(:)
++    type(struct) :: x
++    allocate(ia(from:to))
++    if (any(lbound(ia) .ne. -1) .or. any(ubound(ia) .ne. 2)) call abort
++    if (any(lbound(ia(:)) .ne. 1) .or. any(ubound(ia(:)) .ne. 4)) call abort
++    if (any(lbound(ia(from:to)) .ne. 1) .or. any(ubound(ia(from:to)) .ne. 4)) call abort
++    x=struct(ia)
++    if (any(lbound(x%ib) .ne. -1) .or. any(ubound(x%ib) .ne. 2)) call abort
++    x=struct(ia(:))
++    if (any(lbound(x%ib) .ne. 1) .or. any(ubound(x%ib) .ne. 4)) call abort
++    x=struct(ia(from:to))
++    if (any(lbound(x%ib) .ne. 1) .or. any(ubound(x%ib) .ne. 4)) call abort
++    deallocate(ia)
++  end subroutine
++  subroutine bar
++    type :: struct
++      integer(4), allocatable :: ib(:)
++    end type struct
++    integer(ik8), allocatable :: ia(:)
++    type(struct) :: x
++    allocate(ia(from:to))
++    if (any(lbound(ia) .ne. -1) .or. any(ubound(ia) .ne. 2)) call abort
++    if (any(lbound(ia(:)) .ne. 1) .or. any(ubound(ia(:)) .ne. 4)) call abort
++    if (any(lbound(ia(from:to)) .ne. 1) .or. any(ubound(ia(from:to)) .ne. 4)) call abort
++    x=struct(ia)
++    if (any(lbound(x%ib) .ne. -1) .or. any(ubound(x%ib) .ne. 2)) call abort
++    x=struct(ia(:))
++    if (any(lbound(x%ib) .ne. 1) .or. any(ubound(x%ib) .ne. 4)) call abort
++    x=struct(ia(from:to))
++    if (any(lbound(x%ib) .ne. 1) .or. any(ubound(x%ib) .ne. 4)) call abort
++    deallocate(ia)
++  end subroutine
++end
++
+Index: gcc/testsuite/gfortran.dg/parameter_array_ref_2.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/parameter_array_ref_2.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/parameter_array_ref_2.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,39 @@
++! { dg-do compile }
++! Test the fix for the problems in PR41044
++!
++! Contributed by <ros@rzg.mpg.de>
++! Reduced by Joos VandeVondele <jv244@cam.ac.uk>
++!
++  Subroutine PS_INIT (bkgd, punit, pform, psize, rot90, bbox, clip, eps,  &
++                        caller)
++    type psfd                          ! paper size and frame defaults
++      character(3)                     :: n
++      real                             :: p(2)
++      real                             :: f(4)
++    end type psfd
++    character(4)                       :: fn, orich, pfmt
++    type(psfd), parameter              :: pfd(0:11)=(/  &
++         psfd('   ',(/   0.0,   0.0/),(/200.,120.,800.,560./)), &    ! A0_L
++         psfd('A0 ',(/ 840.9,1189.2/),(/140., 84.,560.,400./)), &    ! A0_P
++         psfd('A1 ',(/ 594.6, 840.9/),(/100., 60.,400.,280./)), &    ! A1_P
++         psfd('A2 ',(/ 420.4, 594.6/),(/ 70., 42.,280.,200./)), &    ! A2_P
++         psfd('A3 ',(/ 297.3, 420.4/),(/ 50., 30.,200.,140./)), &    ! A3_P
++         psfd('A4 ',(/ 210.2, 297.3/),(/ 35., 21.,140.,100./)), &    ! A4_P
++         psfd('A5 ',(/ 148.7, 210.2/),(/ 25., 15.,100., 70./)), &    ! A5_P
++         psfd('A6 ',(/ 105.1, 148.7/),(/ 18., 11., 70., 50./)), &    ! A6_P
++         psfd('   ',(/   0.0,   0.0/),(/ 50., 30.,200.,140./)), &    ! Letter_L
++         psfd('LET',(/ 215.9, 279.4/),(/ 35., 21.,140.,100./)), &    ! Letter_P
++         psfd('   ',(/   0.0,   0.0/),(/ 50., 30.,200.,140./)), &    ! Legal_L
++         psfd('LEG',(/ 215.9, 355.6/),(/ 35., 21.,140.,100./))/)     ! Legal_P
++    if (len_trim(pfmt) > 0) then       ! set paper format
++      idx=sum(maxloc(index(pfd%n,pfmt(1:3))))-1
++    end if
++  end subroutine PS_INIT
++
++! This, additional problem, was posted as comment #8 by Tobias Burnus <burnus@gcc.gnu.org>
++  type t
++    integer :: i
++  end type t
++  type(t), parameter :: a(1) = t(4) ! [t(4)] worked OK
++  real(a(1)%i) :: b
++end
+Index: gcc/testsuite/gfortran.dg/namelist_60.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/namelist_60.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/namelist_60.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,27 @@
++! { dg-do run }
++! PR42901  Reading array of structures from namelist
++! Test case derived from the reporters test case.
++program test_nml
++type field_descr
++  integer number
++end type
++type fsetup
++  type (field_descr), dimension(3) :: vel ! 3 velocity components
++end type
++type (fsetup) field_setup
++namelist /nl_setup/ field_setup
++field_setup%vel%number = 0
++! write(*,nml=nl_setup)
++open(10, status="scratch")
++write(10,'(a)') "&nl_setup"
++write(10,'(a)') " field_setup%vel(1)%number=  3,"
++write(10,'(a)') " field_setup%vel(2)%number=  9,"
++write(10,'(a)') " field_setup%vel(3)%number=  27,"
++write(10,'(a)') "/"
++rewind(10)
++read(10,nml=nl_setup)
++if (field_setup%vel(1)%number .ne. 3) call abort
++if (field_setup%vel(2)%number .ne. 9) call abort
++if (field_setup%vel(3)%number .ne. 27) call abort
++! write(*,nml=nl_setup)
++end program test_nml
+Index: gcc/testsuite/gfortran.dg/func_result_5.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/func_result_5.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/func_result_5.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,14 @@
++! { dg-do compile }
++!
++! PR fortran/42650
++!
++! Result type was not working
++!
++
++type(t) function func2() result(res)
++  type t
++    sequence
++    integer :: i = 5
++  end type t
++  res%i = 2
++end function func2
+Index: gcc/testsuite/gfortran.dg/char_array_arg_1.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/char_array_arg_1.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/char_array_arg_1.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,17 @@
++! { dg-do compile }
++! Test the fix for pr41167, in which the first argument of 'pack', below,
++! was simplified incorrectly, with the results indicated.
++!
++! Contributed by Harald Anlauf <anlauf@gmx.de>
++!
++program gfcbug88
++  implicit none
++  type t
++     character(len=8) :: name
++  end type t
++  type(t) ,parameter :: obstyp(2)= (/ t ('A'), t ('B') /)
++  character(9) :: chr(1)
++
++  print *, pack (" "//obstyp(:)% name, (/ .true., .false. /))  ! Used to ICE on compilation
++  chr = pack (" "//obstyp(:)% name, (/ .true., .false. /))  ! Used to give conversion error
++end program gfcbug88
+Index: gcc/testsuite/gfortran.dg/namelist_59.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/namelist_59.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/namelist_59.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,26 @@
++! { dg-do run }
++! PR41192 NAMELIST input with just a comment ("&NAME ! comment \") error 
++program cmdline
++! comment by itself causes error in gfortran
++   call process(' ')
++   call process('i=10 , j=20 k=30 ! change all three values')
++   call process(' ')
++   call process('! change no values')! before patch this failed.
++end program cmdline
++
++subroutine process(string)
++ implicit none
++ character(len=*) :: string
++ character(len=132) :: lines(3)
++ character(len=255) :: message
++ integer :: i=1,j=2,k=3
++ integer ios
++ namelist /cmd/ i,j,k
++ save cmd
++ lines(1)='&cmd'
++ lines(2)=string
++ lines(3)='/'
++
++ read(lines,nml=cmd,iostat=ios,iomsg=message)
++ if (ios.ne.0) call abort
++end subroutine process
+Index: gcc/testsuite/gfortran.dg/alloc_comp_basics_1.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/alloc_comp_basics_1.f90	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/gfortran.dg/alloc_comp_basics_1.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,5 +1,5 @@
+ ! { dg-do run }
+-! { dg-options "-O2 -fdump-tree-original" }
++! { dg-options "-fdump-tree-original" }
+ !
+ ! Check some basic functionality of allocatable components, including that they
+ ! are nullified when created and automatically deallocated when
+Index: gcc/testsuite/gfortran.dg/dependency_25.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/dependency_25.f90	(.../tags/gcc_4_4_3_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/dependency_25.f90	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -0,0 +1,95 @@
++! { dg-do run }
++! Test the fix for PR42736, in which an excessively rigorous dependency
++! checking for the assignment generated an unnecessary temporary, whose
++! rank was wrong.  When accessed by the scalarizer, a segfault ensued.
++!
++! Contributed by Tobias Burnus <burnus@gcc.gnu.org>
++! Reported by Armelius Cameron <armeliusc@gmail.com>
++!
++module UnitValue_Module
++
++  implicit none
++  private
++
++  public :: &
++    operator(*), &
++    assignment(=)
++
++  type, public :: UnitValue
++    real :: &
++      Value = 1.0
++    character(31) :: &
++      Label
++  end type UnitValue
++
++  interface operator(*)
++    module procedure ProductReal_LV
++  end interface operator(*)
++
++  interface assignment(=)
++    module procedure Assign_LV_Real
++  end interface assignment(=)
++
++contains
++
++  elemental function ProductReal_LV(Multiplier, Multiplicand) result(P_R_LV)
++
++    real, intent(in) :: &
++      Multiplier
++    type(UnitValue), intent(in) :: &
++      Multiplicand
++    type(UnitValue) :: &
++      P_R_LV
++
++    P_R_LV%Value = Multiplier * Multiplicand%Value
++    P_R_LV%Label = Multiplicand%Label
++
++  end function ProductReal_LV
++
++
++  elemental subroutine Assign_LV_Real(LeftHandSide, RightHandSide)
++
++    real, intent(inout) :: &
++      LeftHandSide
++    type(UnitValue), intent(in) :: &
++      RightHandSide
++
++    LeftHandSide = RightHandSide%Value
++
++  end subroutine Assign_LV_Real
++
++end module UnitValue_Module
++
++program TestProgram
++
++  use UnitValue_Module
++
++  implicit none
++
++  type :: TableForm
++    real, dimension(:,:), allocatable :: &
++      RealData
++  end type TableForm
++
++  type(UnitValue) :: &
++    CENTIMETER
++
++  type(TableForm), pointer :: &
++    Table
++
++  allocate(Table)
++  allocate(Table%RealData(10,5))
++
++  CENTIMETER%value = 42
++  Table%RealData = 1
++  Table%RealData(:,1) = Table%RealData(:,1) * CENTIMETER
++  Table%RealData(:,2) = Table%RealData(:,2) * CENTIMETER
++  Table%RealData(:,3) = Table%RealData(:,3) * CENTIMETER
++  Table%RealData(:,5) = Table%RealData(:,5) * CENTIMETER
++
++!  print *, Table%RealData
++  if (any (abs(Table%RealData(:,4) - 1) > epsilon(1.0))) call abort ()
++  if (any (abs(Table%RealData(:,[1,2,3,5]) - 42) > epsilon(1.0))) call abort ()
++end program TestProgram
++
++! { dg-final { cleanup-modules "UnitValue_Module" } }
+Index: gcc/testsuite/objc/execute/forward-1.x
+===================================================================
+--- gcc/testsuite/objc/execute/forward-1.x	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/testsuite/objc/execute/forward-1.x	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,8 +1,6 @@
+ load_lib target-supports.exp
+ 
+ # XFAIL: PR libobjc/36610, for targets which pass arguments via registers
+-# For powerpc-darwin it fails with -fgnu-runtime, passes with -fnext-runtime,
+-# but that would be too ugly to handle; let it fail there.
+ 
+ if { ([istarget x86_64-*-linux*] && [check_effective_target_lp64] )
+      || [istarget powerpc*-*-linux*]
+@@ -15,4 +13,21 @@
+     set torture_execute_xfail "*-*-*"
+ }
+ 
++# For darwin and alpha-linux it fails with -fgnu-runtime,
++# passes with -fnext-runtime.
++
++if { ([istarget x86_64-*-darwin*] && [check_effective_target_lp64] )
++     || [istarget powerpc*-*-darwin*]
++     || [istarget alpha*-*-linux*] } {
++    set torture_eval_before_execute {
++	global compiler_conditional_xfail_data
++	set compiler_conditional_xfail_data {
++	    "Target fails with -fgnu-runtime" \
++		"*-*-*" \
++		{ "-fgnu-runtime" } \
++		{ "" }
++	}
++    }
++}
++
+ return 0
+Index: gcc/dse.c
+===================================================================
+--- gcc/dse.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/dse.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1015,9 +1015,6 @@
+ {
+   switch (GET_CODE (x))
+     {
+-    case MEM:
+-      return MEM_READONLY_P (x);
+-
+     case CONST:
+     case CONST_INT:
+     case CONST_DOUBLE:
+Index: gcc/fortran/trans-expr.c
+===================================================================
+--- gcc/fortran/trans-expr.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/trans-expr.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -3518,6 +3518,150 @@
+ }
+ 
+ 
++static tree
++gfc_trans_alloc_subarray_assign (tree dest, gfc_component * cm,
++				 gfc_expr * expr)
++{
++  gfc_se se;
++  gfc_ss *rss;
++  stmtblock_t block;
++  tree offset;
++  int n;
++  tree tmp;
++  tree tmp2;
++  gfc_array_spec *as;
++  gfc_expr *arg = NULL;
++
++  gfc_start_block (&block);
++  gfc_init_se (&se, NULL);
++
++  /* Get the descriptor for the expressions.  */ 
++  rss = gfc_walk_expr (expr);
++  se.want_pointer = 0;
++  gfc_conv_expr_descriptor (&se, expr, rss);
++  gfc_add_block_to_block (&block, &se.pre);
++  gfc_add_modify (&block, dest, se.expr);
++
++  /* Deal with arrays of derived types with allocatable components.  */
++  if (cm->ts.type == BT_DERIVED
++	&& cm->ts.derived->attr.alloc_comp)
++    tmp = gfc_copy_alloc_comp (cm->ts.derived,
++			       se.expr, dest,
++			       cm->as->rank);
++  else
++    tmp = gfc_duplicate_allocatable (dest, se.expr,
++				     TREE_TYPE(cm->backend_decl),
++				     cm->as->rank);
++
++  gfc_add_expr_to_block (&block, tmp);
++  gfc_add_block_to_block (&block, &se.post);
++
++  if (expr->expr_type != EXPR_VARIABLE)
++    gfc_conv_descriptor_data_set (&block, se.expr,
++				  null_pointer_node);
++
++  /* We need to know if the argument of a conversion function is a
++     variable, so that the correct lower bound can be used.  */
++  if (expr->expr_type == EXPR_FUNCTION
++	&& expr->value.function.isym
++	&& expr->value.function.isym->conversion
++	&& expr->value.function.actual->expr
++	&& expr->value.function.actual->expr->expr_type == EXPR_VARIABLE)
++    arg = expr->value.function.actual->expr;
++
++  /* Obtain the array spec of full array references.  */
++  if (arg)
++    as = gfc_get_full_arrayspec_from_expr (arg);
++  else
++    as = gfc_get_full_arrayspec_from_expr (expr);
++
++  /* Shift the lbound and ubound of temporaries to being unity,
++     rather than zero, based. Always calculate the offset.  */
++  offset = gfc_conv_descriptor_offset (dest);
++  gfc_add_modify (&block, offset, gfc_index_zero_node);
++  tmp2 =gfc_create_var (gfc_array_index_type, NULL);
++
++  for (n = 0; n < expr->rank; n++)
++    {
++      tree span;
++      tree lbound;
++      tree ubound;
++
++      /* Obtain the correct lbound - ISO/IEC TR 15581:2001 page 9.
++	 TODO It looks as if gfc_conv_expr_descriptor should return
++	 the correct bounds and that the following should not be
++	 necessary.  This would simplify gfc_conv_intrinsic_bound
++	 as well.  */
++      if (as && as->lower[n])
++	{
++	  gfc_se lbse;
++	  gfc_init_se (&lbse, NULL);
++	  gfc_conv_expr (&lbse, as->lower[n]);
++	  gfc_add_block_to_block (&block, &lbse.pre);
++	  lbound = gfc_evaluate_now (lbse.expr, &block);
++	}
++      else if (as && arg)
++	{
++	  tmp = gfc_get_symbol_decl (arg->symtree->n.sym);
++	  lbound = gfc_conv_descriptor_lbound (tmp, gfc_rank_cst[n]);
++	}
++      else if (as)
++	lbound = gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]);
++      else
++	lbound = gfc_index_one_node;
++
++      lbound = fold_convert (gfc_array_index_type, lbound);
++
++      /* Shift the bounds and set the offset accordingly.  */
++      tmp = gfc_conv_descriptor_ubound (dest, gfc_rank_cst[n]);
++      span = fold_build2 (MINUS_EXPR, gfc_array_index_type, tmp,
++		gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]));
++
++      ubound = fold_build2 (PLUS_EXPR, gfc_array_index_type,
++			    span, lbound);
++      gfc_add_modify (&block, tmp, ubound);
++
++      tmp = gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]);
++      gfc_add_modify (&block, tmp, lbound);
++
++      tmp = fold_build2 (MULT_EXPR, gfc_array_index_type,
++		gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]),
++		gfc_conv_descriptor_stride (dest, gfc_rank_cst[n]));
++
++      gfc_add_modify (&block, tmp2, tmp);
++      tmp = fold_build2 (MINUS_EXPR, gfc_array_index_type,
++			 offset, tmp2);
++      gfc_add_modify (&block, offset, tmp);
++    }
++
++  if (arg)
++    {
++      /* If a conversion expression has a null data pointer
++	 argument, nullify the allocatable component.  */
++      tree non_null_expr;
++      tree null_expr;
++
++      if (arg->symtree->n.sym->attr.allocatable
++	    || arg->symtree->n.sym->attr.pointer)
++	{
++	  non_null_expr = gfc_finish_block (&block);
++	  gfc_start_block (&block);
++	  gfc_conv_descriptor_data_set (&block, dest,
++					null_pointer_node);
++	  null_expr = gfc_finish_block (&block);
++	  tmp = gfc_conv_descriptor_data_get (arg->symtree->n.sym->backend_decl);
++	  tmp = build2 (EQ_EXPR, boolean_type_node, tmp,
++			fold_convert (TREE_TYPE (tmp),
++				      null_pointer_node));
++	  return build3_v (COND_EXPR, tmp,
++			   null_expr, non_null_expr);
++	}
++    }
++
++  return gfc_finish_block (&block);
++}
++
++
+ /* Assign a single component of a derived type constructor.  */
+ 
+ static tree
+@@ -3528,8 +3672,6 @@
+   gfc_ss *rss;
+   stmtblock_t block;
+   tree tmp;
+-  tree offset;
+-  int n;
+ 
+   gfc_start_block (&block);
+ 
+@@ -3569,91 +3711,8 @@
+  	gfc_conv_descriptor_data_set (&block, dest, null_pointer_node);
+       else if (cm->attr.allocatable)
+ 	{
+-	  tree tmp2;
+-
+-          gfc_init_se (&se, NULL);
+- 
+-	  rss = gfc_walk_expr (expr);
+-	  se.want_pointer = 0;
+-	  gfc_conv_expr_descriptor (&se, expr, rss);
+-	  gfc_add_block_to_block (&block, &se.pre);
+-
+-	  tmp = fold_convert (TREE_TYPE (dest), se.expr);
+-	  gfc_add_modify (&block, dest, tmp);
+-
+-	  if (cm->ts.type == BT_DERIVED && cm->ts.derived->attr.alloc_comp)
+-	    tmp = gfc_copy_alloc_comp (cm->ts.derived, se.expr, dest,
+-				       cm->as->rank);
+-	  else
+-	    tmp = gfc_duplicate_allocatable (dest, se.expr,
+-					     TREE_TYPE(cm->backend_decl),
+-					     cm->as->rank);
+-
++	  tmp = gfc_trans_alloc_subarray_assign (dest, cm, expr);
+ 	  gfc_add_expr_to_block (&block, tmp);
+-	  gfc_add_block_to_block (&block, &se.post);
+-
+-	  if (expr->expr_type != EXPR_VARIABLE)
+-	    gfc_conv_descriptor_data_set (&block, se.expr, null_pointer_node);
+-
+-	  /* Shift the lbound and ubound of temporaries to being unity, rather
+-	     than zero, based.  Calculate the offset for all cases.  */
+-	  offset = gfc_conv_descriptor_offset (dest);
+-	  gfc_add_modify (&block, offset, gfc_index_zero_node);
+-	  tmp2 =gfc_create_var (gfc_array_index_type, NULL);
+-	  for (n = 0; n < expr->rank; n++)
+-	    {
+-	      if (expr->expr_type != EXPR_VARIABLE
+-		    && expr->expr_type != EXPR_CONSTANT)
+-		{
+-		  tree span;
+-		  tmp = gfc_conv_descriptor_ubound (dest, gfc_rank_cst[n]);
+-		  span = fold_build2 (MINUS_EXPR, gfc_array_index_type, tmp,
+-			    gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]));
+-		  gfc_add_modify (&block, tmp,
+-				       fold_build2 (PLUS_EXPR,
+-						    gfc_array_index_type,
+-						    span, gfc_index_one_node));
+-		  tmp = gfc_conv_descriptor_lbound (dest, gfc_rank_cst[n]);
+-		  gfc_add_modify (&block, tmp, gfc_index_one_node);
+-		}
+-	      tmp = fold_build2 (MULT_EXPR, gfc_array_index_type,
+-				 gfc_conv_descriptor_lbound (dest,
+-							     gfc_rank_cst[n]),
+-				 gfc_conv_descriptor_stride (dest,
+-							     gfc_rank_cst[n]));
+-	      gfc_add_modify (&block, tmp2, tmp);
+-	      tmp = fold_build2 (MINUS_EXPR, gfc_array_index_type, offset, tmp2);
+-	      gfc_add_modify (&block, offset, tmp);
+-	    }
+-
+-	  if (expr->expr_type == EXPR_FUNCTION
+-		&& expr->value.function.isym
+-		&& expr->value.function.isym->conversion
+-		&& expr->value.function.actual->expr
+-		&& expr->value.function.actual->expr->expr_type
+-						== EXPR_VARIABLE)
+-	    {
+-	      /* If a conversion expression has a null data pointer
+-		 argument, nullify the allocatable component.  */
+-	      gfc_symbol *s;
+-	      tree non_null_expr;
+-	      tree null_expr;
+-	      s = expr->value.function.actual->expr->symtree->n.sym;
+-	      if (s->attr.allocatable || s->attr.pointer)
+-		{
+-		  non_null_expr = gfc_finish_block (&block);
+-		  gfc_start_block (&block);
+-		  gfc_conv_descriptor_data_set (&block, dest,
+-						null_pointer_node);
+-		  null_expr = gfc_finish_block (&block);
+-		  tmp = gfc_conv_descriptor_data_get (s->backend_decl);
+-		  tmp = build2 (EQ_EXPR, boolean_type_node, tmp,
+-			        fold_convert (TREE_TYPE (tmp),
+-					      null_pointer_node));
+-		  return build3_v (COND_EXPR, tmp, null_expr,
+-				   non_null_expr);
+-		}
+-	    }
+ 	}
+       else
+ 	{
+Index: gcc/fortran/gfortran.h
+===================================================================
+--- gcc/fortran/gfortran.h	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/gfortran.h	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -2450,6 +2450,8 @@
+ gfc_expr *gfc_default_initializer (gfc_typespec *);
+ gfc_expr *gfc_get_variable_expr (gfc_symtree *);
+ 
++gfc_array_spec *gfc_get_full_arrayspec_from_expr (gfc_expr *expr);
++
+ bool gfc_traverse_expr (gfc_expr *, gfc_symbol *,
+ 			bool (*)(gfc_expr *, gfc_symbol *, int*),
+ 			int);
+Index: gcc/fortran/ChangeLog
+===================================================================
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,39 @@
++2010-02-02  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/42650
++	* parse.c (decode_specification_statement): Use sym->result not sym.
++
++2010-01-31  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/38324
++	* expr.c (gfc_get_full_arrayspec_from_expr): New function.
++	* gfortran.h : Add prototype for above.
++	* trans-expr.c (gfc_trans_alloc_subarray_assign): New function.
++	(gfc_trans_subcomponent_assign): Call new function to replace
++	the code to deal with allocatable components.
++	* trans-intrinsic.c (gfc_conv_intrinsic_bound): Call
++	gfc_get_full_arrayspec_from_expr to replace existing code.
++
++2010-01-30  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/41044
++	PR fortran/41167
++	* expr.c (remove_subobject_ref): If the constructor is NULL use
++	the expression as the source.
++	(simplify_const_ref): Change the type of expression if
++	there are component references.  Allow for substring to be at
++	the end of an arbitrarily long chain of references.  If an
++	element is found that is not in an EXPR_ARRAY, assume that this
++	is scalar initialization of array. Call remove_subobject_ref in
++	this case with NULL second argument.
++
++2010-01-27  Paul Thomas  <pault@gcc.gnu.org>
++
++	PR fortran/42736
++	* trans-stmt.c (gfc_conv_elemental_dependencies): If temporary
++	is required, turn any trailing array elements after a range
++	into ranges so that offsets can be calculated.
++
+ 2010-01-21  Release Manager
+ 
+ 	* GCC 4.4.3 released.
+Index: gcc/fortran/trans-stmt.c
+===================================================================
+--- gcc/fortran/trans-stmt.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/trans-stmt.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -212,6 +212,7 @@
+   gfc_ss *ss;
+   gfc_ss_info *info;
+   gfc_symbol *fsym;
++  gfc_ref *ref;
+   int n;
+   tree data;
+   tree offset;
+@@ -267,6 +268,34 @@
+ 	  /* Obtain the argument descriptor for unpacking.  */
+ 	  gfc_init_se (&parmse, NULL);
+ 	  parmse.want_pointer = 1;
++
++	  /* The scalarizer introduces some specific peculiarities when
++	     handling elemental subroutines; the stride can be needed up to
++	     the dim_array - 1, rather than dim_loop - 1 to calculate
++	     offsets outside the loop.  For this reason, we make sure that
++	     the descriptor has the dimensionality of the array by converting
++	     trailing elements into ranges with end = start.  */
++	  for (ref = e->ref; ref; ref = ref->next)
++	    if (ref->type == REF_ARRAY && ref->u.ar.type == AR_SECTION)
++	      break;
++
++	  if (ref)
++	    {
++	      bool seen_range = false;
++	      for (n = 0; n < ref->u.ar.dimen; n++)
++		{
++		  if (ref->u.ar.dimen_type[n] == DIMEN_RANGE)
++		    seen_range = true;
++
++		  if (!seen_range
++			|| ref->u.ar.dimen_type[n] != DIMEN_ELEMENT)
++		    continue;
++
++		  ref->u.ar.end[n] = gfc_copy_expr (ref->u.ar.start[n]);
++		  ref->u.ar.dimen_type[n] = DIMEN_RANGE;
++		}
++	    }
++
+ 	  gfc_conv_expr_descriptor (&parmse, e, gfc_walk_expr (e));
+ 	  gfc_add_block_to_block (&se->pre, &parmse.pre);
+ 
+Index: gcc/fortran/expr.c
+===================================================================
+--- gcc/fortran/expr.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/expr.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1123,8 +1123,13 @@
+ {
+   gfc_expr *e;
+ 
+-  e = cons->expr;
+-  cons->expr = NULL;
++  if (cons)
++    {
++      e = cons->expr;
++      cons->expr = NULL;
++    }
++  else
++    e = gfc_copy_expr (p);
+   e->ref = p->ref->next;
+   p->ref->next =  NULL;
+   gfc_replace_expr (p, e);
+@@ -1428,6 +1433,7 @@
+ {
+   gfc_constructor *cons;
+   gfc_expr *newp;
++  gfc_ref *last_ref;
+ 
+   while (p->ref)
+     {
+@@ -1437,6 +1443,13 @@
+ 	  switch (p->ref->u.ar.type)
+ 	    {
+ 	    case AR_ELEMENT:
++	      /* <type/kind spec>, parameter :: x(<int>) = scalar_expr
++		 will generate this.  */
++	      if (p->expr_type != EXPR_ARRAY)
++		{
++		  remove_subobject_ref (p, NULL);
++		  break;
++		}
+ 	      if (find_array_element (p->value.constructor, &p->ref->u.ar,
+ 				      &cons) == FAILURE)
+ 		return FAILURE;
+@@ -1466,18 +1479,25 @@
+ 			return FAILURE;
+ 		    }
+ 
+-		  /* If this is a CHARACTER array and we possibly took a
+-		     substring out of it, update the type-spec's character
+-		     length according to the first element (as all should have
+-		     the same length).  */
+-		  if (p->ts.type == BT_CHARACTER)
++		  if (p->ts.type == BT_DERIVED
++			&& p->ref->next
++			&& p->value.constructor)
+ 		    {
+-		      int string_len;
++		      /* There may have been component references.  */
++		      p->ts = p->value.constructor->expr->ts;
++		    }
+ 
+-		      gcc_assert (p->ref->next);
+-		      gcc_assert (!p->ref->next->next);
+-		      gcc_assert (p->ref->next->type == REF_SUBSTRING);
++		  last_ref = p->ref;
++		  for (; last_ref->next; last_ref = last_ref->next) {};
+ 
++		  if (p->ts.type == BT_CHARACTER
++			&& last_ref->type == REF_SUBSTRING)
++		    {
++		      /* If this is a CHARACTER array and we possibly took
++			 a substring out of it, update the type-spec's
++			 character length according to the first element
++			 (as all should have the same length).  */
++		      int string_len;
+ 		      if (p->value.constructor)
+ 			{
+ 			  const gfc_expr* first = p->value.constructor->expr;
+@@ -3327,6 +3347,58 @@
+ }
+ 
+ 
++/* Returns the array_spec of a full array expression.  A NULL is
++   returned otherwise.  */
++gfc_array_spec *
++gfc_get_full_arrayspec_from_expr (gfc_expr *expr)
++{
++  gfc_array_spec *as;
++  gfc_ref *ref;
++
++  if (expr->rank == 0)
++    return NULL;
++
++  /* Follow any component references.  */
++  if (expr->expr_type == EXPR_VARIABLE
++      || expr->expr_type == EXPR_CONSTANT)
++    {
++      as = expr->symtree->n.sym->as;
++      for (ref = expr->ref; ref; ref = ref->next)
++	{
++	  switch (ref->type)
++	    {
++	    case REF_COMPONENT:
++	      as = ref->u.c.component->as;
++	      continue;
++
++	    case REF_SUBSTRING:
++	      continue;
++
++	    case REF_ARRAY:
++	      {
++		switch (ref->u.ar.type)
++		  {
++		  case AR_ELEMENT:
++		  case AR_SECTION:
++		  case AR_UNKNOWN:
++		    as = NULL;
++		    continue;
++
++		  case AR_FULL:
++		    break;
++		  }
++		break;
++	      }
++	    }
++	}
++    }
++  else
++    as = NULL;
++
++  return as;
++}
++
++
+ /* General expression traversal function.  */
+ 
+ bool
+Index: gcc/fortran/parse.c
+===================================================================
+--- gcc/fortran/parse.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/parse.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -110,7 +110,7 @@
+   match ("import", gfc_match_import, ST_IMPORT);
+   match ("use", gfc_match_use, ST_USE);
+ 
+-  if (gfc_current_block ()->ts.type != BT_DERIVED)
++  if (gfc_current_block ()->result->ts.type != BT_DERIVED)
+     goto end_of_block;
+ 
+   match (NULL, gfc_match_st_function, ST_STATEMENT_FUNCTION);
+Index: gcc/fortran/trans-intrinsic.c
+===================================================================
+--- gcc/fortran/trans-intrinsic.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/fortran/trans-intrinsic.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -832,7 +832,6 @@
+   gfc_se argse;
+   gfc_ss *ss;
+   gfc_array_spec * as;
+-  gfc_ref *ref;
+ 
+   arg = expr->value.function.actual;
+   arg2 = arg->next;
+@@ -901,43 +900,8 @@
+   ubound = gfc_conv_descriptor_ubound (desc, bound);
+   lbound = gfc_conv_descriptor_lbound (desc, bound);
+   
+-  /* Follow any component references.  */
+-  if (arg->expr->expr_type == EXPR_VARIABLE
+-      || arg->expr->expr_type == EXPR_CONSTANT)
+-    {
+-      as = arg->expr->symtree->n.sym->as;
+-      for (ref = arg->expr->ref; ref; ref = ref->next)
+-	{
+-	  switch (ref->type)
+-	    {
+-	    case REF_COMPONENT:
+-	      as = ref->u.c.component->as;
+-	      continue;
++  as = gfc_get_full_arrayspec_from_expr (arg->expr);
+ 
+-	    case REF_SUBSTRING:
+-	      continue;
+-
+-	    case REF_ARRAY:
+-	      {
+-		switch (ref->u.ar.type)
+-		  {
+-		  case AR_ELEMENT:
+-		  case AR_SECTION:
+-		  case AR_UNKNOWN:
+-		    as = NULL;
+-		    continue;
+-
+-		  case AR_FULL:
+-		    break;
+-		  }
+-		break;
+-	      }
+-	    }
+-	}
+-    }
+-  else
+-    as = NULL;
+-
+   /* 13.14.53: Result value for LBOUND
+ 
+      Case (i): For an array section or for an array expression other than a
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_4_3_release)	(wersja 156153)
-+++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 156153)
+--- gcc/BASE-VER	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/BASE-VER	(.../branches/gcc-4_4-branch)	(wersja 156526)
 @@ -1 +1 @@
 -4.4.3
 +4.4.4
+Index: gcc/gimplify.c
+===================================================================
+--- gcc/gimplify.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/gimplify.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -3684,6 +3684,21 @@
+ 	      }
+ 	  }
+ 
++	/* If the target is volatile and we have non-zero elements
++	   initialize the target from a temporary.  */
++	if (TREE_THIS_VOLATILE (object)
++	    && !TREE_ADDRESSABLE (type)
++	    && num_nonzero_elements > 0)
++	  {
++	    tree temp = create_tmp_var (TYPE_MAIN_VARIANT (type), NULL);
++	    TREE_OPERAND (*expr_p, 0) = temp;
++	    *expr_p = build2 (COMPOUND_EXPR, TREE_TYPE (*expr_p),
++			      *expr_p,
++			      build2 (MODIFY_EXPR, void_type_node,
++				      object, temp));
++	    return GS_OK;
++	  }
++
+ 	if (notify_temp_creation)
+ 	  return GS_OK;
+ 
+@@ -3931,11 +3946,14 @@
+     switch (TREE_CODE (*from_p))
+       {
+       case VAR_DECL:
+-	/* If we're assigning from a constant constructor, move the
+-	   constructor expression to the RHS of the MODIFY_EXPR.  */
++	/* If we're assigning from a read-only variable initialized with
++	   a constructor, do the direct assignment from the constructor,
++	   but only if neither source nor target are volatile since this
++	   latter assignment might end up being done on a per-field basis.  */
+ 	if (DECL_INITIAL (*from_p)
+ 	    && TREE_READONLY (*from_p)
+ 	    && !TREE_THIS_VOLATILE (*from_p)
++	    && !TREE_THIS_VOLATILE (*to_p)
+ 	    && TREE_CODE (DECL_INITIAL (*from_p)) == CONSTRUCTOR)
+ 	  {
+ 	    tree old_from = *from_p;
+Index: gcc/config.gcc
+===================================================================
+--- gcc/config.gcc	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config.gcc	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1088,7 +1088,7 @@
+ 			tmake_file="${tmake_file} i386/t-linux64"
+ 			need_64bit_hwint=yes
+ 			case X"${with_cpu}" in
+-			Xgeneric|Xcore2|Xnocona|Xx86-64|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx)
++			Xgeneric|Xcore2|Xnocona|Xx86-64|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx|Xathlon64-sse3|Xk8-sse3|Xopteron-sse3)
+ 				;;
+ 			X)
+ 				if test x$with_cpu_64 = x; then
+@@ -1097,7 +1097,7 @@
+ 				;;
+ 			*)
+ 				echo "Unsupported CPU used in --with-cpu=$with_cpu, supported values:" 1>&2
+-				echo "generic core2 nocona x86-64 amdfam10 barcelona k8 opteron athlon64 athlon-fx" 1>&2
++				echo "generic core2 nocona x86-64 amdfam10 barcelona k8 opteron athlon64 athlon-fx athlon64-sse3 k8-sse3 opteron-sse3" 1>&2
+ 				exit 1
+ 				;;
+ 			esac
+@@ -1202,7 +1202,7 @@
+ 		# libgcc/configure.ac instead.
+ 		need_64bit_hwint=yes
+ 		case X"${with_cpu}" in
+-		Xgeneric|Xcore2|Xnocona|Xx86-64|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx)
++		Xgeneric|Xcore2|Xnocona|Xx86-64|Xamdfam10|Xbarcelona|Xk8|Xopteron|Xathlon64|Xathlon-fx|Xathlon64-sse3|Xk8-sse3|Xopteron-sse3)
+ 			;;
+ 		X)
+ 			if test x$with_cpu_64 = x; then
+@@ -1211,7 +1211,7 @@
+ 			;;
+ 		*)
+ 			echo "Unsupported CPU used in --with-cpu=$with_cpu, supported values:" 1>&2
+-			echo "generic core2 nocona x86-64 amdfam10 barcelona k8 opteron athlon64 athlon-fx" 1>&2
++			echo "generic core2 nocona x86-64 amdfam10 barcelona k8 opteron athlon64 athlon-fx athlon64-sse3 k8-sse3 opteron-sse3" 1>&2
+ 			exit 1
+ 			;;
+ 		esac
+@@ -2472,7 +2472,10 @@
+         amdfam10-*|barcelona-*)
+           with_cpu=amdfam10
+           ;;
+-        k8-*|opteron-*|athlon_64-*)
++        k8_sse3-*|opteron_sse3-*|athlon64_sse3-*)
++          with_cpu=k8-sse3
++          ;;
++        k8-*|opteron-*|athlon64-*|athlon_fx-*)
+           with_cpu=k8
+           ;;
+         athlon_xp-*|athlon_mp-*|athlon_4-*)
+@@ -2518,7 +2521,10 @@
+         amdfam10-*|barcelona-*)
+           with_cpu=amdfam10
+           ;;
+-        k8-*|opteron-*|athlon_64-*)
++        k8_sse3-*|opteron_sse3-*|athlon64_sse3-*)
++          with_cpu=k8-sse3
++          ;;
++        k8-*|opteron-*|athlon64-*|athlon_fx-*)
+           with_cpu=k8
+           ;;
+         nocona-*)
+@@ -2812,7 +2818,7 @@
+ 				esac
+ 				# OK
+ 				;;
+-			"" | amdfam10 | barcelona | k8 | opteron | athlon64 | athlon-fx | nocona | core2 | generic)
++			"" | amdfam10 | barcelona | k8-sse3 | opteron-sse3 | athlon64-sse3 | k8 | opteron | athlon64 | athlon-fx | nocona | core2 | generic)
+ 				# OK
+ 				;;
+ 			*)
+Index: gcc/config/sparc/sparc.c
+===================================================================
+--- gcc/config/sparc/sparc.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,6 +1,6 @@
+ /* Subroutines for insn-output.c for SPARC.
+    Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
+-   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008
++   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2010
+    Free Software Foundation, Inc.
+    Contributed by Michael Tiemann (tiemann@cygnus.com)
+    64-bit SPARC-V9 support by Michael Tiemann, Jim Wilson, and Doug Evans,
+@@ -371,7 +371,7 @@
+ static void emit_save_or_restore_regs (int);
+ static void sparc_asm_function_prologue (FILE *, HOST_WIDE_INT);
+ static void sparc_asm_function_epilogue (FILE *, HOST_WIDE_INT);
+-#ifdef OBJECT_FORMAT_ELF
++#if defined (OBJECT_FORMAT_ELF) && !HAVE_GNU_AS
+ static void sparc_elf_asm_named_section (const char *, unsigned int, tree);
+ #endif
+ 
+@@ -7847,19 +7847,11 @@
+     }
+ }
+ 
+-#ifdef OBJECT_FORMAT_ELF
++#if defined (OBJECT_FORMAT_ELF) && !HAVE_GNU_AS
+ static void
+ sparc_elf_asm_named_section (const char *name, unsigned int flags,
+ 			     tree decl)
+ {
+-  if (flags & SECTION_MERGE)
+-    {
+-      /* entsize cannot be expressed in this section attributes
+-	 encoding style.  */
+-      default_elf_asm_named_section (name, flags, decl);
+-      return;
+-    }
+-
+   fprintf (asm_out_file, "\t.section\t\"%s\"", name);
+ 
+   if (!(flags & SECTION_DEBUG))
+Index: gcc/config/sparc/sysv4.h
+===================================================================
+--- gcc/config/sparc/sysv4.h	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config/sparc/sysv4.h	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,5 +1,6 @@
+ /* Target definitions for GNU compiler for SPARC running System V.4
+-   Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000, 2002, 2007, 2009
++   Copyright (C) 1991, 1992, 1995, 1996, 1997, 1998, 2000, 2002, 2007, 2009,
++   2010
+    Free Software Foundation, Inc.
+    Contributed by Ron Guilmette (rfg@monkeys.com).
+ 
+@@ -126,9 +127,11 @@
+ #undef DTORS_SECTION_ASM_OP
+ #define DTORS_SECTION_ASM_OP    "\t.section\t\".dtors\",#alloc,#write"
+ 
++#if !HAVE_GNU_AS
+ /* Switch into a generic section.  */
+ #undef TARGET_ASM_NAMED_SECTION
+ #define TARGET_ASM_NAMED_SECTION  sparc_elf_asm_named_section
++#endif
+ 
+ #undef ASM_OUTPUT_ALIGNED_BSS
+ #define ASM_OUTPUT_ALIGNED_BSS(FILE, DECL, NAME, SIZE, ALIGN) \
+Index: gcc/config/sh/sh.c
+===================================================================
+--- gcc/config/sh/sh.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config/sh/sh.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -4061,6 +4061,13 @@
+ 	       && ! TARGET_SMALLCODE)
+ 	new_align = 4;
+ 
++      /* There is a possibility that a bf is transformed into a bf/s by the
++	 delay slot scheduler.  */
++      if (JUMP_P (from) && !JUMP_TABLE_DATA_P (from) 
++	  && get_attr_type (from) == TYPE_CBRANCH
++	  && GET_CODE (PATTERN (NEXT_INSN (PREV_INSN (from)))) != SEQUENCE)
++	inc += 2;
++
+       if (found_si)
+ 	{
+ 	  count_si += inc;
+@@ -8721,9 +8728,7 @@
+ 	&& GET_CODE (PATTERN (insn)) != USE
+ 	&& GET_CODE (PATTERN (insn)) != CLOBBER)
+        || GET_CODE (insn) == CALL_INSN
+-       || (GET_CODE (insn) == JUMP_INSN
+-	   && GET_CODE (PATTERN (insn)) != ADDR_DIFF_VEC
+-	   && GET_CODE (PATTERN (insn)) != ADDR_VEC))
++       || (JUMP_P (insn) && !JUMP_TABLE_DATA_P (insn)))
+       && GET_CODE (PATTERN (NEXT_INSN (PREV_INSN (insn)))) != SEQUENCE
+       && get_attr_needs_delay_slot (insn) == NEEDS_DELAY_SLOT_YES)
+     return 2;
+@@ -8731,9 +8736,7 @@
+   /* SH2e has a bug that prevents the use of annulled branches, so if
+      the delay slot is not filled, we'll have to put a NOP in it.  */
+   if (sh_cpu == CPU_SH2E
+-      && GET_CODE (insn) == JUMP_INSN
+-      && GET_CODE (PATTERN (insn)) != ADDR_DIFF_VEC
+-      && GET_CODE (PATTERN (insn)) != ADDR_VEC
++      && JUMP_P (insn) && !JUMP_TABLE_DATA_P (insn)
+       && get_attr_type (insn) == TYPE_CBRANCH
+       && GET_CODE (PATTERN (NEXT_INSN (PREV_INSN (insn)))) != SEQUENCE)
+     return 2;
+Index: gcc/config/arm/neon.ml
+===================================================================
+--- gcc/config/arm/neon.ml	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config/arm/neon.ml	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,7 +1,7 @@
+ (* Common code for ARM NEON header file, documentation and test case
+    generators.
+ 
+-   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
++   Copyright (C) 2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+    Contributed by CodeSourcery.
+ 
+    This file is part of GCC.
+@@ -233,6 +233,7 @@
+        cases.  The function supplied must return the integer to be written
+        into the testcase for the argument number (0-based) supplied to it.  *)
+   | Const_valuator of (int -> int)
++  | Fixed_return_reg
+ 
+ exception MixedMode of elts * elts
+ 
+@@ -1076,9 +1077,13 @@
+       Use_operands [| Dreg; Qreg |], "vget_high",
+       notype_1, pf_su_8_64;
+     Vget_low, [Instruction_name ["vmov"];
+-               Disassembles_as [Use_operands [| Dreg; Dreg |]]],
++               Disassembles_as [Use_operands [| Dreg; Dreg |]];
++	       Fixed_return_reg],
+       Use_operands [| Dreg; Qreg |], "vget_low",
+-      notype_1, pf_su_8_64;
++      notype_1, pf_su_8_32;
++     Vget_low, [No_op],
++      Use_operands [| Dreg; Qreg |], "vget_low",
++      notype_1, [S64; U64];
+ 
+     (* Conversions.  *)
+     Vcvt, [InfoWord], All (2, Dreg), "vcvt", conv_1,
+Index: gcc/config/arm/neon-testgen.ml
+===================================================================
+--- gcc/config/arm/neon-testgen.ml	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ gcc/config/arm/neon-testgen.ml	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,5 +1,5 @@
+ (* Auto-generate ARM Neon intrinsics tests.
+-   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
++   Copyright (C) 2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
+    Contributed by CodeSourcery.
+ 
+    This file is part of GCC.
+@@ -58,7 +58,7 @@
+ 
+ (* Emit declarations of local variables that are going to be passed
+    to an intrinsic, together with one to take a returned value if needed.  *)
+-let emit_automatics chan c_types =
++let emit_automatics chan c_types features =
+   let emit () =
+     ignore (
+       List.fold_left (fun arg_number -> fun (flags, ty) ->
+@@ -75,11 +75,17 @@
+   in
+     match c_types with
+       (_, return_ty) :: tys ->
+-        if return_ty <> "void" then
+-          (* The intrinsic returns a value.  *)
+-          (Printf.fprintf chan "  %s out_%s;\n" return_ty return_ty;
+-           emit ())
+-        else
++        if return_ty <> "void" then begin
++          (* The intrinsic returns a value.  We need to do explict register
++             allocation for vget_low tests or they fail because of copy
++             elimination.  *)
++          ((if List.mem Fixed_return_reg features then
++              Printf.fprintf chan "  register %s out_%s asm (\"d18\");\n"
++                             return_ty return_ty
++            else
++              Printf.fprintf chan "  %s out_%s;\n" return_ty return_ty);
++	   emit ())
++        end else
+           (* The intrinsic does not return a value.  *)
+           emit ()
+     | _ -> assert false
+@@ -256,7 +262,7 @@
+     (* Emit file and function prologues.  *)
+     emit_prologue chan test_name;
+     (* Emit local variable declarations.  *)
+-    emit_automatics chan c_types;
++    emit_automatics chan c_types features;
+     Printf.fprintf chan "\n";
+     (* Emit the call to the intrinsic.  *)
+     emit_call chan const_valuator c_types name elt_ty;
+Index: libgfortran/ChangeLog
+===================================================================
+--- libgfortran/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libgfortran/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,10 @@
++2010-02-04  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
++
++	PR libfortran/42901
++	* io/list_read.c (nml_get_obj_data): Add new qualifier flag, clean up
++	code, and adjust logic to set namelist info pointer correctly for array
++	qualifiers of derived type components.
++
+ 2010-01-21  Release Manager
+ 
+ 	* GCC 4.4.3 released.
+Index: libgfortran/io/list_read.c
+===================================================================
+--- libgfortran/io/list_read.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libgfortran/io/list_read.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -287,10 +287,10 @@
+ eat_line (st_parameter_dt *dtp)
+ {
+   char c;
+-  if (!is_internal_unit (dtp))
+-    do
+-      c = next_char (dtp);
+-    while (c != '\n');
++
++  do
++    c = next_char (dtp);
++  while (c != '\n');
+ }
+ 
+ 
+@@ -2563,7 +2563,7 @@
+   namelist_info * first_nl = NULL;
+   namelist_info * root_nl = NULL;
+   int dim, parsed_rank;
+-  int component_flag;
++  int component_flag, qualifier_flag;
+   index_type clow, chigh;
+   int non_zero_rank_count;
+ 
+@@ -2612,11 +2612,12 @@
+       break;
+     }
+ 
+-  /* Untouch all nodes of the namelist and reset the flag that is set for
++  /* Untouch all nodes of the namelist and reset the flags that are set for
+      derived type components.  */
+ 
+   nml_untouch_nodes (dtp);
+   component_flag = 0;
++  qualifier_flag = 0;
+   non_zero_rank_count = 0;
+ 
+   /* Get the object name - should '!' and '\n' be permitted separators?  */
+@@ -2698,10 +2699,11 @@
+ 		    " for namelist variable %s", nl->var_name);
+ 	  goto nml_err_ret;
+ 	}
+-
+       if (parsed_rank > 0)
+ 	non_zero_rank_count++;
+ 
++      qualifier_flag = 1;
++
+       c = next_char (dtp);
+       unget_char (dtp, c);
+     }
+@@ -2726,6 +2728,7 @@
+ 
+       root_nl = nl;
+       component_flag = 1;
++
+       c = next_char (dtp);
+       goto get_name;
+     }
+@@ -2766,15 +2769,6 @@
+       unget_char (dtp, c);
+     }
+ 
+-  /* If a derived type touch its components and restore the root
+-     namelist_info if we have parsed a qualified derived type
+-     component.  */
+-
+-  if (nl->type == GFC_DTYPE_DERIVED)
+-    nml_touch_nodes (nl);
+-  if (component_flag && nl->var_rank > 0 && nl->next)
+-    nl = first_nl;
+-
+   /* Make sure no extraneous qualifiers are there.  */
+ 
+   if (c == '(')
+@@ -2819,10 +2813,24 @@
+ 		nl->var_name);
+       goto nml_err_ret;
+     }
++  /* If a derived type, touch its components and restore the root
++     namelist_info if we have parsed a qualified derived type
++     component.  */
+ 
+-  if (first_nl != NULL && first_nl->var_rank > 0)
+-    nl = first_nl;
+-  
++  if (nl->type == GFC_DTYPE_DERIVED)
++    nml_touch_nodes (nl);
++
++  if (first_nl)
++    {
++      if (first_nl->var_rank == 0)
++	{
++	  if (component_flag && qualifier_flag)
++	    nl = first_nl;
++	}
++      else
++	nl = first_nl;
++    }
++
+   if (nml_read_obj (dtp, nl, 0, pprev_nl, nml_err_msg, nml_err_msg_size,
+ 		    clow, chigh) == FAILURE)
+     goto nml_err_ret;
+Index: libiberty/ChangeLog
+===================================================================
+--- libiberty/ChangeLog	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libiberty/ChangeLog	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,3 +1,9 @@
++2010-01-25  Ian Lance Taylor  <iant@google.com>
++
++	* cp-demangle.c (cplus_demangle_type): Check for invalid type
++	after "DF".
++	* testsuite/demangle-expected: Add test.
++
+ 2010-01-21  Release Manager
+ 
+ 	* GCC 4.4.3 released.
+Index: libiberty/testsuite/demangle-expected
+===================================================================
+--- libiberty/testsuite/demangle-expected	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libiberty/testsuite/demangle-expected	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -3910,3 +3910,8 @@
+ --format=gnu-v3
+ _Z1gIIidEEDTclL_Z1fEspplfp_Li1EEEDpT_
+ decltype (f((parm#1+(1))...)) g<int, double>(int, double)
++#
++# Used to crash the demangler.
++--format=gnu-v3
++DFA
++DFA
+Index: libiberty/cp-demangle.c
+===================================================================
+--- libiberty/cp-demangle.c	(.../tags/gcc_4_4_3_release)	(wersja 156526)
++++ libiberty/cp-demangle.c	(.../branches/gcc-4_4-branch)	(wersja 156526)
+@@ -1,5 +1,5 @@
+ /* Demangler for g++ V3 ABI.
+-   Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008
++   Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+    Free Software Foundation, Inc.
+    Written by Ian Lance Taylor <ian@wasabisystems.com>.
+ 
+@@ -2149,6 +2149,8 @@
+ 	    /* For demangling we don't care about the bits.  */
+ 	    d_number (di);
+ 	  ret->u.s_fixed.length = cplus_demangle_type (di);
++	  if (ret->u.s_fixed.length == NULL)
++	    return NULL;
+ 	  d_number (di);
+ 	  peek = d_next_char (di);
+ 	  ret->u.s_fixed.sat = (peek == 's');
+
+Zmiany atrybutów dla: .
+___________________________________________________________________
+Dodane: svn:mergeinfo
+   Połączono zmiany /trunk:r155835,156042
+
