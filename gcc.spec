@@ -1502,7 +1502,7 @@ all $(all):
 		%{?with_bootstrap:%{?with_profiling:profiledbootstrap}} \
 		GCJFLAGS="%{rpmcflags}" \
 		BOOT_CFLAGS="%{rpmcflags}" \
-		STAGE1_CFLAGS="%{rpmcflags} -O0 -g0" \
+		STAGE1_CFLAGS="%{rpmcflags} -O0" \
 		GNATLIBCFLAGS="%{rpmcflags}" \
 		LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 		mandir=%{_mandir} \
