@@ -2232,6 +2232,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/ffitarget.h
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%{_mandir}/man3/ffi*.3*
 
 %if %{with multilib}
 %files -n libffi-multilib-devel
