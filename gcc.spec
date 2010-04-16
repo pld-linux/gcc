@@ -1579,20 +1579,20 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.4.so.1
-ln -sf	libgnat-4.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.4.so
-ln -sf	libgnarl-4.4.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.4.so
-ln -sf	libgnat-4.4.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf	libgnarl-4.4.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.5.so.1
+ln -sf	libgnat-4.5.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.5.so
+ln -sf	libgnarl-4.5.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.5.so
+ln -sf	libgnat-4.5.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf	libgnarl-4.5.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %if %{with multilib}
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/32/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir32}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-4.4.so.1
-ln -sf	libgnat-4.4.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-4.4.so
-ln -sf	libgnarl-4.4.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-4.4.so
-ln -sf	libgnat-4.4.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
-ln -sf	libgnarl-4.4.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-4.5.so.1
+ln -sf	libgnat-4.5.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-4.5.so
+ln -sf	libgnarl-4.5.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-4.5.so
+ln -sf	libgnat-4.5.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
+ln -sf	libgnarl-4.5.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 %endif
 %endif
 
@@ -1611,7 +1611,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
 # gcj-$version-$gcjsonamever
-%define	gcjdbexecdir	gcj-%{version}-10
+%define	gcjdbexecdir	gcj-%{version}-11
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
@@ -1766,6 +1766,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/crt*.o
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
+%attr(755,root,root) %{_libdir}/gcc/*/*/lto-wrapper
+%attr(755,root,root) %{_libdir}/gcc/*/*/lto1
+%{_libdir}/gcc/*/*/plugin
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
 %{_libdir}/gcc/*/*/include/ssp/*.h
@@ -1777,28 +1780,35 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
 %{_libdir}/gcc/*/*/include/stdfix.h
+%{_libdir}/gcc/*/*/include/stdint.h
+%{_libdir}/gcc/*/*/include/stdint-gcc.h
 %{_libdir}/gcc/*/*/include/syslimits.h
 %{_libdir}/gcc/*/*/include/unwind.h
 %{_libdir}/gcc/*/*/include/varargs.h
 %ifarch %{ix86} %{x8664}
+%{_libdir}/gcc/*/*/include/abmintrin.h
 %{_libdir}/gcc/*/*/include/ammintrin.h
 %{_libdir}/gcc/*/*/include/avxintrin.h
 %{_libdir}/gcc/*/*/include/bmmintrin.h
 %{_libdir}/gcc/*/*/include/cpuid.h
 %{_libdir}/gcc/*/*/include/cross-stdarg.h
 %{_libdir}/gcc/*/*/include/emmintrin.h
+%{_libdir}/gcc/*/*/include/fma4intrin.h
+%{_libdir}/gcc/*/*/include/ia32intrin.h
 %{_libdir}/gcc/*/*/include/immintrin.h
+%{_libdir}/gcc/*/*/include/lwpintrin.h
 %{_libdir}/gcc/*/*/include/mm3dnow.h
 %{_libdir}/gcc/*/*/include/mm_malloc.h
-%{_libdir}/gcc/*/*/include/mmintrin-common.h
 %{_libdir}/gcc/*/*/include/mmintrin.h
 %{_libdir}/gcc/*/*/include/nmmintrin.h
+%{_libdir}/gcc/*/*/include/popcntintrin.h
 %{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/smmintrin.h
 %{_libdir}/gcc/*/*/include/tmmintrin.h
 %{_libdir}/gcc/*/*/include/wmmintrin.h
 %{_libdir}/gcc/*/*/include/x86intrin.h
 %{_libdir}/gcc/*/*/include/xmmintrin.h
+%{_libdir}/gcc/*/*/include/xopintrin.h
 %endif
 %ifarch powerpc ppc ppc64
 %{_libdir}/gcc/*/*/include/altivec.h
@@ -1925,7 +1935,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/adalib
 %{_libdir}/gcc/*/*/adalib/*.ali
 %{_libdir}/gcc/*/*/adalib/g-trasym.o
-%{_libdir}/gcc/*/*/adalib/libgccprefix.a
 %ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
@@ -1940,7 +1949,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/gcc/*/*/32/adalib
 %{_libdir}/gcc/*/*/32/adalib/*.ali
 %{_libdir}/gcc/*/*/32/adalib/g-trasym.o
-%{_libdir}/gcc/*/*/32/adalib/libgccprefix.a
 %ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/32/adalib/libgmem.a
 %endif
@@ -2134,16 +2142,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.11
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgcj.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgcj.so.11
 %attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgcj_bc.so.1
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgij.so.10
+%attr(755,root,root) %ghost %{_libdir}/libgij.so.11
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
-%{?with_x:%attr(755,root,root) %ghost %{_libdir}/lib-gnu-awt-xlib.so.10}
+%{?with_x:%attr(755,root,root) %ghost %{_libdir}/lib-gnu-awt-xlib.so.11}
 %dir %{_libdir}/%{gcjdbexecdir}
 %{_libdir}/%{gcjdbexecdir}/classmap.db
 %{?with_mozilla:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.so}
