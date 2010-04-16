@@ -63,6 +63,7 @@
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
+%define		gcj_soname_ver	11
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -1582,20 +1583,20 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-4.5.so.1
-ln -sf	libgnat-4.5.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-4.5.so
-ln -sf	libgnarl-4.5.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-4.5.so
-ln -sf	libgnat-4.5.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
-ln -sf	libgnarl-4.5.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-%{major_ver}.so.1
+ln -sf	libgnat-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-%{major_ver}.so
+ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-%{major_ver}.so
+ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
+ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %if %{with multilib}
 mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/32/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir32}
 # check if symlink to be made is valid
-test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-4.5.so.1
-ln -sf	libgnat-4.5.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-4.5.so
-ln -sf	libgnarl-4.5.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-4.5.so
-ln -sf	libgnat-4.5.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
-ln -sf	libgnarl-4.5.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
+test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-%{major_ver}.so.1
+ln -sf	libgnat-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-%{major_ver}.so
+ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-%{major_ver}.so
+ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
+ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 %endif
 %endif
 
@@ -1613,8 +1614,7 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
 
-# gcj-$version-$gcjsonamever
-%define	gcjdbexecdir	gcj-%{version}-11
+%define	gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
@@ -2145,16 +2145,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc libjava/{ChangeLog,LIBGCJ_LICENSE,NEWS,README,THANKS}
 %attr(755,root,root) %{_bindir}/gij
 %attr(755,root,root) %{_libdir}/libgcj-tools.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.11
+%attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.%{gcj_soname_ver}
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgcj.so.11
+%attr(755,root,root) %ghost %{_libdir}/libgcj.so.%{gcj_soname_ver}
 %attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgcj_bc.so.1
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgij.so.11
+%attr(755,root,root) %ghost %{_libdir}/libgij.so.%{gcj_soname_ver}
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
-%{?with_x:%attr(755,root,root) %ghost %{_libdir}/lib-gnu-awt-xlib.so.11}
+%{?with_x:%attr(755,root,root) %ghost %{_libdir}/lib-gnu-awt-xlib.so.%{gcj_soname_ver}}
 %dir %{_libdir}/%{gcjdbexecdir}
 %{_libdir}/%{gcjdbexecdir}/classmap.db
 %{?with_mozilla:%attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.so}
