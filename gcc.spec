@@ -76,7 +76,7 @@ Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.ta
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
-# svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_5_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_5-branch > gcc-branch.diff
+# svn diff svn://gcc.gnu.org/svn/gcc/tags/gcc_4_5_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_5-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
@@ -98,6 +98,7 @@ BuildRequires:	binutils >= 2:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
 %{?with_tests:BuildRequires:	dejagnu}
+BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex
 %if %{with ada}
@@ -122,6 +123,7 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 %endif
 BuildRequires:	gmp-devel >= 4.1
+BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
@@ -1440,9 +1442,11 @@ TEXCONFIG=false \
 	--enable-c99 \
 	--enable-long-long \
 	--enable-decimal-float=yes \
-	--%{?with_multilib:en}%{!?with_multilib:dis}able-multilib \
+	%{!?with_multilib:--disable-multilib} \
 	--enable-nls \
 	--disable-werror \
+	--enable-lto \
+	--enable-plugin \
 %ifarch %{ix86} %{x8664}
 	--disable-cld \
 %endif
