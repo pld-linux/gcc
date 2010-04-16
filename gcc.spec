@@ -93,6 +93,7 @@ Patch8:		%{name}-enable-java-awt-qt.patch
 Patch9:		%{name}-hash-style-gnu.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-build-id.patch
+Patch12:	%{name}-plugin-decl-hook.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1396,6 +1397,7 @@ Statyczne biblioteki Obiektowego C.
 %patch9 -p1
 %patch10 -p0
 %patch11 -p0
+%patch12 -p0
 
 mv ChangeLog ChangeLog.general
 
