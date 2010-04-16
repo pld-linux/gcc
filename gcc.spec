@@ -15,6 +15,7 @@
 # - thin about cooperate with (or drop some parts of) 'python-gdb' package which also contains:
 #   /usr/lib{,64}/libstdc++.so.6.0.*-gdb.py
 #   /usr/share/python2.6/site-packages/libstdcxx
+#   ^--- our gdb.spec backported the stuff (like fc), so package here and rm in gdb package?
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
