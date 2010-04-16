@@ -12,6 +12,10 @@
 #   /usr/share/python/aotcompile.py
 #   /usr/share/python/classfile.py
 #
+# - thin about cooperate with (or drop some parts of) 'python-gdb' package which also contains:
+#   /usr/lib{,64}/libstdc++.so.6.0.*-gdb.py
+#   /usr/share/python2.6/site-packages/libstdcxx
+#
 # Conditional build:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
@@ -71,7 +75,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1670,7 +1674,10 @@ install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
 
 # gdb stuff maybe?
-rm -f $RPM_BUILD_ROOT{%{_libdir32},%{_libdir}}/*.py
+rm $RPM_BUILD_ROOT%{_libdir}/*.py
+%if %{with multilib}
+rm $RPM_BUILD_ROOT%{_libdir32}/*.py
+%endif
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
