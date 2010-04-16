@@ -1670,7 +1670,7 @@ install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
 
 # gdb stuff maybe?
-rm $RPM_BUILD_ROOT%{_libdir}/*.py
+rm -f $RPM_BUILD_ROOT{%{_libdir32},%{_libdir}}/*.py
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
