@@ -6,6 +6,9 @@
 #   /usr/bin/gjdoc
 #   /usr/share/man/man1/aot-compile.1.gz
 #   /usr/share/man/man1/gjdoc.1.gz
+#   /usr/share/gcc-4.5.0/python/libstdcxx/__init__.py (gdb stuff?)
+#   /usr/share/gcc-4.5.0/python/libstdcxx/v6/__init__.py
+#   /usr/share/gcc-4.5.0/python/libstdcxx/v6/printers.py
 #   /usr/share/python/aotcompile.py
 #   /usr/share/python/classfile.py
 #
