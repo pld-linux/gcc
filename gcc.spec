@@ -165,7 +165,7 @@ BuildRequires:	qt4-build >= 4.0.1
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
 %endif
-Requires:	binutils >= 2:2.20.51.0.2
+Requires:	binutils >= 3:2.20.51.0.2
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
