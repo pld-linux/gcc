@@ -76,7 +76,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -99,7 +99,7 @@ Patch9:		%{name}-hash-style-gnu.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-build-id.patch
 Patch12:	%{name}-plugin-decl-hook.patch
-# until http://gcc.gnu.org/bugzilla/show_bug.cgi?id=44258 is fixed
+Patch13:	%{name}-bug-44914.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1404,6 +1404,7 @@ Statyczne biblioteki Obiektowego C.
 %patch10 -p0
 %patch11 -p0
 %patch12 -p0
+%patch13 -p0
 
 mv ChangeLog ChangeLog.general
 
