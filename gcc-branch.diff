@@ -1,26 +1,48 @@
 Index: gcc/DATESTAMP
 ===================================================================
---- gcc/DATESTAMP	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/DATESTAMP	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -1 +1 @@
 -20100731
-+20100801
++20100803
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162803)
-@@ -1,3 +1,18 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -1,3 +1,40 @@
++2010-08-03  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/44914
++	* tree-sra.c (cfg_changed): New variable.
++	(sra_initialize): Initialize cgf_changed to false.
++	(scan_function): Set cfg_changed if cfg was changed.
++	(perform_intra_sra): Return also TODO_cleanup_cfg if cfg was changed.
++	(ipa_early_sra): Likewise.
++
++2010-08-02  DJ Delorie  <dj@redhat.com>
++
++	* config/rx/predicates.md (rx_constshift_operand): New.
++	* config/rx/rx.md (zs_cond): New.
++	(cbranchsi4): Remove mode.
++	(*cbranchsi4_<code>): Likewise.
++	(*tstbranchsi4_<code>): New.
++	(*tstbranchsi4r_<code>): New.
++	(*tstbranchsi4m_eq): New.
++	(*tstbranchsi4m_ne): New.
++	(cbranchsf4): Remove mode.
++	(*cbranchsf4_<code>): Likewise.
++
 +2010-07-31  Richard Guenther  <rguenther@suse.de>
 +
 +	PR tree-optimization/45052
 +	* ipa-pure-const.c (check_stmt): Check volatileness.
-+  
++
 +2010-07-31  Richard Guenther  <rguenther@suse.de>
 +
 +	* ipa-prop.c (ipa_modify_formal_parameters): Use
@@ -34,11 +56,32 @@ Index: gcc/ChangeLog
  2010-07-31  Release Manager
  
  	* GCC 4.5.1 released.
+@@ -286,7 +323,7 @@
+ 	if old_decl was DECL_ONE_ONLY.
+ 
+ 	2010-06-21  Jakub Jelinek  <jakub@redhat.com>
+- 
++
+ 	PR target/44575
+ 	* config/i386/i386.c (ix86_gimplify_va_arg): When copying
+ 	va_arg from a set of register save slots into a temporary,
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162803)
-@@ -1,3 +1,8 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -1,3 +1,20 @@
++2010-08-03  Martin Jambor  <mjambor@suse.cz>
++
++	PR tree-optimization/44914
++	* g++.dg/tree-ssa/pr44914.C: New test.
++
++2010-08-02  Uros Bizjak  <ubizjak@gmail.com>
++
++        * lib/gcc-dg.exp (cleanup-coverage-files): Remove options from
++        test name.
++        (cleanup-repo-files): Ditto.
++        (cleanup-saved-temps): Ditto.
++
 +2010-07-31  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 +
 +	PR c++/45112
@@ -47,10 +90,44 @@ Index: gcc/testsuite/ChangeLog
  2010-07-31  Release Manager
  
  	* GCC 4.5.1 released.
+@@ -636,7 +653,7 @@
+ 	PR testsuite/44518
+ 	* obj-c++.dg/encode-2.mm: XFAIL new test for all targets.
+ 	* obj-c++.dg/encode-3.mm: Restore XFAIL run for all targets.
+-	
++
+ 2010-06-12  Daniel Franke  <franke.daniel@gmail.com>
+ 
+ 	PR fortran/44347
+Index: gcc/testsuite/g++.dg/tree-ssa/pr44914.C
+===================================================================
+--- gcc/testsuite/g++.dg/tree-ssa/pr44914.C	(.../tags/gcc_4_5_1_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/tree-ssa/pr44914.C	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -0,0 +1,20 @@
++/* { dg-do compile } */
++/* { dg-options "-O1 -fipa-sra -fnon-call-exceptions" } */
++
++struct A
++{
++  ~A () { }
++};
++
++struct B
++{
++  A a;
++  int i;
++  void f (int) { }
++  B ()
++  {
++    f (i);
++  }
++};
++
++B b;
 Index: gcc/testsuite/g++.dg/pr45112.C
 ===================================================================
 --- gcc/testsuite/g++.dg/pr45112.C	(.../tags/gcc_4_5_1_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/pr45112.C	(.../branches/gcc-4_5-branch)	(wersja 162803)
++++ gcc/testsuite/g++.dg/pr45112.C	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -0,0 +1,12 @@
 +/* { dg-do compile } */
 +
@@ -64,10 +141,41 @@ Index: gcc/testsuite/g++.dg/pr45112.C
 +
 +int bug [__alignof__ (JSString::unitStringTable) >= 8 ? 1 : -1];
 +
+Index: gcc/testsuite/lib/gcc-dg.exp
+===================================================================
+--- gcc/testsuite/lib/gcc-dg.exp	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/testsuite/lib/gcc-dg.exp	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -407,6 +407,8 @@
+     # that stores the filename of the testcase in a local variable "name".
+     # A cleaner solution would require a new DejaGnu release.
+     upvar 2 name testcase
++    # The name might include a list of options; extract the file name.
++    set testcase [lindex $testcase 0]]
+     remove-build-file "[file rootname [file tail $testcase]].gc??"
+ 
+     # Clean up coverage files for additional source files.
+@@ -423,6 +425,8 @@
+     # that stores the filename of the testcase in a local variable "name".
+     # A cleaner solution would require a new DejaGnu release.
+     upvar 2 name testcase
++    # The name might include a list of options; extract the file name.
++    set testcase [lindex $testcase 0]]
+     remove-build-file "[file rootname [file tail $testcase]].o"
+     remove-build-file "[file rootname [file tail $testcase]].rpo"
+ 
+@@ -498,6 +502,8 @@
+     # that stores the filename of the testcase in a local variable "name".
+     # A cleaner solution would require a new DejaGnu release.
+     upvar 2 name testcase
++    # The name might include a list of options; extract the file name.
++    set testcase [lindex $testcase 0]]
+     foreach suffix $suffixes {
+ 	remove-build-file "[file rootname [file tail $testcase]]$suffix"
+ 	# -fcompare-debug dumps
 Index: gcc/cp/decl.c
 ===================================================================
---- gcc/cp/decl.c	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/cp/decl.c	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/cp/decl.c	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/cp/decl.c	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -2077,6 +2077,10 @@
        SET_DECL_INIT_PRIORITY (olddecl, DECL_INIT_PRIORITY (newdecl));
        DECL_HAS_INIT_PRIORITY_P (olddecl) = 1;
@@ -81,8 +189,8 @@ Index: gcc/cp/decl.c
       with that from NEWDECL below.  */
 Index: gcc/cp/ChangeLog
 ===================================================================
---- gcc/cp/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/cp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/cp/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/cp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -1,3 +1,8 @@
 +2010-07-31  Ulrich Weigand  <Ulrich.Weigand@de.ibm.com>
 +
@@ -94,8 +202,8 @@ Index: gcc/cp/ChangeLog
  	* GCC 4.5.1 released.
 Index: gcc/ipa-pure-const.c
 ===================================================================
---- gcc/ipa-pure-const.c	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/ipa-pure-const.c	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/ipa-pure-const.c	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/ipa-pure-const.c	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -416,6 +416,13 @@
        print_gimple_stmt (dump_file, stmt, 0, 0);
      }
@@ -112,15 +220,97 @@ Index: gcc/ipa-pure-const.c
  
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/BASE-VER	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -1 +1 @@
 -4.5.1
 +4.5.2
+Index: gcc/tree-sra.c
+===================================================================
+--- gcc/tree-sra.c	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/tree-sra.c	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -276,6 +276,9 @@
+    arguments than formal parameters..  */
+ static bool encountered_unchangable_recursive_call;
+ 
++/* Set by scan_function when it changes the control flow graph.  */
++static bool cfg_changed;
++
+ /* This is a table in which for each basic block and parameter there is a
+    distance (offset + size) in that parameter which is dereferenced and
+    accessed in that BB.  */
+@@ -570,6 +573,7 @@
+   memset (&sra_stats, 0, sizeof (sra_stats));
+   encountered_apply_args = false;
+   encountered_unchangable_recursive_call = false;
++  cfg_changed = false;
+ }
+ 
+ /* Hook fed to pointer_map_traverse, deallocate stored vectors.  */
+@@ -1114,8 +1118,6 @@
+ 
+   FOR_EACH_BB (bb)
+     {
+-      bool bb_changed = false;
+-
+       if (handle_ssa_defs)
+ 	for (gsi = gsi_start_phis (bb); !gsi_end_p (gsi); gsi_next (&gsi))
+ 	  ret |= handle_ssa_defs (gsi_stmt (gsi), data);
+@@ -1220,21 +1222,15 @@
+ 
+ 	      if (!analysis_stage)
+ 		{
+-		  bb_changed = true;
+ 		  update_stmt (stmt);
+-		  maybe_clean_eh_stmt (stmt);
++		  if (maybe_clean_eh_stmt (stmt)
++		      && gimple_purge_dead_eh_edges (bb))
++		    cfg_changed = true;
+ 		}
+ 	    }
+-	  if (deleted)
+-	    bb_changed = true;
+-	  else
+-	    {
+-	      gsi_next (&gsi);
+-	      ret = true;
+-	    }
++	  if (!deleted)
++	    gsi_next (&gsi);
+ 	}
+-      if (!analysis_stage && bb_changed && sra_mode == SRA_MODE_EARLY_IPA)
+-	gimple_purge_dead_eh_edges (bb);
+     }
+ 
+   return ret;
+@@ -2871,7 +2867,10 @@
+   statistics_counter_event (cfun, "Separate LHS and RHS handling",
+ 			    sra_stats.separate_lhs_rhs_handling);
+ 
+-  ret = TODO_update_ssa;
++  if (cfg_changed)
++    ret = TODO_update_ssa | TODO_cleanup_cfg;
++  else
++    ret = TODO_update_ssa;
+ 
+  out:
+   sra_deinitialize ();
+@@ -4236,7 +4235,10 @@
+ 
+   modify_function (node, adjustments);
+   VEC_free (ipa_parm_adjustment_t, heap, adjustments);
+-  ret = TODO_update_ssa;
++  if (cfg_changed)
++    ret = TODO_update_ssa | TODO_cleanup_cfg;
++  else
++    ret = TODO_update_ssa;
+ 
+   statistics_counter_event (cfun, "Unused parameters deleted",
+ 			    sra_stats.deleted_unused_parameters);
 Index: gcc/ipa-prop.c
 ===================================================================
---- gcc/ipa-prop.c	(.../tags/gcc_4_5_1_release)	(wersja 162803)
-+++ gcc/ipa-prop.c	(.../branches/gcc-4_5-branch)	(wersja 162803)
+--- gcc/ipa-prop.c	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/ipa-prop.c	(.../branches/gcc-4_5-branch)	(wersja 162840)
 @@ -1597,7 +1597,7 @@
         || (VEC_index (ipa_parm_adjustment_t, adjustments, 0)->copy_param
  	 && VEC_index (ipa_parm_adjustment_t, adjustments, 0)->base_index == 0))
@@ -130,3 +320,357 @@ Index: gcc/ipa-prop.c
        TYPE_ARG_TYPES (new_type) = new_reversed;
      }
    else
+Index: gcc/config/rx/predicates.md
+===================================================================
+--- gcc/config/rx/predicates.md	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/config/rx/predicates.md	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -45,6 +45,13 @@
+   }
+ )
+ 
++(define_predicate "rx_constshift_operand"
++  (match_code "const_int")
++  {
++    return IN_RANGE (INTVAL (op), 0, 31);
++  }
++)
++
+ ;; Check that the operand is suitable as the source operand
+ ;; for a logic or arithmeitc instruction.  Registers, integers
+ ;; and a restricted subset of memory addresses are allowed.
+Index: gcc/config/rx/rx.md
+===================================================================
+--- gcc/config/rx/rx.md	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ gcc/config/rx/rx.md	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -24,6 +24,9 @@
+ (define_code_iterator most_cond [eq ne gt ge lt le gtu geu ltu leu
+ 				 unordered ordered ])
+ 
++;; Likewise, but only the ones that use Z or S.
++(define_code_iterator zs_cond [eq ne gtu geu ltu leu ])
++
+ ;; This code iterator is used for sign- and zero- extensions.
+ (define_mode_iterator small_int_modes [(HI "") (QI "")])
+ 
+@@ -157,9 +160,9 @@
+ 
+ (define_expand "cbranchsi4"
+   [(set (pc)
+-	(if_then_else (match_operator:SI 0 "comparison_operator"
+-					 [(match_operand:SI 1 "register_operand")
+-					  (match_operand:SI 2 "rx_source_operand")])
++	(if_then_else (match_operator 0 "comparison_operator"
++				      [(match_operand:SI 1 "register_operand")
++				       (match_operand:SI 2 "rx_source_operand")])
+ 		      (label_ref (match_operand 3 ""))
+ 		      (pc)))
+    ]
+@@ -169,7 +172,7 @@
+ 
+ (define_insn_and_split "*cbranchsi4_<code>"
+   [(set (pc)
+-	(if_then_else (most_cond:SI (match_operand:SI  0 "register_operand"  "r")
++	(if_then_else (most_cond (match_operand:SI  0 "register_operand"  "r")
+ 				    (match_operand:SI  1 "rx_source_operand" "riQ"))
+ 		      (label_ref (match_operand        2 "" ""))
+ 		      (pc)))
+@@ -189,11 +192,106 @@
+   "
+ )
+ 
++;; -----------------------------------------------------------------------------
++;; These two are the canonical TST/branch insns.  However, GCC
++;; generates a wide variety of tst-like patterns, we catch those
++;; below.
++(define_insn_and_split "*tstbranchsi4_<code>"
++  [(set (pc)
++	(if_then_else (zs_cond (and:SI (match_operand:SI  0 "register_operand"  "r")
++				       (match_operand:SI  1 "rx_source_operand" "riQ"))
++			       (const_int 0))
++		      (label_ref (match_operand 2 "" ""))
++		      (pc)))
++   ]
++  ""
++  "#"
++  "reload_completed"
++  [(const_int 0)]
++  "
++  emit_insn (gen_tstsi (operands[0], operands[1]));
++  
++  emit_jump_insn (gen_conditional_branch (operands[2],
++  		 gen_rtx_fmt_ee (<zs_cond:CODE>, CCmode,
++				 gen_rtx_REG (CCmode, CC_REG), const0_rtx)));
++  "
++)
++
++;; Inverse of above
++(define_insn_and_split "*tstbranchsi4_<code>"
++  [(set (pc)
++	(if_then_else (zs_cond (and:SI (match_operand:SI  0 "register_operand"  "r")
++				       (match_operand:SI  1 "rx_source_operand" "riQ"))
++			       (const_int 0))
++		      (pc)
++		      (label_ref (match_operand 2 "" ""))))
++   ]
++  ""
++  "#"
++  "reload_completed"
++  [(const_int 0)]
++  "
++  emit_insn (gen_tstsi (operands[0], operands[1]));
++  
++  emit_jump_insn (gen_conditional_branch (operands[2],
++  		 gen_rtx_fmt_ee (reverse_condition (<zs_cond:CODE>), CCmode,
++				 gen_rtx_REG (CCmode, CC_REG), const0_rtx)));
++  "
++)
++
++;; Various other ways that GCC codes "var & const"
++
++(define_insn_and_split "*tstbranchsi4m_eq"
++  [(set (pc)
++	(if_then_else (eq (zero_extract:SI (match_operand:SI  0 "register_operand"  "r")
++					   (match_operand  1 "rx_constshift_operand" "i")
++					   (match_operand  2 "rx_constshift_operand" "i"))
++			  (const_int 0))
++		      (label_ref (match_operand        3 "" ""))
++		      (pc)))
++   ]
++  ""
++  "#"
++  ""
++  [(set (pc)
++	(if_then_else (eq (and:SI (match_dup  0)
++				  (match_dup 4))
++			  (const_int 0))
++		      (label_ref (match_dup 3))
++		      (pc)))
++   ]
++  "operands[4] = GEN_INT (((1 << INTVAL (operands[1]))-1) << INTVAL (operands[2]));"
++)
++
++(define_insn_and_split "*tstbranchsi4m_ne"
++  [(set (pc)
++	(if_then_else (ne (zero_extract:SI (match_operand:SI  0 "register_operand"  "r")
++					   (match_operand  1 "rx_constshift_operand" "i")
++					   (match_operand  2 "rx_constshift_operand" "i"))
++			  (const_int 0))
++		      (label_ref (match_operand        3 "" ""))
++		      (pc)))
++   ]
++  ""
++  "#"
++  ""
++  [(set (pc)
++	(if_then_else (ne (and:SI (match_dup  0)
++				  (match_dup 4))
++			  (const_int 0))
++		      (label_ref (match_dup 3))
++		      (pc)))
++   ]
++  "operands[4] = GEN_INT (((1 << INTVAL (operands[1]))-1) << INTVAL (operands[2]));"
++)
++
++;; -----------------------------------------------------------------------------
++
+ (define_expand "cbranchsf4"
+   [(set (pc)
+-	(if_then_else (match_operator:SF 0 "comparison_operator"
+-					 [(match_operand:SF 1 "register_operand")
+-					  (match_operand:SF 2 "rx_source_operand")])
++	(if_then_else (match_operator 0 "comparison_operator"
++				      [(match_operand:SF 1 "register_operand")
++				       (match_operand:SF 2 "rx_source_operand")])
+ 		      (label_ref (match_operand 3 ""))
+ 		      (pc)))
+    ]
+@@ -203,8 +301,8 @@
+ 
+ (define_insn_and_split "*cbranchsf4_<code>"
+   [(set (pc)
+-	(if_then_else (most_cond:SF (match_operand:SF  0 "register_operand"  "r")
+-				    (match_operand:SF  1 "rx_source_operand" "rFiQ"))
++	(if_then_else (most_cond (match_operand:SF  0 "register_operand"  "r")
++				 (match_operand:SF  1 "rx_source_operand" "rFiQ"))
+ 		      (label_ref (match_operand        2 "" ""))
+ 		      (pc)))
+    ]
+Index: libjava/classpath/javax/print/attribute/standard/JobStateReasons.java
+===================================================================
+--- libjava/classpath/javax/print/attribute/standard/JobStateReasons.java	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/javax/print/attribute/standard/JobStateReasons.java	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -129,7 +129,7 @@
+     if (o == null)
+       throw new NullPointerException("reason is null");  
+     
+-    return add(o);
++    return super.add(o);
+   }
+   
+   /**
+Index: libjava/classpath/ChangeLog
+===================================================================
+--- libjava/classpath/ChangeLog	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -1,3 +1,23 @@
++2010-04-27  Andrew Haley  <aph@redhat.com>
++
++	* java/util/concurrent/CopyOnWriteArrayList.java: Fix for empty
++	list.
++
++2010-04-27  Andrew Haley  <aph@redhat.com>
++
++	* gnu/javax/print/ipp/IppResponse.java (parseAttributes): Handle
++	IppValueTag.UNKNOWN.  
++	* gnu/javax/print/ipp/IppRequest.java (writeOperationAttributes):
++	Handle RequestedAttributes.
++	* gnu/javax/print/ipp/IppPrintService.java (processResponse): Add
++	DocFlavor.SERVICE_FORMATTED.PAGEABLE and
++	DocFlavor.SERVICE_FORMATTED.PRINTABLE.
++
++2010-07-30  Andrew Haley  <aph@redhat.com>
++
++	* javax/print/attribute/standard/JobStateReasons.java (add): Fix
++	infinite recursion with call to super.
++
+ 2010-07-31  Release Manager
+ 
+ 	* GCC 4.5.1 released.
+Index: libjava/classpath/gnu/javax/print/ipp/IppRequest.java
+===================================================================
+--- libjava/classpath/gnu/javax/print/ipp/IppRequest.java	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/gnu/javax/print/ipp/IppRequest.java	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -434,6 +434,8 @@
+       PrinterURI printerUri = (PrinterURI) attributes.get(PrinterURI.class);
+       JobUri jobUri = (JobUri) attributes.get(JobUri.class);
+       JobId jobId = (JobId) attributes.get(JobId.class);
++      RequestedAttributes reqAttrs 
++	= (RequestedAttributes)attributes.get(RequestedAttributes.class);
+       if (printerUri != null && jobId == null && jobUri == null)
+         {
+           write(printerUri);
+@@ -467,6 +469,12 @@
+           logger.log(Component.IPP, "Attribute: Name: <" + jobUri.getCategory()
+             .getName() + "> Value: <" + jobUri.toString() + ">");
+         }
++      else if (reqAttrs != null)
++	{
++	  write(reqAttrs);
++	  attributes.remove(RequestedAttributes.class);
++	  logger.log(Component.IPP, "RequestedAttributes: <" + reqAttrs + ">");
++	}
+       else
+         {
+           throw new IppException("Unknown target operation attribute combination.");
+Index: libjava/classpath/gnu/javax/print/ipp/IppPrintService.java
+===================================================================
+--- libjava/classpath/gnu/javax/print/ipp/IppPrintService.java	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/gnu/javax/print/ipp/IppPrintService.java	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -356,8 +356,17 @@
+                 // should not happen, all fields are public
+               }
+           }
++
++	if (this.getClass()
++	    .isAssignableFrom(gnu.javax.print.CupsPrintService.class))
++	  {
++// 	    CUPS always provides filters to convert from Postscript.
++//  	    This logic looks odd, but it's what OpenJDK does.
++	    flavors.add(DocFlavor.SERVICE_FORMATTED.PAGEABLE);
++	    flavors.add(DocFlavor.SERVICE_FORMATTED.PRINTABLE);
++	  }
+       }
+-    
++
+     // printer uris
+     Set uris = getPrinterAttributeSet(PrinterUriSupported.class);
+     printerUris = new ArrayList(uris.size());
+Index: libjava/classpath/gnu/javax/print/ipp/IppResponse.java
+===================================================================
+--- libjava/classpath/gnu/javax/print/ipp/IppResponse.java	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/gnu/javax/print/ipp/IppResponse.java	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -302,11 +302,14 @@
+             // out-of-band values
+             case IppValueTag.UNSUPPORTED:
+             case IppValueTag.UNKNOWN:
++              // TODO implement out-of-band handling
++              // We currently throw an exception to see when it occurs - not yet :-)
++	      throw new IppException(
++                    "Unexpected name value for out-of-band value tag " + tag);
+             case IppValueTag.NO_VALUE:
+-              // TODO implement out-of-band handling
+-              // We currently throw an exception to see when it occurs - not yet :-)              
+-              throw new IppException(
+-                    "Unexpected name value for out-of-band value tag");
++	      attribute = null;
++
++	      break;
+             case IppValueTag.INTEGER:
+               int intValue = IppUtilities.convertToInt(value);
+               attribute = IppUtilities.getIntegerAttribute(name, intValue);
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList$3.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList$2.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList$1.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList$SubList.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/java/util/concurrent/CopyOnWriteArrayList$RandomAccessSubList.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/gnu/javax/print/ipp/IppRequest$RequestWriter.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/gnu/javax/print/ipp/IppResponse$ResponseReader.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/gnu/javax/print/ipp/IppRequest.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/gnu/javax/print/ipp/IppPrintService.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/gnu/javax/print/ipp/IppResponse.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/lib/javax/print/attribute/standard/JobStateReasons.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/classpath/java/util/concurrent/CopyOnWriteArrayList.java
+===================================================================
+--- libjava/classpath/java/util/concurrent/CopyOnWriteArrayList.java	(.../tags/gcc_4_5_1_release)	(wersja 162840)
++++ libjava/classpath/java/util/concurrent/CopyOnWriteArrayList.java	(.../branches/gcc-4_5-branch)	(wersja 162840)
+@@ -452,7 +452,12 @@
+   public synchronized boolean remove(Object element)
+   {
+     E[] snapshot = this.data;
+-    E[] newData = (E[]) new Object[snapshot.length - 1];
++    int len = snapshot.length;
++
++    if (len == 0)
++      return false;
++
++    E[] newData = (E[]) new Object[len - 1];
+     
+     // search the element to remove while filling the backup array
+     // this way we can run this method in O(n)
