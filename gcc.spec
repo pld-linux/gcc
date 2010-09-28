@@ -981,9 +981,8 @@ programiście wywoływać dowolne funkcje podając konwencję wywołania w
 czasie wykonania.
 
 %package -n libffi-multilib
-Summary:	Foreign Function Interface library
-Summary(es.UTF-8):	Biblioteca de interfaz de funciones ajenas
-Summary(pl.UTF-8):	Biblioteka zewnętrznych wywołań funkcji
+Summary:	Foreign Function Interface library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka zewnętrznych wywołań funkcji - wersja 32-bitowa
 License:	BSD-like
 Group:		Libraries
 
@@ -991,24 +990,18 @@ Group:		Libraries
 The libffi library provides a portable, high level programming
 interface to various calling conventions. This allows a programmer to
 call any function specified by a call interface description at run
-time.
-
-%description -n libffi-multilib -l es.UTF-8
-La biblioteca libffi provee una interfaz portable de programación de
-alto nivel para varias convenciones de llamada. Ello permite que un
-programador llame una función cualquiera especificada por una
-descripción de interfaz de llamada en el tiempo de ejecución.
+time. This package contains 32-bit version of the library.
 
 %description -n libffi-multilib -l pl.UTF-8
 Biblioteka libffi dostarcza przenośnego, wysokopoziomowego
 międzymordzia do różnych konwencji wywołań funkcji. Pozwala to
 programiście wywoływać dowolne funkcje podając konwencję wywołania w
-czasie wykonania.
+czasie wykonania. Ten pakiet zawiera wersję 32-bitową biblioteki.
 
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
 Summary(es.UTF-8):	Ficheros de desarrollo para libffi
-Summary(pl.UTF-8):	Pliki nagłówkowe dla libffi
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libffi
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi = %{epoch}:%{version}-%{release}
@@ -1020,25 +1013,22 @@ Development files for Foreign Function Interface library.
 Ficheros de desarrollo para libffi.
 
 %description -n libffi-devel -l pl.UTF-8
-Pliki nagłówkowe dla libffi.
+Pliki nagłówkowe biblioteki libffi.
 
 %package -n libffi-multilib-devel
-Summary:	Development files for Foreign Function Interface library
-Summary(es.UTF-8):	Ficheros de desarrollo para libffi
-Summary(pl.UTF-8):	Pliki nagłówkowe dla libffi
+Summary:	Development files for 32-bit version of Foreign Function Interface library
+Summary(pl.UTF-8):	Pliki programistyczne 32-bitowej wersji biblioteki libffi
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 Requires:	libffi-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libffi-multilib-devel
-Development files for Foreign Function Interface library.
-
-%description -n libffi-multilib-devel -l es.UTF-8
-Ficheros de desarrollo para libffi.
+Development files for 32-bit version of Foreign Function Interface
+library.
 
 %description -n libffi-multilib-devel -l pl.UTF-8
-Pliki nagłówkowe dla libffi.
+Pliki programistyczne 32-bitowej wersji biblioteki libffi.
 
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
@@ -1058,21 +1048,17 @@ Biblioteca libffi estática.
 Statyczna biblioteka libffi.
 
 %package -n libffi-multilib-static
-Summary:	Static Foreign Function Interface library
-Summary(es.UTF-8):	Biblioteca libffi estática
-Summary(pl.UTF-8):	Statyczna biblioteka libffi
+Summary:	Static Foreign Function Interface library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka libffi - wersja 32-bitowa
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libffi-multilib-static
-Static Foreign Function Interface library.
-
-%description -n libffi-multilib-static -l es.UTF-8
-Biblioteca libffi estática.
+Static Foreign Function Interface library - 32-bit version.
 
 %description -n libffi-multilib-static -l pl.UTF-8
-Statyczna biblioteka libffi.
+Statyczna biblioteka libffi - wersja 32-bitowa.
 
 %package objc
 Summary:	Objective C support for gcc
@@ -1125,52 +1111,19 @@ sistemlerde yaygın olarak kullanılır. Standart Objective C nesne
 kitaplığı bu pakette yer almaz.
 
 %package objc-multilib
-Summary:	Objective C support for gcc
-Summary(de.UTF-8):	Objektive C-Unterstützung für gcc
-Summary(es.UTF-8):	Soporte de Objective C para gcc
-Summary(fr.UTF-8):	Gestion d'Objective C pour gcc
-Summary(pl.UTF-8):	Obsługa obiektowego C dla kompilatora gcc
-Summary(tr.UTF-8):	gcc için Objective C desteği
+Summary:	32-bit Objective C support for gcc
+Summary(pl.UTF-8):	Obsługa 32-bitowych binariów Objective C dla kompilatora gcc
 Group:		Development/Languages
 Requires:	%{name}-multilib = %{epoch}:%{version}-%{release}
 Requires:	libobjc-multilib = %{epoch}:%{version}-%{release}
 
 %description objc-multilib
-This package adds Objective C support to the GNU Compiler Collection.
-Objective C is a object oriented derivative of the C language, mainly
-used on systems running NeXTSTEP. This package does not include the
-standard objective C object library.
-
-%description objc-multilib -l de.UTF-8
-Dieses Paket ergänzt den GNU-Compiler-Collection durch
-Objective-C-Support. Objective C ist ein objektorientiertes Derivat
-von C, das zur Hauptsache auf Systemen mit NeXTSTEP zum Einsatz kommt.
-Die Standard-Objective-C-Objekt-Library ist nicht Teil des Pakets.
-
-%description objc-multilib -l es.UTF-8
-Este paquete añade soporte de Objective C al GCC (colección de
-compiladores GNU). Objective C es un lenguaje orientado a objetos
-derivado de C, principalmente usado en sistemas que funcionan bajo
-NeXTSTEP. El paquete no incluye la biblioteca de objetos estándar de
-Objective C.
-
-%description objc-multilib -l fr.UTF-8
-Ce package ajoute un support Objective C a la collection de
-compilateurs GNU. L'Objective C est un langage orienté objetdérivé du
-langage C, principalement utilisé sur les systèmes NeXTSTEP. Ce
-package n'inclue pas la bibliothéque Objective C standard.
+This package adds 32-bit Objective C support to the GNU Compiler
+Collection.
 
 %description objc-multilib -l pl.UTF-8
-Ten pakiet dodaje obsługę obiektowego C do kompilatora gcc. Obiektowe
-C (objc) jest zorientowaną obiektowo pochodną języka C, używaną
-głównie w systemach używających NeXTSTEP. W pakiecie nie ma
-standardowej biblioteki objc (która znajduje się w osobnym pakiecie).
-
-%description objc-multilib -l tr.UTF-8
-Bu paket, GNU C derleyicisine Objective C desteği ekler. Objective C,
-C dilinin nesne yönelik bir türevidir ve NeXTSTEP altında çalışan
-sistemlerde yaygın olarak kullanılır. Standart Objective C nesne
-kitaplığı bu pakette yer almaz.
+Ten pakiet dodaje obsługę 32-bitowych binariów Objective C do
+kompilatora gcc.
 
 %package objc++
 Summary:	Objective C++ support for gcc
@@ -1188,71 +1141,63 @@ Ten pakiet dodaje obsługę języka Objective C++ do zestawu kompilatorów
 GNU Compiler Collection.
 
 %package -n libobjc
-Summary:	Objective C Libraries
-Summary(es.UTF-8):	Bibliotecas de Objective C
-Summary(pl.UTF-8):	Biblioteki Obiektowego C
+Summary:	Objective C Library
+Summary(es.UTF-8):	Biblioteca de Objective C
+Summary(pl.UTF-8):	Biblioteka Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Libraries
 Obsoletes:	libobjc1
 
 %description -n libobjc
-Objective C Libraries.
+Objective C Library.
 
 %description -n libobjc -l es.UTF-8
 Bibliotecas de Objective C.
 
 %description -n libobjc -l pl.UTF-8
-Biblioteki Obiektowego C.
+Biblioteka Obiektowego C.
 
 %package -n libobjc-multilib
-Summary:	Objective C Libraries
-Summary(es.UTF-8):	Bibliotecas de Objective C
-Summary(pl.UTF-8):	Biblioteki Obiektowego C
+Summary:	Objective C Library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka Obiektowego C - wersja 32-bitowa
 License:	GPL v2+ with linking exception
 Group:		Libraries
 
 %description -n libobjc-multilib
-Objective C Libraries.
-
-%description -n libobjc-multilib -l es.UTF-8
-Bibliotecas de Objective C.
+Objective C Library - 32-bit version.
 
 %description -n libobjc-multilib -l pl.UTF-8
-Biblioteki Obiektowego C.
+Biblioteka Obiektowego C - wersja 32-bitowa.
 
 %package -n libobjc-static
-Summary:	Static Objective C Libraries
+Summary:	Static Objective C Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
-Summary(pl.UTF-8):	Statyczne Biblioteki Obiektowego C
+Summary(pl.UTF-8):	Statyczna Biblioteka Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-static
-Static Objective C Libraries.
+Static Objective C Library.
 
 %description -n libobjc-static -l es.UTF-8
 Bibliotecas estáticas de Objective C.
 
 %description -n libobjc-static -l pl.UTF-8
-Statyczne biblioteki Obiektowego C.
+Statyczna biblioteka Obiektowego C.
 
 %package -n libobjc-multilib-static
-Summary:	Static Objective C Libraries
-Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
-Summary(pl.UTF-8):	Statyczne Biblioteki Obiektowego C
+Summary:	Static Objective C Library - 32-bit version
+Summary(pl.UTF-8):	Statyczna Biblioteka Obiektowego C - wersja 32-bitowa
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 Requires:	libobjc-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-multilib-static
-Static Objective C Libraries.
-
-%description -n libobjc-multilib-static -l es.UTF-8
-Bibliotecas estáticas de Objective C.
+Static Objective C Library - 32-bit version.
 
 %description -n libobjc-multilib-static -l pl.UTF-8
-Statyczne biblioteki Obiektowego C.
+Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
 
 %prep
 %setup -q
