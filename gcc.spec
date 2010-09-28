@@ -220,10 +220,8 @@ Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
 GNU Compiler Collection.
 
 %package multilib
-Summary:	GNU Compiler Collection: the C compiler and shared files
-Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
-Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdzielone
-Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
+Summary:	GNU Compiler Collection: the C compiler 32-bit support
+Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: obsługa binariów 32-bitowych dla kompilatora C
 License:	GPL v3+
 Group:		Development/Languages
 Requires:	%{name}
@@ -247,31 +245,15 @@ Requires:	glibc-devel(sparcv9)
 A compiler aimed at integrating all the optimizations and features
 necessary for a high-performance and stable development environment.
 
-This package contains the C compiler and some files shared by various
-parts of the GNU Compiler Collection. In order to use another GCC
-compiler you will need to install the appropriate subpackage.
-
-%description multilib -l es.UTF-8
-Un compilador que intenta integrar todas las optimalizaciones y
-características necesarias para un entorno de desarrollo eficaz y
-estable.
-
-Este paquete contiene el compilador de C y unos ficheros compartidos
-por varias partes de la colección de compiladores GNU (GCC). Para usar
-otro compilador de GCC será necesario que instale el subpaquete
-adecuado.
+This package contains the C compiler support for producing 32-bit
+programs on 64-bit host.
 
 %description multilib -l pl.UTF-8
 Kompilator, posiadający duże możliwości optymalizacyjne niezbędne do
 wyprodukowania szybkiego i stabilnego kodu wynikowego.
 
-Ten pakiet zawiera kompilator C i pliki współdzielone przez różne
-części kolekcji kompilatorów GNU (GCC). Żeby używać innego kompilatora
-z GCC, trzeba zainstalować odpowiedni podpakiet.
-
-%description multilib -l pt_BR.UTF-8
-Este pacote adiciona infraestrutura básica e suporte a linguagem C ao
-GNU Compiler Collection.
+Ten pakiet zawiera rozszerzenie kompilatora C o obsługę tworzenia
+programów 32-bitowych na maszynie 64-bitowej.
 
 %package -n libgcc
 Summary:	Shared gcc library
@@ -296,24 +278,16 @@ Biblioteka dynamiczna gcc.
 Biblioteca runtime para o GCC.
 
 %package -n libgcc-multilib
-Summary:	Shared gcc library
-Summary(es.UTF-8):	Biblioteca compartida de gcc
-Summary(pl.UTF-8):	Biblioteka gcc
-Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
+Summary:	Shared gcc library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka gcc - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgcc-multilib
-Shared gcc library.
-
-%description -n libgcc-multilib -l es.UTF-8
-Biblioteca compartida de gcc.
+Shared gcc library - 32-bit version.
 
 %description -n libgcc-multilib -l pl.UTF-8
-Biblioteka dynamiczna gcc.
-
-%description -n libgcc-multilib -l pt_BR.UTF-8
-Biblioteca runtime para o GCC.
+Biblioteka dynamiczna gcc - wersja 32-bitowa.
 
 %package -n libgomp
 Summary:	GNU OpenMP library
@@ -328,16 +302,16 @@ GNU OpenMP library.
 Biblioteka GNU OpenMP.
 
 %package -n libgomp-multilib
-Summary:	GNU OpenMP library
-Summary(pl.UTF-8):	Biblioteka GNU OpenMP
+Summary:	GNU OpenMP library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka GNU OpenMP - wersja 32-bitowa
 License:	LGPL v2.1+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgomp-multilib
-GNU OpenMP library.
+GNU OpenMP library - 32-bit version.
 
 %description -n libgomp-multilib -l pl.UTF-8
-Biblioteka GNU OpenMP.
+Biblioteka GNU OpenMP - wersja 32-bitowa.
 
 %package -n libgomp-devel
 Summary:	Development files for GNU OpenMP library
@@ -353,17 +327,17 @@ Development files for GNU OpenMP library.
 Pliki programistyczne biblioteki GNU OpenMP.
 
 %package -n libgomp-multilib-devel
-Summary:	Development files for GNU OpenMP library
-Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
+Summary:	Development files for 32-bit version of GNU OpenMP library
+Summary(pl.UTF-8):	Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP
 License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 
 %description -n libgomp-multilib-devel
-Development files for GNU OpenMP library.
+Development files for 32-bit version of GNU OpenMP library.
 
 %description -n libgomp-multilib-devel -l pl.UTF-8
-Pliki programistyczne biblioteki GNU OpenMP.
+Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP.
 
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
@@ -379,21 +353,21 @@ Static GNU OpenMP library.
 Statyczna biblioteka GNU OpenMP.
 
 %package -n libgomp-multilib-static
-Summary:	Static GNU OpenMP library
-Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
+Summary:	Static GNU OpenMP library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja 32-bitowa
 License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgomp-multilib-devel
 
 %description -n libgomp-multilib-static
-Static GNU OpenMP library.
+Static GNU OpenMP library - 32-bit version.
 
 %description -n libgomp-multilib-static -l pl.UTF-8
-Statyczna biblioteka GNU OpenMP.
+Statyczna biblioteka GNU OpenMP - wersja 32-bitowa.
 
 %package -n libmudflap
-Summary:	GCC mudflap shared support library
-Summary(pl.UTF-8):	Współdzielona biblioteka wspomagająca GCC mudflap
+Summary:	GCC mudflap shared support libraries
+Summary(pl.UTF-8):	Współdzielone biblioteki wspomagająca GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
@@ -406,22 +380,22 @@ Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic.
 
 %package -n libmudflap-multilib
-Summary:	GCC mudflap shared support library
-Summary(pl.UTF-8):	Współdzielona biblioteka wspomagająca GCC mudflap
+Summary:	GCC mudflap shared support libraries - 32-bit version
+Summary(pl.UTF-8):	Współdzielone biblioteki wspomagająca GCC mudflap - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libmudflap-multilib
 The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations.
+array dereferencing operations. This package contains 32-bit version.
 
 %description -n libmudflap-multilib -l pl.UTF-8
 Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic.
+dereferencji wspaźników i tablic. Ten pakiet zawiera wersje 32-bitowe.
 
 %package -n libmudflap-devel
-Summary:	Development files for GCC mudflap library
-Summary(pl.UTF-8):	Pliki programistyczne biblioteki GCC mudflap
+Summary:	Development files for GCC mudflap libraries
+Summary(pl.UTF-8):	Pliki programistyczne bibliotek GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap = %{epoch}:%{version}-%{release}
@@ -437,8 +411,8 @@ dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
 programistyczne.
 
 %package -n libmudflap-multilib-devel
-Summary:	Development files for GCC mudflap library
-Summary(pl.UTF-8):	Pliki programistyczne biblioteki GCC mudflap
+Summary:	Development files for 32-bit version of GCC mudflap libraries
+Summary(pl.UTF-8):	Pliki programistyczne wersji 32-bitowych bibliotek GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
@@ -446,16 +420,16 @@ Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
 %description -n libmudflap-multilib-devel
 The libmudflap libraries are used by GCC for instrumenting pointer and
 array dereferencing operations. This package contains development
-files.
+files for 32-bit version of the libraries.
 
 %description -n libmudflap-multilib-devel -l pl.UTF-8
 Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
-programistyczne.
+programistyczne wersji 32-bitowych bibliotek.
 
 %package -n libmudflap-static
-Summary:	Static GCC mudflap library
-Summary(pl.UTF-8):	Statyczna biblioteka GCC mudflap
+Summary:	Static GCC mudflap libraries
+Summary(pl.UTF-8):	Statyczne biblioteki GCC mudflap
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
@@ -471,21 +445,21 @@ dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
 statyczne.
 
 %package -n libmudflap-multilib-static
-Summary:	Static GCC mudflap library
-Summary(pl.UTF-8):	Statyczna biblioteka GCC mudflap
+Summary:	Static GCC mudflap libraries - 32-bit version
+Summary(pl.UTF-8):	Statyczne biblioteki GCC mudflap - wersje 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libmudflap-multilib-devel
+Requires:	libmudflap-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libmudflap-multilib-static
 The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains static
+array dereferencing operations. This package contains 32-bit static
 libraries.
 
 %description -n libmudflap-multilib-static -l pl.UTF-8
 Biblioteki libmudflap są używane przez GCC do obsługi operacji
 dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
-statyczne.
+statyczne 32-bitowe.
 
 %package ada
 Summary:	Ada support for gcc
@@ -509,23 +483,19 @@ Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
 Adzie.
 
 %package ada-multilib
-Summary:	Ada support for gcc
-Summary(es.UTF-8):	Soporte de Ada para gcc
-Summary(pl.UTF-8):	Obsługa Ady do gcc
+Summary:	Ada 32-bit support for gcc
+Summary(pl.UTF-8):	Obsługa 32-bitowych binariów Ady dla gcc
 Group:		Development/Languages
 Requires:	%{name}-ada = %{epoch}:%{version}-%{release}
 Requires:	libgnat-multilib = %{epoch}:%{version}-%{release}
 
 %description ada-multilib
-This package adds experimental support for compiling Ada programs.
-
-%description ada-multilib -l es.UTF-8
-Este paquete añade soporte experimental para compilar programas en
-Ada.
+This package adds experimental support for compiling 32-bit Ada
+programs on 64-bit host.
 
 %description ada-multilib -l pl.UTF-8
-Ten pakiet dodaje eksperymentalne wsparcie dla kompilacji programów w
-Adzie.
+Ten pakiet dodaje eksperymentalną obsługę kompilacji programów
+32-bitowych w Adzie na maszynie 64-bitowej.
 
 %package -n libgnat
 Summary:	Ada standard libraries
@@ -549,23 +519,18 @@ Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
 napisanych w Adzie.
 
 %package -n libgnat-multilib
-Summary:	Ada standard libraries
-Summary(es.UTF-8):	Bibliotecas estándares de Ada
-Summary(pl.UTF-8):	Biblioteki standardowe dla Ady
+Summary:	Ada standard libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja 32-bitowa
 License:	GPL v2+ with linking exception
 Group:		Libraries
 
 %description -n libgnat-multilib
-This package contains shared libraries needed to run programs written
-in Ada.
-
-%description -n libgnat-multilib -l es.UTF-8
-Este paquete contiene las bibliotecas compartidas necesarias para
-ejecutar programas escritos en Ada.
+This package contains 32-bit version of shared libraries needed to run
+programs written in Ada.
 
 %description -n libgnat-multilib -l pl.UTF-8
-Ten pakiet zawiera biblioteki potrzebne do uruchamiania programów
-napisanych w Adzie.
+Ten pakiet zawiera wersje 32-bitowe bibliotek potrzebnych do
+uruchamiania programów napisanych w Adzie.
 
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
@@ -582,17 +547,18 @@ Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
 Adzie.
 
 %package -n libgnat-multilib-static
-Summary:	Static Ada standard libraries
-Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
+Summary:	Static Ada standard libraries - 32-bit version
+Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady - wersje 32-bitowe
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
 
 %description -n libgnat-multilib-static
-This package contains static libraries for programs written in Ada.
+This package contains 32-bit version of static libraries for programs
+written in Ada.
 
 %description -n libgnat-multilib-static -l pl.UTF-8
-Ten pakiet zawiera biblioteki statyczne dla programów napisanych w
-Adzie.
+Ten pakiet zawiera 32-bitowe wersje bibliotek statycznych dla programów
+napisanych w Adzie.
 
 %package c++
 Summary:	C++ support for gcc
@@ -644,51 +610,17 @@ aykırı durum işleme gibi çoğu güncel C++ tanımlarına uyar. Standart
 C++ kitaplığı bu pakette yer almaz.
 
 %package c++-multilib
-Summary:	C++ support for gcc
-Summary(es.UTF-8):	Soporte de C++ para gcc
-Summary(pl.UTF-8):	Obsługa C++ dla gcc
-Summary(pt_BR.UTF-8):	Suporte C++ para o gcc
+Summary:	C++ 32-bit support for gcc
+Summary(pl.UTF-8):	Obsługa 32-bitowych binariów C++ dla gcc
 Group:		Development/Languages
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	%{name}-multilib = %{epoch}:%{version}-%{release}
 
 %description c++-multilib
-This package adds C++ support to the GNU Compiler Collection. It
-includes support for most of the current C++ specification, including
-templates and exception handling. It does not include a standard C++
-library, which is available separately.
-
-%description c++-multilib -l de.UTF-8
-Dieses Paket enthält die C++-Unterstützung für den
-GNU-Compiler-Collection. Es unterstützt die aktuelle
-C++-Spezifikation, inkl. Templates und Ausnahmeverarbeitung. Eine
-C++-Standard-Library ist nicht enthalten - sie ist getrennt
-erhältlich.
-
-%description c++-multilib -l es.UTF-8
-Este paquete añade soporte de C++ al GCC (colección de compiladores
-GNU). Ello incluye el soporte para la mayoría de la especificación
-actual de C++, incluyendo plantillas y manejo de excepciones. No
-incluye la biblioteca estándar de C++, la que es disponible separada.
-
-%description c++-multilib -l fr.UTF-8
-Ce package ajoute un support C++ a la collection de compilateurs GNU.
-Il comprend un support pour la plupart des spécifications actuelles de
-C++, dont les modéles et la gestion des exceptions. Il ne comprend pas
-une bibliothéque C++ standard, qui est disponible séparément.
+This package adds 32-bit C++ support to the GNU Compiler Collection.
 
 %description c++-multilib -l pl.UTF-8
-Ten pakiet dodaje obsługę C++ do kompilatora gcc. Ma wsparcie dla
-dużej ilości obecnych specyfikacji C++, nie zawiera natomiast
-standardowych bibliotek C++, które są w oddzielnym pakiecie.
-
-%description c++-multilib -l pt_BR.UTF-8
-Este pacote adiciona suporte C++ para o gcc.
-
-%description c++-multilib -l tr.UTF-8
-Bu paket, GNU C derleyicisine C++ desteği ekler. 'Template'ler ve
-aykırı durum işleme gibi çoğu güncel C++ tanımlarına uyar. Standart
-C++ kitaplığı bu pakette yer almaz.
+Ten pakiet dodaje obsługę 32-bitowych binariów C++ do kompilatora gcc.
 
 %package -n libstdc++
 Summary:	GNU C++ library
@@ -737,47 +669,20 @@ Bu paket, standart C++ kitaplıklarının GNU gerçeklemesidir ve C++
 uygulamalarının koşturulması için gerekli kitaplıkları içerir.
 
 %package -n libstdc++-multilib
-Summary:	GNU C++ library
-Summary(es.UTF-8):	Biblioteca C++ de GNU
-Summary(pl.UTF-8):	Biblioteki GNU C++
-Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
+Summary:	GNU C++ library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka GNU C++ - wersja 32-bitowa
 License:	GPL v2+ with free software exception
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc-multilib >= %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib
-This is the GNU implementation of the standard C++ libraries, along
-with additional GNU tools. This package includes the shared libraries
-necessary to run C++ applications.
-
-%description -n libstdc++-multilib -l de.UTF-8
-Dies ist die GNU-Implementierung der Standard-C++-Libraries mit
-weiteren GNU-Tools. Dieses Paket enthält die zum Ausführen von
-C++-Anwendungen erforderlichen gemeinsam genutzten Libraries.
-
-%description -n libstdc++-multilib -l es.UTF-8
-Este es el soporte de las bibliotecas padrón del C++, junto con
-herramientas GNU adicionales. El paquete incluye las bibliotecas
-compartidas necesarias para ejecutar aplicaciones C++.
-
-%description -n libstdc++-multilib -l fr.UTF-8
-Ceci est l'implémentation GNU des librairies C++ standard, ainsi que
-des outils GNU supplémentaires. Ce package comprend les librairies
-partagées nécessaires à l'exécution d'application C++.
+This is 32-bit version of the GNU implementation of the standard C++
+library.
 
 %description -n libstdc++-multilib -l pl.UTF-8
-Pakiet ten zawiera biblioteki będące implementacją standardowych
-bibliotek C++. Znajdują się w nim biblioteki dynamiczne niezbędne do
-uruchomienia aplikacji napisanych w C++.
-
-%description -n libstdc++-multilib -l pt_BR.UTF-8
-Este pacote é uma implementação da biblioteca padrão C++ v3, um
-subconjunto do padrão ISO 14882.
-
-%description -n libstdc++-multilib -l tr.UTF-8
-Bu paket, standart C++ kitaplıklarının GNU gerçeklemesidir ve C++
-uygulamalarının koşturulması için gerekli kitaplıkları içerir.
+Ten pakiet ten zawiera 32-bitową wersję implementacji GNU biblioteki
+standardowej C++.
 
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
@@ -816,13 +721,8 @@ Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
 para desenvolvimento de programas C++.
 
 %package -n libstdc++-multilib-devel
-Summary:	Header files and documentation for C++ development
-Summary(de.UTF-8):	Header-Dateien zur Entwicklung mit C++
-Summary(es.UTF-8):	Ficheros de cabecera y documentación para desarrollo C++
-Summary(fr.UTF-8):	Fichiers d'en-tête et biblitothèques pour développer en C++
-Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki standardowej C++
-Summary(pt_BR.UTF-8):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
-Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
+Summary:	Development files for C++ development - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki standardowej C++ - wersja 32-bitowa
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	%{name}-c++-multilib = %{epoch}:%{version}-%{release}
@@ -830,23 +730,12 @@ Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib-devel
-This is the GNU implementation of the standard C++ libraries. This
-package includes the header files needed for C++ development and
-library documentation.
-
-%description -n libstdc++-multilib-devel -l es.UTF-8
-Este es el soporte de las bibliotecas padrón del lenguaje C++. Este
-paquete incluye los archivos de inclusión y bibliotecas necesarios
-para desarrollo de programas en lenguaje C++.
+This package contains the development files for 32-bit version of
+the GNU implementation of the standard C++ library.
 
 %description -n libstdc++-multilib-devel -l pl.UTF-8
-Pakiet ten zawiera biblioteki będące implementacją standardowych
-bibliotek C++. Znajdują się w nim pliki nagłówkowe wykorzystywane przy
-programowaniu w języku C++ oraz dokumentacja biblioteki standardowej.
-
-%description -n libstdc++-multilib-devel -l pt_BR.UTF-8
-Este pacote inclui os arquivos de inclusão e bibliotecas necessárias
-para desenvolvimento de programas C++.
+Ten pakiet zawiera pliki programistyczne 32-bitowej wersji
+implementacji GNU biblioteki standardowej C++.
 
 %package -n libstdc++-static
 Summary:	Static C++ standard library
@@ -867,21 +756,17 @@ Biblioteca estándar estática de C++.
 Statyczna biblioteka standardowa C++.
 
 %package -n libstdc++-multilib-static
-Summary:	Static C++ standard library
-Summary(es.UTF-8):	Biblioteca estándar estática de C++
-Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
+Summary:	Static C++ standard library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++ - wersja 32-bitowa
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
 Requires:	libstdc++-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib-static
-Static C++ standard library.
-
-%description -n libstdc++-multilib-static -l es.UTF-8
-Biblioteca estándar estática de C++.
+Static C++ standard library - 32-bit version.
 
 %description -n libstdc++-multilib-static -l pl.UTF-8
-Statyczna biblioteka standardowa C++.
+Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
 
 %package fortran
 Summary:	Fortran 95 support for gcc
@@ -911,96 +796,79 @@ potrzebny do kompilowania programów pisanych w języku Fortran 95.
 Suporte Fortran 95 para o GCC.
 
 %package fortran-multilib
-Summary:	Fortran 95 support for gcc
-Summary(es.UTF-8):	Soporte de Fortran 95 para gcc
-Summary(pl.UTF-8):	Obsługa Fortranu 95 dla gcc
-Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
+Summary:	Fortran 95 32-bit support for gcc
+Summary(pl.UTF-8):	Obsługa binariów 32-bitowych Fortrana 95 dla gcc
 Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
 
 %description fortran-multilib
-This package adds support for compiling Fortran 95 programs with the
-GNU compiler.
-
-%description fortran-multilib -l es.UTF-8
-Este paquete añade soporte para compilar programas escritos en Fortran
-95 con el compilador GNU.
+This package adds support for compiling 32-bit Fortran 95 programs
+with the GNU compiler.
 
 %description fortran-multilib -l pl.UTF-8
-Ten pakiet dodaje obsługę Fortranu 95 do kompilatora gcc. Jest
-potrzebny do kompilowania programów pisanych w języku Fortran 95.
-
-%description fortran-multilib -l pt_BR.UTF-8
-Suporte Fortran 95 para o GCC.
+Ten pakiet dodaje obsługę 32-bitowych programów w Fortranie 95 do
+kompilatora gcc.
 
 %package -n libgfortran
-Summary:	Fortran 95 Libraries
-Summary(es.UTF-8):	Bibliotecas de Fortran 95
-Summary(pl.UTF-8):	Biblioteki Fortranu 95
+Summary:	Fortran 95 Library
+Summary(es.UTF-8):	Biblioteca de Fortran 95
+Summary(pl.UTF-8):	Biblioteka Fortrana 95
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Obsoletes:	libg2c
 
 %description -n libgfortran
-Fortran 95 Libraries.
+Fortran 95 Library.
 
 %description -n libgfortran -l es.UTF-8
-Bibliotecas de Fortran 95.
+Biblioteca de Fortran 95.
 
 %description -n libgfortran -l pl.UTF-8
-Biblioteki Fortranu 95.
+Biblioteka Fortrana 95.
 
 %package -n libgfortran-multilib
-Summary:	Fortran 95 Libraries
-Summary(es.UTF-8):	Bibliotecas de Fortran 95
-Summary(pl.UTF-8):	Biblioteki Fortranu 95
+Summary:	Fortran 95 Library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka Fortrana 95 - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
 %description -n libgfortran-multilib
-Fortran 95 Libraries.
-
-%description -n libgfortran-multilib -l es.UTF-8
-Bibliotecas de Fortran 95.
+Fortran 95 Library - 32-bit version.
 
 %description -n libgfortran-multilib -l pl.UTF-8
-Biblioteki Fortranu 95.
+Biblioteka Fortrana 95 - wersja 32-bitowa.
 
 %package -n libgfortran-static
-Summary:	Static Fortran 95 Libraries
+Summary:	Static Fortran 95 Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
-Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
+Summary(pl.UTF-8):	Statyczna Biblioteka Fortrana 95
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c-static
 
 %description -n libgfortran-static
-Static Fortran 95 Libraries.
+Static Fortran 95 Library.
 
 %description -n libgfortran-static -l es.UTF-8
 Bibliotecas estáticas de Fortran 95.
 
 %description -n libgfortran-static -l pl.UTF-8
-Statyczne biblioteki Fortranu 95.
+Statyczna biblioteka Fortrana 95.
 
 %package -n libgfortran-multilib-static
-Summary:	Static Fortran 95 Libraries
-Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
-Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
+Summary:	Static Fortran 95 Library - 32-bit version
+Summary(pl.UTF-8):	Statyczna Biblioteka Fortrana 95 - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libgfortran-multilib-static
-Static Fortran 95 Libraries.
-
-%description -n libgfortran-multilib-static -l es.UTF-8
-Bibliotecas estáticas de Fortran 95.
+Static Fortran 95 Library - 32-bit version.
 
 %description -n libgfortran-multilib-static -l pl.UTF-8
-Statyczne biblioteki Fortranu 95.
+Statyczna biblioteka Fortrana 95 - wersja 32-bitowa.
 
 %package java
 Summary:	Java support for gcc
