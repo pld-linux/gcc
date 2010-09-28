@@ -649,8 +649,8 @@ Summary(es.UTF-8):	Soporte de C++ para gcc
 Summary(pl.UTF-8):	Obsługa C++ dla gcc
 Summary(pt_BR.UTF-8):	Suporte C++ para o gcc
 Group:		Development/Languages
-Requires:	%{name}-c++
-Requires:	%{name}-multilib
+Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	%{name}-multilib = %{epoch}:%{version}-%{release}
 
 %description c++-multilib
 This package adds C++ support to the GNU Compiler Collection. It
@@ -825,7 +825,7 @@ Summary(pt_BR.UTF-8):	Arquivos de inclusão e bibliotecas para o desenvolvimento
 Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
-Requires:	%{name}-c++-multilib
+Requires:	%{name}-c++-multilib = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-multilib = %{epoch}:%{version}-%{release}
 
@@ -872,7 +872,7 @@ Summary(es.UTF-8):	Biblioteca estándar estática de C++
 Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
 License:	GPL v2+ with free software exception
 Group:		Development/Libraries
-Requires:	libstdc++-multilib-devel
+Requires:	libstdc++-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib-static
 Static C++ standard library.
@@ -916,8 +916,8 @@ Summary(es.UTF-8):	Soporte de Fortran 95 para gcc
 Summary(pl.UTF-8):	Obsługa Fortranu 95 dla gcc
 Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
-Requires:	%{name}-fortran
-Requires:	libgfortran-multilib
+Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
+Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
 
 %description fortran-multilib
 This package adds support for compiling Fortran 95 programs with the
@@ -991,7 +991,7 @@ Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
 Summary(pl.UTF-8):	Statyczne Biblioteki Fortranu 95
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libgfortran-multilib
+Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libgfortran-multilib-static
 Static Fortran 95 Libraries.
@@ -1037,6 +1037,7 @@ Summary(pl.UTF-8):	Biblioteki Klas Javy
 License:	GPL v2+ with limited linking exception
 Group:		Libraries
 Requires:	jpackage-utils
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Provides:	java(ClassDataVersion) = %{_classdataversion}
 Obsoletes:	libgcj3
 
@@ -1056,6 +1057,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe dla Bibliotek Klas Javy
 License:	GPL v2+ with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	zlib-devel
 Obsoletes:	libgcj3-devel
 
@@ -1075,7 +1077,6 @@ Summary(pl.UTF-8):	Statyczne Biblioteki Klas Javy
 License:	GPL v2+ with limited linking exception
 Group:		Development/Libraries
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
-Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 
 %description -n libgcj-static
 Static Java Class Libraries.
@@ -1159,8 +1160,8 @@ Summary(es.UTF-8):	Ficheros de desarrollo para libffi
 Summary(pl.UTF-8):	Pliki nagłówkowe dla libffi
 License:	BSD-like
 Group:		Development/Libraries
-Requires:	libffi-devel
-Requires:	libffi-multilib
+Requires:	libffi-devel = %{epoch}:%{version}-%{release}
+Requires:	libffi-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libffi-multilib-devel
 Development files for Foreign Function Interface library.
@@ -1194,7 +1195,7 @@ Summary(es.UTF-8):	Biblioteca libffi estática
 Summary(pl.UTF-8):	Statyczna biblioteka libffi
 License:	BSD-like
 Group:		Development/Libraries
-Requires:	libffi-multilib-devel
+Requires:	libffi-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libffi-multilib-static
 Static Foreign Function Interface library.
@@ -1263,8 +1264,8 @@ Summary(fr.UTF-8):	Gestion d'Objective C pour gcc
 Summary(pl.UTF-8):	Obsługa obiektowego C dla kompilatora gcc
 Summary(tr.UTF-8):	gcc için Objective C desteği
 Group:		Development/Languages
-Requires:	%{name}-multilib
-Requires:	libobjc-multilib
+Requires:	%{name}-multilib = %{epoch}:%{version}-%{release}
+Requires:	libobjc-multilib = %{epoch}:%{version}-%{release}
 
 %description objc-multilib
 This package adds Objective C support to the GNU Compiler Collection.
@@ -1374,7 +1375,7 @@ Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
 Summary(pl.UTF-8):	Statyczne Biblioteki Obiektowego C
 License:	GPL v2+ with linking exception
 Group:		Development/Libraries
-Requires:	libobjc-multilib
+Requires:	libobjc-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-multilib-static
 Static Objective C Libraries.
