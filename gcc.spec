@@ -1388,11 +1388,11 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
-mv $RPM_BUILD_ROOT{%{_libdir}/$libssp,%{_slibdir}}
+mv $RPM_BUILD_ROOT%{_libdir}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/libssp.so
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
-mv $RPM_BUILD_ROOT{%{_libdir32}/$libssp,%{_slibdir32}}
+mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 %endif
 
@@ -1675,27 +1675,27 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgcc_s.so.1
 %attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
-#%attr(755,root,root) %ghost %{_slibdir}/libssp.so.0
+%attr(755,root,root) %ghost %{_slibdir}/libssp.so.0
 
 %if %{with multilib}
 %files -n libgcc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgcc_s.so.1
 %attr(755,root,root) %{_slibdir32}/libssp.so.*.*.*
-#%attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
+%attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
 %endif
 
 %if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libgomp.so.1
+%attr(755,root,root) %ghost %{_libdir}/libgomp.so.1
 
 %if %{with multilib}
 %files -n libgomp-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libgomp.so.1
+%attr(755,root,root) %ghost %{_libdir32}/libgomp.so.1
 %endif
 
 %files -n libgomp-devel
@@ -1730,17 +1730,17 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libmudflap
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libmudflap.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libmudflap.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmudflap.so.0
 %attr(755,root,root) %{_libdir}/libmudflapth.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libmudflapth.so.0
+%attr(755,root,root) %ghost %{_libdir}/libmudflapth.so.0
 
 %if %{with multilib}
 %files -n libmudflap-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libmudflap.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libmudflap.so.0
+%attr(755,root,root) %ghost %{_libdir32}/libmudflap.so.0
 %attr(755,root,root) %{_libdir32}/libmudflapth.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libmudflapth.so.0
+%attr(755,root,root) %ghost %{_libdir32}/libmudflapth.so.0
 %endif
 
 %files -n libmudflap-devel
@@ -1943,13 +1943,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
 %attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.3
+%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.3
 
 %if %{with multilib}
 %files -n libgfortran-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.3
+%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.3
 %endif
 
 %files -n libgfortran-static
@@ -1970,6 +1970,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gappletviewer
 %attr(755,root,root) %{_bindir}/gc-analyze
 %attr(755,root,root) %{_bindir}/gcj
+%attr(755,root,root) %{_bindir}/gcj-dbtool
 %attr(755,root,root) %{_bindir}/gcjh
 %attr(755,root,root) %{_bindir}/gjar
 %attr(755,root,root) %{_bindir}/gjarsigner
@@ -1994,6 +1995,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gappletviewer.1*
 %{_mandir}/man1/gc-analyze.1*
 %{_mandir}/man1/gcj.1*
+%{_mandir}/man1/gcj-dbtool.1*
 %{_mandir}/man1/gcjh.1*
 %{_mandir}/man1/gjar.1*
 %{_mandir}/man1/gjarsigner.1*
@@ -2092,13 +2094,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
 %attr(755,root,root) %{_libdir}/libffi.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libffi.so.4
+%attr(755,root,root) %ghost %{_libdir}/libffi.so.4
 
 %if %{with multilib}
 %files -n libffi-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
+%attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
 %endif
 
 %files -n libffi-devel
@@ -2147,13 +2149,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libobjc.so.2
+%attr(755,root,root) %ghost %{_libdir}/libobjc.so.2
 
 %if %{with multilib}
 %files -n libobjc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.2
+%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.2
 %endif
 
 %files -n libobjc-static
