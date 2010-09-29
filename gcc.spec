@@ -1491,9 +1491,9 @@ install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
 
 # gdb stuff maybe?
-rm $RPM_BUILD_ROOT%{_libdir}/*.py
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.py
 %if %{with multilib}
-rm $RPM_BUILD_ROOT%{_libdir32}/*.py
+%{__rm} $RPM_BUILD_ROOT%{_libdir32}/*.py
 %endif
 
 # svn snap doesn't contain (release does) below files,
@@ -1505,28 +1505,28 @@ rm $RPM_BUILD_ROOT%{_libdir32}/*.py
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p	/sbin/postshell
+%post	-p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun	-p	/sbin/postshell
+%postun	-p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%post ada	-p	/sbin/postshell
+%post	ada -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun ada	-p	/sbin/postshell
+%postun	ada -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%post fortran	-p	/sbin/postshell
+%post	fortran -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun fortran	-p	/sbin/postshell
+%postun	fortran -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%post java	-p	/sbin/postshell
+%post	java -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%postun java	-p	/sbin/postshell
+%postun	java -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
 %post	-p /sbin/ldconfig -n libgcc
