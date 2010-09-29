@@ -318,6 +318,7 @@ Summary:	Development files for GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
 License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgomp = %{epoch}:%{version}-%{release}
 
 %description -n libgomp-devel
@@ -1004,6 +1005,7 @@ Summary(es.UTF-8):	Ficheros de desarrollo para libffi
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki libffi
 License:	BSD-like
 Group:		Development/Libraries
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libffi = %{epoch}:%{version}-%{release}
 
 %description -n libffi-devel
@@ -1567,31 +1569,34 @@ rm -rf $RPM_BUILD_ROOT
 %doc ChangeLog.general MAINTAINERS NEWS
 # bugs.html faq.html
 %doc gcc/{ChangeLog,ONEWS,README.Portability}
-%dir %{_libdir}/gcc
-%dir %{_libdir}/gcc/*
-%dir %{_libdir}/gcc/*/*
 %attr(755,root,root) %{_bindir}/*-gcc*
+%attr(755,root,root) %{_bindir}/cc
+%attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
-%attr(755,root,root) %{_bindir}/cc
-%attr(755,root,root) %{_bindir}/cpp
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
-%{_infodir}/cpp*
-%{_infodir}/gcc*
+%{_infodir}/cpp.info*
+%{_infodir}/cppinternals.info*
+%{_infodir}/gcc.info*
+%{_infodir}/gccinstall.info*
+%{_infodir}/gccint.info*
 %attr(755,root,root) /lib/cpp
-%attr(755,root,root) %{_slibdir}/lib*.so
-%{_libdir}/libssp.a
-%{_libdir}/libssp.la
+%attr(755,root,root) %{_slibdir}/libgcc_s.so
 %attr(755,root,root) %{_libdir}/libssp.so
-%{_libdir}/libssp_nonshared.a
+%{_libdir}/libssp.la
+%{_libdir}/libssp.a
 %{_libdir}/libssp_nonshared.la
-%{_libdir}/gcc/*/*/libgcov.a
+%{_libdir}/libssp_nonshared.a
+%dir %{_libdir}/gcc
+%dir %{_libdir}/gcc/*
+%dir %{_libdir}/gcc/*/*
 %{_libdir}/gcc/*/*/libgcc.a
 %{_libdir}/gcc/*/*/libgcc_eh.a
+%{_libdir}/gcc/*/*/libgcov.a
 %{_libdir}/gcc/*/*/specs
 %{_libdir}/gcc/*/*/crt*.o
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1
@@ -1605,7 +1610,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/float.h
 %{_libdir}/gcc/*/*/include/iso646.h
 %{_libdir}/gcc/*/*/include/limits.h
-%{?with_gomp:%{_libdir}/gcc/*/*/include/omp.h}
 %{_libdir}/gcc/*/*/include/stdarg.h
 %{_libdir}/gcc/*/*/include/stdbool.h
 %{_libdir}/gcc/*/*/include/stddef.h
@@ -1654,38 +1658,44 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/lib*.so
+%attr(755,root,root) %{_slibdir32}/libgcc_s.so
 %dir %{_libdir}/gcc/*/*/32
 %{_libdir}/gcc/*/*/32/crt*.o
-%{_libdir}/gcc/*/*/32/libgcov.a
 %{_libdir}/gcc/*/*/32/libgcc.a
 %{_libdir}/gcc/*/*/32/libgcc_eh.a
-%{_libdir32}/libssp.a
-%{_libdir32}/libssp.la
+%{_libdir}/gcc/*/*/32/libgcov.a
 %attr(755,root,root) %{_libdir32}/libssp.so
-%{_libdir32}/libssp_nonshared.a
+%{_libdir32}/libssp.la
+%{_libdir32}/libssp.a
 %{_libdir32}/libssp_nonshared.la
+%{_libdir32}/libssp_nonshared.a
 %endif
 
 %files -n libgcc
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/lib*.so.*
+%attr(755,root,root) %{_slibdir}/libgcc_s.so.1
+%attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
+#%attr(755,root,root) %ghost %{_slibdir}/libssp.so.0
 
 %if %{with multilib}
 %files -n libgcc-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/lib*.so.*
+%attr(755,root,root) %{_slibdir32}/libgcc_s.so.1
+%attr(755,root,root) %{_slibdir32}/libssp.so.*.*.*
+#%attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
 %endif
 
 %if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libgomp.so.1
 
 %if %{with multilib}
 %files -n libgomp-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libgomp.so.1
 %endif
 
 %files -n libgomp-devel
@@ -1694,7 +1704,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{_libdir}/gcc/*/*/finclude
-%{_infodir}/libgomp*
+%{_libdir}/gcc/*/*/include/omp.h
+%{_infodir}/libgomp.info*
 
 %if %{with multilib}
 %files -n libgomp-multilib-devel
@@ -1718,35 +1729,47 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with mudflap}
 %files -n libmudflap
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmudflap*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmudflap.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libmudflap.so.0
+%attr(755,root,root) %{_libdir}/libmudflapth.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libmudflapth.so.0
 
 %if %{with multilib}
 %files -n libmudflap-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmudflap*.so.*.*.*
+%attr(755,root,root) %{_libdir32}/libmudflap.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libmudflap.so.0
+%attr(755,root,root) %{_libdir32}/libmudflapth.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libmudflapth.so.0
 %endif
 
 %files -n libmudflap-devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libmudflap.so
+%attr(755,root,root) %{_libdir}/libmudflapth.so
+%{_libdir}/libmudflap.la
+%{_libdir}/libmudflapth.la
 %{_libdir}/gcc/*/*/include/mf-runtime.h
-%{_libdir}/libmudflap*.la
-%attr(755,root,root) %{_libdir}/libmudflap*.so
 
 %if %{with multilib}
 %files -n libmudflap-multilib-devel
 %defattr(644,root,root,755)
-%{_libdir32}/libmudflap*.la
-%attr(755,root,root) %{_libdir32}/libmudflap*.so
+%attr(755,root,root) %{_libdir32}/libmudflap.so
+%attr(755,root,root) %{_libdir32}/libmudflapth.so
+%{_libdir32}/libmudflap.la
+%{_libdir32}/libmudflapth.la
 %endif
 
 %files -n libmudflap-static
 %defattr(644,root,root,755)
-%{_libdir}/libmudflap*.a
+%{_libdir}/libmudflap.a
+%{_libdir}/libmudflapth.a
 
 %if %{with multilib}
 %files -n libmudflap-multilib-static
 %defattr(644,root,root,755)
-%{_libdir32}/libmudflap*.a
+%{_libdir32}/libmudflap.a
+%{_libdir32}/libmudflapth.a
 %endif
 %endif
 
@@ -1758,8 +1781,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with java}
 %exclude %{_bindir}/gnative2ascii
 %endif
-%attr(755,root,root) %{_libdir}/libgnarl*.so
-%attr(755,root,root) %{_libdir}/libgnat*.so
+%attr(755,root,root) %{_libdir}/libgnarl-*.so
+%attr(755,root,root) %{_libdir}/libgnarl.so
+%attr(755,root,root) %{_libdir}/libgnat-*.so
+%attr(755,root,root) %{_libdir}/libgnat.so
 %attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
 %{_libdir}/gcc/*/*/adainclude
 %dir %{_libdir}/gcc/*/*/adalib
@@ -1768,13 +1793,17 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{ix86} %{x8664}
 %{_libdir}/gcc/*/*/adalib/libgmem.a
 %endif
-%{_infodir}/gnat*
+%{_infodir}/gnat-style.info*
+%{_infodir}/gnat_rm.info*
+%{_infodir}/gnat_ugn.info*
 
 %if %{with multilib}
 %files ada-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgnarl*.so
-%attr(755,root,root) %{_libdir32}/libgnat*.so
+%attr(755,root,root) %{_libdir32}/libgnarl-*.so
+%attr(755,root,root) %{_libdir32}/libgnarl.so
+%attr(755,root,root) %{_libdir32}/libgnat-*.so
+%attr(755,root,root) %{_libdir32}/libgnat.so
 %{_libdir}/gcc/*/*/32/adainclude
 %dir %{_libdir}/gcc/*/*/32/adalib
 %{_libdir}/gcc/*/*/32/adalib/*.ali
@@ -1786,14 +1815,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgnarl*.so.1
-%attr(755,root,root) %{_libdir}/libgnat*.so.1
+%attr(755,root,root) %{_libdir}/libgnarl-*.so.1
+%attr(755,root,root) %{_libdir}/libgnarl.so.1
+%attr(755,root,root) %{_libdir}/libgnat-*.so.1
+%attr(755,root,root) %{_libdir}/libgnat.so.1
 
 %if %{with multilib}
 %files -n libgnat-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgnarl*.so.1
-%attr(755,root,root) %{_libdir32}/libgnat*.so.1
+%attr(755,root,root) %{_libdir32}/libgnarl-*.so.1
+%attr(755,root,root) %{_libdir32}/libgnarl.so.1
+%attr(755,root,root) %{_libdir32}/libgnat-*.so.1
+%attr(755,root,root) %{_libdir32}/libgnat.so.1
 %endif
 
 %files -n libgnat-static
@@ -1820,15 +1853,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
-%{_libdir}/libsupc++.a
 %{_libdir}/libsupc++.la
+%{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
 
 %if %{with multilib}
 %files c++-multilib
 %defattr(644,root,root,755)
-%{_libdir32}/libsupc++.a
 %{_libdir32}/libsupc++.la
+%{_libdir32}/libsupc++.a
 %endif
 
 %files -n libstdc++ -f libstdc++.lang
@@ -1847,6 +1880,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html
+%attr(755,root,root) %{_libdir}/libstdc++.so
+%{_libdir}/libstdc++.la
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
 %{_includedir}/extc++.h
@@ -1860,14 +1895,12 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/org
 %exclude %{_includedir}/c++/%{version}/sun
 %endif
-%{_libdir}/libstdc++.la
-%attr(755,root,root) %{_libdir}/libstdc++.so
 
 %if %{with multilib}
 %files -n libstdc++-multilib-devel
 %defattr(644,root,root,755)
-%{_libdir32}/libstdc++.la
 %attr(755,root,root) %{_libdir32}/libstdc++.so
+%{_libdir32}/libstdc++.la
 %endif
 
 %files -n libstdc++-static
@@ -1888,33 +1921,35 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/g95
 %attr(755,root,root) %{_bindir}/gfortran
 %attr(755,root,root) %{_bindir}/*-gfortran
-%{_infodir}/gfortran*
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
-%{_libdir}/gcc/*/*/libgfortranbegin.a
-%{_libdir}/gcc/*/*/libgfortranbegin.la
-%{_libdir}/libgfortran.la
 %attr(755,root,root) %{_libdir}/libgfortran.so
+%{_libdir}/libgfortran.la
+%{_libdir}/gcc/*/*/libgfortranbegin.la
+%{_libdir}/gcc/*/*/libgfortranbegin.a
+%{_infodir}/gfortran.info*
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
 
 %if %{with multilib}
 %files fortran-multilib
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/32/libgfortranbegin.a
-%{_libdir}/gcc/*/*/32/libgfortranbegin.la
-%{_libdir32}/libgfortran.la
 %attr(755,root,root) %{_libdir32}/libgfortran.so
+%{_libdir32}/libgfortran.la
+%{_libdir}/gcc/*/*/32/libgfortranbegin.la
+%{_libdir}/gcc/*/*/32/libgfortranbegin.a
 %endif
 
 %files -n libgfortran
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
 %attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.3
 
 %if %{with multilib}
 %files -n libgfortran-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.3
 %endif
 
 %files -n libgfortran-static
@@ -1934,37 +1969,45 @@ rm -rf $RPM_BUILD_ROOT
 %doc gcc/java/ChangeLog java-doc/*
 %attr(755,root,root) %{_bindir}/gappletviewer
 %attr(755,root,root) %{_bindir}/gc-analyze
-%attr(755,root,root) %{_bindir}/gcj*
+%attr(755,root,root) %{_bindir}/gcj
+%attr(755,root,root) %{_bindir}/gcjh
 %attr(755,root,root) %{_bindir}/gjar
 %attr(755,root,root) %{_bindir}/gjarsigner
 %attr(755,root,root) %{_bindir}/gjavah
 %attr(755,root,root) %{_bindir}/gkeytool
 %attr(755,root,root) %{_bindir}/gnative2ascii
 %attr(755,root,root) %{_bindir}/gorbd
-%attr(755,root,root) %{_bindir}/grmi*
+%attr(755,root,root) %{_bindir}/grmic
+%attr(755,root,root) %{_bindir}/grmid
+%attr(755,root,root) %{_bindir}/grmiregistry
 %attr(755,root,root) %{_bindir}/gserialver
 %attr(755,root,root) %{_bindir}/gtnameserv
 %attr(755,root,root) %{_bindir}/jcf-dump
-%attr(755,root,root) %{_bindir}/jv-*
-%attr(755,root,root) %{_bindir}/*-gcj*
+%attr(755,root,root) %{_bindir}/jv-convert
+%attr(755,root,root) %{_bindir}/rebuild-gcj-db
+%attr(755,root,root) %{_bindir}/*-gcj
 %attr(755,root,root) %{_libdir}/gcc/*/*/ecj1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jc1
 %attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
-%{_infodir}/cp-tools*
-%{_infodir}/gcj*
-%{_mandir}/man1/gappletviewer*
-%{_mandir}/man1/gc-analyze*
-%{_mandir}/man1/gcj*
-%{_mandir}/man1/gjar*
-%{_mandir}/man1/gjavah*
-%{_mandir}/man1/gkeytool*
-%{_mandir}/man1/gnative2ascii*
-%{_mandir}/man1/gorbd*
-%{_mandir}/man1/grmi*
-%{_mandir}/man1/gserialver*
-%{_mandir}/man1/gtnameserv*
-%{_mandir}/man1/jcf-*
-%{_mandir}/man1/jv-*
+%{_infodir}/cp-tools.info*
+%{_infodir}/gcj.info*
+%{_mandir}/man1/gappletviewer.1*
+%{_mandir}/man1/gc-analyze.1*
+%{_mandir}/man1/gcj.1*
+%{_mandir}/man1/gcjh.1*
+%{_mandir}/man1/gjar.1*
+%{_mandir}/man1/gjarsigner.1*
+%{_mandir}/man1/gjavah.1*
+%{_mandir}/man1/gkeytool.1*
+%{_mandir}/man1/gnative2ascii.1*
+%{_mandir}/man1/gorbd.1*
+%{_mandir}/man1/grmic.1*
+%{_mandir}/man1/grmid.1*
+%{_mandir}/man1/grmiregistry.1*
+%{_mandir}/man1/gserialver.1*
+%{_mandir}/man1/gtnameserv.1*
+%{_mandir}/man1/jcf-dump.1*
+%{_mandir}/man1/jv-convert.1*
 %{_mandir}/man1/rebuild-gcj-db*
 
 %files -n libgcj
@@ -1975,9 +2018,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_libdir}/libgcj-tools.so.%{gcj_soname_ver}
 %attr(755,root,root) %{_libdir}/libgcj.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgcj.so.%{gcj_soname_ver}
-%attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgcj_bc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgcj_bc.so.1
+%attr(755,root,root) %{_libdir}/libgcj_bc.so
 %attr(755,root,root) %{_libdir}/libgij.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgij.so.%{gcj_soname_ver}
 %{?with_x:%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so.*.*.*}
@@ -1996,22 +2039,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
 %{_javadir}/ecj.jar
-%{_mandir}/man1/gij*
+%{_mandir}/man1/gij.1*
 
 %files -n libgcj-devel
 %defattr(644,root,root,755)
-%{_includedir}/c++/%{version}/java
-%{_includedir}/c++/%{version}/javax
-%{_includedir}/c++/%{version}/gcj
-%{_includedir}/c++/%{version}/gnu
-%{_includedir}/c++/%{version}/org
-%{_includedir}/c++/%{version}/sun
-%{_libdir}/gcc/*/*/include/gcj
-%{_libdir}/gcc/*/*/include/jawt.h
-%{_libdir}/gcc/*/*/include/jawt_md.h
-%{_libdir}/gcc/*/*/include/jni.h
-%{_libdir}/gcc/*/*/include/jni_md.h
-%{_libdir}/gcc/*/*/include/jvmpi.h
+%attr(755,root,root) %{_libdir}/libgcj-tools.so
+%{_libdir}/libgcj-tools.la
+%attr(755,root,root) %{_libdir}/libgcj.so
+%{_libdir}/libgcj.la
+%attr(755,root,root) %{_libdir}/libgij.so
+%{_libdir}/libgij.la
+%if %{with x}
+%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
+%{_libdir}/lib-gnu-awt-xlib.la
+%endif
+%{_libdir}/libgcj.spec
+%dir %{_libdir}/security
+%{_libdir}/security/*
 %{?with_alsa:%{_libdir}/%{gcjdbexecdir}/libgjsmalsa.la}
 %{?with_dssi:%{_libdir}/%{gcjdbexecdir}/libgjsmdssi.la}
 %{?with_gtk:%{_libdir}/%{gcjdbexecdir}/libgtkpeer.la}
@@ -2021,47 +2065,48 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
 %{?with_mozilla:%{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.la}
 %{_libdir}/%{gcjdbexecdir}/libxmlj.la
-%dir %{_libdir}/security
-%{_libdir}/security/*
-%{_libdir}/libgcj.spec
-%{_libdir}/libgcj-tools.la
-%attr(755,root,root) %{_libdir}/libgcj-tools.so
-%{_libdir}/libgcj.la
-%attr(755,root,root) %{_libdir}/libgcj.so
-%{_libdir}/libgij.la
-%attr(755,root,root) %{_libdir}/libgij.so
-%if %{with x}
-%attr(755,root,root) %{_libdir}/lib-gnu-awt-xlib.so
-%{_libdir}/lib-gnu-awt-xlib.la
-%endif
+%{_libdir}/gcc/*/*/include/gcj
+%{_libdir}/gcc/*/*/include/jawt.h
+%{_libdir}/gcc/*/*/include/jawt_md.h
+%{_libdir}/gcc/*/*/include/jni.h
+%{_libdir}/gcc/*/*/include/jni_md.h
+%{_libdir}/gcc/*/*/include/jvmpi.h
+%{_includedir}/c++/%{version}/java
+%{_includedir}/c++/%{version}/javax
+%{_includedir}/c++/%{version}/gcj
+%{_includedir}/c++/%{version}/gnu
+%{_includedir}/c++/%{version}/org
+%{_includedir}/c++/%{version}/sun
 %{_pkgconfigdir}/libgcj-%{major_ver}.pc
 
 %files -n libgcj-static
 %defattr(644,root,root,755)
-%{_libdir}/%{gcjdbexecdir}/libjvm.a
 %{_libdir}/libgcj-tools.a
 %{_libdir}/libgcj.a
 %{_libdir}/libgcj_bc.a
 %{_libdir}/libgij.a
 %{?with_x:%{_libdir}/lib-gnu-awt-xlib.a}
+%{_libdir}/%{gcjdbexecdir}/libjvm.a
 
 %files -n libffi
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
 %attr(755,root,root) %{_libdir}/libffi.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libffi.so.4
 
 %if %{with multilib}
 %files -n libffi-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
 %endif
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/include/ffi.h
-%{_libdir}/gcc/*/*/include/ffitarget.h
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
+%{_libdir}/gcc/*/*/include/ffi.h
+%{_libdir}/gcc/*/*/include/ffitarget.h
 %{_mandir}/man3/ffi*.3*
 
 %if %{with multilib}
@@ -2102,11 +2147,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libobjc.so.2
 
 %if %{with multilib}
 %files -n libobjc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.2
 %endif
 
 %files -n libobjc-static
