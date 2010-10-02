@@ -1,3 +1,4 @@
+# NOTE: despite lower soname, libffi is newer than standalone 3.0.9
 #
 # TODO:
 # - gconf peer? (but libgcj needs split anyway)
