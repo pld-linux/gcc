@@ -7,16 +7,8 @@
 #   /usr/bin/gjdoc
 #   /usr/share/man/man1/aot-compile.1.gz
 #   /usr/share/man/man1/gjdoc.1.gz
-#   /usr/share/gcc-4.5.0/python/libstdcxx/__init__.py (gdb stuff?)
-#   /usr/share/gcc-4.5.0/python/libstdcxx/v6/__init__.py
-#   /usr/share/gcc-4.5.0/python/libstdcxx/v6/printers.py
 #   /usr/share/python/aotcompile.py
 #   /usr/share/python/classfile.py
-#
-# - thin about cooperate with (or drop some parts of) 'python-gdb' package which also contains:
-#   /usr/lib{,64}/libstdc++.so.6.0.*-gdb.py
-#   /usr/share/python2.6/site-packages/libstdcxx
-#   ^--- our gdb.spec backported the stuff (like fc), so package here and rm in gdb package?
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -35,6 +27,7 @@
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_with	profiling	# build with profiling
+%bcond_without	python		# build without libstdc++ python pretty printers for gdb
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
@@ -136,6 +129,10 @@ BuildRequires:	glibc-devel(sparcv9)
 BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
+%if %{with python}
+BuildRequires:	python-devel
+BuildRequires:	rpm-pythonprov
+%endif
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
@@ -560,8 +557,8 @@ This package contains 32-bit version of static libraries for programs
 written in Ada.
 
 %description -n libgnat-multilib-static -l pl.UTF-8
-Ten pakiet zawiera 32-bitowe wersje bibliotek statycznych dla programów
-napisanych w Adzie.
+Ten pakiet zawiera 32-bitowe wersje bibliotek statycznych dla
+programów napisanych w Adzie.
 
 %package c++
 Summary:	C++ support for gcc
@@ -687,6 +684,15 @@ library.
 Ten pakiet ten zawiera 32-bitową wersję implementacji GNU biblioteki
 standardowej C++.
 
+%package -n libstdc++-gdb
+Summary:	libstdc++ pretty printers for GDB
+Group:		Development/Debuggers
+Requires:	python-gdb
+
+%description -n libstdc++-gdb
+This package contains Python scripts for GDB pretty printing of the
+libstdc++ types/containers.
+
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
 Summary(de.UTF-8):	Header-Dateien zur Entwicklung mit C++
@@ -733,8 +739,8 @@ Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libstdc++-multilib-devel
-This package contains the development files for 32-bit version of
-the GNU implementation of the standard C++ library.
+This package contains the development files for 32-bit version of the
+GNU implementation of the standard C++ library.
 
 %description -n libstdc++-multilib-devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne 32-bitowej wersji
@@ -1483,6 +1489,23 @@ cp $gccdir/include-fixed/syslimits.h $gccdir/include
 rm -rf $gccdir/install-tools
 rm -rf $gccdir/include-fixed
 
+%if %{with python}
+for LIB in lib lib64; do
+	LIBPATH="$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_prefix}/$LIB"
+	install -d $LIBPATH
+	# basename is being run only for the native (non-biarch) file.
+	sed -e 's,@pythondir@,%{_datadir}/gdb,' \
+	  -e 's,@toolexeclibdir@,%{_prefix}/'"$LIB," \
+	  < libstdc++-v3/python/hook.in	\
+	  > $LIBPATH/$(basename $RPM_BUILD_ROOT/%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
+done
+install -d $RPM_BUILD_ROOT%{py_sitescriptdir}
+cp -a libstdc++-v3/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
+%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
+%py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
+%py_postclean
+%endif
+
 %find_lang gcc
 %find_lang cpplib
 cat cpplib.lang >> gcc.lang
@@ -1877,6 +1900,16 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.6
+%endif
+
+%if %{with python}
+%files -n libstdc++-gdb
+%defattr(644,root,root,755)
+%dir %{py_sitescriptdir}/libstdcxx
+%{py_sitescriptdir}/libstdcxx/*.py[co]
+%dir %{py_sitescriptdir}/libstdcxx/v6
+%{py_sitescriptdir}/libstdcxx/v6/*.py[co]
+%{_datadir}/gdb/auto-load/%{_prefix}/lib*/libstdc++.so.6.0.14-gdb.py
 %endif
 
 %files -n libstdc++-devel
