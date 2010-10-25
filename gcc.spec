@@ -785,7 +785,7 @@ Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
 Summary:	C++ standard library API documentation
 Group:		Documentation
 
-%description apidocs
+%description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
 
 %package fortran
@@ -1943,7 +1943,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{with apidocs}
-%files libstdc++-apidocs
+%files -n libstdc++-apidocs
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html/*
 %endif
