@@ -783,10 +783,14 @@ Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
 
 %package -n libstdc++-apidocs
 Summary:	C++ standard library API documentation
+Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
 Group:		Documentation
 
 %description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
+
+%description -n libstdc++-apidocs -l pl.UTF-8
+Dokumentacja API i wewnętrzna biblioteki standardowej C++.
 
 %package fortran
 Summary:	Fortran 95 support for gcc
