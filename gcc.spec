@@ -1945,7 +1945,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with apidocs}
 %files libstdc++-apidocs
 %defattr(644,root,root,755)
-%doc libstdc++-v3/doc/html
+%doc libstdc++-v3/doc/html/*
 %endif
 
 %if %{with multilib}
