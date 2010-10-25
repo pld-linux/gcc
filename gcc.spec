@@ -22,6 +22,7 @@
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
+%bcond_without	apidocs		# do not build and package API docs
 %bcond_with	mozilla		# don't build libgcjwebplugin (needs fix for new xulrunner)
 %bcond_with	qt		# build libgcj Qt peer (currently doesn't build with libtool-2.x)
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
@@ -779,6 +780,13 @@ Static C++ standard library - 32-bit version.
 
 %description -n libstdc++-multilib-static -l pl.UTF-8
 Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
+
+%package -n libstdc++-apidocs
+Summary:	C++ standard library API documentation
+Group:		Documentation
+
+%description apidocs
+API and internal documentation for C++ standard library.
 
 %package fortran
 Summary:	Fortran 95 support for gcc
@@ -1918,7 +1926,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
-%doc libstdc++-v3/doc/html
 %attr(755,root,root) %{_libdir}/libstdc++.so
 %{_libdir}/libstdc++.la
 %dir %{_includedir}/c++
@@ -1933,6 +1940,12 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_includedir}/c++/%{version}/gnu
 %exclude %{_includedir}/c++/%{version}/org
 %exclude %{_includedir}/c++/%{version}/sun
+%endif
+
+%if %{with apidocs}
+%files libstdc++-apidocs
+%defattr(644,root,root,755)
+%doc libstdc++-v3/doc/html
 %endif
 
 %if %{with multilib}
