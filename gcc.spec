@@ -9,6 +9,7 @@
 #   /usr/share/man/man1/gjdoc.1.gz
 #   /usr/share/python/aotcompile.py
 #   /usr/share/python/classfile.py
+# - missing libffi.pc required by some packages (eg. python-pygobject)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
