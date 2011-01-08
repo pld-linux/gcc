@@ -1,7 +1,7 @@
 Index: libgomp/configure.tgt
 ===================================================================
---- libgomp/configure.tgt	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libgomp/configure.tgt	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libgomp/configure.tgt	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libgomp/configure.tgt	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -125,6 +125,10 @@
  	config_path="bsd posix"
  	;;
@@ -15,8 +15,8 @@ Index: libgomp/configure.tgt
  
 Index: libgomp/ChangeLog
 ===================================================================
---- libgomp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libgomp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libgomp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libgomp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1,3 +1,10 @@
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
@@ -28,23 +28,355 @@ Index: libgomp/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/tree-loop-distribution.c
+===================================================================
+--- gcc/tree-loop-distribution.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/tree-loop-distribution.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -251,7 +251,7 @@
+ 
+ /* Generate a call to memset.  Return true when the operation succeeded.  */
+ 
+-static bool
++static void
+ generate_memset_zero (gimple stmt, tree op0, tree nb_iter,
+ 		      gimple_stmt_iterator bsi)
+ {
+@@ -265,45 +265,27 @@
+ 
+   DR_STMT (dr) = stmt;
+   DR_REF (dr) = op0;
+-  if (!dr_analyze_innermost (dr))
+-    goto end;
++  res = dr_analyze_innermost (dr);
++  gcc_assert (res && stride_of_unit_type_p (DR_STEP (dr), TREE_TYPE (op0)));
+ 
+-  /* Test for a positive stride, iterating over every element.  */
+-  if (integer_zerop (size_binop (MINUS_EXPR,
+-				 fold_convert (sizetype, DR_STEP (dr)),
+-				 TYPE_SIZE_UNIT (TREE_TYPE (op0)))))
+-    {
+-      addr_base = fold_convert_loc (loc, sizetype,
+-				    size_binop_loc (loc, PLUS_EXPR,
+-						    DR_OFFSET (dr),
+-						    DR_INIT (dr)));
+-      addr_base = fold_build2_loc (loc, POINTER_PLUS_EXPR,
+-				   TREE_TYPE (DR_BASE_ADDRESS (dr)),
+-				   DR_BASE_ADDRESS (dr), addr_base);
++  nb_bytes = build_size_arg_loc (loc, nb_iter, op0, &stmt_list);
++  addr_base = size_binop_loc (loc, PLUS_EXPR, DR_OFFSET (dr), DR_INIT (dr));
++  addr_base = fold_convert_loc (loc, sizetype, addr_base);
+ 
+-      nb_bytes = build_size_arg_loc (loc, nb_iter, op0, &stmt_list);
+-    }
+-
+   /* Test for a negative stride, iterating over every element.  */
+-  else if (integer_zerop (size_binop (PLUS_EXPR,
+-				      TYPE_SIZE_UNIT (TREE_TYPE (op0)),
+-				      fold_convert (sizetype, DR_STEP (dr)))))
++  if (integer_zerop (size_binop (PLUS_EXPR,
++				 TYPE_SIZE_UNIT (TREE_TYPE (op0)),
++				 fold_convert (sizetype, DR_STEP (dr)))))
+     {
+-      nb_bytes = build_size_arg_loc (loc, nb_iter, op0, &stmt_list);
+-
+-      addr_base = size_binop_loc (loc, PLUS_EXPR, DR_OFFSET (dr), DR_INIT (dr));
+-      addr_base = fold_convert_loc (loc, sizetype, addr_base);
+       addr_base = size_binop_loc (loc, MINUS_EXPR, addr_base,
+ 				  fold_convert_loc (loc, sizetype, nb_bytes));
+       addr_base = size_binop_loc (loc, PLUS_EXPR, addr_base,
+ 				  TYPE_SIZE_UNIT (TREE_TYPE (op0)));
+-      addr_base = fold_build2_loc (loc, POINTER_PLUS_EXPR,
+-				   TREE_TYPE (DR_BASE_ADDRESS (dr)),
+-				   DR_BASE_ADDRESS (dr), addr_base);
+     }
+-  else
+-    goto end;
+ 
++  addr_base = fold_build2_loc (loc, POINTER_PLUS_EXPR,
++			       TREE_TYPE (DR_BASE_ADDRESS (dr)),
++			       DR_BASE_ADDRESS (dr), addr_base);
+   mem = force_gimple_operand (addr_base, &stmts, true, NULL);
+   gimple_seq_add_seq (&stmt_list, stmts);
+ 
+@@ -311,14 +293,11 @@
+   fn_call = gimple_build_call (fn, 3, mem, integer_zero_node, nb_bytes);
+   gimple_seq_add_stmt (&stmt_list, fn_call);
+   gsi_insert_seq_after (&bsi, stmt_list, GSI_CONTINUE_LINKING);
+-  res = true;
+ 
+   if (dump_file && (dump_flags & TDF_DETAILS))
+     fprintf (dump_file, "generated memset zero\n");
+ 
+- end:
+   free_data_ref (dr);
+-  return res;
+ }
+ 
+ /* Tries to generate a builtin function for the instructions of LOOP
+@@ -332,7 +311,6 @@
+   unsigned i, x = 0;
+   basic_block *bbs;
+   gimple write = NULL;
+-  tree op0, op1;
+   gimple_stmt_iterator bsi;
+   tree nb_iter = number_of_exit_cond_executions (loop);
+ 
+@@ -368,26 +346,17 @@
+ 	}
+     }
+ 
+-  if (!write)
++  if (!stmt_with_adjacent_zero_store_dr_p (write))
+     goto end;
+ 
+-  op0 = gimple_assign_lhs (write);
+-  op1 = gimple_assign_rhs1 (write);
+-
+-  if (!(TREE_CODE (op0) == ARRAY_REF
+-	|| TREE_CODE (op0) == INDIRECT_REF))
+-    goto end;
+-
+   /* The new statements will be placed before LOOP.  */
+   bsi = gsi_last_bb (loop_preheader_edge (loop)->src);
++  generate_memset_zero (write, gimple_assign_lhs (write), nb_iter, bsi);
++  res = true;
+ 
+-  if (gimple_assign_rhs_code (write) == INTEGER_CST
+-      && (integer_zerop (op1) || real_zerop (op1)))
+-    res = generate_memset_zero (write, op0, nb_iter, bsi);
+-
+   /* If this is the last partition for which we generate code, we have
+      to destroy the loop.  */
+-  if (res && !copy_p)
++  if (!copy_p)
+     {
+       unsigned nbbs = loop->num_nodes;
+       edge exit = single_exit (loop);
+@@ -531,24 +500,6 @@
+ static void rdg_flag_vertex_and_dependent (struct graph *, int, bitmap, bitmap,
+ 					   bitmap, bool *);
+ 
+-/* Flag all the uses of U.  */
+-
+-static void
+-rdg_flag_all_uses (struct graph *rdg, int u, bitmap partition, bitmap loops,
+-		   bitmap processed, bool *part_has_writes)
+-{
+-  struct graph_edge *e;
+-
+-  for (e = rdg->vertices[u].succ; e; e = e->succ_next)
+-    if (!bitmap_bit_p (processed, e->dest))
+-      {
+-	rdg_flag_vertex_and_dependent (rdg, e->dest, partition, loops,
+-				       processed, part_has_writes);
+-	rdg_flag_all_uses (rdg, e->dest, partition, loops, processed,
+-			   part_has_writes);
+-      }
+-}
+-
+ /* Flag the uses of U stopping following the information from
+    upstream_mem_writes.  */
+ 
+@@ -720,68 +671,13 @@
+     }
+ }
+ 
+-/* Flag all the nodes of RDG containing memory accesses that could
+-   potentially belong to arrays already accessed in the current
+-   PARTITION.  */
+-
+-static void
+-rdg_flag_similar_memory_accesses (struct graph *rdg, bitmap partition,
+-				  bitmap loops, bitmap processed,
+-				  VEC (int, heap) **other_stores)
+-{
+-  bool foo;
+-  unsigned i, n;
+-  int j, k, kk;
+-  bitmap_iterator ii;
+-  struct graph_edge *e;
+-
+-  EXECUTE_IF_SET_IN_BITMAP (partition, 0, i, ii)
+-    if (RDG_MEM_WRITE_STMT (rdg, i)
+-	|| RDG_MEM_READS_STMT (rdg, i))
+-      {
+-	for (j = 0; j < rdg->n_vertices; j++)
+-	  if (!bitmap_bit_p (processed, j)
+-	      && (RDG_MEM_WRITE_STMT (rdg, j)
+-		  || RDG_MEM_READS_STMT (rdg, j))
+-	      && rdg_has_similar_memory_accesses (rdg, i, j))
+-	    {
+-	      /* Flag first the node J itself, and all the nodes that
+-		 are needed to compute J.  */
+-	      rdg_flag_vertex_and_dependent (rdg, j, partition, loops,
+-					     processed, &foo);
+-
+-	      /* When J is a read, we want to coalesce in the same
+-		 PARTITION all the nodes that are using J: this is
+-		 needed for better cache locality.  */
+-	      rdg_flag_all_uses (rdg, j, partition, loops, processed, &foo);
+-
+-	      /* Remove from OTHER_STORES the vertex that we flagged.  */
+-	      if (RDG_MEM_WRITE_STMT (rdg, j))
+-		for (k = 0; VEC_iterate (int, *other_stores, k, kk); k++)
+-		  if (kk == j)
+-		    {
+-		      VEC_unordered_remove (int, *other_stores, k);
+-		      break;
+-		    }
+-	    }
+-
+-	/* If the node I has two uses, then keep these together in the
+-	   same PARTITION.  */
+-	for (n = 0, e = rdg->vertices[i].succ; e; e = e->succ_next, n++);
+-
+-	if (n > 1)
+-	  rdg_flag_all_uses (rdg, i, partition, loops, processed, &foo);
+-      }
+-}
+-
+ /* Returns a bitmap in which all the statements needed for computing
+    the strongly connected component C of the RDG are flagged, also
+    including the loop exit conditions.  */
+ 
+ static bitmap
+ build_rdg_partition_for_component (struct graph *rdg, rdgc c,
+-				   bool *part_has_writes,
+-				   VEC (int, heap) **other_stores)
++				   bool *part_has_writes)
+ {
+   int i, v;
+   bitmap partition = BITMAP_ALLOC (NULL);
+@@ -793,13 +689,6 @@
+       rdg_flag_vertex_and_dependent (rdg, v, partition, loops, processed,
+ 				     part_has_writes);
+ 
+-  /* Also iterate on the array of stores not in the starting vertices,
+-     and determine those vertices that have some memory affinity with
+-     the current nodes in the component: these are stores to the same
+-     arrays, i.e. we're taking care of cache locality.  */
+-  rdg_flag_similar_memory_accesses (rdg, partition, loops, processed,
+-				    other_stores);
+-
+   rdg_flag_loop_exits (rdg, loops, partition, processed, part_has_writes);
+ 
+   BITMAP_FREE (processed);
+@@ -863,6 +752,79 @@
+   BITMAP_FREE (saved_components);
+ }
+ 
++/* Returns true when it is possible to generate a builtin pattern for
++   the PARTITION of RDG.  For the moment we detect only the memset
++   zero pattern.  */
++
++static bool
++can_generate_builtin (struct graph *rdg, bitmap partition)
++{
++  unsigned i;
++  bitmap_iterator bi;
++  int nb_reads = 0;
++  int nb_writes = 0;
++  int stores_zero = 0;
++
++  EXECUTE_IF_SET_IN_BITMAP (partition, 0, i, bi)
++    if (RDG_MEM_READS_STMT (rdg, i))
++      nb_reads++;
++    else if (RDG_MEM_WRITE_STMT (rdg, i))
++      {
++	nb_writes++;
++	if (stmt_with_adjacent_zero_store_dr_p (RDG_STMT (rdg, i)))
++	  stores_zero++;
++      }
++
++  return stores_zero == 1 && nb_writes == 1 && nb_reads == 0;
++}
++
++/* Returns true when PARTITION1 and PARTITION2 have similar memory
++   accesses in RDG.  */
++
++static bool
++similar_memory_accesses (struct graph *rdg, bitmap partition1,
++			 bitmap partition2)
++{
++  unsigned i, j;
++  bitmap_iterator bi, bj;
++
++  EXECUTE_IF_SET_IN_BITMAP (partition1, 0, i, bi)
++    if (RDG_MEM_WRITE_STMT (rdg, i)
++	|| RDG_MEM_READS_STMT (rdg, i))
++      EXECUTE_IF_SET_IN_BITMAP (partition2, 0, j, bj)
++	if (RDG_MEM_WRITE_STMT (rdg, j)
++	    || RDG_MEM_READS_STMT (rdg, j))
++	  if (rdg_has_similar_memory_accesses (rdg, i, j))
++	    return true;
++
++  return false;
++}
++
++/* Fuse all the partitions from PARTITIONS that contain similar memory
++   references, i.e., we're taking care of cache locality.  This
++   function does not fuse those partitions that contain patterns that
++   can be code generated with builtins.  */
++
++static void
++fuse_partitions_with_similar_memory_accesses (struct graph *rdg,
++					      VEC (bitmap, heap) **partitions)
++{
++  int p1, p2;
++  bitmap partition1, partition2;
++
++  for (p1 = 0; VEC_iterate (bitmap, *partitions, p1, partition1); p1++)
++    if (!can_generate_builtin (rdg, partition1))
++      for (p2 = 0; VEC_iterate (bitmap, *partitions, p2, partition2); p2++)
++	if (p1 != p2
++	    && !can_generate_builtin (rdg, partition2)
++	    && similar_memory_accesses (rdg, partition1, partition2))
++	  {
++	    bitmap_ior_into (partition1, partition2);
++	    VEC_ordered_remove (bitmap, *partitions, p2);
++	    p2--;
++	  }
++}
++
+ /* Aggregate several components into a useful partition that is
+    registered in the PARTITIONS vector.  Partitions will be
+    distributed in different loops.  */
+@@ -885,8 +847,7 @@
+       if (bitmap_bit_p (processed, v))
+ 	continue;
+ 
+-      np = build_rdg_partition_for_component (rdg, x, &part_has_writes,
+-					      other_stores);
++      np = build_rdg_partition_for_component (rdg, x, &part_has_writes);
+       bitmap_ior_into (partition, np);
+       bitmap_ior_into (processed, np);
+       BITMAP_FREE (np);
+@@ -932,6 +893,8 @@
+     VEC_safe_push (bitmap, heap, *partitions, partition);
+   else
+     BITMAP_FREE (partition);
++
++  fuse_partitions_with_similar_memory_accesses (rdg, partitions);
+ }
+ 
+ /* Dump to FILE the PARTITIONS.  */
 Index: gcc/DATESTAMP
 ===================================================================
---- gcc/DATESTAMP	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/DATESTAMP	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1 +1 @@
 -20101216
-+20101218
++20110108
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/tree-ssa-sccvn.c
 ===================================================================
---- gcc/tree-ssa-sccvn.c	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/tree-ssa-sccvn.c	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/tree-ssa-sccvn.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/tree-ssa-sccvn.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1063,6 +1063,7 @@
        size2 = TREE_INT_CST_LOW (gimple_call_arg (def_stmt, 2)) * 8;
        if ((unsigned HOST_WIDE_INT)size2 / 8
@@ -75,9 +407,143 @@ Index: gcc/tree-ssa-sccvn.c
  	return (void *)-1;
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168030)
-@@ -1,3 +1,23 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,157 @@
++2011-01-07  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	Backport from mainline:
++	2011-01-06  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	PR target/43309
++	* config/i386/i386.c (legitimize_tls_address)
++	<TLS_MODEL_INITIAL_EXEC>: Handle TARGET_64BIT && TARGET_SUN_TLS.
++	* config/i386/i386.md (UNSPEC_TLS_IE_SUN): Declare.
++	(tls_initial_exec_64_sun): New pattern.
++
++2011-01-03  Eric Botcazou  <ebotcazou@adacore.com>
++
++	Backport from mainline
++	2010-12-30  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR target/47038
++	* config/sparc/sparc.c (sparc_file_end): Call resolve_unique_section
++	on the GOT helper if USE_HIDDEN_LINKONCE.
++
++	2010-12-02  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR target/46685
++	* config/sparc/sparc.c (can_use_mov_pic_label_ref): New predicate.
++	(sparc_expand_move): Call it to decide whether to emit the special
++	mov{si,di}_pic_label_ref patterns.
++	(sparc_legitimize_pic_address): Call it to decide whether to emit
++	the regular PIC sequence for labels.  Fix long line.
++	(sparc_file_end): Set is_thunk for the PIC helper.
++
++2010-12-30  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	* config/pa/pa.md: Add ",*" condition to 64-bit add/subtract boolean
++	patterns.
++
++2010-12-27  Yao Qi  <yao@codesourcery.com>
++
++	Backport from mainline:
++	2010-10-14  Yao Qi  <yao@codesourcery.com>
++
++	PR target/45447
++	* config/arm/arm.c (arm_build_builtin_va_list): Assign
++	va_list_name to TYPE_STUB_DECL (va_list_type).
++
++2010-12-23  Sebastian Pop  <sebastian.pop@amd.com>
++	    Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/46758
++	* graphite-sese-to-poly.c (scan_tree_for_params_right_scev): Use
++	tree_int_to_gmp instead of int_cst_value.
++	(scan_tree_for_params_int): Same.
++	(scan_tree_for_params): Same.
++	(pdr_add_data_dimensions): Use ppl_set_inhomogeneous_tree.
++
++2010-12-23  Sebastian Pop  <sebastian.pop@amd.com>
++
++	Backport from mainline
++	Fix PR45758: reset scevs before Graphite.
++        2010-09-24  Sebastian Pop  <sebastian.pop@amd.com>
++
++	PR tree-optimization/45552
++	* graphite.c (graphite_initialize): Call scev_reset.
++
++2010-12-23  Sebastian Pop  <sebastian.pop@amd.com>
++
++	PR tree-optimization/43023
++	* tree-data-ref.c (mem_write_stride_of_same_size_as_unit_type_p):
++	Removed.
++	(stores_zero_from_loop): Call stmt_stores_zero.
++	(stmt_with_adjacent_zero_store_dr_p): New.
++	* tree-data-ref.h (stmt_with_adjacent_zero_store_dr_p): Declared.
++	(stride_of_unit_type_p): New.
++	* tree-loop-distribution.c (generate_memset_zero): Do not return a
++	boolean.  Call gcc_assert on stride_of_unit_type_p.
++	(generate_builtin): Call stmt_stores_zero.
++	(rdg_flag_all_uses): Removed.
++	(rdg_flag_similar_memory_accesses): Removed.
++	(build_rdg_partition_for_component): Removed parameter
++	other_stores.  Removed call to rdg_flag_similar_memory_accesses.
++	(can_generate_builtin): New.
++	(similar_memory_accesses): New.
++	(fuse_partitions_with_similar_memory_accesses): New.
++	(rdg_build_partitions): Call
++	fuse_partitions_with_similar_memory_accesses.
++
++2010-12-21  Martin Jambor  <mjambor@suse.cz>
++
++	Backport from mainline:
++	2010-12-09  Martin Jambor  <mjambor@suse.cz>
++
++	PR middle-end/46734
++	* tree-sra.c (splice_param_accesses): Check that there are not
++	multiple ADDRESSABLE types.
++
++2010-12-19  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	Backport from mainline:
++	2010-12-18  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
++
++	PR target/46915
++	* config/pa/pa.c (branch_to_delay_slot_p): Use next_active_insn instead
++	of next_real_insn.  Search forward checking for both ASM_INPUT and
++	ASM_OPERANDS asms until exit condition is found.
++	(branch_needs_nop_p): Likewise.
++	(use_skip_p): New function.
++	(output_cbranch): Use use_skip_p.
++	(output_bb, output_bvb): Likewise.
++
++2010-12-19  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR target/46729
++	* config/sparc/sparc.h (GLOBAL_OFFSET_TABLE_REGNUM): New macro.
++	(PIC_OFFSET_TABLE_REGNUM): Rewrite in terms of above macro.
++	* config/sparc/sparc.c (pic_helper_needed): Delete.
++	(global_offset_table): Likewise.
++	(pic_helper_symbol): Rename to...
++	(got_helper_rtx): ...this.
++	(global_offset_table_rtx): New global variable.
++	(sparc_got_symbol): Likewise.
++	(sparc_got): New static function.
++	(check_pic): Use local variable and call sparc_got.
++	(sparc_tls_symbol): Initialize to NULL_RTX.
++	(sparc_tls_got): In non-PIC mode, reload the GOT register for Sun TLS
++	and 32-bit ABI and copy the GOT symbol to a new register otherwise.
++	(get_pc_thunk_name): Rename local variable.
++	(gen_load_pcrel_sym): New wrapper around load_pcrel_sym{si,di}.
++	(load_pic_register): Rename to...
++	(load_got_register): ...this.  Adjust and call gen_load_pcrel_sym.
++	(sparc_expand_prologue): Do not test flag_pic.
++	(sparc_output_mi_thunk): Use pic_offset_table_rtx directly.
++	(sparc_file_end): Test got_helper_rtx instead of pic_helper_needed.
++	Rename local variable and do not call get_pc_thunk_name again.
++	* config/sparc/sparc.md (load_pcrel_sym): Add operand #3.
++
 +2010-12-18  Alexandre Oliva  <aoliva@redhat.com>
 +
 +	PR debug/46756
@@ -101,10 +567,18 @@ Index: gcc/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/testsuite/gcc.target/arm/pr45447.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/pr45447.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/arm/pr45447.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,3 @@
++/* { dg-do compile } */
++/* { dg-options "-g -femit-struct-debug-baseonly" } */
++typedef __builtin_va_list x;
 Index: gcc/testsuite/gnat.dg/opt13.adb
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13.adb	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13.adb	(.../branches/gcc-4_5-branch)	(wersja 168030)
++++ gcc/testsuite/gnat.dg/opt13.adb	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1,13 @@
 +-- { dg-do run }
 +-- { dg-options "-O" }
@@ -122,7 +596,7 @@ Index: gcc/testsuite/gnat.dg/opt13.adb
 Index: gcc/testsuite/gnat.dg/opt13_pkg.adb
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../branches/gcc-4_5-branch)	(wersja 168030)
++++ gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1,31 @@
 +package body Opt13_Pkg is
 +
@@ -158,7 +632,7 @@ Index: gcc/testsuite/gnat.dg/opt13_pkg.adb
 Index: gcc/testsuite/gnat.dg/opt13_pkg.ads
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../branches/gcc-4_5-branch)	(wersja 168030)
++++ gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1,15 @@
 +package Opt13_Pkg is
 +
@@ -178,7 +652,7 @@ Index: gcc/testsuite/gnat.dg/opt13_pkg.ads
 Index: gcc/testsuite/gcc.dg/debug/pr46782.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/debug/pr46782.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/debug/pr46782.c	(.../branches/gcc-4_5-branch)	(wersja 168030)
++++ gcc/testsuite/gcc.dg/debug/pr46782.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1,11 @@
 +/* PR debug/46782 */
 +/* { dg-do compile } */
@@ -191,11 +665,125 @@ Index: gcc/testsuite/gcc.dg/debug/pr46782.c
 +  while (i)
 +    ;
 +}
+Index: gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c
+===================================================================
+--- gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,18 @@
++int
++movegt (int y, long long a)
++{
++  int i;
++  int ret = 0;
++  for (i = 0; i < y; i++)
++    if (a == -1LL << 33)
++      ret = -1;
++  return ret;
++}
++
++int
++main ()
++{
++  if (movegt (1, -1LL << 33) != -1)
++    __builtin_abort ();
++  return 0;
++}
+Index: gcc/testsuite/gcc.dg/graphite/pr45552.c
+===================================================================
+--- gcc/testsuite/gcc.dg/graphite/pr45552.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/graphite/pr45552.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,46 @@
++typedef struct
++{
++  double z;
++} Vector;
++typedef struct
++{
++  float *vertex;
++  float *normal;
++} VertexArray;
++typedef struct
++{
++  Vector *vertex;
++  int num_vertex;
++} ObjectSmooth;
++typedef struct
++{
++  int num_cells;
++} State;
++static void *array_from_ObjectSmooth( ObjectSmooth *obj )
++{
++  int i, j;
++  VertexArray *array = (VertexArray *) __builtin_malloc( sizeof( VertexArray ) );
++  array->vertex = (float *) __builtin_malloc( 3*sizeof(float)*obj->num_vertex );
++  array->normal = (float *) __builtin_malloc( 3*sizeof(float)*obj->num_vertex );
++  for (i=0, j=0; i<obj->num_vertex; ++i) {
++    array->normal[j++] = 9;
++    array->vertex[j] = obj->vertex[i].z;
++    array->normal[j++] = 1;
++  }
++}
++static void draw_cell( void )
++{
++  glCallList( array_from_ObjectSmooth( (ObjectSmooth *) __builtin_malloc(10) ));
++}
++static int render( State *st)
++{
++  int b;
++  for (b=0; b<st->num_cells; ++b) {
++    draw_cell();
++    draw_cell();
++  }
++}
++reshape_glcells( int width, int height )
++{
++  render( 0 );
++}
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168030)
-@@ -1,3 +1,23 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,63 @@
++2011-02-01  Thomas Koenig  <tkoenig@gcc.gnu.org>
++
++	Backport from mainline
++	PR fortran/45338
++	* gfortran.dg/userdef_operator_2.f90:  New test case.
++
++2010-12-27  Yao Qi  <yao@codesourcery.com>
++
++	Backport from mainline:
++	2010-10-14  Yao Qi  <yao@codesourcery.com>
++
++	PR target/45447
++	* gcc.target/arm/pr45447.c: New test.
++
++2010-12-24  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gnat.dg/opt13_pkg.ad[sb]: Fix line ending.
++
++2010-12-22  Sebastian Pop  <sebastian.pop@amd.com>
++
++	PR tree-optimization/46758
++	* gcc.dg/graphite/run-id-pr46758.c: New.
++
++2010-12-23  Sebastian Pop  <sebastian.pop@amd.com>
++
++	PR tree-optimization/45552
++	* gcc.dg/graphite/pr45552.c
++
++
++2010-12-23  Sebastian Pop  <sebastian.pop@amd.com>
++
++	PR tree-optimization/43023
++	* gfortran.dg/ldist-1.f90: Adjust pattern.
++	* gfortran.dg/ldist-pr43023.f90: New.
++
++2010-12-21  Martin Jambor  <mjambor@suse.cz>
++
++	PR middle-end/46734
++	* g++.dg/tree-ssa/pr46734.C: New test.
++
 +2010-12-18  Alexandre Oliva  <aoliva@redhat.com>
 +
 +	PR debug/46756
@@ -219,10 +807,63 @@ Index: gcc/testsuite/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/testsuite/g++.dg/tree-ssa/pr46734.C
+===================================================================
+--- gcc/testsuite/g++.dg/tree-ssa/pr46734.C	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/tree-ssa/pr46734.C	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,34 @@
++/* { dg-do compile } */
++/* { dg-options "-O -fipa-sra" } */
++
++struct A
++{
++  int *p;
++  A() {p = (int *) -1;}
++  ~A() {if (p && p != (int *) -1) *p = 0;}
++};
++
++struct B
++{
++  A a;
++  char data[23];
++  B() : a() {data[0] = 0;}
++};
++
++extern A ga;
++extern int *gi;
++extern void *gz;
++extern B *gb;
++
++static int * __attribute__ ((noinline)) foo (B *b, void *z)
++{
++  __builtin_memcpy (gz, z, 28);
++  ga = b->a;
++  return b->a.p;
++}
++
++int *bar (B *b, void *z)
++{
++  gb = b;
++  return foo (b, z);
++}
+Index: gcc/testsuite/gfortran.dg/ldist-1.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/ldist-1.f90	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/testsuite/gfortran.dg/ldist-1.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -29,5 +29,8 @@
+   return
+ end Subroutine PADEC
+ 
+-! { dg-final { scan-tree-dump-times "distributed: split to 4 loops" 1 "ldist" } }
++! There are 5 legal partitions in this code.  Based on the data
++! locality heuristic, this loop should not be split.
++
++! { dg-final { scan-tree-dump-not "distributed: split to" "ldist" } }
+ ! { dg-final { cleanup-tree-dump "ldist" } }
 Index: gcc/testsuite/gfortran.dg/debug/pr46756.f
 ===================================================================
 --- gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../branches/gcc-4_5-branch)	(wersja 168030)
++++ gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -0,0 +1,29 @@
 +C PR debug/46756, reduced from ../20010519-1.f
 +C { dg-do compile }
@@ -253,10 +894,68 @@ Index: gcc/testsuite/gfortran.dg/debug/pr46756.f
 + 800  CONTINUE
 +      GOTO I800 ! { dg-warning "Deleted feature: Assigned" "Assigned GO TO" }
 +      END
+Index: gcc/testsuite/gfortran.dg/ldist-pr43023.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/ldist-pr43023.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/ldist-pr43023.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,31 @@
++! { dg-do compile }
++! { dg-options "-O2 -ftree-loop-distribution" }
++
++MODULE NFT_mod
++
++implicit none
++integer :: Nangle
++real:: Z0
++real, dimension(:,:), allocatable :: Angle
++real, dimension(:), allocatable :: exth, ezth, hxth, hyth, hyphi
++
++CONTAINS
++
++SUBROUTINE NFT_Init()
++
++real :: th, fi
++integer :: n
++
++do n = 1,Nangle
++  th = Angle(n,1)
++  fi = Angle(n,2)
++
++  exth(n) =  cos(fi)*cos(th)
++  ezth(n) = -sin(th)
++  hxth(n) = -sin(fi)
++  hyth(n) =  cos(fi)
++  hyphi(n) = -sin(fi)
++end do
++END SUBROUTINE NFT_Init
++
++END MODULE NFT_mod
+Index: gcc/testsuite/gfortran.dg/userdef_operator_2.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/userdef_operator_2.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/userdef_operator_2.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -0,0 +1,17 @@
++! { dg-do compile }
++! PR 45338 - no ICE when cmp is not used explicitly.
++! Test case by Simon Smart 
++module test_mod
++  implicit none
++contains
++  subroutine test_fn (cmp)
++    interface operator(.myop.)
++       pure function cmp (a, b) result(ret)
++         integer, intent(in) :: a, b
++         logical ret
++       end function cmp
++    end interface
++    integer :: a, b
++    print*, a .myop. b
++  end subroutine test_fn
++end module test_mod
 Index: gcc/testsuite/gfortran.dg/power2.f90
 ===================================================================
---- gcc/testsuite/gfortran.dg/power2.f90	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/testsuite/gfortran.dg/power2.f90	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/testsuite/gfortran.dg/power2.f90	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/testsuite/gfortran.dg/power2.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -13,6 +13,9 @@
    INTEGER(KIND=1) :: k1
    INTEGER(KIND=2) :: k2
@@ -269,8 +968,8 @@ Index: gcc/testsuite/gfortran.dg/power2.f90
  
 Index: gcc/jump.c
 ===================================================================
---- gcc/jump.c	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/jump.c	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/jump.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/jump.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -194,7 +194,7 @@
    rtx prev_nonjump_insn = NULL;
  
@@ -280,17 +979,221 @@ Index: gcc/jump.c
        {
  	mark_jump_label (PATTERN (insn), insn, 0);
  
+Index: gcc/ada/ChangeLog
+===================================================================
+--- gcc/ada/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/ada/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,9 @@
++2011-01-04  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc-interface/trans.c (Subprogram_Body_to_gnu): Evaluate the
++	expressions of the parameter cache within the statement group of
++	the CICO mechanism.
++
+ 2010-12-16  Release Manager
+ 
+ 	* GCC 4.5.2 released.
+Index: gcc/ada/gcc-interface/trans.c
+===================================================================
+--- gcc/ada/gcc-interface/trans.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/ada/gcc-interface/trans.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -2303,6 +2303,31 @@
+   gnat_poplevel ();
+   gnu_result = end_stmt_group ();
+ 
++  /* If we populated the parameter attributes cache, we need to make sure that
++     the cached expressions are evaluated on all the possible paths leading to
++     their uses.  So we force their evaluation on entry of the function.  */
++  cache = DECL_STRUCT_FUNCTION (gnu_subprog_decl)->language->parm_attr_cache;
++  if (cache)
++    {
++      struct parm_attr_d *pa;
++      int i;
++
++      start_stmt_group ();
++
++      for (i = 0; VEC_iterate (parm_attr, cache, i, pa); i++)
++	{
++	  if (pa->first)
++	    add_stmt_with_node (pa->first, gnat_node);
++	  if (pa->last)
++	    add_stmt_with_node (pa->last, gnat_node);
++	  if (pa->length)
++	    add_stmt_with_node (pa->length, gnat_node);
++	}
++
++      add_stmt (gnu_result);
++      gnu_result = end_stmt_group ();
++    }
++
+   /* If we are dealing with a return from an Ada procedure with parameters
+      passed by copy-in/copy-out, we need to return a record containing the
+      final values of these parameters.  If the list contains only one entry,
+@@ -2341,30 +2366,6 @@
+ 
+   pop_stack (&gnu_return_label_stack);
+ 
+-  /* If we populated the parameter attributes cache, we need to make sure
+-     that the cached expressions are evaluated on all possible paths.  */
+-  cache = DECL_STRUCT_FUNCTION (gnu_subprog_decl)->language->parm_attr_cache;
+-  if (cache)
+-    {
+-      struct parm_attr_d *pa;
+-      int i;
+-
+-      start_stmt_group ();
+-
+-      for (i = 0; VEC_iterate (parm_attr, cache, i, pa); i++)
+-	{
+-	  if (pa->first)
+-	    add_stmt_with_node (pa->first, gnat_node);
+-	  if (pa->last)
+-	    add_stmt_with_node (pa->last, gnat_node);
+-	  if (pa->length)
+-	    add_stmt_with_node (pa->length, gnat_node);
+-	}
+-
+-      add_stmt (gnu_result);
+-      gnu_result = end_stmt_group ();
+-    }
+-
+   /* Set the end location.  */
+   Sloc_to_locus
+     ((Present (End_Label (Handled_Statement_Sequence (gnat_node)))
+Index: gcc/fortran/ChangeLog
+===================================================================
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,10 @@
++2011-02-01  Thomas Koenig  <tkoenig@gcc.gnu.org>
++
++	Backport from mainline
++	PR fortran/45338
++	* resolve.c (resolve_operator):  Mark function for user-defined
++	operator as referenced.
++
+ 2010-12-16  Release Manager
+ 
+ 	* GCC 4.5.2 released.
+Index: gcc/fortran/resolve.c
+===================================================================
+--- gcc/fortran/resolve.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/fortran/resolve.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -3577,9 +3577,12 @@
+ 	sprintf (msg, _("Operand of user operator '%s' at %%L is %s"),
+ 		 e->value.op.uop->name, gfc_typename (&op1->ts));
+       else
+-	sprintf (msg, _("Operands of user operator '%s' at %%L are %s/%s"),
+-		 e->value.op.uop->name, gfc_typename (&op1->ts),
+-		 gfc_typename (&op2->ts));
++	{
++	  sprintf (msg, _("Operands of user operator '%s' at %%L are %s/%s"),
++		   e->value.op.uop->name, gfc_typename (&op1->ts),
++		   gfc_typename (&op2->ts));
++	  e->value.op.uop->op->sym->attr.referenced = 1;
++	}
+ 
+       goto bad_op;
+ 
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/BASE-VER	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1 +1 @@
 -4.5.2
 +4.5.3
+Index: gcc/tree-data-ref.c
+===================================================================
+--- gcc/tree-data-ref.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/tree-data-ref.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -4594,7 +4594,7 @@
+     for (e = v->succ; e; e = e->succ_next)
+       fprintf (file, " %d", e->dest);
+ 
+-  fprintf (file, ") \n");
++  fprintf (file, ")\n");
+   print_gimple_stmt (file, RDGV_STMT (v), 0, TDF_VOPS|TDF_MEMSYMS);
+   fprintf (file, ")\n");
+ }
+@@ -4991,6 +4991,38 @@
+   free (bbs);
+ }
+ 
++/* Returns true when the statement at STMT is of the form "A[i] = 0"
++   that contains a data reference on its LHS with a stride of the same
++   size as its unit type.  */
++
++bool
++stmt_with_adjacent_zero_store_dr_p (gimple stmt)
++{
++  tree op0, op1;
++  bool res;
++  struct data_reference *dr;
++
++  if (!stmt
++      || !gimple_vdef (stmt)
++      || !is_gimple_assign (stmt)
++      || !gimple_assign_single_p (stmt)
++      || !(op1 = gimple_assign_rhs1 (stmt))
++      || !(integer_zerop (op1) || real_zerop (op1)))
++    return false;
++
++  dr = XCNEW (struct data_reference);
++  op0 = gimple_assign_lhs (stmt);
++
++  DR_STMT (dr) = stmt;
++  DR_REF (dr) = op0;
++
++  res = dr_analyze_innermost (dr)
++    && stride_of_unit_type_p (DR_STEP (dr), TREE_TYPE (op0));
++
++  free_data_ref (dr);
++  return res;
++}
++
+ /* For a data reference REF, return the declaration of its base
+    address or NULL_TREE if the base is not determined.  */
+ 
+Index: gcc/tree-data-ref.h
+===================================================================
+--- gcc/tree-data-ref.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/tree-data-ref.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -567,7 +567,19 @@
+ void remove_similar_memory_refs (VEC (gimple, heap) **);
+ bool rdg_defs_used_in_other_loops_p (struct graph *, int);
+ bool have_similar_memory_accesses (gimple, gimple);
++bool stmt_with_adjacent_zero_store_dr_p (gimple);
+ 
++/* Returns true when STRIDE is equal in absolute value to the size of
++   the unit type of TYPE.  */
++
++static inline bool
++stride_of_unit_type_p (tree stride, tree type)
++{
++  return tree_int_cst_equal (fold_unary (ABS_EXPR, TREE_TYPE (stride),
++					 stride),
++			     TYPE_SIZE_UNIT (type));
++}
++
+ /* Determines whether RDG vertices V1 and V2 access to similar memory
+    locations, in which case they have to be in the same partition.  */
+ 
+Index: gcc/graphite.c
+===================================================================
+--- gcc/graphite.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/graphite.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -210,6 +210,7 @@
+       return false;
+     }
+ 
++  scev_reset ();
+   recompute_all_dominators ();
+   initialize_original_copy_tables ();
+   cloog_initialize ();
 Index: gcc/cfgcleanup.c
 ===================================================================
---- gcc/cfgcleanup.c	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ gcc/cfgcleanup.c	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- gcc/cfgcleanup.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/cfgcleanup.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -482,15 +482,20 @@
  		  /* When not optimizing, ensure that edges or forwarder
  		     blocks with different locus are not optimized out.  */
@@ -314,10 +1217,882 @@ Index: gcc/cfgcleanup.c
  
  		      if (locus && goto_locus
  			  && !locator_eq (locus, goto_locus))
+Index: gcc/tree-sra.c
+===================================================================
+--- gcc/tree-sra.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/tree-sra.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -3413,7 +3413,10 @@
+ 	  else if (ac2->size != access->size)
+ 	    return NULL;
+ 
+-	  if (access_precludes_ipa_sra_p (ac2))
++	  if (access_precludes_ipa_sra_p (ac2)
++	      || (ac2->type != access->type
++		  && (TREE_ADDRESSABLE (ac2->type)
++		      || TREE_ADDRESSABLE (access->type))))
+ 	    return NULL;
+ 
+ 	  modification |= ac2->write;
+Index: gcc/graphite-sese-to-poly.c
+===================================================================
+--- gcc/graphite-sese-to-poly.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/graphite-sese-to-poly.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -715,7 +715,7 @@
+       gcc_assert (TREE_CODE (e) == INTEGER_CST);
+ 
+       value_init (val);
+-      value_set_si (val, int_cst_value (e));
++      tree_int_to_gmp (e, val);
+       add_value_to_dim (l, expr, val);
+       value_clear (val);
+     }
+@@ -729,16 +729,13 @@
+ {
+   Value val;
+   ppl_Coefficient_t coef;
+-  int v = int_cst_value (cst);
++  tree type = TREE_TYPE (cst);
+ 
+   value_init (val);
+-  value_set_si (val, 0);
+ 
+   /* Necessary to not get "-1 = 2^n - 1". */
+-  if (v < 0)
+-    value_sub_int (val, val, -v);
+-  else
+-    value_add_int (val, val, v);
++  mpz_set_double_int (val, double_int_sext (tree_to_double_int (cst),
++					    TYPE_PRECISION (type)), false);
+ 
+   value_multiply (val, val, k);
+   ppl_new_Coefficient (&coef);
+@@ -816,7 +813,7 @@
+ 	      Value val;
+ 	      gcc_assert (host_integerp (TREE_OPERAND (e, 1), 0));
+ 	      value_init (val);
+-	      value_set_si (val, int_cst_value (TREE_OPERAND (e, 1)));
++	      tree_int_to_gmp (TREE_OPERAND (e, 1), val);
+ 	      value_multiply (val, val, k);
+ 	      scan_tree_for_params (s, TREE_OPERAND (e, 0), c, val);
+ 	      value_clear (val);
+@@ -831,7 +828,7 @@
+ 	      Value val;
+ 	      gcc_assert (host_integerp (TREE_OPERAND (e, 0), 0));
+ 	      value_init (val);
+-	      value_set_si (val, int_cst_value (TREE_OPERAND (e, 0)));
++	      tree_int_to_gmp (TREE_OPERAND (e, 0), val);
+ 	      value_multiply (val, val, k);
+ 	      scan_tree_for_params (s, TREE_OPERAND (e, 1), c, val);
+ 	      value_clear (val);
+@@ -1717,10 +1714,13 @@
+       /* subscript - low >= 0 */
+       if (host_integerp (low, 0))
+ 	{
++	  tree minus_low;
++
+ 	  ppl_new_Linear_Expression_with_dimension (&expr, accessp_nb_dims);
+ 	  ppl_set_coef (expr, subscript, 1);
+ 
+-	  ppl_set_inhomogeneous (expr, -int_cst_value (low));
++	  minus_low = fold_build1 (NEGATE_EXPR, TREE_TYPE (low), low);
++	  ppl_set_inhomogeneous_tree (expr, minus_low);
+ 
+ 	  ppl_new_Constraint (&cstr, expr, PPL_CONSTRAINT_TYPE_GREATER_OR_EQUAL);
+ 	  ppl_Polyhedron_add_constraint (accesses, cstr);
+@@ -1740,7 +1740,7 @@
+ 	  ppl_new_Linear_Expression_with_dimension (&expr, accessp_nb_dims);
+ 	  ppl_set_coef (expr, subscript, -1);
+ 
+-	  ppl_set_inhomogeneous (expr, int_cst_value (high));
++	  ppl_set_inhomogeneous_tree (expr, high);
+ 
+ 	  ppl_new_Constraint (&cstr, expr, PPL_CONSTRAINT_TYPE_GREATER_OR_EQUAL);
+ 	  ppl_Polyhedron_add_constraint (accesses, cstr);
+Index: gcc/config/sparc/sparc.md
+===================================================================
+--- gcc/config/sparc/sparc.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/sparc/sparc.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1106,14 +1106,15 @@
+ 
+ ;; Load in operand 0 the (absolute) address of operand 1, which is a symbolic
+ ;; value subject to a PC-relative relocation.  Operand 2 is a helper function
+-;; that adds the PC value at the call point to operand 0.
++;; that adds the PC value at the call point to register #(operand 3).
+ 
+ (define_insn "load_pcrel_sym<P:mode>"
+   [(set (match_operand:P 0 "register_operand" "=r")
+ 	(unspec:P [(match_operand:P 1 "symbolic_operand" "")
+-		   (match_operand:P 2 "call_address_operand" "")] UNSPEC_LOAD_PCREL_SYM))
++		   (match_operand:P 2 "call_address_operand" "")
++		   (match_operand:P 3 "const_int_operand" "")] UNSPEC_LOAD_PCREL_SYM))
+    (clobber (reg:P 15))]
+-  ""
++  "REGNO (operands[0]) == INTVAL (operands[3])"
+ {
+   if (flag_delayed_branch)
+     return "sethi\t%%hi(%a1-4), %0\n\tcall\t%a2\n\t add\t%0, %%lo(%a1+4), %0";
+Index: gcc/config/sparc/sparc.c
+===================================================================
+--- gcc/config/sparc/sparc.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -363,7 +363,7 @@
+ static int epilogue_renumber (rtx *, int);
+ static bool sparc_assemble_integer (rtx, unsigned int, int);
+ static int set_extends (rtx);
+-static void load_pic_register (void);
++static void load_got_register (void);
+ static int save_or_restore_regs (int, int, rtx, int, int);
+ static void emit_save_or_restore_regs (int);
+ static void sparc_asm_function_prologue (FILE *, HOST_WIDE_INT);
+@@ -966,6 +966,36 @@
+   return 0;
+ }
+ 
++/* Return true if the address of LABEL can be loaded by means of the
++   mov{si,di}_pic_label_ref patterns in PIC mode.  */
++
++static bool
++can_use_mov_pic_label_ref (rtx label)
++{
++  /* VxWorks does not impose a fixed gap between segments; the run-time
++     gap can be different from the object-file gap.  We therefore can't
++     assume X - _GLOBAL_OFFSET_TABLE_ is a link-time constant unless we
++     are absolutely sure that X is in the same segment as the GOT.
++     Unfortunately, the flexibility of linker scripts means that we
++     can't be sure of that in general, so assume that GOT-relative
++     accesses are never valid on VxWorks.  */
++  if (TARGET_VXWORKS_RTP)
++    return false;
++
++  /* Similarly, if the label is non-local, it might end up being placed
++     in a different section than the current one; now mov_pic_label_ref
++     requires the label and the code to be in the same section.  */
++  if (LABEL_REF_NONLOCAL_P (label))
++    return false;
++
++  /* Finally, if we are reordering basic blocks and partition into hot
++     and cold sections, this might happen for any label.  */
++  if (flag_reorder_blocks_and_partition)
++    return false;
++
++  return true;
++}
++
+ /* Expand a move instruction.  Return true if all work is done.  */
+ 
+ bool
+@@ -1000,14 +1030,9 @@
+       if (pic_address_needs_scratch (operands[1]))
+ 	operands[1] = legitimize_pic_address (operands[1], NULL_RTX);
+ 
+-      /* VxWorks does not impose a fixed gap between segments; the run-time
+-	 gap can be different from the object-file gap.  We therefore can't
+-	 assume X - _GLOBAL_OFFSET_TABLE_ is a link-time constant unless we
+-	 are absolutely sure that X is in the same segment as the GOT.
+-	 Unfortunately, the flexibility of linker scripts means that we
+-	 can't be sure of that in general, so assume that _G_O_T_-relative
+-	 accesses are never valid on VxWorks.  */
+-      if (GET_CODE (operands[1]) == LABEL_REF && !TARGET_VXWORKS_RTP)
++      /* We cannot use the mov{si,di}_pic_label_ref patterns in all cases.  */
++      if (GET_CODE (operands[1]) == LABEL_REF
++	  && can_use_mov_pic_label_ref (operands[1]))
+ 	{
+ 	  if (mode == SImode)
+ 	    {
+@@ -2907,26 +2932,39 @@
+     }
+ }
+ 
+-/* PIC support.  */
+-static GTY(()) bool pic_helper_needed = false;
+-static GTY(()) rtx pic_helper_symbol;
+-static GTY(()) rtx global_offset_table;
++/* Global Offset Table support.  */
++static GTY(()) rtx got_helper_rtx = NULL_RTX;
++static GTY(()) rtx global_offset_table_rtx = NULL_RTX;
+ 
++/* Return the SYMBOL_REF for the Global Offset Table.  */
++
++static GTY(()) rtx sparc_got_symbol = NULL_RTX;
++
++static rtx
++sparc_got (void)
++{
++  if (!sparc_got_symbol)
++    sparc_got_symbol = gen_rtx_SYMBOL_REF (Pmode, "_GLOBAL_OFFSET_TABLE_");
++
++  return sparc_got_symbol;
++}
++
+ /* Ensure that we are not using patterns that are not OK with PIC.  */
+ 
+ int
+ check_pic (int i)
+ {
++  rtx op;
++
+   switch (flag_pic)
+     {
+     case 1:
+-      gcc_assert (GET_CODE (recog_data.operand[i]) != SYMBOL_REF
+-	  	  && (GET_CODE (recog_data.operand[i]) != CONST
+-	          || (GET_CODE (XEXP (recog_data.operand[i], 0)) == MINUS
+-		      && (XEXP (XEXP (recog_data.operand[i], 0), 0)
+-			  == global_offset_table)
+-		      && (GET_CODE (XEXP (XEXP (recog_data.operand[i], 0), 1))
+-			  == CONST))));
++      op = recog_data.operand[i];
++      gcc_assert (GET_CODE (op) != SYMBOL_REF
++	  	  && (GET_CODE (op) != CONST
++		      || (GET_CODE (XEXP (op, 0)) == MINUS
++			  && XEXP (XEXP (op, 0), 0) == sparc_got ()
++			  && GET_CODE (XEXP (XEXP (op, 0), 1)) == CONST)));
+     case 2:
+     default:
+       return 1;
+@@ -3161,9 +3199,9 @@
+   return 1;
+ }
+ 
+-/* Construct the SYMBOL_REF for the tls_get_offset function.  */
++/* Return the SYMBOL_REF for the tls_get_addr function.  */
+ 
+-static GTY(()) rtx sparc_tls_symbol;
++static GTY(()) rtx sparc_tls_symbol = NULL_RTX;
+ 
+ static rtx
+ sparc_tls_get_addr (void)
+@@ -3174,21 +3212,28 @@
+   return sparc_tls_symbol;
+ }
+ 
++/* Return the Global Offset Table to be used in TLS mode.  */
++
+ static rtx
+ sparc_tls_got (void)
+ {
+-  rtx temp;
++  /* In PIC mode, this is just the PIC offset table.  */
+   if (flag_pic)
+     {
+       crtl->uses_pic_offset_table = 1;
+       return pic_offset_table_rtx;
+     }
+ 
+-  if (!global_offset_table)
+-    global_offset_table = gen_rtx_SYMBOL_REF (Pmode, "_GLOBAL_OFFSET_TABLE_");
+-  temp = gen_reg_rtx (Pmode);
+-  emit_move_insn (temp, global_offset_table);
+-  return temp;
++  /* In non-PIC mode, Sun as (unlike GNU as) emits PC-relative relocations for
++     the GOT symbol with the 32-bit ABI, so we reload the GOT register.  */
++  if (TARGET_SUN_TLS && TARGET_ARCH32)
++    {
++      load_got_register ();
++      return global_offset_table_rtx;
++    }
++
++  /* In all other cases, we load a new pseudo with the GOT symbol.  */
++  return copy_to_reg (sparc_got ());
+ }
+ 
+ /* Return true if X contains a thread-local symbol.  */
+@@ -3369,7 +3414,7 @@
+ 
+   if (GET_CODE (orig) == SYMBOL_REF
+       /* See the comment in sparc_expand_move.  */
+-      || (TARGET_VXWORKS_RTP && GET_CODE (orig) == LABEL_REF))
++      || (GET_CODE (orig) == LABEL_REF && !can_use_mov_pic_label_ref (orig)))
+     {
+       rtx pic_ref, address;
+       rtx insn;
+@@ -3420,11 +3465,13 @@
+ 	}
+       else
+ 	{
+-	  pic_ref = gen_const_mem (Pmode,
+-				   gen_rtx_PLUS (Pmode,
+-						 pic_offset_table_rtx, address));
++	  pic_ref
++	    = gen_const_mem (Pmode,
++			     gen_rtx_PLUS (Pmode,
++					   pic_offset_table_rtx, address));
+ 	  insn = emit_move_insn (reg, pic_ref);
+ 	}
++
+       /* Put a REG_EQUAL note on this insn, so that it can be optimized
+ 	 by loop.  */
+       set_unique_reg_note (insn, REG_EQUAL, orig);
+@@ -3462,9 +3509,8 @@
+       return gen_rtx_PLUS (Pmode, base, offset);
+     }
+   else if (GET_CODE (orig) == LABEL_REF)
+-    /* ??? Why do we do this?  */
+-    /* Now movsi_pic_label_ref uses it, but we ought to be checking that
+-       the register is live instead, in case it is eliminated.  */
++    /* ??? We ought to be checking that the register is live instead, in case
++       it is eliminated.  */
+     crtl->uses_pic_offset_table = 1;
+ 
+   return orig;
+@@ -3529,59 +3575,69 @@
+ static void
+ get_pc_thunk_name (char name[32], unsigned int regno)
+ {
+-  const char *pic_name = reg_names[regno];
++  const char *reg_name = reg_names[regno];
+ 
+   /* Skip the leading '%' as that cannot be used in a
+      symbol name.  */
+-  pic_name += 1;
++  reg_name += 1;
+ 
+   if (USE_HIDDEN_LINKONCE)
+-    sprintf (name, "__sparc_get_pc_thunk.%s", pic_name);
++    sprintf (name, "__sparc_get_pc_thunk.%s", reg_name);
+   else
+     ASM_GENERATE_INTERNAL_LABEL (name, "LADDPC", regno);
+ }
+ 
+-/* Emit code to load the PIC register.  */
++/* Wrapper around the load_pcrel_sym{si,di} patterns.  */
+ 
+-static void
+-load_pic_register (void)
++static rtx
++gen_load_pcrel_sym (rtx op0, rtx op1, rtx op2, rtx op3)
+ {
+   int orig_flag_pic = flag_pic;
++  rtx insn;
+ 
+-  if (TARGET_VXWORKS_RTP)
+-    {
+-      emit_insn (gen_vxworks_load_got ());
+-      emit_use (pic_offset_table_rtx);
+-      return;
+-    }
++  /* The load_pcrel_sym{si,di} patterns require absolute addressing.  */
++  flag_pic = 0;
++  if (TARGET_ARCH64)
++    insn = gen_load_pcrel_symdi (op0, op1, op2, op3);
++  else
++    insn = gen_load_pcrel_symsi (op0, op1, op2, op3);
++  flag_pic = orig_flag_pic;
+ 
+-  /* If we haven't initialized the special PIC symbols, do so now.  */
+-  if (!pic_helper_needed)
+-    {
+-      char name[32];
++  return insn;
++}
+ 
+-      pic_helper_needed = true;
++/* Emit code to load the GOT register.  */
+ 
+-      get_pc_thunk_name (name, REGNO (pic_offset_table_rtx));
+-      pic_helper_symbol = gen_rtx_SYMBOL_REF (Pmode, ggc_strdup (name));
++static void
++load_got_register (void)
++{
++  /* In PIC mode, this will retrieve pic_offset_table_rtx.  */
++  if (!global_offset_table_rtx)
++    global_offset_table_rtx = gen_rtx_REG (Pmode, GLOBAL_OFFSET_TABLE_REGNUM);
+ 
+-      global_offset_table = gen_rtx_SYMBOL_REF (Pmode, "_GLOBAL_OFFSET_TABLE_");
++  if (TARGET_VXWORKS_RTP)
++    emit_insn (gen_vxworks_load_got ());
++  else
++    {
++      /* The GOT symbol is subject to a PC-relative relocation so we need a
++	 helper function to add the PC value and thus get the final value.  */
++      if (!got_helper_rtx)
++	{
++	  char name[32];
++	  get_pc_thunk_name (name, GLOBAL_OFFSET_TABLE_REGNUM);
++	  got_helper_rtx = gen_rtx_SYMBOL_REF (Pmode, ggc_strdup (name));
++	}
++
++      emit_insn (gen_load_pcrel_sym (global_offset_table_rtx, sparc_got (),
++				     got_helper_rtx,
++				     GEN_INT (GLOBAL_OFFSET_TABLE_REGNUM)));
+     }
+ 
+-  flag_pic = 0;
+-  if (TARGET_ARCH64)
+-    emit_insn (gen_load_pcrel_symdi (pic_offset_table_rtx, global_offset_table,
+-				     pic_helper_symbol));
+-  else
+-    emit_insn (gen_load_pcrel_symsi (pic_offset_table_rtx, global_offset_table,
+-				     pic_helper_symbol));
+-  flag_pic = orig_flag_pic;
+-
+   /* Need to emit this whether or not we obey regdecls,
+      since setjmp/longjmp can cause life info to screw up.
+      ??? In the case where we don't obey regdecls, this is not sufficient
+      since we may not fall out the bottom.  */
+-  emit_use (pic_offset_table_rtx);
++  emit_use (global_offset_table_rtx);
+ }
+ 
+ /* Emit a call instruction with the pattern given by PAT.  ADDR is the
+@@ -4113,7 +4169,7 @@
+ 
+ /* Expand the function prologue.  The prologue is responsible for reserving
+    storage for the frame, saving the call-saved registers and loading the
+-   PIC register if needed.  */
++   GOT register if needed.  */
+ 
+ void
+ sparc_expand_prologue (void)
+@@ -4215,9 +4271,9 @@
+   if (num_gfregs)
+     emit_save_or_restore_regs (SORR_SAVE);
+ 
+-  /* Load the PIC register if needed.  */
+-  if (flag_pic && crtl->uses_pic_offset_table)
+-    load_pic_register ();
++  /* Load the GOT register if needed.  */
++  if (crtl->uses_pic_offset_table)
++    load_got_register ();
+ }
+ 
+ /* This function generates the assembly code for function entry, which boils
+@@ -8705,7 +8761,7 @@
+ /* Emit the sequence of insns SEQ while preserving the registers REG and REG2.
+    This is achieved by means of a manual dynamic stack space allocation in
+    the current frame.  We make the assumption that SEQ doesn't contain any
+-   function calls, with the possible exception of calls to the PIC helper.  */
++   function calls, with the possible exception of calls to the GOT helper.  */
+ 
+ static void
+ emit_and_preserve (rtx seq, rtx reg, rtx reg2)
+@@ -8868,20 +8924,19 @@
+     {
+       /* The hoops we have to jump through in order to generate a sibcall
+ 	 without using delay slots...  */
+-      rtx spill_reg, spill_reg2, seq, scratch = gen_rtx_REG (Pmode, 1);
++      rtx spill_reg, seq, scratch = gen_rtx_REG (Pmode, 1);
+ 
+       if (flag_pic)
+         {
+ 	  spill_reg = gen_rtx_REG (word_mode, 15);  /* %o7 */
+-	  spill_reg2 = gen_rtx_REG (word_mode, PIC_OFFSET_TABLE_REGNUM);
+ 	  start_sequence ();
+-	  /* Delay emitting the PIC helper function because it needs to
++	  /* Delay emitting the GOT helper function because it needs to
+ 	     change the section and we are emitting assembly code.  */
+-	  load_pic_register ();  /* clobbers %o7 */
++	  load_got_register ();  /* clobbers %o7 */
+ 	  scratch = legitimize_pic_address (funexp, scratch);
+ 	  seq = get_insns ();
+ 	  end_sequence ();
+-	  emit_and_preserve (seq, spill_reg, spill_reg2);
++	  emit_and_preserve (seq, spill_reg, pic_offset_table_rtx);
+ 	}
+       else if (TARGET_ARCH32)
+ 	{
+@@ -9032,17 +9087,15 @@
+ static void
+ sparc_file_end (void)
+ {
+-  /* If need to emit the special PIC helper function, do so now.  */
+-  if (pic_helper_needed)
++  /* If we need to emit the special GOT helper function, do so now.  */
++  if (got_helper_rtx)
+     {
+-      unsigned int regno = REGNO (pic_offset_table_rtx);
+-      const char *pic_name = reg_names[regno];
+-      char name[32];
++      const char *name = XSTR (got_helper_rtx, 0);
++      const char *reg_name = reg_names[GLOBAL_OFFSET_TABLE_REGNUM];
+ #ifdef DWARF2_UNWIND_INFO
+       bool do_cfi;
+ #endif
+ 
+-      get_pc_thunk_name (name, regno);
+       if (USE_HIDDEN_LINKONCE)
+ 	{
+ 	  tree decl = build_decl (BUILTINS_LOCATION, FUNCTION_DECL,
+@@ -9055,7 +9108,9 @@
+ 	  make_decl_one_only (decl, DECL_ASSEMBLER_NAME (decl));
+ 	  DECL_VISIBILITY (decl) = VISIBILITY_HIDDEN;
+ 	  DECL_VISIBILITY_SPECIFIED (decl) = 1;
++	  resolve_unique_section (decl, 0, flag_function_sections);
+ 	  allocate_struct_function (decl, true);
++	  cfun->is_thunk = 1;
+ 	  current_function_decl = decl;
+ 	  init_varasm_status ();
+ 	  assemble_start_function (decl, name);
+@@ -9076,10 +9131,10 @@
+ #endif
+       if (flag_delayed_branch)
+ 	fprintf (asm_out_file, "\tjmp\t%%o7+8\n\t add\t%%o7, %s, %s\n",
+-		 pic_name, pic_name);
++		 reg_name, reg_name);
+       else
+ 	fprintf (asm_out_file, "\tadd\t%%o7, %s, %s\n\tjmp\t%%o7+8\n\t nop\n",
+-		 pic_name, pic_name);
++		 reg_name, reg_name);
+ #ifdef DWARF2_UNWIND_INFO
+       if (do_cfi)
+ 	fprintf (asm_out_file, "\t.cfi_endproc\n");
+Index: gcc/config/sparc/sparc.h
+===================================================================
+--- gcc/config/sparc/sparc.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/sparc/sparc.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -964,10 +964,15 @@
+    not be a register used by the prologue.  */
+ #define STATIC_CHAIN_REGNUM (TARGET_ARCH64 ? 5 : 2)
+ 
++/* Register which holds the global offset table, if any.  */
++
++#define GLOBAL_OFFSET_TABLE_REGNUM 23
++
+ /* Register which holds offset table for position-independent
+    data references.  */
+ 
+-#define PIC_OFFSET_TABLE_REGNUM (flag_pic ? 23 : INVALID_REGNUM)
++#define PIC_OFFSET_TABLE_REGNUM \
++  (flag_pic ? GLOBAL_OFFSET_TABLE_REGNUM : INVALID_REGNUM)
+ 
+ /* Pick a default value we can notice from override_options:
+    !v9: Default is on.
+Index: gcc/config/i386/i386.md
+===================================================================
+--- gcc/config/i386/i386.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/i386/i386.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -92,6 +92,7 @@
+    (UNSPEC_TLS_GD		21)
+    (UNSPEC_TLS_LD_BASE		22)
+    (UNSPEC_TLSDESC		23)
++   (UNSPEC_TLS_IE_SUN		24)
+ 
+    ; Other random patterns
+    (UNSPEC_SCAS			30)
+@@ -14702,6 +14703,18 @@
+    (set_attr "memory" "load")
+    (set_attr "imm_disp" "false")])
+ 
++;; The Sun linker took the AMD64 TLS spec literally and can only handle
++;; %rax as destination of the initial executable code sequence.
++(define_insn "tls_initial_exec_64_sun"
++  [(set (match_operand:DI 0 "register_operand" "=a")
++	(unspec:DI
++	 [(match_operand:DI 1 "tls_symbolic_operand" "")]
++	 UNSPEC_TLS_IE_SUN))
++   (clobber (reg:CC FLAGS_REG))]
++  "TARGET_64BIT && TARGET_SUN_TLS"
++  "mov{q}\t{%%fs:0, %0|%0, QWORD PTR fs:0}\n\tadd{q}\t{%a1@gottpoff(%%rip), %0|%0, %a1@gottpoff[rip]}"
++  [(set_attr "type" "multi")])
++
+ ;; GNU2 TLS patterns can be split.
+ 
+ (define_expand "tls_dynamic_gnu2_32"
+Index: gcc/config/i386/i386.c
+===================================================================
+--- gcc/config/i386/i386.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/i386/i386.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -10438,6 +10438,17 @@
+     case TLS_MODEL_INITIAL_EXEC:
+       if (TARGET_64BIT)
+ 	{
++	  if (TARGET_SUN_TLS)
++	    {
++	      /* The Sun linker took the AMD64 TLS spec literally
++		 and can only handle %rax as destination of the
++		 initial executable code sequence.  */
++
++	      dest = gen_reg_rtx (Pmode);
++	      emit_insn (gen_tls_initial_exec_64_sun (dest, x));
++	      return dest;
++	    }
++
+ 	  pic = NULL;
+ 	  type = UNSPEC_GOTNTPOFF;
+ 	}
+Index: gcc/config/arm/arm.c
+===================================================================
+--- gcc/config/arm/arm.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/arm/arm.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1114,6 +1114,7 @@
+ 			     va_list_type);
+   DECL_ARTIFICIAL (va_list_name) = 1;
+   TYPE_NAME (va_list_type) = va_list_name;
++  TYPE_STUB_DECL (va_list_type) = va_list_name;
+   /* Create the __ap field.  */
+   ap_field = build_decl (BUILTINS_LOCATION,
+ 			 FIELD_DECL, 
+Index: gcc/config/pa/pa.md
+===================================================================
+--- gcc/config/pa/pa.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/pa/pa.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -811,7 +811,7 @@
+ 			 (match_operand:DI 3 "arith11_operand" "rI"))
+ 		 (match_operand:DI 1 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "sub%I3 %3,%2,%%r0\;add,dc %%r0,%1,%0"
++  "sub%I3,* %3,%2,%%r0\;add,dc %%r0,%1,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -833,7 +833,7 @@
+ 			 (match_operand:DI 3 "register_operand" "r"))
+ 		 (match_operand:DI 1 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "sub %2,%3,%%r0\;add,dc %%r0,%1,%0"
++  "sub,* %2,%3,%%r0\;add,dc %%r0,%1,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -856,7 +856,7 @@
+ 			 (match_operand:DI 3 "int11_operand" "I"))
+ 		 (match_operand:DI 1 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "addi %k3,%2,%%r0\;add,dc %%r0,%1,%0"
++  "addi,* %k3,%2,%%r0\;add,dc %%r0,%1,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -902,7 +902,7 @@
+ 		  (gtu:DI (match_operand:DI 2 "register_operand" "r")
+ 			  (match_operand:DI 3 "arith11_operand" "rI"))))]
+   "TARGET_64BIT"
+-  "sub%I3 %3,%2,%%r0\;sub,db %1,%%r0,%0"
++  "sub%I3,* %3,%2,%%r0\;sub,db %1,%%r0,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -924,7 +924,7 @@
+ 				    (match_operand:DI 3 "arith11_operand" "rI")))
+ 		  (match_operand:DI 4 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "sub%I3 %3,%2,%%r0\;sub,db %1,%4,%0"
++  "sub%I3,* %3,%2,%%r0\;sub,db %1,%4,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -946,7 +946,7 @@
+ 		  (ltu:DI (match_operand:DI 2 "register_operand" "r")
+ 			  (match_operand:DI 3 "register_operand" "r"))))]
+   "TARGET_64BIT"
+-  "sub %2,%3,%%r0\;sub,db %1,%%r0,%0"
++  "sub,* %2,%3,%%r0\;sub,db %1,%%r0,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -968,7 +968,7 @@
+ 				    (match_operand:DI 3 "register_operand" "r")))
+ 		  (match_operand:DI 4 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "sub %2,%3,%%r0\;sub,db %1,%4,%0"
++  "sub,* %2,%3,%%r0\;sub,db %1,%4,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -991,7 +991,7 @@
+ 		  (leu:DI (match_operand:DI 2 "register_operand" "r")
+ 			  (match_operand:DI 3 "int11_operand" "I"))))]
+   "TARGET_64BIT"
+-  "addi %k3,%2,%%r0\;sub,db %1,%%r0,%0"
++  "addi,* %k3,%2,%%r0\;sub,db %1,%%r0,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+@@ -1013,7 +1013,7 @@
+ 				    (match_operand:DI 3 "int11_operand" "I")))
+ 		  (match_operand:DI 4 "register_operand" "r")))]
+   "TARGET_64BIT"
+-  "addi %k3,%2,%%r0\;sub,db %1,%4,%0"
++  "addi,* %k3,%2,%%r0\;sub,db %1,%4,%0"
+   [(set_attr "type" "binary")
+    (set_attr "length" "8")])
+ 
+Index: gcc/config/pa/pa.c
+===================================================================
+--- gcc/config/pa/pa.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ gcc/config/pa/pa.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -6097,37 +6097,94 @@
+ }
+ 
+ /* Return TRUE if INSN, a jump insn, has an unfilled delay slot and
+-   it branches to the next real instruction.  Otherwise, return FALSE.  */
++   it branches into the delay slot.  Otherwise, return FALSE.  */
+ 
+ static bool
+ branch_to_delay_slot_p (rtx insn)
+ {
++  rtx jump_insn;
++
+   if (dbr_sequence_length ())
+     return FALSE;
+ 
+-  return next_real_insn (JUMP_LABEL (insn)) == next_real_insn (insn);
++  jump_insn = next_active_insn (JUMP_LABEL (insn));
++  while (insn)
++    {
++      insn = next_active_insn (insn);
++      if (jump_insn == insn)
++	return TRUE;
++
++      /* We can't rely on the length of asms.  So, we return FALSE when
++	 the branch is followed by an asm.  */
++      if (!insn
++	  || GET_CODE (PATTERN (insn)) == ASM_INPUT
++	  || extract_asm_operands (PATTERN (insn)) != NULL_RTX
++	  || get_attr_length (insn) > 0)
++	break;
++    }
++
++  return FALSE;
+ }
+ 
+-/* Return TRUE if INSN, a jump insn, needs a nop in its delay slot.
++/* Return TRUE if INSN, a forward jump insn, needs a nop in its delay slot.
+ 
+    This occurs when INSN has an unfilled delay slot and is followed
+-   by an ASM_INPUT.  Disaster can occur if the ASM_INPUT is empty and
+-   the jump branches into the delay slot.  So, we add a nop in the delay
+-   slot just to be safe.  This messes up our instruction count, but we
+-   don't know how big the ASM_INPUT insn is anyway.  */
++   by an asm.  Disaster can occur if the asm is empty and the jump
++   branches into the delay slot.  So, we add a nop in the delay slot
++   when this occurs.  */
+ 
+ static bool
+ branch_needs_nop_p (rtx insn)
+ {
+-  rtx next_insn;
++  rtx jump_insn;
+ 
+   if (dbr_sequence_length ())
+     return FALSE;
+ 
+-  next_insn = next_real_insn (insn);
+-  return GET_CODE (PATTERN (next_insn)) == ASM_INPUT;
++  jump_insn = next_active_insn (JUMP_LABEL (insn));
++  while (insn)
++    {
++      insn = next_active_insn (insn);
++      if (!insn || jump_insn == insn)
++	return TRUE;
++
++      if (!(GET_CODE (PATTERN (insn)) == ASM_INPUT
++	   || extract_asm_operands (PATTERN (insn)) != NULL_RTX)
++	  && get_attr_length (insn) > 0)
++	break;
++    }
++
++  return FALSE;
+ }
+ 
++/* Return TRUE if INSN, a forward jump insn, can use nullification
++   to skip the following instruction.  This avoids an extra cycle due
++   to a mis-predicted branch when we fall through.  */
++
++static bool
++use_skip_p (rtx insn)
++{
++  rtx jump_insn = next_active_insn (JUMP_LABEL (insn));
++
++  while (insn)
++    {
++      insn = next_active_insn (insn);
++
++      /* We can't rely on the length of asms, so we can't skip asms.  */
++      if (!insn
++	  || GET_CODE (PATTERN (insn)) == ASM_INPUT
++	  || extract_asm_operands (PATTERN (insn)) != NULL_RTX)
++	break;
++      if (get_attr_length (insn) == 4
++	  && jump_insn == next_active_insn (insn))
++	return TRUE;
++      if (get_attr_length (insn) > 0)
++	break;
++    }
++
++  return FALSE;
++}
++
+ /* This routine handles all the normal conditional branch sequences we
+    might need to generate.  It handles compare immediate vs compare
+    register, nullification of delay slots, varying length branches,
+@@ -6139,7 +6196,7 @@
+ output_cbranch (rtx *operands, int negated, rtx insn)
+ {
+   static char buf[100];
+-  int useskip = 0;
++  bool useskip;
+   int nullify = INSN_ANNULLED_BRANCH_P (insn);
+   int length = get_attr_length (insn);
+   int xdelay;
+@@ -6177,12 +6234,7 @@
+   /* A forward branch over a single nullified insn can be done with a
+      comclr instruction.  This avoids a single cycle penalty due to
+      mis-predicted branch if we fall through (branch not taken).  */
+-  if (length == 4
+-      && next_real_insn (insn) != 0
+-      && get_attr_length (next_real_insn (insn)) == 4
+-      && JUMP_LABEL (insn) == next_nonnote_insn (next_real_insn (insn))
+-      && nullify)
+-    useskip = 1;
++  useskip = (length == 4 && nullify) ? use_skip_p (insn) : FALSE;
+ 
+   switch (length)
+     {
+@@ -6470,7 +6522,7 @@
+ output_bb (rtx *operands ATTRIBUTE_UNUSED, int negated, rtx insn, int which)
+ {
+   static char buf[100];
+-  int useskip = 0;
++  bool useskip;
+   int nullify = INSN_ANNULLED_BRANCH_P (insn);
+   int length = get_attr_length (insn);
+   int xdelay;
+@@ -6496,14 +6548,8 @@
+   /* A forward branch over a single nullified insn can be done with a
+      extrs instruction.  This avoids a single cycle penalty due to
+      mis-predicted branch if we fall through (branch not taken).  */
++  useskip = (length == 4 && nullify) ? use_skip_p (insn) : FALSE;
+ 
+-  if (length == 4
+-      && next_real_insn (insn) != 0
+-      && get_attr_length (next_real_insn (insn)) == 4
+-      && JUMP_LABEL (insn) == next_nonnote_insn (next_real_insn (insn))
+-      && nullify)
+-    useskip = 1;
+-
+   switch (length)
+     {
+ 
+@@ -6661,7 +6707,7 @@
+ output_bvb (rtx *operands ATTRIBUTE_UNUSED, int negated, rtx insn, int which)
+ {
+   static char buf[100];
+-  int useskip = 0;
++  bool useskip;
+   int nullify = INSN_ANNULLED_BRANCH_P (insn);
+   int length = get_attr_length (insn);
+   int xdelay;
+@@ -6687,14 +6733,8 @@
+   /* A forward branch over a single nullified insn can be done with a
+      extrs instruction.  This avoids a single cycle penalty due to
+      mis-predicted branch if we fall through (branch not taken).  */
++  useskip = (length == 4 && nullify) ? use_skip_p (insn) : FALSE;
+ 
+-  if (length == 4
+-      && next_real_insn (insn) != 0
+-      && get_attr_length (next_real_insn (insn)) == 4
+-      && JUMP_LABEL (insn) == next_nonnote_insn (next_real_insn (insn))
+-      && nullify)
+-    useskip = 1;
+-
+   switch (length)
+     {
+ 
 Index: libstdc++-v3/ChangeLog
 ===================================================================
---- libstdc++-v3/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1,3 +1,11 @@
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
@@ -332,8 +2107,8 @@ Index: libstdc++-v3/ChangeLog
  	* GCC 4.5.2 released.
 Index: libstdc++-v3/testsuite/lib/libstdc++.exp
 ===================================================================
---- libstdc++-v3/testsuite/lib/libstdc++.exp	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libstdc++-v3/testsuite/lib/libstdc++.exp	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libstdc++-v3/testsuite/lib/libstdc++.exp	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libstdc++-v3/testsuite/lib/libstdc++.exp	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -586,6 +586,15 @@
      }
  
@@ -352,8 +2127,8 @@ Index: libstdc++-v3/testsuite/lib/libstdc++.exp
      } else {
 Index: libffi/ChangeLog
 ===================================================================
---- libffi/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libffi/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libffi/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libffi/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -1,3 +1,11 @@
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
@@ -368,8 +2143,8 @@ Index: libffi/ChangeLog
  	* GCC 4.5.2 released.
 Index: libffi/testsuite/libffi.call/ffitest.h
 ===================================================================
---- libffi/testsuite/libffi.call/ffitest.h	(.../tags/gcc_4_5_2_release)	(wersja 168030)
-+++ libffi/testsuite/libffi.call/ffitest.h	(.../branches/gcc-4_5-branch)	(wersja 168030)
+--- libffi/testsuite/libffi.call/ffitest.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libffi/testsuite/libffi.call/ffitest.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
 @@ -77,6 +77,26 @@
  #define PRIuPTR "lu"
  #endif
@@ -397,3 +2172,131 @@ Index: libffi/testsuite/libffi.call/ffitest.h
  /* Solaris < 10 kludge.  */
  #if defined(__sun__) && defined(__svr4__) && !defined(PRIuPTR)
  #if defined(__arch64__) || defined (__x86_64__)
+Index: libjava/classpath/lib/java/security/VMAccessController.class
+===================================================================
+Nie można wyświetlić: plik binarny.
+svn:mime-type = application/octet-stream
+Index: libjava/ChangeLog
+===================================================================
+--- libjava/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libjava/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,24 @@
++2011-01-07  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	Backport from mainline:
++	2011-01-06  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* testsuite/libjava.jni/jni.exp (gcj_jni_get_cxxflags_invocation):
++	Add -shared-libgcc to cxxflags for *-*-solaris*.
++	Remove -lsocket.
++
++2010-12-13  Andrew John Hughes  <ahughes@redhat.com>
++
++	PR libgcj/46774
++	* libjava/java/security/VMAccessController.java:
++	(DEFAULT_CONTEXT): Create ProtectionDomain with
++	four argument constructor (arguments are the same
++	as those implied by the two argument constructor).
++	(getContext()): Create ProtectionDomain instances
++	with four argument constructor using a null Principal
++	array (as before) but including the classloader, which
++	was always null before.
++
+ 2010-12-16  Release Manager
+ 
+ 	* GCC 4.5.2 released.
+Index: libjava/testsuite/libjava.jni/jni.exp
+===================================================================
+--- libjava/testsuite/libjava.jni/jni.exp	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libjava/testsuite/libjava.jni/jni.exp	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -274,8 +274,10 @@
+     eval lappend cxxflags "-shared-libgcc -lgcj $libiconv"
+   }
+ 
++  # Make sure libgcc unwinder is used on 64-bit Solaris 10+/x86 rather than
++  # the libc one.
+   if { [istarget "*-*-solaris*"] } {
+-    lappend cxxflags "-lsocket"
++    lappend cxxflags "-shared-libgcc"
+   }
+ 
+   return $cxxflags
+Index: libjava/java/security/VMAccessController.java
+===================================================================
+--- libjava/java/security/VMAccessController.java	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libjava/java/security/VMAccessController.java	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -56,7 +56,7 @@
+     Permissions permissions = new Permissions();
+     permissions.add(new AllPermission());
+     ProtectionDomain[] domain = new ProtectionDomain[] {
+-      new ProtectionDomain(source, permissions)
++      new ProtectionDomain(source, permissions, null, null)
+     };
+     DEFAULT_CONTEXT = new AccessControlContext(domain);
+   }
+@@ -178,12 +178,13 @@
+     for (int i = 3; i < classes.length; i++)
+       {
+         Class clazz = classes[i];
++        ClassLoader loader = clazz.getClassLoader();
+ 
+         if (DEBUG)
+           {
+             debug("checking " + clazz);
+             // subject to getClassLoader RuntimePermission
+-            debug("loader = " + clazz.getClassLoader());
++            debug("loader = " + loader);
+           }
+ 
+         if (privileged && i == classes.length - 2)
+@@ -208,7 +209,8 @@
+         // Create a static snapshot of this domain, which may change over time
+         // if the current policy changes.
+         domains.add(new ProtectionDomain(domain.getCodeSource(),
+-                                         domain.getPermissions()));
++                                         domain.getPermissions(),
++                                         loader, null));
+       }
+ 
+     if (DEBUG)
+Index: libcpp/directives.c
+===================================================================
+--- libcpp/directives.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libcpp/directives.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -280,16 +280,17 @@
+ static void
+ end_directive (cpp_reader *pfile, int skip_line)
+ {
+-  if (pfile->state.in_deferred_pragma)
+-    ;
+-  else if (CPP_OPTION (pfile, traditional))
++  if (CPP_OPTION (pfile, traditional))
+     {
+       /* Revert change of prepare_directive_trad.  */
+-      pfile->state.prevent_expansion--;
++      if (!pfile->state.in_deferred_pragma)
++	pfile->state.prevent_expansion--;
+ 
+       if (pfile->directive != &dtable[T_DEFINE])
+ 	_cpp_remove_overlay (pfile);
+     }
++  else if (pfile->state.in_deferred_pragma)
++    ;
+   /* We don't skip for an assembler #.  */
+   else if (skip_line)
+     {
+Index: libcpp/ChangeLog
+===================================================================
+--- libcpp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
++++ libcpp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+@@ -1,3 +1,10 @@
++2011-11-04  Eric Botcazou  <ebotcazou@adacore.com>
++            Jakub Jelinek  <jakub@redhat.com>
++
++	PR preprocessor/39213
++	* directives.c (end_directive): Call _cpp_remove_overlay for deferred
++	pragmas as well in traditional mode.
++
+ 2010-12-16  Release Manager
+ 
+ 	* GCC 4.5.2 released.
