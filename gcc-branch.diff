@@ -1,7 +1,7 @@
 Index: libgomp/configure.tgt
 ===================================================================
---- libgomp/configure.tgt	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libgomp/configure.tgt	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libgomp/configure.tgt	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libgomp/configure.tgt	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -125,6 +125,10 @@
  	config_path="bsd posix"
  	;;
@@ -15,9 +15,17 @@ Index: libgomp/configure.tgt
  
 Index: libgomp/ChangeLog
 ===================================================================
---- libgomp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libgomp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1,3 +1,10 @@
+--- libgomp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libgomp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,3 +1,18 @@
++2011-01-16  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline
++	2010-12-14  Jakub Jelinek  <jakub@redhat.com>
++
++	PR fortran/46874
++	* libgomp.fortran/allocatable6.f90: New test.
++
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
 +	Backport from mainline:
@@ -28,10 +36,73 @@ Index: libgomp/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: libgomp/testsuite/libgomp.fortran/allocatable6.f90
+===================================================================
+--- libgomp/testsuite/libgomp.fortran/allocatable6.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ libgomp/testsuite/libgomp.fortran/allocatable6.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,45 @@
++! PR fortran/46874
++! { dg-do run }
++
++  interface
++    subroutine sub (a, b, c, d, n)
++      integer :: n
++      integer, allocatable :: a(:), b(:), c(:), d(:)
++    end subroutine
++  end interface
++
++  integer, allocatable :: a(:), b(:), c(:), d(:)
++  integer :: i, j
++  allocate (a(50), b(50), c(50), d(50))
++  do i = 1, 50
++    a(i) = 2 + modulo (i, 7)
++    b(i) = 179 - modulo (i, 11)
++  end do
++  c = 0
++  d = 2147483647
++  call sub (a, b, c, d, 50)
++  do i = 1, 50
++    j = 0
++    if (i .eq. 3) then
++      j = 8
++    else if (i .gt. 1 .and. i .lt. 9) then
++      j = 7
++    end if
++    if (c(i) .ne. j) call abort
++    j = 179 - modulo (i, 11)
++    if (i .gt. 1 .and. i .lt. 9) j = i
++    if (d(i) .ne. j) call abort
++  end do
++  deallocate (a, b, c, d)
++end
++
++subroutine sub (a, b, c, d, n)
++  integer :: n
++  integer, allocatable :: a(:), b(:), c(:), d(:)
++!$omp parallel do shared(a, b) reduction(+:c) reduction(min:d)
++  do i = 1, n
++    c(a(i)) = c(a(i)) + 1
++    d(i) = min(d(i), b(i))
++    d(a(i)) = min(d(a(i)), a(i))
++  end do
++end
+Index: gcc/tree-ssa-loop-im.c
+===================================================================
+--- gcc/tree-ssa-loop-im.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-loop-im.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -2139,7 +2139,7 @@
+   edge ex;
+ 
+   for (i = 0; VEC_iterate (edge, exits, i, ex); i++)
+-    if (ex->flags & EDGE_ABNORMAL)
++    if (ex->flags & (EDGE_ABNORMAL | EDGE_EH))
+       return false;
+ 
+   return true;
 Index: gcc/tree-loop-distribution.c
 ===================================================================
---- gcc/tree-loop-distribution.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/tree-loop-distribution.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/tree-loop-distribution.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-loop-distribution.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -251,7 +251,7 @@
  
  /* Generate a call to memset.  Return true when the operation succeeded.  */
@@ -362,22 +433,30 @@ Index: gcc/tree-loop-distribution.c
  /* Dump to FILE the PARTITIONS.  */
 Index: gcc/DATESTAMP
 ===================================================================
---- gcc/DATESTAMP	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/DATESTAMP	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/DATESTAMP	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1 +1 @@
 -20101216
-+20110108
++20110124
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/tree-ssa-sccvn.c
 ===================================================================
---- gcc/tree-ssa-sccvn.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/tree-ssa-sccvn.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1063,6 +1063,7 @@
+--- gcc/tree-ssa-sccvn.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-sccvn.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -988,6 +988,7 @@
+ }
+ 
+ static tree *last_vuse_ptr;
++static vn_lookup_kind vn_walk_kind;
+ 
+ /* Callback for walk_non_aliased_vuses.  Adjusts the vn_reference_t VR_
+    with the current VUSE and performs the expression lookup.  */
+@@ -1063,6 +1064,7 @@
        size2 = TREE_INT_CST_LOW (gimple_call_arg (def_stmt, 2)) * 8;
        if ((unsigned HOST_WIDE_INT)size2 / 8
  	  == TREE_INT_CST_LOW (gimple_call_arg (def_stmt, 2))
@@ -385,7 +464,7 @@ Index: gcc/tree-ssa-sccvn.c
  	  && operand_equal_p (base, base2, 0)
  	  && offset2 <= offset
  	  && offset2 + size2 >= offset + maxsize)
-@@ -1086,7 +1087,8 @@
+@@ -1086,7 +1088,8 @@
        HOST_WIDE_INT offset2, size2, maxsize2;
        base2 = get_ref_base_and_extent (gimple_assign_lhs (def_stmt),
  				       &offset2, &size2, &maxsize2);
@@ -395,7 +474,17 @@ Index: gcc/tree-ssa-sccvn.c
  	  && offset2 <= offset
  	  && offset2 + size2 >= offset + maxsize)
  	{
-@@ -1116,7 +1118,8 @@
+@@ -1101,7 +1104,8 @@
+ 
+   /* For aggregate copies translate the reference through them if
+      the copy kills ref.  */
+-  else if (gimple_assign_single_p (def_stmt)
++  else if (vn_walk_kind == VN_WALKREWRITE
++	   && gimple_assign_single_p (def_stmt)
+ 	   && (DECL_P (gimple_assign_rhs1 (def_stmt))
+ 	       || INDIRECT_REF_P (gimple_assign_rhs1 (def_stmt))
+ 	       || handled_component_p (gimple_assign_rhs1 (def_stmt))))
+@@ -1116,7 +1120,8 @@
        /* See if the assignment kills REF.  */
        base2 = get_ref_base_and_extent (gimple_assign_lhs (def_stmt),
  				       &offset2, &size2, &maxsize2);
@@ -405,11 +494,250 @@ Index: gcc/tree-ssa-sccvn.c
  	  || offset2 > offset
  	  || offset2 + size2 < offset + maxsize)
  	return (void *)-1;
+@@ -1190,7 +1195,7 @@
+ tree
+ vn_reference_lookup_pieces (tree vuse, alias_set_type set, tree type,
+ 			    VEC (vn_reference_op_s, heap) *operands,
+-			    vn_reference_t *vnresult, bool maywalk)
++			    vn_reference_t *vnresult, vn_lookup_kind kind)
+ {
+   struct vn_reference_s vr1;
+   vn_reference_t tmp;
+@@ -1215,10 +1220,11 @@
+   vn_reference_lookup_1 (&vr1, vnresult);
+ 
+   if (!*vnresult
+-      && maywalk
++      && kind != VN_NOWALK
+       && vr1.vuse)
+     {
+       ao_ref r;
++      vn_walk_kind = kind;
+       if (ao_ref_init_from_vn_reference (&r, set, type, vr1.operands))
+ 	*vnresult =
+ 	  (vn_reference_t)walk_non_aliased_vuses (&r, vr1.vuse,
+@@ -1241,7 +1247,7 @@
+    stored in the hashtable if one exists.  */
+ 
+ tree
+-vn_reference_lookup (tree op, tree vuse, bool maywalk,
++vn_reference_lookup (tree op, tree vuse, vn_lookup_kind kind,
+ 		     vn_reference_t *vnresult)
+ {
+   VEC (vn_reference_op_s, heap) *operands;
+@@ -1256,12 +1262,13 @@
+   vr1.set = get_alias_set (op);
+   vr1.hashcode = vn_reference_compute_hash (&vr1);
+ 
+-  if (maywalk
++  if (kind != VN_NOWALK
+       && vr1.vuse)
+     {
+       vn_reference_t wvnresult;
+       ao_ref r;
+       ao_ref_init (&r, op);
++      vn_walk_kind = kind;
+       wvnresult =
+ 	(vn_reference_t)walk_non_aliased_vuses (&r, vr1.vuse,
+ 						vn_reference_lookup_2,
+@@ -1980,14 +1987,14 @@
+ 
+   last_vuse = gimple_vuse (stmt);
+   last_vuse_ptr = &last_vuse;
+-  result = vn_reference_lookup (op, gimple_vuse (stmt), true, NULL);
++  result = vn_reference_lookup (op, gimple_vuse (stmt), VN_WALKREWRITE, NULL);
+   last_vuse_ptr = NULL;
+ 
+   /* If we have a VCE, try looking up its operand as it might be stored in
+      a different type.  */
+   if (!result && TREE_CODE (op) == VIEW_CONVERT_EXPR)
+     result = vn_reference_lookup (TREE_OPERAND (op, 0), gimple_vuse (stmt),
+-    				  true, NULL);
++    				  VN_WALKREWRITE, NULL);
+ 
+   /* We handle type-punning through unions by value-numbering based
+      on offset and size of the access.  Be prepared to handle a
+@@ -2098,7 +2105,7 @@
+      Otherwise, the vdefs for the store are used when inserting into
+      the table, since the store generates a new memory state.  */
+ 
+-  result = vn_reference_lookup (lhs, gimple_vuse (stmt), false, NULL);
++  result = vn_reference_lookup (lhs, gimple_vuse (stmt), VN_NOWALK, NULL);
+ 
+   if (result)
+     {
+Index: gcc/tree-ssa-sccvn.h
+===================================================================
+--- gcc/tree-ssa-sccvn.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-sccvn.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -185,10 +185,11 @@
+ void copy_reference_ops_from_call (gimple, VEC(vn_reference_op_s, heap) **);
+ bool ao_ref_init_from_vn_reference (ao_ref *, alias_set_type, tree,
+ 				    VEC (vn_reference_op_s, heap) *);
++typedef enum { VN_NOWALK, VN_WALK, VN_WALKREWRITE } vn_lookup_kind;
+ tree vn_reference_lookup_pieces (tree, alias_set_type, tree,
+ 				 VEC (vn_reference_op_s, heap) *,
+-				 vn_reference_t *, bool);
+-tree vn_reference_lookup (tree, tree, bool, vn_reference_t *);
++				 vn_reference_t *, vn_lookup_kind);
++tree vn_reference_lookup (tree, tree, vn_lookup_kind, vn_reference_t *);
+ vn_reference_t vn_reference_insert (tree, tree, tree);
+ vn_reference_t vn_reference_insert_pieces (tree, alias_set_type, tree,
+ 					   VEC (vn_reference_op_s, heap) *,
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1,3 +1,157 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,3 +1,306 @@
++2011-01-21  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/47365
++	* tree-ssa-sccvn.h (vn_lookup_kind): Declare.
++	(vn_reference_lookup_pieces): Adjust.
++	(vn_reference_lookup): Likewise.
++	* tree-ssa-sccvn.c (vn_walk_kind): New static global.
++	(vn_reference_lookup_3): Only look through kills if in
++	VN_WALKREWRITE mode.
++	(vn_reference_lookup_pieces): Adjust.
++	(vn_reference_lookup): Likewise.
++	(visit_reference_op_load): Likewise.
++	(visit_reference_op_store): Likewise.
++	* tree-ssa-pre.c (phi_translate_1): Use VN_WALK mode.
++	(compute_avail): Likewise.
++	(eliminate): Likewise.
++
++2011-01-20  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/47167
++	* tree-ssa-copyrename.c (copy_rename_partition_coalesce):
++	Revert previous change, only avoid enumeral type changes.
++
++2011-01-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from mainline
++	2011-01-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/47318
++	* config/i386/avxintrin.h (_mm_maskload_pd): Change mask to
++	__m128i.
++	(_mm_maskstore_pd): Likewise.
++	(_mm_maskload_ps): Likewise.
++	(_mm_maskstore_ps): Likewise.
++	(_mm256_maskload_pd): Change mask to __m256i.
++	(_mm256_maskstore_pd): Likewise.
++	(_mm256_maskload_ps): Likewise.
++	(_mm256_maskstore_ps): Likewise.
++
++	* config/i386/i386-builtin-types.def: Updated.
++	(ix86_expand_special_args_builtin): Likewise.
++
++	* config/i386/i386.c (bdesc_special_args): Update
++	__builtin_ia32_maskloadpd, __builtin_ia32_maskloadps,
++	__builtin_ia32_maskloadpd256, __builtin_ia32_maskloadps256,
++	__builtin_ia32_maskstorepd, __builtin_ia32_maskstoreps,
++	__builtin_ia32_maskstorepd256 and __builtin_ia32_maskstoreps256.
++
++	* config/i386/sse.md (avx_maskload<ssemodesuffix><avxmodesuffix>):
++	Use <avxpermvecmode> on mask register.
++	(avx_maskstore<ssemodesuffix><avxmodesuffix>): Likewise.
++
++2011-01-17  Olivier Hainque  <hainque@adacore.com>
++            Michael Haubenwallner  <michael.haubenwallner@salomon.at>
++            Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR target/46655
++	* xcoffout.c (ASM_OUTPUT_LINE): Output line only if positive, and only
++	if <= USHRT_MAX in 32-bit mode.
++
++2011-01-17  Richard Guenther  <rguenther@suse.de>
++
++	Backport from mainline
++	PR tree-optimization/47286
++	* tree-ssa-structalias.c (new_var_info): Register variables
++	are global.
++
++	PR tree-optimization/44592
++	* tree-ssa-ccp.c (gimplify_and_update_call_from_tree): Copy
++	from trunk.
++
++2011-01-16  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline
++	2011-01-07  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/47201
++	* config/i386/i386.c (ix86_delegitimize_address): If
++	simplify_gen_subreg fails, return orig_x.
++
++	2011-01-06  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c/47150
++	* c-convert.c (convert): When converting a complex expression
++	other than COMPLEX_EXPR to a different complex type, ensure
++	c_save_expr is called instead of save_expr, unless in_late_binary_op.
++	* c-typeck.c (convert_for_assignment): Set in_late_binary_op also
++	when converting COMPLEX_TYPE.
++
++	2010-12-21  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/46880
++	* config/i386/sse.md (sse2_loadlpd, sse2_movsd): Fix shufpd source
++	operand.
++
++	PR middle-end/45852
++	* expr.c (store_expr): Ignore alt_rtl if equal to target,
++	but has side-effects.
++
++	2010-12-16  Jakub Jelinek  <jakub@redhat.com>
++
++	PR tree-optimization/43655
++	* tree-ssa-ter.c (is_replaceable_p): Don't use
++	gimple_references_memory_p for -O0, instead check for load
++	by looking at rhs.
++
++	PR debug/46893
++	* cfgexpand.c (expand_debug_expr): If GET_MODE (op0) is VOIDmode,
++	use TYPE_MODE (TREE_TYPE (tem)) instead of mode1.
++
++	2010-12-10  Jakub Jelinek  <jakub@redhat.com>
++
++	PR rtl-optimization/46804
++	* regmove.c (optimize_reg_copy_3): Look for REG_EQUAL note
++	on the setter of src_reg rather than on insn.  If it is
++	equal to the setter's original SET_SRC, replace it with its
++	zero or sign extension instead of dropping it.
++
++	PR rtl-optimization/46865
++	* rtl.c (rtx_equal_p_cb, rtx_equal_p): For last operand of
++	ASM_OPERANDS and ASM_INPUT if integers are different,
++	call locator_eq.
++	* jump.c (rtx_renumbered_equal_p): Likewise.
++
++	PR tree-optimization/46864
++	* tree-ssa-loop-im.c (loop_suitable_for_sm): Return false even
++	when there are EDGE_EH exit edges.
++
++	2010-12-09  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/41082
++	* config/rs6000/rs6000.c (rs6000_expand_vector_extract): Use stvx
++	instead of stve*x.
++	(altivec_expand_stv_builtin): For op0 use mode of operand 1 instead
++	of operand 0.
++	* config/rs6000/altivec.md (VI_scalar): New mode attr.
++	(altivec_stve<VI_char>x, *altivec_stvesfx): Use scalar instead of
++	vector mode for operand 0, put operand 1 into UNSPEC.
++
++2011-01-13  Nick Clifton  <nickc@redhat.com>
++
++	Import this fix from the mainline:
++	2010-10-19  Nick Clifton  <nickc@redhat.com>
++
++	* config/rx/rx.c (rx_function_value): Small integer types are
++	promoted to SImode.
++	(rx_promote_function_mode): New function.
++	(TARGET_PROMOTE_FUNCTION_MODE): Define.
++
 +2011-01-07  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
 +	Backport from mainline:
@@ -567,18 +895,386 @@ Index: gcc/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/testsuite/gcc.c-torture/compile/pr47150.c
+===================================================================
+--- gcc/testsuite/gcc.c-torture/compile/pr47150.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.c-torture/compile/pr47150.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,11 @@
++/* PR c/47150 */
++
++float _Complex foo (float, float);
++
++void
++bar ()
++{
++  float w = 2;
++  float _Complex b;
++  b = 0.5 * (foo (0, w) + foo (1, w) / w);
++}
 Index: gcc/testsuite/gcc.target/arm/pr45447.c
 ===================================================================
 --- gcc/testsuite/gcc.target/arm/pr45447.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/arm/pr45447.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gcc.target/arm/pr45447.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,3 @@
 +/* { dg-do compile } */
 +/* { dg-options "-g -femit-struct-debug-baseonly" } */
 +typedef __builtin_va_list x;
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-1.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -16,10 +16,11 @@
+   int i;
+   int m[8] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3), mask_v(4), mask_v(5), mask_v(6), mask_v(7)};
+   float s[8] = {1,2,3,4,5,6,7,8};
+-  union256 u, mask;
++  union256 u;
++  union256i_d mask;
+   float e [8] = {0.0};
+ 
+-  mask.x = _mm256_loadu_ps ((float*)m);
++  mask.x = _mm256_loadu_si256 ((__m256i *)m);
+   u.x = _mm256_maskload_ps (s, mask.x);
+ 
+   for (i = 0 ; i < 8; i++) 
+Index: gcc/testsuite/gcc.target/i386/pr46880.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/pr46880.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/pr46880.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,28 @@
++/* PR target/46880 */
++/* { dg-do run } */
++/* { dg-options "-O2 -fno-strict-aliasing -msse2" } */
++/* { dg-require-effective-target sse2_runtime } */
++
++typedef double __m128d __attribute__ ((__vector_size__ (16), __may_alias__));
++typedef double (*T)[2];
++
++static __attribute__ ((noinline, noclone)) __m128d
++foo (__m128d c, __m128d d)
++{
++  T cp = (T) &c;
++  T dp = (T) &d;
++  __m128d e = { (*cp)[1], (*dp)[1] };
++  return e;
++}
++
++int
++main ()
++{
++  __m128d c = { 1.0, 2.0 };
++  __m128d d = { 3.0, 4.0 };
++  union { __m128d x; double d[2]; } u;
++  u.x = foo (c, d);
++  if (u.d[0] != 2.0 || u.d[1] != 4.0)
++    __builtin_abort ();
++  return 0;
++}
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovps-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovps-1.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovps-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,31 @@
++/* { dg-do run } */
++/* { dg-require-effective-target avx } */
++/* { dg-options "-O2 -mavx" } */
++
++#include "avx-check.h"
++
++#ifndef MASK
++#define MASK 134
++#endif
++
++#define mask_v(pos) (((MASK & (0x1 << (pos))) >> (pos)) << 31)
++
++void static
++avx_test (void)
++{
++  int i;
++  int m[4] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3)};
++  float s[4] = {1,2,3,4};
++  union128 u;
++  union128i_d mask;
++  float e[4] = {0.0};
++
++  mask.x = _mm_loadu_si128 ((__m128i *)m);
++  u.x = _mm_maskload_ps (s, mask.x);
++
++  for (i = 0 ; i < 4; i++) 
++    e[i] = m[i] ? s[i] : 0;
++   
++  if (check_union128 (u, e))
++    abort ();
++}
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-1.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -14,12 +14,13 @@
+ avx_test (void)
+ {
+   int i;
+-  long long m[8] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3)};
++  long long m[4] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3)};
+   double s[4] = {1.1, 2.2, 3.3, 4.4};
+-  union256d u, mask;
++  union256d u;
++  union256i_q mask;
+   double e [4] = {0.0};
+ 
+-  mask.x = _mm256_loadu_pd ((double*)m);
++  mask.x = _mm256_loadu_si256 ((__m256i *)m);
+   u.x = _mm256_maskload_pd (s, mask.x);
+ 
+   for (i = 0 ; i < 4; i++) 
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-1.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,31 @@
++/* { dg-do run } */
++/* { dg-require-effective-target avx } */
++/* { dg-options "-O2 -mavx" } */
++
++#include "avx-check.h"
++
++#ifndef MASK
++#define MASK 7
++#endif
++
++#define mask_v(pos) (((MASK & (0x1ULL << (pos))) >> (pos)) << 63)
++
++void static
++avx_test (void)
++{
++  int i;
++  long long m[2] = {mask_v(0), mask_v(1)};
++  double s[2] = {1.1, 2.2};
++  union128d u;
++  union128i_q mask;
++  double e[2] = {0.0};
++
++  mask.x = _mm_loadu_si128 ((__m128i *)m);
++  u.x = _mm_maskload_pd (s, mask.x);
++
++  for (i = 0 ; i < 2; i++) 
++    e[i] = m[i] ? s[i] : 0;
++   
++  if (check_union128d (u, e))
++    abort ();
++}
+Index: gcc/testsuite/gcc.target/i386/pr46865-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/pr46865-1.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/pr46865-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,31 @@
++/* PR rtl-optimization/46865 */
++/* { dg-do compile } */
++/* { dg-options "-O2" } */
++
++extern unsigned long f;
++
++#define m1(f)							\
++  if (f & 1)							\
++    asm volatile ("nop /* asmnop */\n");			\
++  else								\
++    asm volatile ("nop /* asmnop */\n");
++
++#define m2(f)							\
++  if (f & 1)							\
++    asm volatile ("nop /* asmnop */\n" : : "i" (6) : "cx");	\
++  else								\
++    asm volatile ("nop /* asmnop */\n" : : "i" (6) : "cx");
++
++void
++foo (void)
++{
++  m1 (f);
++}
++
++void
++bar (void)
++{
++  m2 (f);
++}
++
++/* { dg-final { scan-assembler-times "asmnop" 2 } } */
+Index: gcc/testsuite/gcc.target/i386/pr45852.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/pr45852.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/pr45852.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,16 @@
++/* PR middle-end/45852 */
++/* { dg-options "-O2 -mcmodel=small" } */
++/* { dg-do compile { target { { i?86-*-linux* x86_64-*-linux* } && lp64 } } } */
++/* { dg-require-visibility "" } */
++
++struct S { int s; };
++
++volatile struct S globvar __attribute__((visibility ("hidden"))) = { -6 };
++
++void
++foo (void)
++{
++  globvar = globvar;
++}
++
++/* { dg-final { scan-assembler-times "globvar.%?rip" 2 } } */
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-2.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovps-256-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -16,12 +16,13 @@
+   int i;
+   int m[8] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3), mask_v(4), mask_v(5), mask_v(6), mask_v(7)};
+   float s[8] = {1,2,3,4,5,6,7,8};
+-  union256 src, mask;
++  union256 src;
++  union256i_d mask;
+   float e [8] = {0.0};
+   float d [8] = {0.0};
+ 
+   src.x = _mm256_loadu_ps (s);
+-  mask.x = _mm256_loadu_ps ((float *)m);
++  mask.x = _mm256_loadu_si256 ((__m256i *)m);
+   _mm256_maskstore_ps (d, mask.x, src.x);
+ 
+   for (i = 0 ; i < 8; i++) 
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovps-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovps-2.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovps-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,33 @@
++/* { dg-do run } */
++/* { dg-require-effective-target avx } */
++/* { dg-options "-O2 -mavx" } */
++
++#include "avx-check.h"
++
++#ifndef MASK
++#define MASK 214
++#endif
++
++#define mask_v(pos) (((MASK & (0x1 << (pos))) >> (pos)) << 31)
++
++void static
++avx_test (void)
++{
++  int i;
++  int m[4] = {mask_v(0), mask_v(1), mask_v(2), mask_v(3)};
++  float s[4] = {1,2,3,4};
++  union128 src;
++  union128i_d mask;
++  float e[4] = {0.0};
++  float d[4] = {0.0};
++
++  src.x = _mm_loadu_ps (s);
++  mask.x = _mm_loadu_si128 ((__m128i *)m);
++  _mm_maskstore_ps (d, mask.x, src.x);
++
++  for (i = 0 ; i < 4; i++) 
++    e[i] = m[i] ? s[i] : 0;
++   
++  if (checkVf (d, e, 4))
++    abort ();
++}
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-2.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-256-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -18,10 +18,11 @@
+   double s[4] = {1.1, 2.2, 3.3, 4.4};
+   double e [4] = {0.0};
+   double d [4] = {0.0};
+-  union256d src, mask;
++  union256d src;
++  union256i_q mask;
+   
+   src.x = _mm256_loadu_pd (s);
+-  mask.x = _mm256_loadu_pd ((double*)m);
++  mask.x = _mm256_loadu_si256 ((__m256i *)m);
+   _mm256_maskstore_pd (d, mask.x, src.x);
+ 
+   for (i = 0 ; i < 4; i++) 
+Index: gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-2.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/avx-vmaskmovpd-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,33 @@
++/* { dg-do run } */
++/* { dg-require-effective-target avx } */
++/* { dg-options "-O2 -mavx" } */
++
++#include "avx-check.h"
++
++#ifndef MASK
++#define MASK 6
++#endif
++
++#define mask_v(pos) (((MASK & (0x1ULL << (pos))) >> (pos)) << 63)
++
++void static
++avx_test (void)
++{
++  int i;
++  long long m[2] = {mask_v(0), mask_v(1)};
++  double s[2] = {1.1, 2.2};
++  double e[2] = {0.0};
++  double d[2] = {0.0};
++  union128d src;
++  union128i_q mask;
++  
++  src.x = _mm_loadu_pd (s);
++  mask.x = _mm_loadu_si128 ((__m128i *)m);
++  _mm_maskstore_pd (d, mask.x, src.x);
++
++  for (i = 0 ; i < 2; i++) 
++    e[i] = m[i] ? s[i] : 0;
++   
++  if (checkVd (d, e, 2))
++    abort ();
++}
+Index: gcc/testsuite/gcc.target/i386/pr46865-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/pr46865-2.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/i386/pr46865-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,32 @@
++/* PR rtl-optimization/46865 */
++/* { dg-do compile } */
++/* { dg-options "-O2 -save-temps" } */
++
++extern unsigned long f;
++
++#define m1(f)							\
++  if (f & 1)							\
++    asm volatile ("nop /* asmnop */\n");			\
++  else								\
++    asm volatile ("nop /* asmnop */\n");
++
++#define m2(f)							\
++  if (f & 1)							\
++    asm volatile ("nop /* asmnop */\n" : : "i" (6) : "cx");	\
++  else								\
++    asm volatile ("nop /* asmnop */\n" : : "i" (6) : "cx");
++
++void
++foo (void)
++{
++  m1 (f);
++}
++
++void
++bar (void)
++{
++  m2 (f);
++}
++
++/* { dg-final { scan-assembler-times "asmnop" 2 } } */
++/* { dg-final { cleanup-saved-temps } } */
 Index: gcc/testsuite/gnat.dg/opt13.adb
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13.adb	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13.adb	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gnat.dg/opt13.adb	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,13 @@
 +-- { dg-do run }
 +-- { dg-options "-O" }
@@ -596,7 +1292,7 @@ Index: gcc/testsuite/gnat.dg/opt13.adb
 Index: gcc/testsuite/gnat.dg/opt13_pkg.adb
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gnat.dg/opt13_pkg.adb	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,31 @@
 +package body Opt13_Pkg is
 +
@@ -632,7 +1328,7 @@ Index: gcc/testsuite/gnat.dg/opt13_pkg.adb
 Index: gcc/testsuite/gnat.dg/opt13_pkg.ads
 ===================================================================
 --- gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gnat.dg/opt13_pkg.ads	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,15 @@
 +package Opt13_Pkg is
 +
@@ -649,10 +1345,62 @@ Index: gcc/testsuite/gnat.dg/opt13_pkg.ads
 +    type My_Type is access Data;
 +
 +end Opt13_Pkg;
+Index: gcc/testsuite/gcc.dg/pr47201.c
+===================================================================
+--- gcc/testsuite/gcc.dg/pr47201.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/pr47201.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,18 @@
++/* PR target/47201 */
++/* { dg-do compile } */
++/* { dg-options "-O -fpic -g" { target fpic } } */
++
++union U
++{
++  __UINTPTR_TYPE__ m;
++  float d;
++} u;
++
++int
++foo (void)
++{
++  union U v = {
++    (__UINTPTR_TYPE__)&u
++  };
++  return u.d == v.d;
++}
+Index: gcc/testsuite/gcc.dg/pr46893.c
+===================================================================
+--- gcc/testsuite/gcc.dg/pr46893.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/pr46893.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,13 @@
++/* PR debug/46893 */
++/* { dg-do compile } */
++/* { dg-options "-O -g" } */
++
++void
++foo (void)
++{
++  union { unsigned long long l; double d; } u = { 0x7ff0000000000000ULL };
++  double v = 0, w = -u.d;
++
++  if (w)
++    w = v;
++}
+Index: gcc/testsuite/gcc.dg/20061124-1.c
+===================================================================
+--- gcc/testsuite/gcc.dg/20061124-1.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.dg/20061124-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,5 +1,6 @@
+ /* { dg-do run } */
+ /* { dg-require-effective-target sync_char_short } */
++/* { dg-options "-mcpu=v9" { target sparc*-*-* } } */
+ 
+ /* This testcase failed on s390 because no compare instruction for
+    the check of FLAG was emitted.  */
 Index: gcc/testsuite/gcc.dg/debug/pr46782.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/debug/pr46782.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/debug/pr46782.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gcc.dg/debug/pr46782.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,11 @@
 +/* PR debug/46782 */
 +/* { dg-do compile } */
@@ -668,7 +1416,7 @@ Index: gcc/testsuite/gcc.dg/debug/pr46782.c
 Index: gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,18 @@
 +int
 +movegt (int y, long long a)
@@ -691,7 +1439,7 @@ Index: gcc/testsuite/gcc.dg/graphite/run-id-pr46758.c
 Index: gcc/testsuite/gcc.dg/graphite/pr45552.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/graphite/pr45552.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/graphite/pr45552.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gcc.dg/graphite/pr45552.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,46 @@
 +typedef struct
 +{
@@ -739,11 +1487,273 @@ Index: gcc/testsuite/gcc.dg/graphite/pr45552.c
 +{
 +  render( 0 );
 +}
+Index: gcc/testsuite/gcc.dg/torture/pr47365.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr47365.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr47365.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,39 @@
++/* { dg-do run } */
++
++struct A
++{
++  int i;
++};
++
++struct B
++{
++  struct A a[2];
++};
++
++int i = 1;
++struct B b = { 0, 3 };
++
++static void
++test ()
++{
++  if (b.a[0].i != i)
++    {
++      int t = b.a[0].i;
++      b.a[0] = b.a[1];
++      b.a[1].i = t;
++    }
++
++  if (b.a[1].i == i)
++    __builtin_abort ();
++
++  if (b.a[0].i == 0)
++    __builtin_abort ();
++}
++
++int
++main ()
++{
++  test ();
++  return 0;
++}
++
+Index: gcc/testsuite/gcc.dg/tree-ssa/pr47392.c
+===================================================================
+--- gcc/testsuite/gcc.dg/tree-ssa/pr47392.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/tree-ssa/pr47392.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,42 @@
++/* { dg-do run } */
++/* { dg-options "-O2 -fdump-tree-pre-stats" } */
++
++struct A
++{
++  int i;
++};
++
++struct B
++{
++  struct A a[2];
++};
++
++int i = 1;
++struct B b = { 0, 3 };
++
++static void
++test ()
++{
++  if (b.a[0].i != i)
++    {
++      int t = b.a[0].i;
++      b.a[0] = b.a[1];
++      b.a[1].i = t;
++    }
++
++  if (b.a[1].i == i)
++    __builtin_abort ();
++
++  if (b.a[0].i == 0)
++    __builtin_abort ();
++}
++
++int
++main ()
++{
++  test ();
++  return 0;
++}
++
++/* { dg-final { scan-tree-dump "Eliminated: 1" "pre" } } */
++/* { dg-final { cleanup-tree-dump "pre" } } */
+Index: gcc/testsuite/gcc.dg/tree-ssa/pr47286.c
+===================================================================
+--- gcc/testsuite/gcc.dg/tree-ssa/pr47286.c	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/tree-ssa/pr47286.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,20 @@
++/* { dg-do compile } */
++/* { dg-skip-if "" { ! { i?86-*-* x86_64-*-* } } { "*" } { "" } } */
++/* { dg-options "-O2 -fdump-tree-optimized" } */
++
++struct thread_info { int preempt_count; };
++static inline struct thread_info *current_thread_info(void)
++{
++  register struct thread_info *sp asm("esp");
++  return sp;
++}
++void testcase(void)
++{
++  current_thread_info()->preempt_count += 1;
++}
++
++/* We have to make sure that alias analysis treats sp as pointing
++   to globals and thus the store not optimized away.  */
++
++/* { dg-final { scan-tree-dump "->preempt_count =" "optimized" } } */
++/* { dg-final { cleanup-tree-dump "optimized" } } */
+Index: gcc/testsuite/gcc.dg/pr28796-2.c
+===================================================================
+--- gcc/testsuite/gcc.dg/pr28796-2.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.dg/pr28796-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -2,6 +2,7 @@
+ /* { dg-options "-O2 -funsafe-math-optimizations -fno-finite-math-only -DUNSAFE" } */
+ /* { dg-add-options ieee } */
+ /* { dg-skip-if "No Inf/NaN support" { spu-*-* } } */
++/* { dg-skip-if "Bug in _Q_dtoq" { sparc*-sun-solaris2.8 } } */
+ 
+ #include "tg-tests.h"
+ 
+Index: gcc/testsuite/gcc.dg/vect/pr43430-1.c
+===================================================================
+--- gcc/testsuite/gcc.dg/vect/pr43430-1.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.dg/vect/pr43430-1.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -35,5 +35,5 @@
+   return foo (data_ch1, data_ch2, 1);
+ }
+ 
+-/* { dg-final { scan-tree-dump-times "vectorized 1 loops" 1 "vect" } } */
++/* { dg-final { scan-tree-dump-times "vectorized 1 loops" 1 "vect" { target vect_condition } } } */
+ /* { dg-final { cleanup-tree-dump "vect" } } */
+Index: gcc/testsuite/gcc.dg/vect/slp-multitypes-2.c
+===================================================================
+--- gcc/testsuite/gcc.dg/vect/slp-multitypes-2.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gcc.dg/vect/slp-multitypes-2.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,4 +1,5 @@
+ /* { dg-require-effective-target vect_int } */
++/* { dg-do run { xfail { sparc*-*-* && ilp32 } } } PR rtl-opt/46603 */
+ 
+ #include <stdarg.h>
+ #include <stdio.h>
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1,3 +1,63 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,3 +1,176 @@
++2011-01-24  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* gfortran.dg/cray_pointers_2.f90: Avoid cycling through
++	optimization options.
++
++2011-01-24  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* gfortran.dg/array_constructor_33.f90: Use dg-timeout-factor 4.
++
++2011-01-21  Richard Guenther  <rguenther@suse.de>
++
++	PR tree-optimization/47365
++	* gcc.dg/torture/pr47365.c: New testcase.
++	* gcc.dg/tree-ssa/pr47392.c: Likewise.
++
++2011-01-21  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* g++.dg/other/anon5.C: Skip on mips-sgi-irix*.
++
++2011-01-17  Eric Botcazou  <ebotcazou@adacore.com>
++
++	Backport from mainline
++	2010-11-22  Eric Botcazou  <ebotcazou@adacore.com>
++
++	* gcc.dg/pr28796-2.c: SKIP on SPARC/Solaris 8.
++
++	PR rtl-optimization/46603
++	* gcc.dg/vect/slp-multitypes-2.c: XFAIL execution on SPARC 32-bit.
++
++	2010-08-31  Bingfeng Mei  <bmei@broadcom.com>
++
++	* gcc.dg/vect/pr43430-1.c: Requires vect_condition target.
++
++2011-01-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* g++.old-deja/g++.other/init19.C: Don't XFAIL on mips-sgi-irix*.
++
++2011-01-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	Backport from mainline
++	2011-01-17  H.J. Lu  <hongjiu.lu@intel.com>
++
++	PR target/47318
++	* gcc.target/i386/avx-vmaskmovpd-1.c: New.
++	* gcc.target/i386/avx-vmaskmovpd-2.c: Likewise.
++	* gcc.target/i386/avx-vmaskmovps-1.c: Likewise.
++	* gcc.target/i386/avx-vmaskmovps-1.c: Likewise.
++
++	* gcc.target/i386/avx-vmaskmovpd-256-1.c (avx_test): Load mask
++	as __m256i.
++	* gcc.target/i386/avx-vmaskmovpd-256-2.c (avx_test): Likewise.
++	* gcc.target/i386/avx-vmaskmovps-256-1.c (avx_test): Likewise.
++	* gcc.target/i386/avx-vmaskmovps-256-2.c (avx_test): Likewise.
++
++2011-01-17  Richard Guenther  <rguenther@suse.de>
++
++	Backport from mainline
++	PR tree-optimization/47286
++	* gcc.dg/tree-ssa/pr47286.c: New testcase.
++
++	PR tree-optimization/44592
++	* gfortran.dg/pr44592.f90: New testcase.
++
++2011-01-16  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline
++	2011-01-07  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/47201
++	* gcc.dg/pr47201.c: New test.
++
++	2011-01-06  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c/47150
++	* gcc.c-torture/compile/pr47150.c: New test.
++
++	2010-12-21  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/46880
++	* gcc.target/i386/pr46880.c: New test.
++
++	PR middle-end/45852
++	* gcc.target/i386/pr45852.c: New test.
++
++	2010-12-16  Jakub Jelinek  <jakub@redhat.com>
++
++	PR tree-optimization/43655
++	* g++.dg/opt/pr43655.C: New test.
++
++	PR debug/46893
++	* gcc.dg/pr46893.c: New test.
++
++	2010-12-10  Jakub Jelinek  <jakub@redhat.com>
++
++	PR rtl-optimization/46804
++	* gfortran.dg/pr46804.f90: New test.
++
++	PR rtl-optimization/46865
++	* gcc.target/i386/pr46865-1.c: New test.
++	* gcc.target/i386/pr46865-2.c: New test.
++
++	PR tree-optimization/46864
++	* g++.dg/opt/pr46864.C: New test.
++
++2011-01-13  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
++
++	* gfortran.dg/cray_pointers_2.f90: Use dg-timeout-factor 4.
++
++2011-01-12  Eric Botcazou  <ebotcazou@adacore.com>
++
++	PR testsuite/33033
++	* gcc.dg/20061124-1.c: Pass -mcpu=v9 on the SPARC.
++
 +2011-02-01  Thomas Koenig  <tkoenig@gcc.gnu.org>
 +
 +	Backport from mainline
@@ -807,10 +1817,31 @@ Index: gcc/testsuite/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/testsuite/g++.old-deja/g++.other/init19.C
+===================================================================
+--- gcc/testsuite/g++.old-deja/g++.other/init19.C	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/g++.old-deja/g++.other/init19.C	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,4 +1,4 @@
+-// { dg-do run { xfail { { ! cxa_atexit } && { ! *-*-solaris2* } } } }
++// { dg-do run { xfail { { ! cxa_atexit } && { ! { mips-sgi-irix* *-*-solaris2* } } } } }
+ #include <stdlib.h>
+ 
+ #define assert(x) do { if (! (x)) abort(); } while (0)
+Index: gcc/testsuite/g++.dg/other/anon5.C
+===================================================================
+--- gcc/testsuite/g++.dg/other/anon5.C	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/g++.dg/other/anon5.C	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,5 +1,5 @@
+ // PR c++/34094
+-// { dg-do link { target { ! { *-*-darwin* *-*-hpux* *-*-solaris2.* alpha*-dec-osf* } } } }
++// { dg-do link { target { ! { *-*-darwin* *-*-hpux* *-*-solaris2.* alpha*-dec-osf* mips-sgi-irix* } } } }
+ // { dg-options "-g" }
+ 
+ namespace {
 Index: gcc/testsuite/g++.dg/tree-ssa/pr46734.C
 ===================================================================
 --- gcc/testsuite/g++.dg/tree-ssa/pr46734.C	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/tree-ssa/pr46734.C	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/g++.dg/tree-ssa/pr46734.C	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,34 @@
 +/* { dg-do compile } */
 +/* { dg-options "-O -fipa-sra" } */
@@ -846,10 +1877,80 @@ Index: gcc/testsuite/g++.dg/tree-ssa/pr46734.C
 +  gb = b;
 +  return foo (b, z);
 +}
+Index: gcc/testsuite/g++.dg/opt/pr43655.C
+===================================================================
+--- gcc/testsuite/g++.dg/opt/pr43655.C	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/opt/pr43655.C	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,34 @@
++// PR tree-optimization/43655
++// { dg-do run }
++// { dg-options "-O0 -ftree-ter" }
++
++extern "C" void abort ();
++
++struct C
++{
++  C (int i) : val(i) { }
++  C (const C& c) : val(c.val) { }
++  ~C (void) { val = 999; }
++  C& operator = (const C& c) { val = c.val; return *this; }
++  C& inc (int i) { val += i; return *this; }
++  int val;
++};
++
++C
++f ()
++{
++  return C (3);
++}
++
++C
++f (int i)
++{
++  return f ().inc (i);
++}
++
++int
++main ()
++{
++  if (f (2).val != 5)
++    abort ();
++}
+Index: gcc/testsuite/g++.dg/opt/pr46864.C
+===================================================================
+--- gcc/testsuite/g++.dg/opt/pr46864.C	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/opt/pr46864.C	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,26 @@
++// PR tree-optimization/46864
++// { dg-do compile }
++// { dg-options "-O -fnon-call-exceptions" }
++
++int baz ();
++
++struct S
++{
++  int k;
++  bool bar () throw ()
++  {
++    int m = baz ();
++    for (int i = 0; i < m; i++)
++      k = i;
++    return m;
++  }
++};
++
++extern S *s;
++
++void
++foo ()
++{
++  while (baz () && s->bar ())
++    ;
++}
 Index: gcc/testsuite/gfortran.dg/ldist-1.f90
 ===================================================================
---- gcc/testsuite/gfortran.dg/ldist-1.f90	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/testsuite/gfortran.dg/ldist-1.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/testsuite/gfortran.dg/ldist-1.f90	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gfortran.dg/ldist-1.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -29,5 +29,8 @@
    return
  end Subroutine PADEC
@@ -863,7 +1964,7 @@ Index: gcc/testsuite/gfortran.dg/ldist-1.f90
 Index: gcc/testsuite/gfortran.dg/debug/pr46756.f
 ===================================================================
 --- gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gfortran.dg/debug/pr46756.f	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,29 @@
 +C PR debug/46756, reduced from ../20010519-1.f
 +C { dg-do compile }
@@ -894,10 +1995,67 @@ Index: gcc/testsuite/gfortran.dg/debug/pr46756.f
 + 800  CONTINUE
 +      GOTO I800 ! { dg-warning "Deleted feature: Assigned" "Assigned GO TO" }
 +      END
+Index: gcc/testsuite/gfortran.dg/cray_pointers_2.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/cray_pointers_2.f90	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gfortran.dg/cray_pointers_2.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,5 +1,8 @@
+-! { dg-do run }
+-! { dg-options "-fcray-pointer -fbounds-check" }
++! Using two spaces between dg-do and run is a hack to keep gfortran-dg-runtest
++! from cycling through optimization options for this expensive test.
++! { dg-do  run }
++! { dg-options "-O3 -fcray-pointer -fbounds-check" }
++! { dg-timeout-factor 4 }
+ ! Series of routines for testing a Cray pointer implementation
+ program craytest
+   common /errors/errors(400)
+Index: gcc/testsuite/gfortran.dg/dependency_39.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/dependency_39.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/dependency_39.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,37 @@
++! { dg-do run }
++! PR 45777 - component ref aliases when both are pointers
++module m1
++  type t1
++     integer, dimension(:), allocatable :: data
++  end type t1
++contains
++  subroutine s1(t,d)
++    integer, dimension(:), pointer :: d
++    type(t1), pointer :: t
++    d(1:5)=t%data(3:7)
++  end subroutine s1
++  subroutine s2(d,t)
++    integer, dimension(:), pointer :: d
++    type(t1), pointer :: t
++    t%data(3:7) = d(1:5)
++  end subroutine s2
++end module m1
++
++program main
++  use m1
++  type(t1), pointer :: t
++  integer, dimension(:), pointer :: d
++  allocate(t)
++  allocate(t%data(10))
++  t%data=(/(i,i=1,10)/)
++  d=>t%data(5:9)
++  call s1(t,d)
++  if (any(d.ne.(/3,4,5,6,7/))) call abort()
++  t%data=(/(i,i=1,10)/)
++  d=>t%data(1:5)
++  call s2(d,t)
++  if (any(t%data.ne.(/1,2,1,2,3,4,5,8,9,10/))) call abort
++  deallocate(t%data)
++  deallocate(t)
++end program main
++! { dg-final { cleanup-modules "m1" } }
 Index: gcc/testsuite/gfortran.dg/ldist-pr43023.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/ldist-pr43023.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/ldist-pr43023.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gfortran.dg/ldist-pr43023.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,31 @@
 +! { dg-do compile }
 +! { dg-options "-O2 -ftree-loop-distribution" }
@@ -930,10 +2088,35 @@ Index: gcc/testsuite/gfortran.dg/ldist-pr43023.f90
 +END SUBROUTINE NFT_Init
 +
 +END MODULE NFT_mod
+Index: gcc/testsuite/gfortran.dg/pr44592.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/pr44592.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/pr44592.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,20 @@
++! { dg-do run }
++! { dg-options "-O3" }
++! From forall_12.f90
++! Fails with loop reversal at -O3
++!
++  character(len=1) :: b(4) = (/"1","2","3","4"/), c(4)
++  c = b
++  i = 1
++  ! This statement must be here for the abort below
++  b(1:3)(i:i) = b(2:4)(i:i)
++
++  b = c
++  b(4:2:-1)(i:i) = b(3:1:-1)(i:i)
++
++  ! This fails.  If the condition is printed, the result is F F F F
++  if (any (b .ne. (/"1","1","2","3"/))) i = 2
++  print *, b
++  print *, b .ne. (/"1","1","2","3"/)
++  if (i == 2) call abort
++end
 Index: gcc/testsuite/gfortran.dg/userdef_operator_2.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/userdef_operator_2.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/userdef_operator_2.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
++++ gcc/testsuite/gfortran.dg/userdef_operator_2.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -0,0 +1,17 @@
 +! { dg-do compile }
 +! PR 45338 - no ICE when cmp is not used explicitly.
@@ -952,10 +2135,61 @@ Index: gcc/testsuite/gfortran.dg/userdef_operator_2.f90
 +    print*, a .myop. b
 +  end subroutine test_fn
 +end module test_mod
+Index: gcc/testsuite/gfortran.dg/array_constructor_33.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/array_constructor_33.f90	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gfortran.dg/array_constructor_33.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,4 +1,5 @@
+ ! { dg-do compile }
++! { dg-timeout-factor 4 }
+ ! PR20923 gfortran slow for large array constructors.
+ ! Test case prepared from PR by Jerry DeLisle <jvdelisle@gcc.gnu.org>
+ program sel
+Index: gcc/testsuite/gfortran.dg/pr46804.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/pr46804.f90	(.../tags/gcc_4_5_2_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/pr46804.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -0,0 +1,36 @@
++! PR rtl-optimization/46804
++! { dg-do run }
++! { dg-options "-O -fPIC -fexpensive-optimizations -fgcse -foptimize-register-move -fpeel-loops -fno-tree-loop-optimize" }
++
++program main
++  integer, parameter :: n1 = 2, n2 = 3, n3 = 4, slen = 3
++  character (len = slen), dimension (n1, n2, n3) :: a
++  integer (kind = 1), dimension (2, 4) :: shift1
++  integer (kind = 2), dimension (2, 4) :: shift2
++  integer (kind = 4), dimension (2, 4) :: shift3
++  do i3 = 1, n3
++    do i2 = 1, n2
++      do i1 = 1, n1
++        a (i1, i2, i3) = 'ab'(i1:i1) // 'cde'(i2:i2) // 'fghi'(i3:i3)
++      end do
++    end do
++  end do
++  shift1 (1, :) = (/ 4, 11, 19, 20 /)
++  shift1 (2, :) = (/ 55, 5, 1, 2 /)
++  shift2 = shift1
++  shift3 = shift1
++  call test (cshift (a, shift2, 2))
++  call test (cshift (a, shift3, 2))
++contains
++  subroutine test (b)
++    character (len = slen), dimension (n1, n2, n3) :: b
++    do i3 = 1, n3
++      do i2 = 1, n2
++        do i1 = 1, n1
++          i2p = mod (shift1 (i1, i3) + i2 - 1, n2) + 1
++          if (b (i1, i2, i3) .ne. a (i1, i2p, i3)) call abort
++        end do
++      end do
++    end do
++  end subroutine test
++end program main
 Index: gcc/testsuite/gfortran.dg/power2.f90
 ===================================================================
---- gcc/testsuite/gfortran.dg/power2.f90	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/testsuite/gfortran.dg/power2.f90	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/testsuite/gfortran.dg/power2.f90	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/testsuite/gfortran.dg/power2.f90	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -13,6 +13,9 @@
    INTEGER(KIND=1) :: k1
    INTEGER(KIND=2) :: k2
@@ -966,10 +2200,217 @@ Index: gcc/testsuite/gfortran.dg/power2.f90
    k1 = 1_1 + 1_1**k1
    k2 = 1_2 + 1_2**k2
  
+Index: gcc/tree-ssa-copyrename.c
+===================================================================
+--- gcc/tree-ssa-copyrename.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-copyrename.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -225,11 +225,16 @@
+       ign2 = false;
+     }
+ 
+-  /* Don't coalesce if the two variables are not of the same type.  */
+-  if (TREE_TYPE (root1) != TREE_TYPE (root2))
++  /* Don't coalesce if the two variables aren't type compatible .  */
++  if (!types_compatible_p (TREE_TYPE (root1), TREE_TYPE (root2))
++      /* There is a disconnect between the middle-end type-system and
++         VRP, avoid coalescing enum types with different bounds.  */
++      || ((TREE_CODE (TREE_TYPE (root1)) == ENUMERAL_TYPE
++	   || TREE_CODE (TREE_TYPE (root2)) == ENUMERAL_TYPE)
++	  && TREE_TYPE (root1) != TREE_TYPE (root2)))
+     {
+       if (debug)
+-	fprintf (debug, " : Different types.  No coalesce.\n");
++	fprintf (debug, " : Incompatible types.  No coalesce.\n");
+       return false;
+     }
+ 
+Index: gcc/tree-ssa-ccp.c
+===================================================================
+--- gcc/tree-ssa-ccp.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-ccp.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -3355,7 +3355,9 @@
+    is replaced.  If the call is expected to produces a result, then it
+    is replaced by an assignment of the new RHS to the result variable.
+    If the result is to be ignored, then the call is replaced by a
+-   GIMPLE_NOP.  */
++   GIMPLE_NOP.  A proper VDEF chain is retained by making the first
++   VUSE and the last VDEF of the whole sequence be the same as the replaced
++   statement and using new SSA names for stores in between.  */
+ 
+ static void
+ gimplify_and_update_call_from_tree (gimple_stmt_iterator *si_p, tree expr)
+@@ -3366,17 +3368,36 @@
+   gimple_stmt_iterator i;
+   gimple_seq stmts = gimple_seq_alloc();
+   struct gimplify_ctx gctx;
++  gimple last = NULL;
++  gimple laststore = NULL;
++  tree reaching_vuse;
+ 
+   stmt = gsi_stmt (*si_p);
+ 
+   gcc_assert (is_gimple_call (stmt));
+ 
+   lhs = gimple_call_lhs (stmt);
++  reaching_vuse = gimple_vuse (stmt);
+ 
+   push_gimplify_context (&gctx);
+ 
+   if (lhs == NULL_TREE)
+-    gimplify_and_add (expr, &stmts);
++    {
++      gimplify_and_add (expr, &stmts);
++      /* We can end up with folding a memcpy of an empty class assignment
++	 which gets optimized away by C++ gimplification.  */
++      if (gimple_seq_empty_p (stmts))
++	{
++	  pop_gimplify_context (NULL);
++	  if (gimple_in_ssa_p (cfun))
++	    {
++	      unlink_stmt_vdef (stmt);
++	      release_defs (stmt);
++	    }
++	  gsi_remove (si_p, true);
++	  return;
++	}
++    }
+   else
+     tmp = get_initialized_tmp_var (expr, &stmts, NULL);
+ 
+@@ -3387,26 +3408,95 @@
+ 
+   /* The replacement can expose previously unreferenced variables.  */
+   for (i = gsi_start (stmts); !gsi_end_p (i); gsi_next (&i))
+-  {
+-    new_stmt = gsi_stmt (i);
+-    find_new_referenced_vars (new_stmt);
+-    gsi_insert_before (si_p, new_stmt, GSI_NEW_STMT);
+-    mark_symbols_for_renaming (new_stmt);
+-    gsi_next (si_p);
+-  }
++    {
++      if (last)
++	{
++	  gsi_insert_before (si_p, last, GSI_NEW_STMT);
++	  gsi_next (si_p);
++	}
++      new_stmt = gsi_stmt (i);
++      if (gimple_in_ssa_p (cfun))
++	{
++	  find_new_referenced_vars (new_stmt);
++	  mark_symbols_for_renaming (new_stmt);
++	}
++      /* If the new statement has a VUSE, update it with exact SSA name we
++         know will reach this one.  */
++      if (gimple_vuse (new_stmt))
++	{
++	  /* If we've also seen a previous store create a new VDEF for
++	     the latter one, and make that the new reaching VUSE.  */
++	  if (laststore)
++	    {
++	      reaching_vuse = make_ssa_name (gimple_vop (cfun), laststore);
++	      gimple_set_vdef (laststore, reaching_vuse);
++	      update_stmt (laststore);
++	      laststore = NULL;
++	    }
++	  gimple_set_vuse (new_stmt, reaching_vuse);
++	  gimple_set_modified (new_stmt, true);
++	}
++      if (gimple_assign_single_p (new_stmt)
++	  && !is_gimple_reg (gimple_assign_lhs (new_stmt)))
++	{
++	  laststore = new_stmt;
++	}
++      last = new_stmt;
++    }
+ 
+   if (lhs == NULL_TREE)
+     {
+-      new_stmt = gimple_build_nop ();
+-      unlink_stmt_vdef (stmt);
+-      release_defs (stmt);
++      /* If we replace a call without LHS that has a VDEF and our new
++         sequence ends with a store we must make that store have the same
++	 vdef in order not to break the sequencing.  This can happen
++	 for instance when folding memcpy calls into assignments.  */
++      if (gimple_vdef (stmt) && laststore)
++	{
++	  gimple_set_vdef (laststore, gimple_vdef (stmt));
++	  if (TREE_CODE (gimple_vdef (stmt)) == SSA_NAME)
++	    SSA_NAME_DEF_STMT (gimple_vdef (stmt)) = laststore;
++	  update_stmt (laststore);
++	}
++      else if (gimple_in_ssa_p (cfun))
++	{
++	  unlink_stmt_vdef (stmt);
++	  release_defs (stmt);
++	}
++      new_stmt = last;
+     }
+   else
+     {
++      if (last)
++	{
++	  gsi_insert_before (si_p, last, GSI_NEW_STMT);
++	  gsi_next (si_p);
++	}
++      if (laststore && is_gimple_reg (lhs))
++	{
++	  gimple_set_vdef (laststore, gimple_vdef (stmt));
++	  update_stmt (laststore);
++	  if (TREE_CODE (gimple_vdef (stmt)) == SSA_NAME)
++	    SSA_NAME_DEF_STMT (gimple_vdef (stmt)) = laststore;
++	  laststore = NULL;
++	}
++      else if (laststore)
++	{
++	  reaching_vuse = make_ssa_name (gimple_vop (cfun), laststore);
++	  gimple_set_vdef (laststore, reaching_vuse);
++	  update_stmt (laststore);
++	  laststore = NULL;
++	}
+       new_stmt = gimple_build_assign (lhs, tmp);
+-      gimple_set_vuse (new_stmt, gimple_vuse (stmt));
+-      gimple_set_vdef (new_stmt, gimple_vdef (stmt));
+-      move_ssa_defining_stmt_for_defs (new_stmt, stmt);
++      if (!is_gimple_reg (tmp))
++	gimple_set_vuse (new_stmt, reaching_vuse);
++      if (!is_gimple_reg (lhs))
++	{
++	  gimple_set_vdef (new_stmt, gimple_vdef (stmt));
++	  if (TREE_CODE (gimple_vdef (stmt)) == SSA_NAME)
++	    SSA_NAME_DEF_STMT (gimple_vdef (stmt)) = new_stmt;
++	}
++      else if (reaching_vuse == gimple_vuse (stmt))
++	unlink_stmt_vdef (stmt);
+     }
+ 
+   gimple_set_location (new_stmt, gimple_location (stmt));
+Index: gcc/xcoffout.c
+===================================================================
+--- gcc/xcoffout.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/xcoffout.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -81,8 +81,15 @@
+ #define ASM_OUTPUT_LINE(FILE,LINENUM)					   \
+   do									   \
+     {									   \
++      /* Make sure we're in a function and prevent output of .line 0, as   \
++	 line # 0 is meant for symbol addresses in xcoff.  Additionally,   \
++	 line numbers are 'unsigned short' in 32-bit mode.  */		   \
+       if (xcoff_begin_function_line >= 0)				   \
+-	fprintf (FILE, "\t.line\t%d\n", ABS_OR_RELATIVE_LINENO (LINENUM)); \
++	{								   \
++	  int lno = ABS_OR_RELATIVE_LINENO (LINENUM);			   \
++	  if (lno > 0 && (TARGET_64BIT || lno <= (int)USHRT_MAX))	   \
++	    fprintf (FILE, "\t.line\t%d\n", lno);			   \
++	}								   \
+     }									   \
+   while (0)
+ 
 Index: gcc/jump.c
 ===================================================================
---- gcc/jump.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/jump.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/jump.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/jump.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -194,7 +194,7 @@
    rtx prev_nonjump_insn = NULL;
  
@@ -979,10 +2420,41 @@ Index: gcc/jump.c
        {
  	mark_jump_label (PATTERN (insn), insn, 0);
  
+@@ -1728,7 +1728,13 @@
+ 
+ 	case 'i':
+ 	  if (XINT (x, i) != XINT (y, i))
+-	    return 0;
++	    {
++	      if (((code == ASM_OPERANDS && i == 6)
++		   || (code == ASM_INPUT && i == 1))
++		  && locator_eq (XINT (x, i), XINT (y, i)))
++		break;
++	      return 0;
++	    }
+ 	  break;
+ 
+ 	case 't':
+Index: gcc/expr.c
+===================================================================
+--- gcc/expr.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/expr.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -4730,7 +4730,10 @@
+       /* If store_expr stores a DECL whose DECL_RTL(exp) == TARGET,
+ 	 but TARGET is not valid memory reference, TEMP will differ
+ 	 from TARGET although it is really the same location.  */
+-      && !(alt_rtl && rtx_equal_p (alt_rtl, target))
++      && !(alt_rtl
++	   && rtx_equal_p (alt_rtl, target)
++	   && !side_effects_p (alt_rtl)
++	   && !side_effects_p (target))
+       /* If there's nothing to copy, don't bother.  Don't call
+ 	 expr_size unless necessary, because some front-ends (C++)
+ 	 expr_size-hook must not be given objects that are not
 Index: gcc/ada/ChangeLog
 ===================================================================
---- gcc/ada/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/ada/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/ada/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/ada/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1,3 +1,9 @@
 +2011-01-04  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -995,8 +2467,8 @@ Index: gcc/ada/ChangeLog
  	* GCC 4.5.2 released.
 Index: gcc/ada/gcc-interface/trans.c
 ===================================================================
---- gcc/ada/gcc-interface/trans.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/ada/gcc-interface/trans.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/ada/gcc-interface/trans.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/ada/gcc-interface/trans.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -2303,6 +2303,31 @@
    gnat_poplevel ();
    gnu_result = end_stmt_group ();
@@ -1060,12 +2532,352 @@ Index: gcc/ada/gcc-interface/trans.c
    /* Set the end location.  */
    Sloc_to_locus
      ((Present (End_Label (Handled_Statement_Sequence (gnat_node)))
+Index: gcc/fortran/trans-array.c
+===================================================================
+--- gcc/fortran/trans-array.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/trans-array.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -3389,7 +3389,38 @@
+     }
+ }
+ 
++/* Return true if both symbols could refer to the same data object.  Does
++   not take account of aliasing due to equivalence statements.  */
+ 
++static int
++symbols_could_alias (gfc_symbol *lsym, gfc_symbol *rsym, bool lsym_pointer,
++		     bool lsym_target, bool rsym_pointer, bool rsym_target)
++{
++  /* Aliasing isn't possible if the symbols have different base types.  */
++  if (gfc_compare_types (&lsym->ts, &rsym->ts) == 0)
++    return 0;
++
++  /* Pointers can point to other pointers and target objects.  */
++
++  if ((lsym_pointer && (rsym_pointer || rsym_target))
++      || (rsym_pointer && (lsym_pointer || lsym_target)))
++    return 1;
++
++  /* Special case: Argument association, cf. F90 12.4.1.6, F2003 12.4.1.7
++     and F2008 12.5.2.13 items 3b and 4b. The pointer case (a) is already
++     checked above.  */
++  if (lsym->attr.target && rsym->attr.target
++      && ((lsym->attr.dummy
++	   && (!lsym->attr.dimension || lsym->as->type == AS_ASSUMED_SHAPE))
++	  || (rsym->attr.dummy
++	      && (!rsym->attr.dimension
++		  || rsym->as->type == AS_ASSUMED_SHAPE))))
++    return 1;
++
++  return 0;
++}
++
++
+ /* Return true if the two SS could be aliased, i.e. both point to the same data
+    object.  */
+ /* TODO: resolve aliases based on frontend expressions.  */
+@@ -3401,10 +3432,18 @@
+   gfc_ref *rref;
+   gfc_symbol *lsym;
+   gfc_symbol *rsym;
++  bool lsym_pointer, lsym_target, rsym_pointer, rsym_target;
+ 
+   lsym = lss->expr->symtree->n.sym;
+   rsym = rss->expr->symtree->n.sym;
+-  if (gfc_symbols_could_alias (lsym, rsym))
++
++  lsym_pointer = lsym->attr.pointer;
++  lsym_target = lsym->attr.target;
++  rsym_pointer = rsym->attr.pointer;
++  rsym_target = rsym->attr.target;
++
++  if (symbols_could_alias (lsym, rsym, lsym_pointer, lsym_target,
++			   rsym_pointer, rsym_target))
+     return 1;
+ 
+   if (rsym->ts.type != BT_DERIVED
+@@ -3419,27 +3458,75 @@
+       if (lref->type != REF_COMPONENT)
+ 	continue;
+ 
+-      if (gfc_symbols_could_alias (lref->u.c.sym, rsym))
++      lsym_pointer = lsym_pointer || lref->u.c.sym->attr.pointer;
++      lsym_target  = lsym_target  || lref->u.c.sym->attr.target;
++
++      if (symbols_could_alias (lref->u.c.sym, rsym, lsym_pointer, lsym_target,
++			       rsym_pointer, rsym_target))
+ 	return 1;
+ 
++      if ((lsym_pointer && (rsym_pointer || rsym_target))
++	  || (rsym_pointer && (lsym_pointer || lsym_target)))
++	{
++	  if (gfc_compare_types (&lref->u.c.component->ts,
++				 &rsym->ts))
++	    return 1;
++	}
++
+       for (rref = rss->expr->ref; rref != rss->data.info.ref;
+ 	   rref = rref->next)
+ 	{
+ 	  if (rref->type != REF_COMPONENT)
+ 	    continue;
+ 
+-	  if (gfc_symbols_could_alias (lref->u.c.sym, rref->u.c.sym))
++	  rsym_pointer = rsym_pointer || rref->u.c.sym->attr.pointer;
++	  rsym_target  = lsym_target  || rref->u.c.sym->attr.target;
++
++	  if (symbols_could_alias (lref->u.c.sym, rref->u.c.sym,
++				   lsym_pointer, lsym_target,
++				   rsym_pointer, rsym_target))
+ 	    return 1;
++
++	  if ((lsym_pointer && (rsym_pointer || rsym_target))
++	      || (rsym_pointer && (lsym_pointer || lsym_target)))
++	    {
++	      if (gfc_compare_types (&lref->u.c.component->ts,
++				     &rref->u.c.sym->ts))
++		return 1;
++	      if (gfc_compare_types (&lref->u.c.sym->ts,
++				     &rref->u.c.component->ts))
++		return 1;
++	      if (gfc_compare_types (&lref->u.c.component->ts,
++				     &rref->u.c.component->ts))
++		return 1;
++	    }
+ 	}
+     }
+ 
++  lsym_pointer = lsym->attr.pointer;
++  lsym_target = lsym->attr.target;
++  lsym_pointer = lsym->attr.pointer;
++  lsym_target = lsym->attr.target;
++
+   for (rref = rss->expr->ref; rref != rss->data.info.ref; rref = rref->next)
+     {
+       if (rref->type != REF_COMPONENT)
+ 	break;
+ 
+-      if (gfc_symbols_could_alias (rref->u.c.sym, lsym))
++      rsym_pointer = rsym_pointer || rref->u.c.sym->attr.pointer;
++      rsym_target  = lsym_target  || rref->u.c.sym->attr.target;
++
++      if (symbols_could_alias (rref->u.c.sym, lsym,
++			       lsym_pointer, lsym_target,
++			       rsym_pointer, rsym_target))
+ 	return 1;
++
++      if ((lsym_pointer && (rsym_pointer || rsym_target))
++	  || (rsym_pointer && (lsym_pointer || lsym_target)))
++	{
++	  if (gfc_compare_types (&lsym->ts, &rref->u.c.component->ts))
++	    return 1;
++	}
+     }
+ 
+   return 0;
+Index: gcc/fortran/symbol.c
+===================================================================
+--- gcc/fortran/symbol.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/symbol.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -2733,41 +2733,6 @@
+   return i;
+ }
+ 
+-/* Return true if both symbols could refer to the same data object.  Does
+-   not take account of aliasing due to equivalence statements.  */
+-
+-int
+-gfc_symbols_could_alias (gfc_symbol *lsym, gfc_symbol *rsym)
+-{
+-  /* Aliasing isn't possible if the symbols have different base types.  */
+-  if (gfc_compare_types (&lsym->ts, &rsym->ts) == 0)
+-    return 0;
+-
+-  /* Pointers can point to other pointers, target objects and allocatable
+-     objects.  Two allocatable objects cannot share the same storage.  */
+-  if (lsym->attr.pointer
+-      && (rsym->attr.pointer || rsym->attr.allocatable || rsym->attr.target))
+-    return 1;
+-  if (lsym->attr.target && rsym->attr.pointer)
+-    return 1;
+-  if (lsym->attr.allocatable && rsym->attr.pointer)
+-    return 1;
+-
+-  /* Special case: Argument association, cf. F90 12.4.1.6, F2003 12.4.1.7
+-     and F2008 12.5.2.13 items 3b and 4b. The pointer case (a) is already
+-     checked above.  */
+-  if (lsym->attr.target && rsym->attr.target
+-      && ((lsym->attr.dummy
+-	   && (!lsym->attr.dimension || lsym->as->type == AS_ASSUMED_SHAPE))
+-	  || (rsym->attr.dummy
+-	      && (!rsym->attr.dimension
+-		  || rsym->as->type == AS_ASSUMED_SHAPE))))
+-    return 1;
+-
+-  return 0;
+-}
+-
+-
+ /* Undoes all the changes made to symbols in the current statement.
+    This subroutine is made simpler due to the fact that attributes are
+    never removed once added.  */
+Index: gcc/fortran/trans-openmp.c
+===================================================================
+--- gcc/fortran/trans-openmp.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/trans-openmp.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -480,13 +480,23 @@
+   gfc_symbol init_val_sym, outer_sym, intrinsic_sym;
+   gfc_expr *e1, *e2, *e3, *e4;
+   gfc_ref *ref;
+-  tree decl, backend_decl, stmt;
++  tree decl, backend_decl, stmt, type, outer_decl;
+   locus old_loc = gfc_current_locus;
+   const char *iname;
+   gfc_try t;
+ 
+   decl = OMP_CLAUSE_DECL (c);
+   gfc_current_locus = where;
++  type = TREE_TYPE (decl);
++  outer_decl = create_tmp_var_raw (type, NULL);
++  if (TREE_CODE (decl) == PARM_DECL
++      && TREE_CODE (type) == REFERENCE_TYPE
++      && GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (type))
++      && GFC_TYPE_ARRAY_AKIND (TREE_TYPE (type)) == GFC_ARRAY_ALLOCATABLE)
++    {
++      decl = build_fold_indirect_ref (decl);
++      type = TREE_TYPE (type);
++    }
+ 
+   /* Create a fake symbol for init value.  */
+   memset (&init_val_sym, 0, sizeof (init_val_sym));
+@@ -505,7 +515,9 @@
+   outer_sym.attr.dummy = 0;
+   outer_sym.attr.result = 0;
+   outer_sym.attr.flavor = FL_VARIABLE;
+-  outer_sym.backend_decl = create_tmp_var_raw (TREE_TYPE (decl), NULL);
++  outer_sym.backend_decl = outer_decl;
++  if (decl != OMP_CLAUSE_DECL (c))
++    outer_sym.backend_decl = build_fold_indirect_ref (outer_decl);
+ 
+   /* Create fake symtrees for it.  */
+   symtree1 = gfc_new_symtree (&root1, sym->name);
+@@ -622,12 +634,12 @@
+ 
+   /* Create the init statement list.  */
+   pushlevel (0);
+-  if (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (decl))
+-      && GFC_TYPE_ARRAY_AKIND (TREE_TYPE (decl)) == GFC_ARRAY_ALLOCATABLE)
++  if (GFC_DESCRIPTOR_TYPE_P (type)
++      && GFC_TYPE_ARRAY_AKIND (type) == GFC_ARRAY_ALLOCATABLE)
+     {
+       /* If decl is an allocatable array, it needs to be allocated
+ 	 with the same bounds as the outer var.  */
+-      tree type = TREE_TYPE (decl), rank, size, esize, ptr;
++      tree rank, size, esize, ptr;
+       stmtblock_t block;
+ 
+       gfc_start_block (&block);
+@@ -663,8 +675,8 @@
+ 
+   /* Create the merge statement list.  */
+   pushlevel (0);
+-  if (GFC_DESCRIPTOR_TYPE_P (TREE_TYPE (decl))
+-      && GFC_TYPE_ARRAY_AKIND (TREE_TYPE (decl)) == GFC_ARRAY_ALLOCATABLE)
++  if (GFC_DESCRIPTOR_TYPE_P (type)
++      && GFC_TYPE_ARRAY_AKIND (type) == GFC_ARRAY_ALLOCATABLE)
+     {
+       /* If decl is an allocatable array, it needs to be deallocated
+ 	 afterwards.  */
+@@ -684,7 +696,7 @@
+   OMP_CLAUSE_REDUCTION_MERGE (c) = stmt;
+ 
+   /* And stick the placeholder VAR_DECL into the clause as well.  */
+-  OMP_CLAUSE_REDUCTION_PLACEHOLDER (c) = outer_sym.backend_decl;
++  OMP_CLAUSE_REDUCTION_PLACEHOLDER (c) = outer_decl;
+ 
+   gfc_current_locus = old_loc;
+ 
+Index: gcc/fortran/gfortran.h
+===================================================================
+--- gcc/fortran/gfortran.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/gfortran.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -2483,8 +2483,6 @@
+ int gfc_get_ha_symbol (const char *, gfc_symbol **);
+ int gfc_get_ha_sym_tree (const char *, gfc_symtree **);
+ 
+-int gfc_symbols_could_alias (gfc_symbol *, gfc_symbol *);
+-
+ void gfc_undo_symbols (void);
+ void gfc_commit_symbols (void);
+ void gfc_commit_symbol (gfc_symbol *);
+Index: gcc/fortran/error.c
+===================================================================
+--- gcc/fortran/error.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/error.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -939,7 +939,7 @@
+   buffer_flag = i;
+ 
+   if (flag_fatal_errors)
+-    exit (1);
++    exit (FATAL_EXIT_CODE);
+ }
+ 
+ 
+@@ -956,7 +956,7 @@
+   error_print (_("Fatal Error:"), _(gmsgid), argp);
+   va_end (argp);
+ 
+-  exit (3);
++  exit (FATAL_EXIT_CODE);
+ }
+ 
+ 
+@@ -1019,7 +1019,7 @@
+       gfc_increment_error_count();
+ 
+       if (flag_fatal_errors)
+-	exit (1);
++	exit (FATAL_EXIT_CODE);
+     }
+ 
+   return rc;
 Index: gcc/fortran/ChangeLog
 ===================================================================
---- gcc/fortran/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/fortran/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1,3 +1,10 @@
-+2011-02-01  Thomas Koenig  <tkoenig@gcc.gnu.org>
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,3 +1,42 @@
++2011-01-21  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/47394
++	* error.c (gfc_error_now, gfc_fatal_error, gfc_error_check):
++	Use defined instead of magic number exit status codes.
++	* scanner.c (include_line, gfc_new_file): Ditto.
++	* gfortranspec.c (lang_specific_driver): Ditto.
++
++2011-01-16  Jakub Jelinek  <jakub@redhat.com>
++
++	Backport from mainline
++	2010-12-14  Jakub Jelinek  <jakub@redhat.com>
++
++	PR fortran/46874
++	* trans-openmp.c (gfc_trans_omp_array_reduction): Handle allocatable
++	dummy variables.
++
++2011-01-16  Thomas Koenig  <tkoenig@gcc.gnu.org>
++
++	Backport from trunk
++	PR fortran/45777
++	* symbol.c (gfc_symbols_could_alias):  Strip gfc_ prefix,
++	make static and move in front of its only caller, to ...
++	* trans-array.c (symbols_could_alias): ... here.
++	Pass information about pointer and target status as
++	arguments.  Allocatable arrays don't alias anything
++	unless they have the POINTER attribute.
++	(gfc_could_be_alias):  Keep track of pointer and target
++	status when following references.  Also check if typespecs
++	of components match those of other components or symbols.
++	* gfortran.h:  Remove prototype for gfc_symbols_could_alias.
++
++2011-01-02  Thomas Koenig  <tkoenig@gcc.gnu.org>
 +
 +	Backport from mainline
 +	PR fortran/45338
@@ -1075,10 +2887,45 @@ Index: gcc/fortran/ChangeLog
  2010-12-16  Release Manager
  
  	* GCC 4.5.2 released.
+Index: gcc/fortran/scanner.c
+===================================================================
+--- gcc/fortran/scanner.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/scanner.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1841,7 +1841,7 @@
+ 
+   filename = gfc_widechar_to_char (begin, -1);
+   if (load_file (filename, NULL, false) == FAILURE)
+-    exit (1);
++    exit (FATAL_EXIT_CODE);
+ 
+   gfc_free (filename);
+   return true;
+@@ -2045,7 +2045,7 @@
+     printf ("%s:%3d %s\n", LOCATION_FILE (line_head->location),
+ 	    LOCATION_LINE (line_head->location), line_head->line);
+ 
+-  exit (0);
++  exit (SUCCESS_EXIT_CODE);
+ #endif
+ 
+   return result;
+Index: gcc/fortran/gfortranspec.c
+===================================================================
+--- gcc/fortran/gfortranspec.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/gfortranspec.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -375,7 +375,7 @@
+ You may redistribute copies of GNU Fortran\n\
+ under the terms of the GNU General Public License.\n\
+ For more information about these matters, see the file named COPYING\n\n"));
+-	  exit (0);
++	  exit (SUCCESS_EXIT_CODE);
+ 	  break;
+ 
+ 	case OPTION_help:
 Index: gcc/fortran/resolve.c
 ===================================================================
---- gcc/fortran/resolve.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/fortran/resolve.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/fortran/resolve.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/fortran/resolve.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -3577,9 +3577,12 @@
  	sprintf (msg, _("Operand of user operator '%s' at %%L is %s"),
  		 e->value.op.uop->name, gfc_typename (&op1->ts));
@@ -1095,17 +2942,60 @@ Index: gcc/fortran/resolve.c
  
        goto bad_op;
  
+Index: gcc/regmove.c
+===================================================================
+--- gcc/regmove.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/regmove.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -513,7 +513,7 @@
+   rtx src_reg = XEXP (src, 0);
+   int src_no = REGNO (src_reg);
+   int dst_no = REGNO (dest);
+-  rtx p, set;
++  rtx p, set, set_insn;
+   enum machine_mode old_mode;
+   basic_block bb = BLOCK_FOR_INSN (insn);
+ 
+@@ -551,6 +551,7 @@
+ 				 GET_MODE_BITSIZE (GET_MODE (src_reg))))
+     return;
+ 
++  set_insn = p;
+   old_mode = GET_MODE (src_reg);
+   PUT_MODE (src_reg, GET_MODE (src));
+   XEXP (src, 0) = SET_SRC (set);
+@@ -583,9 +584,19 @@
+     }
+   else
+     {
+-      rtx note = find_reg_note (p, REG_EQUAL, NULL_RTX);
++      rtx note = find_reg_note (set_insn, REG_EQUAL, NULL_RTX);
+       if (note)
+-	remove_note (p, note);
++	{
++	  if (rtx_equal_p (XEXP (note, 0), XEXP (src, 0)))
++	    {
++	      XEXP (note, 0)
++		= gen_rtx_fmt_e (GET_CODE (src), GET_MODE (src),
++				 XEXP (note, 0));
++	      df_notes_rescan (set_insn);
++	    }
++	  else
++	    remove_note (set_insn, note);
++	}
+     }
+ }
+ 
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/BASE-VER	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/BASE-VER	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1 +1 @@
 -4.5.2
 +4.5.3
 Index: gcc/tree-data-ref.c
 ===================================================================
---- gcc/tree-data-ref.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/tree-data-ref.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/tree-data-ref.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-data-ref.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -4594,7 +4594,7 @@
      for (e = v->succ; e; e = e->succ_next)
        fprintf (file, " %d", e->dest);
@@ -1156,8 +3046,8 @@ Index: gcc/tree-data-ref.c
  
 Index: gcc/tree-data-ref.h
 ===================================================================
---- gcc/tree-data-ref.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/tree-data-ref.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/tree-data-ref.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-data-ref.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -567,7 +567,19 @@
  void remove_similar_memory_refs (VEC (gimple, heap) **);
  bool rdg_defs_used_in_other_loops_p (struct graph *, int);
@@ -1178,10 +3068,50 @@ Index: gcc/tree-data-ref.h
  /* Determines whether RDG vertices V1 and V2 access to similar memory
     locations, in which case they have to be in the same partition.  */
  
+Index: gcc/c-typeck.c
+===================================================================
+--- gcc/c-typeck.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/c-typeck.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -5025,10 +5025,10 @@
+     {
+       tree ret;
+       bool save = in_late_binary_op;
+-      if (codel == BOOLEAN_TYPE)
++      if (codel == BOOLEAN_TYPE || codel == COMPLEX_TYPE)
+ 	in_late_binary_op = true;
+       ret = convert_and_check (type, orig_rhs);
+-      if (codel == BOOLEAN_TYPE)
++      if (codel == BOOLEAN_TYPE || codel == COMPLEX_TYPE)
+ 	in_late_binary_op = save;
+       return ret;
+     }
+Index: gcc/cfgexpand.c
+===================================================================
+--- gcc/cfgexpand.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/cfgexpand.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -2578,7 +2578,7 @@
+ 	    enum machine_mode opmode = GET_MODE (op0);
+ 
+ 	    if (opmode == VOIDmode)
+-	      opmode = mode1;
++	      opmode = TYPE_MODE (TREE_TYPE (tem));
+ 
+ 	    /* This condition may hold if we're expanding the address
+ 	       right past the end of an array that turned out not to
+@@ -2599,7 +2599,8 @@
+ 				     ? SIGN_EXTRACT
+ 				     : ZERO_EXTRACT, mode,
+ 				     GET_MODE (op0) != VOIDmode
+-				     ? GET_MODE (op0) : mode1,
++				     ? GET_MODE (op0)
++				     : TYPE_MODE (TREE_TYPE (tem)),
+ 				     op0, GEN_INT (bitsize), GEN_INT (bitpos));
+       }
+ 
 Index: gcc/graphite.c
 ===================================================================
---- gcc/graphite.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/graphite.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/graphite.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/graphite.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -210,6 +210,7 @@
        return false;
      }
@@ -1190,10 +3120,61 @@ Index: gcc/graphite.c
    recompute_all_dominators ();
    initialize_original_copy_tables ();
    cloog_initialize ();
+Index: gcc/tree-ssa-pre.c
+===================================================================
+--- gcc/tree-ssa-pre.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-pre.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1701,7 +1701,7 @@
+ 	    tree result = vn_reference_lookup_pieces (newvuse, ref->set,
+ 						      ref->type,
+ 						      newoperands,
+-						      &newref, true);
++						      &newref, VN_WALK);
+ 	    if (newref)
+ 	      VEC_free (vn_reference_op_s, heap, newoperands);
+ 
+@@ -2558,6 +2558,10 @@
+     {
+       if (dump_file && (dump_flags & TDF_DETAILS))
+ 	fprintf (dump_file, "Starting iteration %d\n", num_iterations);
++      /* ???  We need to clear our PHI translation cache here as the
++         ANTIC sets shrink and we restrict valid translations to
++	 those having operands with leaders in ANTIC.  Same below
++	 for PA ANTIC computation.  */
+       num_iterations++;
+       changed = false;
+       for (i = n_basic_blocks - NUM_FIXED_BLOCKS - 1; i >= 0; i--)
+@@ -3965,7 +3969,7 @@
+ 		copy_reference_ops_from_call (stmt, &ops);
+ 		vn_reference_lookup_pieces (gimple_vuse (stmt), 0,
+ 					    gimple_expr_type (stmt),
+-					    ops, &ref, false);
++					    ops, &ref, VN_NOWALK);
+ 		VEC_free (vn_reference_op_s, heap, ops);
+ 		if (!ref)
+ 		  continue;
+@@ -4035,7 +4039,7 @@
+ 
+ 		      vn_reference_lookup (gimple_assign_rhs1 (stmt),
+ 					   gimple_vuse (stmt),
+-					   true, &ref);
++					   VN_WALK, &ref);
+ 		      if (!ref)
+ 			continue;
+ 
+@@ -4265,7 +4269,7 @@
+ 	      tree rhs = gimple_assign_rhs1 (stmt);
+ 	      tree val;
+ 	      val = vn_reference_lookup (gimple_assign_lhs (stmt),
+-					 gimple_vuse (stmt), true, NULL);
++					 gimple_vuse (stmt), VN_WALK, NULL);
+ 	      if (TREE_CODE (rhs) == SSA_NAME)
+ 		rhs = VN_INFO (rhs)->valnum;
+ 	      if (val
 Index: gcc/cfgcleanup.c
 ===================================================================
---- gcc/cfgcleanup.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/cfgcleanup.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/cfgcleanup.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/cfgcleanup.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -482,15 +482,20 @@
  		  /* When not optimizing, ensure that edges or forwarder
  		     blocks with different locus are not optimized out.  */
@@ -1219,8 +3200,8 @@ Index: gcc/cfgcleanup.c
  			  && !locator_eq (locus, goto_locus))
 Index: gcc/tree-sra.c
 ===================================================================
---- gcc/tree-sra.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/tree-sra.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/tree-sra.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-sra.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -3413,7 +3413,10 @@
  	  else if (ac2->size != access->size)
  	    return NULL;
@@ -1233,10 +3214,100 @@ Index: gcc/tree-sra.c
  	    return NULL;
  
  	  modification |= ac2->write;
+Index: gcc/c-convert.c
+===================================================================
+--- gcc/c-convert.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/c-convert.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -131,6 +131,32 @@
+       goto maybe_fold;
+ 
+     case COMPLEX_TYPE:
++      /* If converting from COMPLEX_TYPE to a different COMPLEX_TYPE
++	 and e is not COMPLEX_EXPR, convert_to_complex uses save_expr,
++	 but for the C FE c_save_expr needs to be called instead.  */
++      if (TREE_CODE (TREE_TYPE (e)) == COMPLEX_TYPE)
++	{
++	  tree subtype = TREE_TYPE (type);
++	  tree elt_type = TREE_TYPE (TREE_TYPE (e));
++
++	  if (TYPE_MAIN_VARIANT (elt_type) != TYPE_MAIN_VARIANT (subtype)
++	      && TREE_CODE (e) != COMPLEX_EXPR)
++	    {
++	      if (in_late_binary_op)
++		e = save_expr (e);
++	      else
++		e = c_save_expr (e);
++	      ret
++		= fold_build2 (COMPLEX_EXPR, type,
++			       convert (subtype,
++					fold_build1 (REALPART_EXPR,
++						     elt_type, e)),
++			       convert (subtype,
++					fold_build1 (IMAGPART_EXPR,
++						     elt_type, e)));
++	      goto maybe_fold;
++	    }
++	}
+       ret = convert_to_complex (type, e);
+       goto maybe_fold;
+ 
+Index: gcc/tree-ssa-ter.c
+===================================================================
+--- gcc/tree-ssa-ter.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-ter.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -416,7 +416,9 @@
+     return false;
+ 
+   /* Without alias info we can't move around loads.  */
+-  if (gimple_references_memory_p (stmt) && !optimize)
++  if (!optimize
++      && gimple_assign_single_p (stmt)
++      && !is_gimple_val (gimple_assign_rhs1 (stmt)))
+     return false;
+ 
+   /* Float expressions must go through memory if float-store is on.  */
+Index: gcc/rtl.c
+===================================================================
+--- gcc/rtl.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/rtl.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -429,7 +429,15 @@
+ 	case 'n':
+ 	case 'i':
+ 	  if (XINT (x, i) != XINT (y, i))
+-	    return 0;
++	    {
++#ifndef GENERATOR_FILE
++	      if (((code == ASM_OPERANDS && i == 6)
++		   || (code == ASM_INPUT && i == 1))
++		  && locator_eq (XINT (x, i), XINT (y, i)))
++		break;
++#endif
++	      return 0;
++	    }
+ 	  break;
+ 
+ 	case 'V':
+@@ -549,7 +557,15 @@
+ 	case 'n':
+ 	case 'i':
+ 	  if (XINT (x, i) != XINT (y, i))
+-	    return 0;
++	    {
++#ifndef GENERATOR_FILE
++	      if (((code == ASM_OPERANDS && i == 6)
++		   || (code == ASM_INPUT && i == 1))
++		  && locator_eq (XINT (x, i), XINT (y, i)))
++		break;
++#endif
++	      return 0;
++	    }
+ 	  break;
+ 
+ 	case 'V':
 Index: gcc/graphite-sese-to-poly.c
 ===================================================================
---- gcc/graphite-sese-to-poly.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/graphite-sese-to-poly.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/graphite-sese-to-poly.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/graphite-sese-to-poly.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -715,7 +715,7 @@
        gcc_assert (TREE_CODE (e) == INTEGER_CST);
  
@@ -1308,10 +3379,27 @@ Index: gcc/graphite-sese-to-poly.c
  
  	  ppl_new_Constraint (&cstr, expr, PPL_CONSTRAINT_TYPE_GREATER_OR_EQUAL);
  	  ppl_Polyhedron_add_constraint (accesses, cstr);
+Index: gcc/tree-ssa-structalias.c
+===================================================================
+--- gcc/tree-ssa-structalias.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/tree-ssa-structalias.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -369,7 +369,11 @@
+   ret->may_have_pointers = true;
+   ret->is_global_var = (t == NULL_TREE);
+   if (t && DECL_P (t))
+-    ret->is_global_var = is_global_var (t);
++    ret->is_global_var = (is_global_var (t)
++			  /* We have to treat even local register variables
++			     as escape points.  */
++			  || (TREE_CODE (t) == VAR_DECL
++			      && DECL_HARD_REGISTER (t)));
+   ret->solution = BITMAP_ALLOC (&pta_obstack);
+   ret->oldsolution = BITMAP_ALLOC (&oldpta_obstack);
+   ret->next = NULL;
 Index: gcc/config/sparc/sparc.md
 ===================================================================
---- gcc/config/sparc/sparc.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/sparc/sparc.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/sparc/sparc.md	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/sparc/sparc.md	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1106,14 +1106,15 @@
  
  ;; Load in operand 0 the (absolute) address of operand 1, which is a symbolic
@@ -1333,8 +3421,8 @@ Index: gcc/config/sparc/sparc.md
      return "sethi\t%%hi(%a1-4), %0\n\tcall\t%a2\n\t add\t%0, %%lo(%a1+4), %0";
 Index: gcc/config/sparc/sparc.c
 ===================================================================
---- gcc/config/sparc/sparc.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/sparc/sparc.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -363,7 +363,7 @@
  static int epilogue_renumber (rtx *, int);
  static bool sparc_assemble_integer (rtx, unsigned int, int);
@@ -1738,8 +3826,8 @@ Index: gcc/config/sparc/sparc.c
  	fprintf (asm_out_file, "\t.cfi_endproc\n");
 Index: gcc/config/sparc/sparc.h
 ===================================================================
---- gcc/config/sparc/sparc.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/sparc/sparc.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/sparc/sparc.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/sparc/sparc.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -964,10 +964,15 @@
     not be a register used by the prologue.  */
  #define STATIC_CHAIN_REGNUM (TARGET_ARCH64 ? 5 : 2)
@@ -1757,10 +3845,60 @@ Index: gcc/config/sparc/sparc.h
  
  /* Pick a default value we can notice from override_options:
     !v9: Default is on.
+Index: gcc/config/rx/rx.c
+===================================================================
+--- gcc/config/rx/rx.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/rx/rx.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -821,9 +821,34 @@
+ 		   const_tree fn_decl_or_type ATTRIBUTE_UNUSED,
+ 		   bool       outgoing ATTRIBUTE_UNUSED)
+ {
+-  return gen_rtx_REG (TYPE_MODE (ret_type), FUNC_RETURN_REGNUM);
++  enum machine_mode mode = TYPE_MODE (ret_type);
++
++  /* RX ABI specifies that small integer types are
++     promoted to int when returned by a function.  */
++  if (GET_MODE_SIZE (mode) > 0 && GET_MODE_SIZE (mode) < 4)
++    return gen_rtx_REG (SImode, FUNC_RETURN_REGNUM);
++    
++  return gen_rtx_REG (mode, FUNC_RETURN_REGNUM);
+ }
+ 
++/* TARGET_PROMOTE_FUNCTION_MODE must behave in the same way with
++   regard to function returns as does TARGET_FUNCTION_VALUE.  */
++
++static enum machine_mode
++rx_promote_function_mode (const_tree type ATTRIBUTE_UNUSED,
++			  enum machine_mode mode,
++			  int * punsignedp ATTRIBUTE_UNUSED,
++			  const_tree funtype ATTRIBUTE_UNUSED,
++			  int for_return)
++{
++  if (for_return != 1
++      || GET_MODE_SIZE (mode) >= 4
++      || GET_MODE_SIZE (mode) < 1)
++    return mode;
++
++  return SImode;
++}
++
+ static bool
+ rx_return_in_memory (const_tree type, const_tree fntype ATTRIBUTE_UNUSED)
+ {
+@@ -2759,6 +2784,9 @@
+ #undef  TARGET_CC_MODES_COMPATIBLE
+ #define TARGET_CC_MODES_COMPATIBLE		rx_cc_modes_compatible
+ 
++#undef  TARGET_PROMOTE_FUNCTION_MODE
++#define TARGET_PROMOTE_FUNCTION_MODE		rx_promote_function_mode
++
+ struct gcc_target targetm = TARGET_INITIALIZER;
+ 
+ /* #include "gt-rx.h" */
 Index: gcc/config/i386/i386.md
 ===================================================================
---- gcc/config/i386/i386.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/i386/i386.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/i386/i386.md	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/i386/i386.md	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -92,6 +92,7 @@
     (UNSPEC_TLS_GD		21)
     (UNSPEC_TLS_LD_BASE		22)
@@ -1788,10 +3926,181 @@ Index: gcc/config/i386/i386.md
  ;; GNU2 TLS patterns can be split.
  
  (define_expand "tls_dynamic_gnu2_32"
+Index: gcc/config/i386/sse.md
+===================================================================
+--- gcc/config/i386/sse.md	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/i386/sse.md	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -5011,7 +5011,7 @@
+    movsd\t{%2, %0|%0, %2}
+    movlpd\t{%2, %0|%0, %2}
+    movsd\t{%2, %0|%0, %2}
+-   shufpd\t{$2, %2, %0|%0, %2, 2}
++   shufpd\t{$2, %1, %0|%0, %1, 2}
+    movhpd\t{%H1, %0|%0, %H1}
+    #
+    #
+@@ -5090,7 +5090,7 @@
+    movsd\t{%2, %0|%0, %2}
+    movlpd\t{%2, %0|%0, %2}
+    movlpd\t{%2, %0|%0, %2}
+-   shufpd\t{$2, %2, %0|%0, %2, 2}
++   shufpd\t{$2, %1, %0|%0, %1, 2}
+    movhps\t{%H1, %0|%0, %H1}
+    movhps\t{%1, %H0|%H0, %1}"
+   [(set_attr "type" "ssemov,ssemov,ssemov,sselog,ssemov,ssemov")
+@@ -12097,7 +12097,7 @@
+   [(set (match_operand:AVXMODEF2P 0 "register_operand" "=x")
+ 	(unspec:AVXMODEF2P
+ 	  [(match_operand:AVXMODEF2P 1 "memory_operand" "m")
+-	   (match_operand:AVXMODEF2P 2 "register_operand" "x")
++	   (match_operand:<avxpermvecmode> 2 "register_operand" "x")
+ 	   (match_dup 0)]
+ 	  UNSPEC_MASKLOAD))]
+   "TARGET_AVX"
+@@ -12110,7 +12110,7 @@
+ (define_insn "avx_maskstorep<avxmodesuffixf2c><avxmodesuffix>"
+   [(set (match_operand:AVXMODEF2P 0 "memory_operand" "=m")
+ 	(unspec:AVXMODEF2P
+-	  [(match_operand:AVXMODEF2P 1 "register_operand" "x")
++	  [(match_operand:<avxpermvecmode> 1 "register_operand" "x")
+ 	   (match_operand:AVXMODEF2P 2 "register_operand" "x")
+ 	   (match_dup 0)]
+ 	  UNSPEC_MASKSTORE))]
+Index: gcc/config/i386/i386-builtin-types.def
+===================================================================
+--- gcc/config/i386/i386-builtin-types.def	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/i386/i386-builtin-types.def	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -229,7 +229,7 @@
+ DEF_FUNCTION_TYPE (V1DI, V1DI, V1DI)
+ DEF_FUNCTION_TYPE (V1DI, V2SI, V2SI)
+ DEF_FUNCTION_TYPE (V1DI, V8QI, V8QI)
+-DEF_FUNCTION_TYPE (V2DF, PCV2DF, V2DF)
++DEF_FUNCTION_TYPE (V2DF, PCV2DF, V2DI)
+ DEF_FUNCTION_TYPE (V2DF, V2DF, DI)
+ DEF_FUNCTION_TYPE (V2DF, V2DF, INT)
+ DEF_FUNCTION_TYPE (V2DF, V2DF, PCDOUBLE)
+@@ -251,7 +251,7 @@
+ DEF_FUNCTION_TYPE (V2SI, V2SI, SI)
+ DEF_FUNCTION_TYPE (V2SI, V2SI, V2SI)
+ DEF_FUNCTION_TYPE (V2SI, V4HI, V4HI)
+-DEF_FUNCTION_TYPE (V4DF, PCV4DF, V4DF)
++DEF_FUNCTION_TYPE (V4DF, PCV4DF, V4DI)
+ DEF_FUNCTION_TYPE (V4DF, V4DF, INT)
+ DEF_FUNCTION_TYPE (V4DF, V4DF, V4DF)
+ DEF_FUNCTION_TYPE (V4DF, V4DF, V4DI)
+@@ -260,7 +260,7 @@
+ DEF_FUNCTION_TYPE (V4HI, V4HI, SI)
+ DEF_FUNCTION_TYPE (V4HI, V4HI, V4HI)
+ DEF_FUNCTION_TYPE (V4HI, V8QI, V8QI)
+-DEF_FUNCTION_TYPE (V4SF, PCV4SF, V4SF)
++DEF_FUNCTION_TYPE (V4SF, PCV4SF, V4SI)
+ DEF_FUNCTION_TYPE (V4SF, V4SF, DI)
+ DEF_FUNCTION_TYPE (V4SF, V4SF, INT)
+ DEF_FUNCTION_TYPE (V4SF, V4SF, PCV2SF)
+@@ -284,7 +284,7 @@
+ DEF_FUNCTION_TYPE (V8HI, V8HI, V8HI)
+ DEF_FUNCTION_TYPE (V8QI, V4HI, V4HI)
+ DEF_FUNCTION_TYPE (V8QI, V8QI, V8QI)
+-DEF_FUNCTION_TYPE (V8SF, PCV8SF, V8SF)
++DEF_FUNCTION_TYPE (V8SF, PCV8SF, V8SI)
+ DEF_FUNCTION_TYPE (V8SF, V8SF, INT)
+ DEF_FUNCTION_TYPE (V8SF, V8SF, V8SF)
+ DEF_FUNCTION_TYPE (V8SF, V8SF, V8SI)
+@@ -343,10 +343,10 @@
+ DEF_FUNCTION_TYPE (V8SI, V8SI, V8SI, INT)
+ DEF_FUNCTION_TYPE (V8SI, V8SI, V8SI, V8SI)
+ DEF_FUNCTION_TYPE (VOID, PCVOID, UNSIGNED, UNSIGNED)
+-DEF_FUNCTION_TYPE (VOID, PV2DF, V2DF, V2DF)
+-DEF_FUNCTION_TYPE (VOID, PV4DF, V4DF, V4DF)
+-DEF_FUNCTION_TYPE (VOID, PV4SF, V4SF, V4SF)
+-DEF_FUNCTION_TYPE (VOID, PV8SF, V8SF, V8SF)
++DEF_FUNCTION_TYPE (VOID, PV2DF, V2DI, V2DF)
++DEF_FUNCTION_TYPE (VOID, PV4DF, V4DI, V4DF)
++DEF_FUNCTION_TYPE (VOID, PV4SF, V4SI, V4SF)
++DEF_FUNCTION_TYPE (VOID, PV8SF, V8SI, V8SF)
+ DEF_FUNCTION_TYPE (VOID, UINT, UINT, UINT)
+ DEF_FUNCTION_TYPE (VOID, UINT64, UINT, UINT)
+ DEF_FUNCTION_TYPE (VOID, V16QI, V16QI, PCHAR)
+Index: gcc/config/i386/avxintrin.h
+===================================================================
+--- gcc/config/i386/avxintrin.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/i386/avxintrin.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -890,55 +890,55 @@
+ }
+ 
+ extern __inline __m128d __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm_maskload_pd (double const *__P, __m128d __M)
++_mm_maskload_pd (double const *__P, __m128i __M)
+ {
+   return (__m128d) __builtin_ia32_maskloadpd ((const __v2df *)__P,
+-					      (__v2df)__M);
++					      (__v2di)__M);
+ }
+ 
+ extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm_maskstore_pd (double *__P, __m128d __M, __m128d __A)
++_mm_maskstore_pd (double *__P, __m128i __M, __m128d __A)
+ {
+-  __builtin_ia32_maskstorepd ((__v2df *)__P, (__v2df)__M, (__v2df)__A);
++  __builtin_ia32_maskstorepd ((__v2df *)__P, (__v2di)__M, (__v2df)__A);
+ }
+ 
+ extern __inline __m256d __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm256_maskload_pd (double const *__P, __m256d __M)
++_mm256_maskload_pd (double const *__P, __m256i __M)
+ {
+   return (__m256d) __builtin_ia32_maskloadpd256 ((const __v4df *)__P,
+-						 (__v4df)__M);
++						 (__v4di)__M);
+ }
+ 
+ extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm256_maskstore_pd (double *__P, __m256d __M, __m256d __A)
++_mm256_maskstore_pd (double *__P, __m256i __M, __m256d __A)
+ {
+-  __builtin_ia32_maskstorepd256 ((__v4df *)__P, (__v4df)__M, (__v4df)__A);
++  __builtin_ia32_maskstorepd256 ((__v4df *)__P, (__v4di)__M, (__v4df)__A);
+ }
+ 
+ extern __inline __m128 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm_maskload_ps (float const *__P, __m128 __M)
++_mm_maskload_ps (float const *__P, __m128i __M)
+ {
+   return (__m128) __builtin_ia32_maskloadps ((const __v4sf *)__P,
+-					     (__v4sf)__M);
++					     (__v4si)__M);
+ }
+ 
+ extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm_maskstore_ps (float *__P, __m128 __M, __m128 __A)
++_mm_maskstore_ps (float *__P, __m128i __M, __m128 __A)
+ {
+-  __builtin_ia32_maskstoreps ((__v4sf *)__P, (__v4sf)__M, (__v4sf)__A);
++  __builtin_ia32_maskstoreps ((__v4sf *)__P, (__v4si)__M, (__v4sf)__A);
+ }
+ 
+ extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm256_maskload_ps (float const *__P, __m256 __M)
++_mm256_maskload_ps (float const *__P, __m256i __M)
+ {
+   return (__m256) __builtin_ia32_maskloadps256 ((const __v8sf *)__P,
+-						(__v8sf)__M);
++						(__v8si)__M);
+ }
+ 
+ extern __inline void __attribute__((__gnu_inline__, __always_inline__, __artificial__))
+-_mm256_maskstore_ps (float *__P, __m256 __M, __m256 __A)
++_mm256_maskstore_ps (float *__P, __m256i __M, __m256 __A)
+ {
+-  __builtin_ia32_maskstoreps256 ((__v8sf *)__P, (__v8sf)__M, (__v8sf)__A);
++  __builtin_ia32_maskstoreps256 ((__v8sf *)__P, (__v8si)__M, (__v8sf)__A);
+ }
+ 
+ extern __inline __m256 __attribute__((__gnu_inline__, __always_inline__, __artificial__))
 Index: gcc/config/i386/i386.c
 ===================================================================
---- gcc/config/i386/i386.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/i386/i386.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/i386/i386.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/i386/i386.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -10438,6 +10438,17 @@
      case TLS_MODEL_INITIAL_EXEC:
        if (TARGET_64BIT)
@@ -1810,10 +4119,175 @@ Index: gcc/config/i386/i386.c
  	  pic = NULL;
  	  type = UNSPEC_GOTNTPOFF;
  	}
+@@ -11027,7 +11038,11 @@
+ 	return orig_x;
+       x = XVECEXP (XEXP (x, 0), 0, 0);
+       if (GET_MODE (orig_x) != Pmode)
+-	return simplify_gen_subreg (GET_MODE (orig_x), x, Pmode, 0);
++	{
++	  x = simplify_gen_subreg (GET_MODE (orig_x), x, Pmode, 0);
++	  if (x == NULL_RTX)
++	    return orig_x;
++	}
+       return x;
+     }
+ 
+@@ -11096,7 +11111,11 @@
+ 	return orig_x;
+     }
+   if (GET_MODE (orig_x) != Pmode && MEM_P (orig_x))
+-    return simplify_gen_subreg (GET_MODE (orig_x), result, Pmode, 0);
++    {
++      result = simplify_gen_subreg (GET_MODE (orig_x), result, Pmode, 0);
++      if (result == NULL_RTX)
++	return orig_x;
++    }
+   return result;
+ }
+ 
+@@ -21638,14 +21657,14 @@
+   { OPTION_MASK_ISA_AVX, CODE_FOR_avx_movntv4df, "__builtin_ia32_movntpd256", IX86_BUILTIN_MOVNTPD256, UNKNOWN, (int) VOID_FTYPE_PDOUBLE_V4DF },
+   { OPTION_MASK_ISA_AVX, CODE_FOR_avx_movntv8sf, "__builtin_ia32_movntps256", IX86_BUILTIN_MOVNTPS256, UNKNOWN, (int) VOID_FTYPE_PFLOAT_V8SF },
+ 
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadpd, "__builtin_ia32_maskloadpd", IX86_BUILTIN_MASKLOADPD, UNKNOWN, (int) V2DF_FTYPE_PCV2DF_V2DF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadps, "__builtin_ia32_maskloadps", IX86_BUILTIN_MASKLOADPS, UNKNOWN, (int) V4SF_FTYPE_PCV4SF_V4SF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadpd256, "__builtin_ia32_maskloadpd256", IX86_BUILTIN_MASKLOADPD256, UNKNOWN, (int) V4DF_FTYPE_PCV4DF_V4DF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadps256, "__builtin_ia32_maskloadps256", IX86_BUILTIN_MASKLOADPS256, UNKNOWN, (int) V8SF_FTYPE_PCV8SF_V8SF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstorepd, "__builtin_ia32_maskstorepd", IX86_BUILTIN_MASKSTOREPD, UNKNOWN, (int) VOID_FTYPE_PV2DF_V2DF_V2DF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstoreps, "__builtin_ia32_maskstoreps", IX86_BUILTIN_MASKSTOREPS, UNKNOWN, (int) VOID_FTYPE_PV4SF_V4SF_V4SF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstorepd256, "__builtin_ia32_maskstorepd256", IX86_BUILTIN_MASKSTOREPD256, UNKNOWN, (int) VOID_FTYPE_PV4DF_V4DF_V4DF },
+-  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstoreps256, "__builtin_ia32_maskstoreps256", IX86_BUILTIN_MASKSTOREPS256, UNKNOWN, (int) VOID_FTYPE_PV8SF_V8SF_V8SF },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadpd, "__builtin_ia32_maskloadpd", IX86_BUILTIN_MASKLOADPD, UNKNOWN, (int) V2DF_FTYPE_PCV2DF_V2DI },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadps, "__builtin_ia32_maskloadps", IX86_BUILTIN_MASKLOADPS, UNKNOWN, (int) V4SF_FTYPE_PCV4SF_V4SI },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadpd256, "__builtin_ia32_maskloadpd256", IX86_BUILTIN_MASKLOADPD256, UNKNOWN, (int) V4DF_FTYPE_PCV4DF_V4DI },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskloadps256, "__builtin_ia32_maskloadps256", IX86_BUILTIN_MASKLOADPS256, UNKNOWN, (int) V8SF_FTYPE_PCV8SF_V8SI },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstorepd, "__builtin_ia32_maskstorepd", IX86_BUILTIN_MASKSTOREPD, UNKNOWN, (int) VOID_FTYPE_PV2DF_V2DI_V2DF },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstoreps, "__builtin_ia32_maskstoreps", IX86_BUILTIN_MASKSTOREPS, UNKNOWN, (int) VOID_FTYPE_PV4SF_V4SI_V4SF },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstorepd256, "__builtin_ia32_maskstorepd256", IX86_BUILTIN_MASKSTOREPD256, UNKNOWN, (int) VOID_FTYPE_PV4DF_V4DI_V4DF },
++  { OPTION_MASK_ISA_AVX, CODE_FOR_avx_maskstoreps256, "__builtin_ia32_maskstoreps256", IX86_BUILTIN_MASKSTOREPS256, UNKNOWN, (int) VOID_FTYPE_PV8SF_V8SI_V8SF },
+ 
+   { OPTION_MASK_ISA_LWP, CODE_FOR_lwp_llwpcb, "__builtin_ia32_llwpcb", IX86_BUILTIN_LLWPCB, UNKNOWN, (int) VOID_FTYPE_PVOID },
+   { OPTION_MASK_ISA_LWP, CODE_FOR_lwp_slwpcb, "__builtin_ia32_slwpcb", IX86_BUILTIN_SLWPCB, UNKNOWN, (int) PVOID_FTYPE_VOID },
+@@ -23927,18 +23946,18 @@
+       klass = load;
+       memory = 1;
+       break;
+-    case V8SF_FTYPE_PCV8SF_V8SF:
+-    case V4DF_FTYPE_PCV4DF_V4DF:
+-    case V4SF_FTYPE_PCV4SF_V4SF:
+-    case V2DF_FTYPE_PCV2DF_V2DF:
++    case V8SF_FTYPE_PCV8SF_V8SI:
++    case V4DF_FTYPE_PCV4DF_V4DI:
++    case V4SF_FTYPE_PCV4SF_V4SI:
++    case V2DF_FTYPE_PCV2DF_V2DI:
+       nargs = 2;
+       klass = load;
+       memory = 0;
+       break;
+-    case VOID_FTYPE_PV8SF_V8SF_V8SF:
+-    case VOID_FTYPE_PV4DF_V4DF_V4DF:
+-    case VOID_FTYPE_PV4SF_V4SF_V4SF:
+-    case VOID_FTYPE_PV2DF_V2DF_V2DF:
++    case VOID_FTYPE_PV8SF_V8SI_V8SF:
++    case VOID_FTYPE_PV4DF_V4DI_V4DF:
++    case VOID_FTYPE_PV4SF_V4SI_V4SF:
++    case VOID_FTYPE_PV2DF_V2DI_V2DF:
+       nargs = 2;
+       klass = store;
+       /* Reserve memory operand for target.  */
+Index: gcc/config/rs6000/rs6000.c
+===================================================================
+--- gcc/config/rs6000/rs6000.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/rs6000/rs6000.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -4472,7 +4472,7 @@
+ {
+   enum machine_mode mode = GET_MODE (vec);
+   enum machine_mode inner_mode = GET_MODE_INNER (mode);
+-  rtx mem, x;
++  rtx mem;
+ 
+   if (VECTOR_MEM_VSX_P (mode) && (mode == V2DFmode || mode == V2DImode))
+     {
+@@ -4485,17 +4485,11 @@
+   /* Allocate mode-sized buffer.  */
+   mem = assign_stack_temp (mode, GET_MODE_SIZE (mode), 0);
+ 
++  emit_move_insn (mem, vec);
++
+   /* Add offset to field within buffer matching vector element.  */
+-  mem = adjust_address_nv (mem, mode, elt * GET_MODE_SIZE (inner_mode));
++  mem = adjust_address_nv (mem, inner_mode, elt * GET_MODE_SIZE (inner_mode));
+ 
+-  /* Store single field into mode-sized buffer.  */
+-  x = gen_rtx_UNSPEC (VOIDmode,
+-		      gen_rtvec (1, const0_rtx), UNSPEC_STVE);
+-  emit_insn (gen_rtx_PARALLEL (VOIDmode,
+-			       gen_rtvec (2,
+-					  gen_rtx_SET (VOIDmode,
+-						       mem, vec),
+-					  x)));
+   emit_move_insn (target, adjust_address_nv (mem, inner_mode, 0));
+ }
+ 
+@@ -9897,6 +9891,7 @@
+   rtx op2 = expand_normal (arg2);
+   rtx pat, addr;
+   enum machine_mode tmode = insn_data[icode].operand[0].mode;
++  enum machine_mode smode = insn_data[icode].operand[1].mode;
+   enum machine_mode mode1 = Pmode;
+   enum machine_mode mode2 = Pmode;
+ 
+@@ -9906,8 +9901,8 @@
+       || arg2 == error_mark_node)
+     return const0_rtx;
+ 
+-  if (! (*insn_data[icode].operand[1].predicate) (op0, tmode))
+-    op0 = copy_to_mode_reg (tmode, op0);
++  if (! (*insn_data[icode].operand[1].predicate) (op0, smode))
++    op0 = copy_to_mode_reg (smode, op0);
+ 
+   op2 = copy_to_mode_reg (mode2, op2);
+ 
+Index: gcc/config/rs6000/altivec.md
+===================================================================
+--- gcc/config/rs6000/altivec.md	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/rs6000/altivec.md	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -171,6 +171,7 @@
+ (define_mode_iterator VM2 [V4SI V8HI V16QI V4SF V2DF V2DI])
+ 
+ (define_mode_attr VI_char [(V4SI "w") (V8HI "h") (V16QI "b")])
++(define_mode_attr VI_scalar [(V4SI "SI") (V8HI "HI") (V16QI "QI")])
+ 
+ ;; Vector move instructions.
+ (define_insn "*altivec_mov<mode>"
+@@ -1777,19 +1778,15 @@
+   [(set_attr "type" "vecstore")])
+ 
+ (define_insn "altivec_stve<VI_char>x"
+-  [(parallel
+-    [(set (match_operand:VI 0 "memory_operand" "=Z")
+-	  (match_operand:VI 1 "register_operand" "v"))
+-     (unspec [(const_int 0)] UNSPEC_STVE)])]
++  [(set (match_operand:<VI_scalar> 0 "memory_operand" "=Z")
++	(unspec:<VI_scalar> [(match_operand:VI 1 "register_operand" "v")] UNSPEC_STVE))]
+   "TARGET_ALTIVEC"
+   "stve<VI_char>x %1,%y0"
+   [(set_attr "type" "vecstore")])
+ 
+ (define_insn "*altivec_stvesfx"
+-  [(parallel
+-    [(set (match_operand:V4SF 0 "memory_operand" "=Z")
+-	  (match_operand:V4SF 1 "register_operand" "v"))
+-     (unspec [(const_int 0)] UNSPEC_STVE)])]
++  [(set (match_operand:SF 0 "memory_operand" "=Z")
++	(unspec:SF [(match_operand:V4SF 1 "register_operand" "v")] UNSPEC_STVE))]
+   "TARGET_ALTIVEC"
+   "stvewx %1,%y0"
+   [(set_attr "type" "vecstore")])
 Index: gcc/config/arm/arm.c
 ===================================================================
---- gcc/config/arm/arm.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/arm/arm.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/arm/arm.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/arm/arm.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1114,6 +1114,7 @@
  			     va_list_type);
    DECL_ARTIFICIAL (va_list_name) = 1;
@@ -1824,8 +4298,8 @@ Index: gcc/config/arm/arm.c
  			 FIELD_DECL, 
 Index: gcc/config/pa/pa.md
 ===================================================================
---- gcc/config/pa/pa.md	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/pa/pa.md	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/pa/pa.md	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/pa/pa.md	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -811,7 +811,7 @@
  			 (match_operand:DI 3 "arith11_operand" "rI"))
  		 (match_operand:DI 1 "register_operand" "r")))]
@@ -1909,8 +4383,8 @@ Index: gcc/config/pa/pa.md
  
 Index: gcc/config/pa/pa.c
 ===================================================================
---- gcc/config/pa/pa.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ gcc/config/pa/pa.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- gcc/config/pa/pa.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ gcc/config/pa/pa.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -6097,37 +6097,94 @@
  }
  
@@ -2089,11 +4563,28 @@ Index: gcc/config/pa/pa.c
    switch (length)
      {
  
+Index: libstdc++-v3/src/bitmap_allocator.cc
+===================================================================
+--- libstdc++-v3/src/bitmap_allocator.cc	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libstdc++-v3/src/bitmap_allocator.cc	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -49,6 +49,7 @@
+   {
+ #if defined __GTHREADS
+     __mutex_type& __bfl_mutex = _M_get_mutex();
++    __bfl_mutex.lock();
+ #endif
+     const vector_type& __free_list = _M_get_free_list();
+     using __gnu_cxx::__detail::__lower_bound;
 Index: libstdc++-v3/ChangeLog
 ===================================================================
---- libstdc++-v3/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
-@@ -1,3 +1,11 @@
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
+@@ -1,3 +1,16 @@
++2011-01-19  Graham Reed  <greed@pobox.com>
++
++	PR libstdc++/47354
++	* src/bitmap_allocator.cc (free_list::_M_get): Lock mutex.
++
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
 +	Backport from mainline:
@@ -2107,8 +4598,8 @@ Index: libstdc++-v3/ChangeLog
  	* GCC 4.5.2 released.
 Index: libstdc++-v3/testsuite/lib/libstdc++.exp
 ===================================================================
---- libstdc++-v3/testsuite/lib/libstdc++.exp	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libstdc++-v3/testsuite/lib/libstdc++.exp	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libstdc++-v3/testsuite/lib/libstdc++.exp	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libstdc++-v3/testsuite/lib/libstdc++.exp	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -586,6 +586,15 @@
      }
  
@@ -2127,8 +4618,8 @@ Index: libstdc++-v3/testsuite/lib/libstdc++.exp
      } else {
 Index: libffi/ChangeLog
 ===================================================================
---- libffi/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libffi/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libffi/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libffi/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1,3 +1,11 @@
 +2010-12-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
@@ -2143,8 +4634,8 @@ Index: libffi/ChangeLog
  	* GCC 4.5.2 released.
 Index: libffi/testsuite/libffi.call/ffitest.h
 ===================================================================
---- libffi/testsuite/libffi.call/ffitest.h	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libffi/testsuite/libffi.call/ffitest.h	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libffi/testsuite/libffi.call/ffitest.h	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libffi/testsuite/libffi.call/ffitest.h	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -77,6 +77,26 @@
  #define PRIuPTR "lu"
  #endif
@@ -2178,8 +4669,8 @@ Nie można wyświetlić: plik binarny.
 svn:mime-type = application/octet-stream
 Index: libjava/ChangeLog
 ===================================================================
---- libjava/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libjava/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libjava/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libjava/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1,3 +1,24 @@
 +2011-01-07  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 +
@@ -2207,8 +4698,8 @@ Index: libjava/ChangeLog
  	* GCC 4.5.2 released.
 Index: libjava/testsuite/libjava.jni/jni.exp
 ===================================================================
---- libjava/testsuite/libjava.jni/jni.exp	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libjava/testsuite/libjava.jni/jni.exp	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libjava/testsuite/libjava.jni/jni.exp	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libjava/testsuite/libjava.jni/jni.exp	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -274,8 +274,10 @@
      eval lappend cxxflags "-shared-libgcc -lgcj $libiconv"
    }
@@ -2223,8 +4714,8 @@ Index: libjava/testsuite/libjava.jni/jni.exp
    return $cxxflags
 Index: libjava/java/security/VMAccessController.java
 ===================================================================
---- libjava/java/security/VMAccessController.java	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libjava/java/security/VMAccessController.java	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libjava/java/security/VMAccessController.java	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libjava/java/security/VMAccessController.java	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -56,7 +56,7 @@
      Permissions permissions = new Permissions();
      permissions.add(new AllPermission());
@@ -2261,8 +4752,8 @@ Index: libjava/java/security/VMAccessController.java
      if (DEBUG)
 Index: libcpp/directives.c
 ===================================================================
---- libcpp/directives.c	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libcpp/directives.c	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libcpp/directives.c	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libcpp/directives.c	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -280,16 +280,17 @@
  static void
  end_directive (cpp_reader *pfile, int skip_line)
@@ -2287,8 +4778,8 @@ Index: libcpp/directives.c
      {
 Index: libcpp/ChangeLog
 ===================================================================
---- libcpp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 168599)
-+++ libcpp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 168599)
+--- libcpp/ChangeLog	(.../tags/gcc_4_5_2_release)	(wersja 169176)
++++ libcpp/ChangeLog	(.../branches/gcc-4_5-branch)	(wersja 169176)
 @@ -1,3 +1,10 @@
 +2011-11-04  Eric Botcazou  <ebotcazou@adacore.com>
 +            Jakub Jelinek  <jakub@redhat.com>
