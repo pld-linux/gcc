@@ -1929,7 +1929,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/%{_prefix}/lib*/libstdc++.so.6.0.14-gdb.py
+%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.6.0.14-gdb.py
 %endif
 
 %files -n libstdc++-devel
