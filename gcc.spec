@@ -690,12 +690,17 @@ standardowej C++.
 
 %package -n libstdc++-gdb
 Summary:	libstdc++ pretty printers for GDB
+Summary(pl.UTF-8):	Funkcje wypisujące dane libstdc++ dla GDB
 Group:		Development/Debuggers
 Requires:	python-gdb
 
 %description -n libstdc++-gdb
 This package contains Python scripts for GDB pretty printing of the
 libstdc++ types/containers.
+
+%description -n libstdc++-gdb -l pl.UTF-8
+Ten pakiet zawiera skrypty Pythona dla GDB służące do ładnego
+wypisywania typów i kontenerów libstdc++.
 
 %package -n libstdc++-devel
 Summary:	Header files and documentation for C++ development
