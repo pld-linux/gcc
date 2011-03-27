@@ -1700,8 +1700,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 %attr(755,root,root) %{_libdir}/gcc/*/*/lto-wrapper
 %attr(755,root,root) %{_libdir}/gcc/*/*/lto1
-%attr(755,root,root) %{_libdir}/gcc/*/*/liblto_plugin.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/gcc/*/*/liblto_plugin.so.0
+%attr(755,root,root) %{_libdir}/gcc/*/*/liblto_plugin.so*
 %{_libdir}/gcc/*/*/plugin
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
