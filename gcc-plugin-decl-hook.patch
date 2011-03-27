@@ -1,180 +1,46 @@
-Date: Tue, 22 Dec 2009 10:00:29 -0800
-Subject: plugin event for C/C++ declarations
-From: Brian Hackett <bhackett1024 at gmail dot com>
-To: gcc-patches at gcc dot gnu dot org
-
-Hi, this patch adds a new plugin event FINISH_DECL, which is invoked
-at every finish_decl in the C and C++ frontends.  Previously there did
-not seem to be a way for a plugin to see the definition for a global
-that is never used in the input file, or the initializer for a global
-which is declared before a function but defined after.  This event
-isn't restricted to just globals though, but also locals, fields, and
-parameters (C frontend only).
-
-Index: gcc/doc/plugins.texi
-===================================================================
---- gcc/doc/plugins.texi	(revision 155401)
-+++ gcc/doc/plugins.texi	(working copy)
-@@ -146,6 +146,7 @@ enum plugin_event
+diff --git a/gcc/c-decl.c b/gcc/c-decl.c
+index b438b06..c3738b9 100644
+--- a/gcc/c-decl.c
++++ b/gcc/c-decl.c
+@@ -4480,6 +4480,8 @@ finish_decl (tree decl, location_t init_loc, tree init,
+ 	       && C_TYPE_FIELDS_READONLY (type))
+ 	diagnose_uninitialized_cst_member (decl, type);
+     }
++
++  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
+ }
+ 
+ /* Given a parsed parameter declaration, decode it into a PARM_DECL.  */
+diff --git a/gcc/cp/decl.c b/gcc/cp/decl.c
+index 6a13cc4..9752cf4 100644
+--- a/gcc/cp/decl.c
++++ b/gcc/cp/decl.c
+@@ -6147,6 +6147,8 @@ cp_finish_decl (tree decl, tree init, bool init_const_expr_p,
+ 
+   if (was_readonly)
+     TREE_READONLY (decl) = 1;
++
++  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
+ }
+ 
+ /* Returns a declaration for a VAR_DECL as if:
+diff --git a/gcc/doc/plugins.texi b/gcc/doc/plugins.texi
+index 767cee8..d989ddd 100644
+--- a/gcc/doc/plugins.texi
++++ b/gcc/doc/plugins.texi
+@@ -153,6 +153,7 @@ enum plugin_event
    PLUGIN_FINISH_TYPE,           /* After finishing parsing a type.  */
    PLUGIN_FINISH_UNIT,           /* Useful for summary processing.  */
    PLUGIN_PRE_GENERICIZE,        /* Allows to see low level AST in C and C++ frontends.  */
 +  PLUGIN_FINISH_DECL,           /* Allows to see all declarations in C and C++ frontends. */
    PLUGIN_FINISH,                /* Called before GCC exits.  */
    PLUGIN_INFO,                  /* Information about the plugin. */
-   PLUGIN_GGC_START,		/* Called at start of GCC Garbage Collection. */
-Index: gcc/plugin.def
-===================================================================
---- gcc/plugin.def	(revision 155386)
-+++ gcc/plugin.def	(working copy)
-@@ -30,6 +30,9 @@ DEFEVENT (PLUGIN_FINISH_UNIT)
- /* Allows to see low level AST in C and C++ frontends. */
- DEFEVENT (PLUGIN_PRE_GENERICIZE)
-
-+/* Allows to see all declarations in C and C++ frontends. */
-+DEFEVENT (PLUGIN_FINISH_DECL)
-+
- /* Called before GCC exits.  */
- DEFEVENT (PLUGIN_FINISH)
-
-Index: gcc/testsuite/g++.dg/plugin/plugin.exp
-===================================================================
---- gcc/testsuite/g++.dg/plugin/plugin.exp	(revision 155401)
-+++ gcc/testsuite/g++.dg/plugin/plugin.exp	(working copy)
-@@ -51,7 +51,8 @@ set plugin_test_list [list \
-     { pragma_plugin.c pragma_plugin-test-1.C } \
-     { selfassign.c self-assign-test-1.C self-assign-test-2.C self-assign-test-3.C } \
-     { dumb_plugin.c dumb-plugin-test-1.C } \
--    { header_plugin.c header-plugin-test.C } ]
-+    { header_plugin.c header-plugin-test.C } \
-+    { decl_plugin.c decl-plugin-test.C } ]
-
- foreach plugin_test $plugin_test_list {
-     # Replace each source file with its full-path name
-Index: gcc/testsuite/g++.dg/plugin/decl-plugin-test.C
-===================================================================
---- gcc/testsuite/g++.dg/plugin/decl-plugin-test.C	(revision 0)
-+++ gcc/testsuite/g++.dg/plugin/decl-plugin-test.C	(revision 0)
-@@ -0,0 +1,32 @@
-+
-+
-+extern int global; // { dg-warning "Decl Global global" }
-+int global_array[] = { 1, 2, 3 }; // { dg-warning "Decl Global global_array" }
-+
-+int takes_args(int arg1, int arg2)
-+{
-+  int local = arg1 + arg2 + global; // { dg-warning "Decl Local local" }
-+  return local + 1;
-+}
-+
-+int global = 12; // { dg-warning "Decl Global global" }
-+
-+struct test_str {
-+  int field; // { dg-warning "Decl Field field" }
-+};
-+
-+class test_class {
-+  int class_field1; // { dg-warning "Decl Field class_field1" }
-+  int class_field2; // { dg-warning "Decl Field class_field2" }
-+
-+  test_class() // { dg-warning "Decl Function test_class" }
-+    : class_field1(0), class_field2(0)
-+  {}
-+
-+  void swap_fields(int bias) // { dg-warning "Decl Function swap_fields" }
-+  {
-+    int temp = class_field1 + bias; // { dg-warning "Decl Local temp" }
-+    class_field1 = class_field2 - bias;
-+    class_field2 = temp;
-+  }
-+};
-Index: gcc/testsuite/g++.dg/plugin/decl_plugin.c
-===================================================================
---- gcc/testsuite/g++.dg/plugin/decl_plugin.c	(revision 0)
-+++ gcc/testsuite/g++.dg/plugin/decl_plugin.c	(revision 0)
-@@ -0,0 +1,51 @@
-+/* A plugin example that shows which declarations are caught by FINISH_DECL */
-+
-+#include "gcc-plugin.h"
-+#include <stdlib.h>
-+#include "config.h"
-+#include "system.h"
-+#include "coretypes.h"
-+#include "tree.h"
-+#include "tree-pass.h"
-+#include "intl.h"
-+
-+int plugin_is_GPL_compatible;
-+
-+/* Callback function to invoke after GCC finishes a declaration. */
-+
-+void plugin_finish_decl (void *event_data, void *data)
-+{
-+  tree decl = (tree) event_data;
-+
-+  const char *kind = NULL;
-+  switch (TREE_CODE(decl)) {
-+  case FUNCTION_DECL:
-+    kind = "Function"; break;
-+  case PARM_DECL:
-+    kind = "Parameter"; break;
-+  case VAR_DECL:
-+    if (DECL_CONTEXT(decl) != NULL)
-+      kind = "Local";
-+    else
-+      kind = "Global";
-+    break;
-+  case FIELD_DECL:
-+    kind = "Field"; break;
-+  default:
-+    kind = "Unknown";
-+  }
-+
-+  warning (0, G_("Decl %s %s"),
-+           kind, IDENTIFIER_POINTER (DECL_NAME (decl)));
-+}
-+
-+int
-+plugin_init (struct plugin_name_args *plugin_info,
-+             struct plugin_gcc_version *version)
-+{
-+  const char *plugin_name = plugin_info->base_name;
-+
-+  register_callback (plugin_name, PLUGIN_FINISH_DECL,
-+                     plugin_finish_decl, NULL);
-+  return 0;
-+}
-Index: gcc/cp/decl.c
-===================================================================
---- gcc/cp/decl.c	(revision 155386)
-+++ gcc/cp/decl.c	(working copy)
-@@ -5949,6 +5949,8 @@ cp_finish_decl (tree decl, tree init, bo
-   /* If this was marked 'used', be sure it will be output.  */
-   if (lookup_attribute ("used", DECL_ATTRIBUTES (decl)))
-     mark_decl_referenced (decl);
-+
-+  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
- }
-
- /* Returns a declaration for a VAR_DECL as if:
-Index: gcc/c-decl.c
-===================================================================
---- gcc/c-decl.c	(revision 155386)
-+++ gcc/c-decl.c	(working copy)
-@@ -4389,6 +4389,8 @@ finish_decl (tree decl, location_t init_
-       && DECL_INITIAL (decl) == NULL_TREE)
-     warning_at (DECL_SOURCE_LOCATION (decl), OPT_Wc___compat,
- 		"uninitialized const %qD is invalid in C++", decl);
-+
-+  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
- }
-
- /* Given a parsed parameter declaration, decode it into a PARM_DECL.  */
-Index: gcc/plugin.c
-===================================================================
---- gcc/plugin.c	(revision 155386)
-+++ gcc/plugin.c	(working copy)
-@@ -403,6 +403,7 @@ register_callback (const char *plugin_na
+   PLUGIN_GGC_START,             /* Called at start of GCC Garbage Collection. */
+diff --git a/gcc/plugin.c b/gcc/plugin.c
+index c93daed..f65e54a 100644
+--- a/gcc/plugin.c
++++ b/gcc/plugin.c
+@@ -423,6 +423,7 @@ register_callback (const char *plugin_name,
        case PLUGIN_START_UNIT:
        case PLUGIN_FINISH_UNIT:
        case PLUGIN_PRE_GENERICIZE:
@@ -182,7 +48,7 @@ Index: gcc/plugin.c
        case PLUGIN_GGC_START:
        case PLUGIN_GGC_MARKING:
        case PLUGIN_GGC_END:
-@@ -484,6 +485,7 @@ invoke_plugin_callbacks (int event, void
+@@ -499,6 +500,7 @@ invoke_plugin_callbacks_full (int event, void *gcc_data)
        case PLUGIN_START_UNIT:
        case PLUGIN_FINISH_UNIT:
        case PLUGIN_PRE_GENERICIZE:
@@ -190,3 +56,17 @@ Index: gcc/plugin.c
        case PLUGIN_ATTRIBUTES:
        case PLUGIN_PRAGMAS:
        case PLUGIN_FINISH:
+diff --git a/gcc/plugin.def b/gcc/plugin.def
+index 4a40c2c..4f8ad08 100644
+--- a/gcc/plugin.def
++++ b/gcc/plugin.def
+@@ -30,6 +30,9 @@ DEFEVENT (PLUGIN_FINISH_UNIT)
+ /* Allows to see low level AST in C and C++ frontends. */
+ DEFEVENT (PLUGIN_PRE_GENERICIZE)
+ 
++/* Allows to see all declarations in C and C++ frontends. */
++DEFEVENT (PLUGIN_FINISH_DECL)
++
+ /* Called before GCC exits.  */
+ DEFEVENT (PLUGIN_FINISH)
+ 

@@ -59,12 +59,12 @@
 %undefine	with_ada
 %endif
 
-%define		major_ver	4.5
-%define		minor_ver	2
+%define		major_ver	4.6
+%define		minor_ver	0
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	11
+%define		gcj_soname_ver	12
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -72,28 +72,26 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	d6559145853fbaaa0fd7556ed93bce9a
+# Source0-md5:	93d1c436bf991564524701259b6285a2
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
-# svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_5_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_5-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_6_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
-Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-hash-style-gnu.patch
 Patch10:	%{name}-moresparcs.patch
-Patch11:	%{name}-build-id.patch
+# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=41757
 Patch12:	%{name}-plugin-decl-hook.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
@@ -1229,11 +1227,55 @@ Static Objective C Library - 32-bit version.
 %description -n libobjc-multilib-static -l pl.UTF-8
 Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
 
+%package -n libquadmath
+Summary:	GCC __float128 shared support library
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath
+This package contains GCC shared support library which is needed
+for __float128 math support and for Fortran REAL*16 support.
+
+%package -n libquadmath-devel
+Summary:	GCC __float128 shared support library - devel files
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath-devel
+This package contains GCC shared support library which is needed
+for __float128 math support and for Fortran REAL*16 support - devel files.
+
+%package -n libquadmath-multilib
+Summary:	GCC __float128 shared support library - 32-bit version
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath-multilib
+This package contains GCC shared support library which is needed
+for __float128 math support and for Fortran REAL*16 support - 32-bit version.
+
+%package -n libquadmath-static
+Summary:	Static GCC __float128 library
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-static
+Static GCC __float128 library.
+
+%package -n libquadmath-multilib-static
+Summary:	GCC __float128 shared support static library - 32-bit version
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-multilib-static
+Static GCC __float128 library - 32-bit version.
+
 %prep
 %setup -q
 %patch100 -p0
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -1243,9 +1285,8 @@ Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
 %if %{with qt}
 %patch8 -p1
 %endif
-%patch9 -p1
-%patch10 -p0
-%patch11 -p0
+# FIXME for sparc
+#%patch10 -p0
 %patch12 -p0
 
 mv ChangeLog ChangeLog.general
@@ -1288,8 +1329,10 @@ TEXCONFIG=false \
 	--mandir=%{_mandir} \
 	--x-libraries=%{_libdir} \
 	--enable-checking=release \
+	--enable-gnu-unique-object \
 	--enable-shared \
 	--enable-threads=posix \
+	--enable-linker-build-id \
 	--enable-linux-futex \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
@@ -1471,7 +1514,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la} \
+	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 %if %{with java}
@@ -1492,7 +1535,7 @@ done
 %if %{with multilib}
 for f in libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la} \
+	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 	%{?with_java:libffi.la} \
@@ -1608,6 +1651,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib
 %postun	-p /sbin/ldconfig -n libobjc-multilib
+%post -n libquadmath
+/sbin/ldconfig
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%postun -n libquadmath
+/sbin/ldconfig
+[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%post	-p /sbin/ldconfig -n libquadmath-multilib
+%postun	-p /sbin/ldconfig -n libquadmath-multilib
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -1618,7 +1669,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cc
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_bindir}/gcc
-%attr(755,root,root) %{_bindir}/gccbug
+#%attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
@@ -1648,6 +1699,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/gcc/*/*/collect2
 %attr(755,root,root) %{_libdir}/gcc/*/*/lto-wrapper
 %attr(755,root,root) %{_libdir}/gcc/*/*/lto1
+%attr(755,root,root) %{_libdir}/gcc/*/*/liblto_plugin.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/gcc/*/*/liblto_plugin.so.0
 %{_libdir}/gcc/*/*/plugin
 %dir %{_libdir}/gcc/*/*/include
 %dir %{_libdir}/gcc/*/*/include/ssp
@@ -1668,6 +1721,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/abmintrin.h
 %{_libdir}/gcc/*/*/include/ammintrin.h
 %{_libdir}/gcc/*/*/include/avxintrin.h
+%{_libdir}/gcc/*/*/include/bmiintrin.h
 %{_libdir}/gcc/*/*/include/bmmintrin.h
 %{_libdir}/gcc/*/*/include/cpuid.h
 %{_libdir}/gcc/*/*/include/cross-stdarg.h
@@ -1683,6 +1737,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/gcc/*/*/include/popcntintrin.h
 %{_libdir}/gcc/*/*/include/pmmintrin.h
 %{_libdir}/gcc/*/*/include/smmintrin.h
+%{_libdir}/gcc/*/*/include/tbmintrin.h
 %{_libdir}/gcc/*/*/include/tmmintrin.h
 %{_libdir}/gcc/*/*/include/wmmintrin.h
 %{_libdir}/gcc/*/*/include/x86intrin.h
@@ -1929,7 +1984,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.6.0.14-gdb.py
+%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.6.0.15-gdb.py
 %endif
 
 %files -n libstdc++-devel
@@ -1983,6 +2038,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*-gfortran
 %attr(755,root,root) %{_libdir}/gcc/*/*/f951
 %attr(755,root,root) %{_libdir}/libgfortran.so
+%{_libdir}/libgfortran.spec
 %{_libdir}/libgfortran.la
 %{_libdir}/gcc/*/*/libgfortranbegin.la
 %{_libdir}/gcc/*/*/libgfortranbegin.a
@@ -1994,6 +2050,7 @@ rm -rf $RPM_BUILD_ROOT
 %files fortran-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so
+%{_libdir32}/libgfortran.spec
 %{_libdir32}/libgfortran.la
 %{_libdir}/gcc/*/*/32/libgfortranbegin.la
 %{_libdir}/gcc/*/*/32/libgfortranbegin.a
@@ -2020,6 +2077,36 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libgfortran.a
+%endif
+
+%files -n libquadmath
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libquadmath.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libquadmath.so.0
+
+%files -n libquadmath-devel
+%defattr(644,root,root,755)
+%{_libdir}/gcc/*/*/include/quadmath.h
+%{_libdir}/gcc/*/*/include/quadmath_weak.h
+%attr(755,root,root) %{_libdir}/libquadmath.so
+%{_libdir}/libquadmath.la
+%{_infodir}/libquadmath.info*
+
+%if %{with multilib}
+%files -n libquadmath-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
+%endif
+
+%files -n libquadmath-static
+%defattr(644,root,root,755)
+%{_libdir}/libquadmath.a
+
+%if %{with multilib}
+%files -n libquadmath-multilib-static
+%defattr(644,root,root,755)
+%{_libdir32}/libquadmath.a
 %endif
 %endif
 
@@ -2192,7 +2279,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with objc}
 %files objc
 %defattr(644,root,root,755)
-%doc gcc/objc/README
+%doc gcc/objc/README.libobjc
 %attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
 %attr(755,root,root) %{_libdir}/libobjc.so
 %{_libdir}/libobjc.la
@@ -2209,13 +2296,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libobjc.so.2
+%attr(755,root,root) %ghost %{_libdir}/libobjc.so.3
 
 %if %{with multilib}
 %files -n libobjc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.2
+%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.3
 %endif
 
 %files -n libobjc-static
