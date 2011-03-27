@@ -1233,8 +1233,8 @@ License:	GPL v2+ with linking exception
 Group:		Libraries
 
 %description -n libquadmath
-This package contains GCC shared support library which is needed
-for __float128 math support and for Fortran REAL*16 support.
+This package contains GCC shared support library which is needed for
+__float128 math support and for Fortran REAL*16 support.
 
 %package -n libquadmath-devel
 Summary:	GCC __float128 shared support library - devel files
@@ -1242,8 +1242,8 @@ License:	GPL v2+ with linking exception
 Group:		Libraries
 
 %description -n libquadmath-devel
-This package contains GCC shared support library which is needed
-for __float128 math support and for Fortran REAL*16 support - devel files.
+This package contains GCC shared support library which is needed for
+__float128 math support and for Fortran REAL*16 support - devel files.
 
 %package -n libquadmath-multilib
 Summary:	GCC __float128 shared support library - 32-bit version
@@ -1251,8 +1251,9 @@ License:	GPL v2+ with linking exception
 Group:		Libraries
 
 %description -n libquadmath-multilib
-This package contains GCC shared support library which is needed
-for __float128 math support and for Fortran REAL*16 support - 32-bit version.
+This package contains GCC shared support library which is needed for
+__float128 math support and for Fortran REAL*16 support - 32-bit
+version.
 
 %package -n libquadmath-static
 Summary:	Static GCC __float128 library
