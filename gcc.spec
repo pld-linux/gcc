@@ -1286,9 +1286,8 @@ Static GCC __float128 library - 32-bit version.
 %if %{with qt}
 %patch8 -p1
 %endif
-# FIXME for sparc
-#%patch10 -p0
-%patch12 -p0
+%patch10 -p1
+%patch12 -p1
 
 mv ChangeLog ChangeLog.general
 
