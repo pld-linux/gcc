@@ -82,6 +82,7 @@ Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_6_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch > gcc-branch.diff
+Source3:	libffi.pc.in
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
@@ -183,8 +184,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # 32-bit environment on x86-64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
+%define		_pkgconfigdir32	%{_libdir32}/pkgconfig
 %endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
+%define		gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
@@ -1546,15 +1549,29 @@ cd ..
 install -d java-doc
 cp -f libjava/READ* java-doc
 ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
-rm -f $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/classpath/libgjs*.la
 # tools.zip sources
-rm -rf $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/classpath/tools/gnu
+
+# still not installed by gcc?
+[ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc ] || exit 1
+sed -e 's,@prefix@,%{_prefix},
+	s,@exec_prefix@,%{_exec_prefix},
+	s,@libdir@,%{_libdir},
+	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc
+%if %{with multilib}
+[ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc ] || exit 1
+install -d $RPM_BUILD_ROOT%{_pkgconfigdir32}
+sed -e 's,@prefix@,%{_prefix},
+	s,@exec_prefix@,%{_exec_prefix},
+	s,@libdir@,%{_libdir32},
+	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
 %endif
+%endif
+
 %if %{with objc}
 cp -f libobjc/README gcc/objc/README.libobjc
 %endif
-
-%define	gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/%{_target_platform}/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
@@ -2307,6 +2324,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libffi.la
 %{gcclibdir}/include/ffi.h
 %{gcclibdir}/include/ffitarget.h
+%{_pkgconfigdir}/libffi.pc
 %{_mandir}/man3/ffi*.3*
 
 %if %{with multilib}
@@ -2314,6 +2332,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so
 %{_libdir32}/libffi.la
+%{_pkgconfigdir32}/libffi.pc
 %endif
 
 %files -n libffi-static
