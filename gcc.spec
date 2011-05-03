@@ -952,12 +952,12 @@ Group:		Development/Libraries
 Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
 
-%description -n libquadmath-devel
+%description -n libquadmath-multilib-devel
 This package contains development files for 32-bit GCC support library
 which is needed for __float128 math support and for Fortran REAL*16
 support.
 
-%description -n libquadmath-devel -l pl.UTF-8
+%description -n libquadmath-multilib-devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne 32-bitowej biblioteki GCC do
 obsługi operacji matematycznych na zmiennych typu __float128 oraz typu
 REAL*16 w Fortranie.
