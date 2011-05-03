@@ -897,6 +897,97 @@ Static Fortran 95 Library - 32-bit version.
 %description -n libgfortran-multilib-static -l pl.UTF-8
 Statyczna biblioteka Fortrana 95 - wersja 32-bitowa.
 
+%package -n libquadmath
+Summary:	GCC __float128 shared support library
+Summary(pl.UTF-8):	Biblioteka współdzielona do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath
+This package contains GCC shared support library which is needed for
+__float128 math support and for Fortran REAL*16 support.
+
+%description -n libquadmath -l pl.UTF-8
+Ten pakiet zawiera bibliotekę współdzieloną GCC do obsługi operacji
+matematycznych na zmiennych typu __float128 oraz typu REAL*16 w
+Fortranie.
+
+%package -n libquadmath-multilib
+Summary:	GCC __float128 shared support library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka współdzielona GCC do obsługi typu __float128 - wersja 32-bitowa
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath-multilib
+This package contains 32-bit version of GCC shared support library
+which is needed for __float128 math support and for Fortran REAL*16
+support.
+
+%description -n libquadmath-multilib -l pl.UTF-8
+Ten pakiet zawiera 32-bitową bibliotekę współdzieloną GCC do obsługi
+operacji matematycznych na zmiennych typu __float128 oraz typu REAL*16
+w Fortranie.
+
+%package -n libquadmath-devel
+Summary:	Header files for GCC __float128 support library
+Summary(pl.UTF-8):	Pliki nagłówkowe biblioteka GCC do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-devel
+This package contains header files for GCC support library which is
+needed for __float128 math support and for Fortran REAL*16 support.
+
+%description -n libquadmath-devel -l pl.UTF-8
+Ten pakiet zawiera pliki nagłówkowe biblioteki GCC do obsługi operacji
+matematycznych na zmiennych typu __float128 oraz typu REAL*16 w
+Fortranie.
+
+%package -n libquadmath-multilib-devel
+Summary:	Development files for 32-bit GCC __float128 support library
+Summary(pl.UTF-8):	Pliki programistyczne 32-bitowej biblioteki do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
+Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-devel
+This package contains development files for 32-bit GCC support library
+which is needed for __float128 math support and for Fortran REAL*16
+support.
+
+%description -n libquadmath-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne 32-bitowej biblioteki GCC do
+obsługi operacji matematycznych na zmiennych typu __float128 oraz typu
+REAL*16 w Fortranie.
+
+%package -n libquadmath-static
+Summary:	Static GCC __float128 support library
+Summary(pl.UTF-8):	Biblioteka statyczna GCC do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-static
+Static GCC __float128 support library.
+
+%description -n libquadmath-static -l pl.UTF-8
+Biblioteka statyczna GCC do obsługi typu __float128.
+
+%package -n libquadmath-multilib-static
+Summary:	Static GCC __float128 support library - 32-bit version
+Summary(pl.UTF-8):	32-bitowa biblioteka statyczna GCC do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-multilib-static
+Static GCC __float128 support library - 32-bit version.
+
+%description -n libquadmath-multilib-static -l pl.UTF-8
+32-bitowa biblioteka statyczna GCC do obsługi typu __float128.
+
 %package java
 Summary:	Java support for gcc
 Summary(es.UTF-8):	Soporte de Java para gcc
@@ -1226,52 +1317,6 @@ Static Objective C Library - 32-bit version.
 
 %description -n libobjc-multilib-static -l pl.UTF-8
 Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
-
-%package -n libquadmath
-Summary:	GCC __float128 shared support library
-License:	GPL v2+ with linking exception
-Group:		Libraries
-
-%description -n libquadmath
-This package contains GCC shared support library which is needed for
-__float128 math support and for Fortran REAL*16 support.
-
-%package -n libquadmath-devel
-Summary:	GCC __float128 shared support library - devel files
-License:	GPL v2+ with linking exception
-Group:		Libraries
-
-%description -n libquadmath-devel
-This package contains GCC shared support library which is needed for
-__float128 math support and for Fortran REAL*16 support - devel files.
-
-%package -n libquadmath-multilib
-Summary:	GCC __float128 shared support library - 32-bit version
-License:	GPL v2+ with linking exception
-Group:		Libraries
-
-%description -n libquadmath-multilib
-This package contains GCC shared support library which is needed for
-__float128 math support and for Fortran REAL*16 support - 32-bit
-version.
-
-%package -n libquadmath-static
-Summary:	Static GCC __float128 library
-License:	GPL v2+ with linking exception
-Group:		Development/Libraries
-Requires:	libquadmath = %{epoch}:%{version}-%{release}
-
-%description -n libquadmath-static
-Static GCC __float128 library.
-
-%package -n libquadmath-multilib-static
-Summary:	GCC __float128 shared support static library - 32-bit version
-License:	GPL v2+ with linking exception
-Group:		Development/Libraries
-Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
-
-%description -n libquadmath-multilib-static
-Static GCC __float128 library - 32-bit version.
 
 %prep
 %setup -q
@@ -2083,6 +2128,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libquadmath.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libquadmath.so.0
 
+%if %{with multilib}
+%files -n libquadmath-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
+%endif
+
 %files -n libquadmath-devel
 %defattr(644,root,root,755)
 %{_libdir}/gcc/*/*/include/quadmath.h
@@ -2092,10 +2144,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/libquadmath.info*
 
 %if %{with multilib}
-%files -n libquadmath-multilib
+%files -n libquadmath-multilib-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
+%attr(755,root,root) %{_libdir32}/libquadmath.so
+%{_libdir32}/libquadmath.la
 %endif
 
 %files -n libquadmath-static
