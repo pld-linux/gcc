@@ -1,0 +1,72 @@
+diff --git a/gcc/c-decl.c b/gcc/c-decl.c
+index b438b06..c3738b9 100644
+--- a/gcc/c-decl.c
++++ b/gcc/c-decl.c
+@@ -4480,6 +4480,8 @@ finish_decl (tree decl, location_t init_loc, tree init,
+ 	       && C_TYPE_FIELDS_READONLY (type))
+ 	diagnose_uninitialized_cst_member (decl, type);
+     }
++
++  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
+ }
+ 
+ /* Given a parsed parameter declaration, decode it into a PARM_DECL.  */
+diff --git a/gcc/cp/decl.c b/gcc/cp/decl.c
+index 6a13cc4..9752cf4 100644
+--- a/gcc/cp/decl.c
++++ b/gcc/cp/decl.c
+@@ -6147,6 +6147,8 @@ cp_finish_decl (tree decl, tree init, bool init_const_expr_p,
+ 
+   if (was_readonly)
+     TREE_READONLY (decl) = 1;
++
++  invoke_plugin_callbacks(PLUGIN_FINISH_DECL, decl);
+ }
+ 
+ /* Returns a declaration for a VAR_DECL as if:
+diff --git a/gcc/doc/plugins.texi b/gcc/doc/plugins.texi
+index 767cee8..d989ddd 100644
+--- a/gcc/doc/plugins.texi
++++ b/gcc/doc/plugins.texi
+@@ -153,6 +153,7 @@ enum plugin_event
+   PLUGIN_FINISH_TYPE,           /* After finishing parsing a type.  */
+   PLUGIN_FINISH_UNIT,           /* Useful for summary processing.  */
+   PLUGIN_PRE_GENERICIZE,        /* Allows to see low level AST in C and C++ frontends.  */
++  PLUGIN_FINISH_DECL,           /* Allows to see all declarations in C and C++ frontends. */
+   PLUGIN_FINISH,                /* Called before GCC exits.  */
+   PLUGIN_INFO,                  /* Information about the plugin. */
+   PLUGIN_GGC_START,             /* Called at start of GCC Garbage Collection. */
+diff --git a/gcc/plugin.c b/gcc/plugin.c
+index c93daed..f65e54a 100644
+--- a/gcc/plugin.c
++++ b/gcc/plugin.c
+@@ -423,6 +423,7 @@ register_callback (const char *plugin_name,
+       case PLUGIN_START_UNIT:
+       case PLUGIN_FINISH_UNIT:
+       case PLUGIN_PRE_GENERICIZE:
++      case PLUGIN_FINISH_DECL:
+       case PLUGIN_GGC_START:
+       case PLUGIN_GGC_MARKING:
+       case PLUGIN_GGC_END:
+@@ -499,6 +500,7 @@ invoke_plugin_callbacks_full (int event, void *gcc_data)
+       case PLUGIN_START_UNIT:
+       case PLUGIN_FINISH_UNIT:
+       case PLUGIN_PRE_GENERICIZE:
++      case PLUGIN_FINISH_DECL:
+       case PLUGIN_ATTRIBUTES:
+       case PLUGIN_PRAGMAS:
+       case PLUGIN_FINISH:
+diff --git a/gcc/plugin.def b/gcc/plugin.def
+index 4a40c2c..4f8ad08 100644
+--- a/gcc/plugin.def
++++ b/gcc/plugin.def
+@@ -30,6 +30,9 @@ DEFEVENT (PLUGIN_FINISH_UNIT)
+ /* Allows to see low level AST in C and C++ frontends. */
+ DEFEVENT (PLUGIN_PRE_GENERICIZE)
+ 
++/* Allows to see all declarations in C and C++ frontends. */
++DEFEVENT (PLUGIN_FINISH_DECL)
++
+ /* Called before GCC exits.  */
+ DEFEVENT (PLUGIN_FINISH)
+ 
