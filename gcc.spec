@@ -1803,6 +1803,19 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/xmmintrin.h
 %{gcclibdir}/include/xopintrin.h
 %endif
+%ifarch arm
+%{gcclibdir}/include/arm_neon.h
+%{gcclibdir}/include/mmintrin.h
+%endif
+%ifarch ia64
+%{gcclibdir}/include/ia64intrin.h
+%endif
+%ifarch m68k
+%{gcclibdir}/include/math-68881.h
+%endif
+%ifarch mips
+%{gcclibdir}/include/loongson.h
+%endif
 %ifarch powerpc ppc ppc64
 %{gcclibdir}/include/altivec.h
 %{gcclibdir}/include/paired.h
