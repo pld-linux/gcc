@@ -1607,10 +1607,10 @@ do
 done
 %endif
 
-cp %{gcclibdir}/install-tools/include/*.h %{gcclibdir}/include
-cp %{gcclibdir}/include-fixed/syslimits.h %{gcclibdir}/include
-%{__rm} -r %{gcclibdir}/install-tools
-%{__rm} -r %{gcclibdir}/include-fixed
+cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcclibdir}/include
+cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcclibdir}/include
+%{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/install-tools
+%{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/include-fixed
 
 %if %{with python}
 for LIB in lib lib64; do
