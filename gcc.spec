@@ -184,6 +184,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %endif
+%define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
@@ -1477,7 +1478,7 @@ cd builddir
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install gcc/specs $RPM_BUILD_ROOT%{_libdir}/gcc/%{_target_platform}/%{version}
+install gcc/specs $RPM_BUILD_ROOT%{gcclibdir}
 
 %if %{with multilib}
 # create links
@@ -1519,7 +1520,7 @@ echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/adalib/*.so.1 \
+mv -f	$RPM_BUILD_ROOT%{gcclibdir}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-%{major_ver}.so.1
@@ -1528,7 +1529,7 @@ ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-%{major_ver
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %if %{with multilib}
-mv -f	$RPM_BUILD_ROOT%{_libdir}/gcc/*/*/32/adalib/*.so.1 \
+mv -f	$RPM_BUILD_ROOT%{gcclibdir}/32/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir32}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-%{major_ver}.so.1
@@ -1555,7 +1556,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 
 %define	gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
 
-# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/*/%{version}
+# avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/%{_target_platform}/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
@@ -1591,11 +1592,10 @@ do
 done
 %endif
 
-gccdir=$(echo $RPM_BUILD_ROOT%{_libdir}/gcc/*/*)
-cp $gccdir/install-tools/include/*.h $gccdir/include
-cp $gccdir/include-fixed/syslimits.h $gccdir/include
-rm -rf $gccdir/install-tools
-rm -rf $gccdir/include-fixed
+cp %{gcclibdir}/install-tools/include/*.h %{gcclibdir}/include
+cp %{gcclibdir}/include-fixed/syslimits.h %{gcclibdir}/include
+%{__rm} -r %{gcclibdir}/install-tools
+%{__rm} -r %{gcclibdir}/include-fixed
 
 %if %{with python}
 for LIB in lib lib64; do
@@ -1733,81 +1733,81 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp_nonshared.la
 %{_libdir}/libssp_nonshared.a
 %dir %{_libdir}/gcc
-%dir %{_libdir}/gcc/*
-%dir %{_libdir}/gcc/*/*
-%{_libdir}/gcc/*/*/libgcc.a
-%{_libdir}/gcc/*/*/libgcc_eh.a
-%{_libdir}/gcc/*/*/libgcov.a
-%{_libdir}/gcc/*/*/specs
-%{_libdir}/gcc/*/*/crt*.o
-%attr(755,root,root) %{_libdir}/gcc/*/*/cc1
-%attr(755,root,root) %{_libdir}/gcc/*/*/collect2
-%attr(755,root,root) %{_libdir}/gcc/*/*/lto-wrapper
-%attr(755,root,root) %{_libdir}/gcc/*/*/lto1
-%attr(755,root,root) %{_libdir}/gcc/*/*/liblto_plugin.so*
-%{_libdir}/gcc/*/*/plugin
-%dir %{_libdir}/gcc/*/*/include
-%dir %{_libdir}/gcc/*/*/include/ssp
-%{_libdir}/gcc/*/*/include/ssp/*.h
-%{_libdir}/gcc/*/*/include/float.h
-%{_libdir}/gcc/*/*/include/iso646.h
-%{_libdir}/gcc/*/*/include/limits.h
-%{_libdir}/gcc/*/*/include/stdarg.h
-%{_libdir}/gcc/*/*/include/stdbool.h
-%{_libdir}/gcc/*/*/include/stddef.h
-%{_libdir}/gcc/*/*/include/stdfix.h
-%{_libdir}/gcc/*/*/include/stdint.h
-%{_libdir}/gcc/*/*/include/stdint-gcc.h
-%{_libdir}/gcc/*/*/include/syslimits.h
-%{_libdir}/gcc/*/*/include/unwind.h
-%{_libdir}/gcc/*/*/include/varargs.h
+%dir %{_libdir}/gcc/%{_target_platform}
+%dir %{gcclibdir}
+%{gcclibdir}/libgcc.a
+%{gcclibdir}/libgcc_eh.a
+%{gcclibdir}/libgcov.a
+%{gcclibdir}/specs
+%{gcclibdir}/crt*.o
+%attr(755,root,root) %{gcclibdir}/cc1
+%attr(755,root,root) %{gcclibdir}/collect2
+%attr(755,root,root) %{gcclibdir}/lto-wrapper
+%attr(755,root,root) %{gcclibdir}/lto1
+%attr(755,root,root) %{gcclibdir}/liblto_plugin.so*
+%{gcclibdir}/plugin
+%dir %{gcclibdir}/include
+%dir %{gcclibdir}/include/ssp
+%{gcclibdir}/include/ssp/*.h
+%{gcclibdir}/include/float.h
+%{gcclibdir}/include/iso646.h
+%{gcclibdir}/include/limits.h
+%{gcclibdir}/include/stdarg.h
+%{gcclibdir}/include/stdbool.h
+%{gcclibdir}/include/stddef.h
+%{gcclibdir}/include/stdfix.h
+%{gcclibdir}/include/stdint.h
+%{gcclibdir}/include/stdint-gcc.h
+%{gcclibdir}/include/syslimits.h
+%{gcclibdir}/include/unwind.h
+%{gcclibdir}/include/varargs.h
 %ifarch %{ix86} %{x8664}
-%{_libdir}/gcc/*/*/include/abmintrin.h
-%{_libdir}/gcc/*/*/include/ammintrin.h
-%{_libdir}/gcc/*/*/include/avxintrin.h
-%{_libdir}/gcc/*/*/include/bmiintrin.h
-%{_libdir}/gcc/*/*/include/bmmintrin.h
-%{_libdir}/gcc/*/*/include/cpuid.h
-%{_libdir}/gcc/*/*/include/cross-stdarg.h
-%{_libdir}/gcc/*/*/include/emmintrin.h
-%{_libdir}/gcc/*/*/include/fma4intrin.h
-%{_libdir}/gcc/*/*/include/ia32intrin.h
-%{_libdir}/gcc/*/*/include/immintrin.h
-%{_libdir}/gcc/*/*/include/lwpintrin.h
-%{_libdir}/gcc/*/*/include/mm3dnow.h
-%{_libdir}/gcc/*/*/include/mm_malloc.h
-%{_libdir}/gcc/*/*/include/mmintrin.h
-%{_libdir}/gcc/*/*/include/nmmintrin.h
-%{_libdir}/gcc/*/*/include/popcntintrin.h
-%{_libdir}/gcc/*/*/include/pmmintrin.h
-%{_libdir}/gcc/*/*/include/smmintrin.h
-%{_libdir}/gcc/*/*/include/tbmintrin.h
-%{_libdir}/gcc/*/*/include/tmmintrin.h
-%{_libdir}/gcc/*/*/include/wmmintrin.h
-%{_libdir}/gcc/*/*/include/x86intrin.h
-%{_libdir}/gcc/*/*/include/xmmintrin.h
-%{_libdir}/gcc/*/*/include/xopintrin.h
+%{gcclibdir}/include/abmintrin.h
+%{gcclibdir}/include/ammintrin.h
+%{gcclibdir}/include/avxintrin.h
+%{gcclibdir}/include/bmiintrin.h
+%{gcclibdir}/include/bmmintrin.h
+%{gcclibdir}/include/cpuid.h
+%{gcclibdir}/include/cross-stdarg.h
+%{gcclibdir}/include/emmintrin.h
+%{gcclibdir}/include/fma4intrin.h
+%{gcclibdir}/include/ia32intrin.h
+%{gcclibdir}/include/immintrin.h
+%{gcclibdir}/include/lwpintrin.h
+%{gcclibdir}/include/mm3dnow.h
+%{gcclibdir}/include/mm_malloc.h
+%{gcclibdir}/include/mmintrin.h
+%{gcclibdir}/include/nmmintrin.h
+%{gcclibdir}/include/popcntintrin.h
+%{gcclibdir}/include/pmmintrin.h
+%{gcclibdir}/include/smmintrin.h
+%{gcclibdir}/include/tbmintrin.h
+%{gcclibdir}/include/tmmintrin.h
+%{gcclibdir}/include/wmmintrin.h
+%{gcclibdir}/include/x86intrin.h
+%{gcclibdir}/include/xmmintrin.h
+%{gcclibdir}/include/xopintrin.h
 %endif
 %ifarch powerpc ppc ppc64
-%{_libdir}/gcc/*/*/include/altivec.h
-%{_libdir}/gcc/*/*/include/paired.h
-%{_libdir}/gcc/*/*/include/ppc-asm.h
-%{_libdir}/gcc/*/*/include/ppu_intrinsics.h
-%{_libdir}/gcc/*/*/include/si2vmx.h
-%{_libdir}/gcc/*/*/include/spe.h
-%{_libdir}/gcc/*/*/include/spu2vmx.h
-%{_libdir}/gcc/*/*/include/vec_types.h
+%{gcclibdir}/include/altivec.h
+%{gcclibdir}/include/paired.h
+%{gcclibdir}/include/ppc-asm.h
+%{gcclibdir}/include/ppu_intrinsics.h
+%{gcclibdir}/include/si2vmx.h
+%{gcclibdir}/include/spe.h
+%{gcclibdir}/include/spu2vmx.h
+%{gcclibdir}/include/vec_types.h
 %endif
 
 %if %{with multilib}
 %files multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgcc_s.so
-%dir %{_libdir}/gcc/*/*/32
-%{_libdir}/gcc/*/*/32/crt*.o
-%{_libdir}/gcc/*/*/32/libgcc.a
-%{_libdir}/gcc/*/*/32/libgcc_eh.a
-%{_libdir}/gcc/*/*/32/libgcov.a
+%dir %{gcclibdir}/32
+%{gcclibdir}/32/crt*.o
+%{gcclibdir}/32/libgcc.a
+%{gcclibdir}/32/libgcc_eh.a
+%{gcclibdir}/32/libgcov.a
 %attr(755,root,root) %{_libdir32}/libssp.so
 %{_libdir32}/libssp.la
 %{_libdir32}/libssp.a
@@ -1847,8 +1847,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgomp.so
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
-%{_libdir}/gcc/*/*/finclude
-%{_libdir}/gcc/*/*/include/omp.h
+%{gcclibdir}/finclude
+%{gcclibdir}/include/omp.h
 %{_infodir}/libgomp.info*
 
 %if %{with multilib}
@@ -1893,7 +1893,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libmudflapth.so
 %{_libdir}/libmudflap.la
 %{_libdir}/libmudflapth.la
-%{_libdir}/gcc/*/*/include/mf-runtime.h
+%{gcclibdir}/include/mf-runtime.h
 
 %if %{with multilib}
 %files -n libmudflap-multilib-devel
@@ -1929,13 +1929,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgnarl.so
 %attr(755,root,root) %{_libdir}/libgnat-*.so
 %attr(755,root,root) %{_libdir}/libgnat.so
-%attr(755,root,root) %{_libdir}/gcc/*/*/gnat1
-%{_libdir}/gcc/*/*/adainclude
-%dir %{_libdir}/gcc/*/*/adalib
-%{_libdir}/gcc/*/*/adalib/*.ali
-%{_libdir}/gcc/*/*/adalib/g-trasym.o
+%attr(755,root,root) %{gcclibdir}/gnat1
+%{gcclibdir}/adainclude
+%dir %{gcclibdir}/adalib
+%{gcclibdir}/adalib/*.ali
+%{gcclibdir}/adalib/g-trasym.o
 %ifarch %{ix86} %{x8664}
-%{_libdir}/gcc/*/*/adalib/libgmem.a
+%{gcclibdir}/adalib/libgmem.a
 %endif
 %{_infodir}/gnat-style.info*
 %{_infodir}/gnat_rm.info*
@@ -1948,12 +1948,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgnarl.so
 %attr(755,root,root) %{_libdir32}/libgnat-*.so
 %attr(755,root,root) %{_libdir32}/libgnat.so
-%{_libdir}/gcc/*/*/32/adainclude
-%dir %{_libdir}/gcc/*/*/32/adalib
-%{_libdir}/gcc/*/*/32/adalib/*.ali
-%{_libdir}/gcc/*/*/32/adalib/g-trasym.o
+%{gcclibdir}/32/adainclude
+%dir %{gcclibdir}/32/adalib
+%{gcclibdir}/32/adalib/*.ali
+%{gcclibdir}/32/adalib/g-trasym.o
 %ifarch %{ix86} %{x8664}
-%{_libdir}/gcc/*/*/32/adalib/libgmem.a
+%{gcclibdir}/32/adalib/libgmem.a
 %endif
 %endif
 
@@ -1975,16 +1975,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/adalib/libgnala.a
-%{_libdir}/gcc/*/*/adalib/libgnarl.a
-%{_libdir}/gcc/*/*/adalib/libgnat.a
+%{gcclibdir}/adalib/libgnala.a
+%{gcclibdir}/adalib/libgnarl.a
+%{gcclibdir}/adalib/libgnat.a
 
 %if %{with multilib}
 %files -n libgnat-multilib-static
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/32/adalib/libgnala.a
-%{_libdir}/gcc/*/*/32/adalib/libgnarl.a
-%{_libdir}/gcc/*/*/32/adalib/libgnat.a
+%{gcclibdir}/32/adalib/libgnala.a
+%{gcclibdir}/32/adalib/libgnarl.a
+%{gcclibdir}/32/adalib/libgnat.a
 %endif
 %endif
 
@@ -1996,7 +1996,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
-%attr(755,root,root) %{_libdir}/gcc/*/*/cc1plus
+%attr(755,root,root) %{gcclibdir}/cc1plus
 %{_libdir}/libsupc++.la
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
@@ -2080,12 +2080,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/g95
 %attr(755,root,root) %{_bindir}/gfortran
 %attr(755,root,root) %{_bindir}/*-gfortran
-%attr(755,root,root) %{_libdir}/gcc/*/*/f951
+%attr(755,root,root) %{gcclibdir}/f951
 %attr(755,root,root) %{_libdir}/libgfortran.so
 %{_libdir}/libgfortran.spec
 %{_libdir}/libgfortran.la
-%{_libdir}/gcc/*/*/libgfortranbegin.la
-%{_libdir}/gcc/*/*/libgfortranbegin.a
+%{gcclibdir}/libgfortranbegin.la
+%{gcclibdir}/libgfortranbegin.a
 %{_infodir}/gfortran.info*
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
@@ -2096,8 +2096,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgfortran.so
 %{_libdir32}/libgfortran.spec
 %{_libdir32}/libgfortran.la
-%{_libdir}/gcc/*/*/32/libgfortranbegin.la
-%{_libdir}/gcc/*/*/32/libgfortranbegin.a
+%{gcclibdir}/32/libgfortranbegin.la
+%{gcclibdir}/32/libgfortranbegin.a
 %endif
 
 %files -n libgfortran
@@ -2137,8 +2137,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libquadmath-devel
 %defattr(644,root,root,755)
-%{_libdir}/gcc/*/*/include/quadmath.h
-%{_libdir}/gcc/*/*/include/quadmath_weak.h
+%{gcclibdir}/include/quadmath.h
+%{gcclibdir}/include/quadmath_weak.h
 %attr(755,root,root) %{_libdir}/libquadmath.so
 %{_libdir}/libquadmath.la
 %{_infodir}/libquadmath.info*
@@ -2185,9 +2185,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/jv-convert
 %attr(755,root,root) %{_bindir}/rebuild-gcj-db
 %attr(755,root,root) %{_bindir}/*-gcj
-%attr(755,root,root) %{_libdir}/gcc/*/*/ecj1
-%attr(755,root,root) %{_libdir}/gcc/*/*/jc1
-%attr(755,root,root) %{_libdir}/gcc/*/*/jvgenmain
+%attr(755,root,root) %{gcclibdir}/ecj1
+%attr(755,root,root) %{gcclibdir}/jc1
+%attr(755,root,root) %{gcclibdir}/jvgenmain
 %{_infodir}/cp-tools.info*
 %{_infodir}/gcj.info*
 %{_mandir}/man1/gappletviewer.1*
@@ -2265,12 +2265,12 @@ rm -rf $RPM_BUILD_ROOT
 %{?with_qt:%{_libdir}/%{gcjdbexecdir}/libqtpeer.la}
 %{?with_mozilla:%{_libdir}/%{gcjdbexecdir}/libgcjwebplugin.la}
 %{_libdir}/%{gcjdbexecdir}/libxmlj.la
-%{_libdir}/gcc/*/*/include/gcj
-%{_libdir}/gcc/*/*/include/jawt.h
-%{_libdir}/gcc/*/*/include/jawt_md.h
-%{_libdir}/gcc/*/*/include/jni.h
-%{_libdir}/gcc/*/*/include/jni_md.h
-%{_libdir}/gcc/*/*/include/jvmpi.h
+%{gcclibdir}/include/gcj
+%{gcclibdir}/include/jawt.h
+%{gcclibdir}/include/jawt_md.h
+%{gcclibdir}/include/jni.h
+%{gcclibdir}/include/jni_md.h
+%{gcclibdir}/include/jvmpi.h
 %{_includedir}/c++/%{version}/java
 %{_includedir}/c++/%{version}/javax
 %{_includedir}/c++/%{version}/gcj
@@ -2305,8 +2305,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libffi.so
 %{_libdir}/libffi.la
-%{_libdir}/gcc/*/*/include/ffi.h
-%{_libdir}/gcc/*/*/include/ffitarget.h
+%{gcclibdir}/include/ffi.h
+%{gcclibdir}/include/ffitarget.h
 %{_mandir}/man3/ffi*.3*
 
 %if %{with multilib}
@@ -2331,10 +2331,17 @@ rm -rf $RPM_BUILD_ROOT
 %files objc
 %defattr(644,root,root,755)
 %doc gcc/objc/README.libobjc
-%attr(755,root,root) %{_libdir}/gcc/*/*/cc1obj
+%attr(755,root,root) %{gcclibdir}/cc1obj
 %attr(755,root,root) %{_libdir}/libobjc.so
 %{_libdir}/libobjc.la
-%{_libdir}/gcc/*/*/include/objc
+%{gcclibdir}/include/objc
+
+%if %{with objcxx}
+%files objc++
+%defattr(644,root,root,755)
+%doc gcc/objcp/ChangeLog
+%attr(755,root,root) %{gcclibdir}/cc1objplus
+%endif
 
 %if %{with multilib}
 %files objc-multilib
@@ -2365,11 +2372,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
 %endif
-%endif
-
-%if %{with objcxx}
-%files objc++
-%defattr(644,root,root,755)
-%doc gcc/objcp/ChangeLog
-%attr(755,root,root) %{_libdir}/gcc/*/*/cc1objplus
 %endif
