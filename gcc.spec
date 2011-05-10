@@ -808,6 +808,7 @@ Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
+Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 Obsoletes:	gcc-g77
@@ -833,6 +834,7 @@ Summary(pl.UTF-8):	Obsługa binariów 32-bitowych Fortrana 95 dla gcc
 Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
+Requires:	libquadmath-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description fortran-multilib
 This package adds support for compiling 32-bit Fortran 95 programs
@@ -848,6 +850,7 @@ Summary(es.UTF-8):	Biblioteca de Fortran 95
 Summary(pl.UTF-8):	Biblioteka Fortrana 95
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
+Requires:	libquadmath = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c
 
 %description -n libgfortran
@@ -864,6 +867,7 @@ Summary:	Fortran 95 Library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Fortrana 95 - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
+Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libgfortran-multilib
 Fortran 95 Library - 32-bit version.
