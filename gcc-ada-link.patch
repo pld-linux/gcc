@@ -21,7 +21,7 @@
  	-$(MKDIR) ada/doctools
  	$(CP) $^ ada/doctools
 -	cd ada/doctools && $(GNATMAKE) -q xgnatugn
-+	cd ada/doctools && $(GNATMAKE) -q xgnatugn -a0../rts
++	cd ada/doctools && $(GNATMAKE) -q xgnatugn -aO../rts
  
  # Note that gnat_ugn_unw.texi does not depend on xgnatugn 
  # being built so we can distribute a pregenerated gnat_ugn_unw.info
