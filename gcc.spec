@@ -72,7 +72,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	5
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -95,6 +95,7 @@ Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=41757
 Patch12:	%{name}-plugin-decl-hook.patch
+Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf
 %{?with_tests:BuildRequires:	autogen}
@@ -1342,12 +1343,13 @@ Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
 %endif
 %patch10 -p1
 %patch12 -p1
+%patch13 -p0
 
 mv ChangeLog ChangeLog.general
 
 %if %{with java}
 # see contrib/download_ecj
-install %{SOURCE2} ecj.jar
+cp -p %{SOURCE2} ecj.jar
 %endif
 
 # override snapshot version.
@@ -1486,7 +1488,7 @@ cd builddir
 	infodir=%{_infodir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install gcc/specs $RPM_BUILD_ROOT%{gcclibdir}
+cp -p gcc/specs $RPM_BUILD_ROOT%{gcclibdir}
 
 %if %{with multilib}
 # create links
@@ -1639,7 +1641,7 @@ cat cpplib.lang >> gcc.lang
 
 %if %{with cxx}
 %find_lang libstdc\+\+
-install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
+cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
 
 # gdb stuff maybe?
@@ -1647,6 +1649,9 @@ install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/*.py
 %endif
+
+# always -f, as "dir" is created depending which texlive version is installed
+%{__rm} -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
