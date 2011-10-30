@@ -3,13 +3,8 @@
 # TODO:
 # - gconf peer? (but libgcj needs split anyway)
 # - package?
-#   /usr/bin/aot-compile
-#   /usr/bin/gjdoc
-#   /usr/share/man/man1/aot-compile.1.gz
+#   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
-#   /usr/share/python/aotcompile.py
-#   /usr/share/python/classfile.py
-# - missing libffi.pc required by some packages (eg. python-pygobject)
 #
 # Conditional build:
 %bcond_without	ada		# build without ADA support
@@ -150,6 +145,7 @@ BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	perl-base
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
+BuildRequires:	sed >= 4.0
 BuildRequires:	unzip
 BuildRequires:	zip
 %if %{with gtk}
@@ -1026,6 +1022,23 @@ Ten pakiet dodaje możliwość kompilowania programów w języku Java(TM)
 oraz bajtkodu do kodu natywnego. Do używania go wymagany jest
 dodatkowo pakiet libgcj.
 
+%package java-aotcompile
+Summary:	Java AOT-compiler - compiling bytecode to native
+Summary(pl.UTF-8):	Kompilator AOT dla Javy - kompilacja bajtkodu do kodu natywnego
+License:	GPL v2+
+Group:		Development/Tools
+Requires:	%{name}-java = %{epoch}:%{version}-%{release}
+
+%description java-aotcompile
+aot-compile is a script that searches a directory for Java bytecode
+(as class files, or in jars) and uses gcj to compile it to native code
+and generate the databases from it.
+
+%description java-aotcompile -l pl.UTF-8
+aot-compile to skrypt wyszukujący w katalogu bajtkod Javy (w plikach
+class lub jarach) i kompilujący go przy użyciu gcj, a następnie
+generujący z niego bazy danych.
+
 %package -n libgcj
 Summary:	Java Class Libraries
 Summary(es.UTF-8):	Bibliotecas de clases de Java
@@ -1626,13 +1639,27 @@ for LIB in lib lib64; do
 	sed -e 's,@pythondir@,%{_datadir}/gdb,' \
 	  -e 's,@toolexeclibdir@,%{_prefix}/'"$LIB," \
 	  < libstdc++-v3/python/hook.in	\
-	  > $LIBPATH/$(basename $RPM_BUILD_ROOT/%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
+	  > $LIBPATH/$(basename $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
 done
 install -d $RPM_BUILD_ROOT%{py_sitescriptdir}
-cp -a libstdc++-v3/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
+mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
+%if %{with java}
+mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_sitescriptdir}
+%endif
+%{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' $RPM_BUILD_ROOT%{_bindir}/aot-compile
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_postclean
+%else
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx
+%if %{with java}
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava
+%endif
+%endif
+# script(s) always installed; see above for builds with python; if no python, just don't package
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
+%if %{with multilib}
+%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
 %endif
 
 %find_lang gcc
@@ -1642,12 +1669,6 @@ cat cpplib.lang >> gcc.lang
 %if %{with cxx}
 %find_lang libstdc\+\+
 cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
-%endif
-
-# gdb stuff maybe?
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/*.py
-%if %{with multilib}
-%{__rm} $RPM_BUILD_ROOT%{_libdir32}/*.py
 %endif
 
 # always -f, as "dir" is created depending which texlive version is installed
@@ -2246,6 +2267,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/jcf-dump.1*
 %{_mandir}/man1/jv-convert.1*
 %{_mandir}/man1/rebuild-gcj-db*
+
+%if %{with python}
+%files java-aotcompile
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/aot-compile
+%dir %{py_sitescriptdir}/libjava
+%{py_sitescriptdir}/libjava/*.py[co]
+%{_mandir}/man1/aot-compile.1*
+%endif
 
 %files -n libgcj
 %defattr(644,root,root,755)
