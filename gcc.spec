@@ -56,6 +56,11 @@
 %undefine	with_multilib
 %endif
 
+%ifarch i386 i486
+# __i686.get_pc_thunk.bx undefined in libgo (TODO: recheck on gcc updates)
+%undefine	with_go
+%endif
+
 %ifarch sparc64
 %undefine	with_ada
 %endif
@@ -98,9 +103,9 @@ Patch10:	%{name}-moresparcs.patch
 Patch12:	%{name}-plugin-decl-hook.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
-BuildRequires:	automake
+BuildRequires:	automake >= 1:1.9.3
 # binutils 2.17.50.0.9 or newer are required for fixing PR middle-end/20218.
 BuildRequires:	binutils >= 2:2.17.50.0.9-1
 BuildRequires:	bison
