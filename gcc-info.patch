@@ -303,3 +303,17 @@
  @end direntry
  
  @c Part 3 Titlepage and Copyright
+--- gcc-4.6.2/gcc/go/gccgo.texi.orig	2011-02-14 05:42:53.000000000 +0100
++++ gcc-4.6.2/gcc/go/gccgo.texi	2011-10-31 18:27:12.670749858 +0100
+@@ -48,9 +48,9 @@
+ 
+ @ifinfo
+ @format
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* Gccgo: (gccgo).           A GCC-based compiler for the Go language
++* Gccgo: (gccgo).			A GCC-based compiler for the Go language
+ @end direntry
+ @end format
+ 

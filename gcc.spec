@@ -7,28 +7,34 @@
 #   /usr/share/man/man1/gjdoc.1.gz
 #
 # Conditional build:
+# - languages:
 %bcond_without	ada		# build without ADA support
 %bcond_without	cxx		# build without C++ support
 %bcond_without	fortran		# build without Fortran support
-%bcond_without	gomp		# build without OpenMP support
+%bcond_without	go		# build without Go support
 %bcond_without	java		# build without Java support
-%bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
+# - features:
+%bcond_without	gomp		# build without OpenMP support
+%bcond_without	mudflap		# build without Mudflap pointer debugging support
+%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
+%bcond_with	profiling	# build with profiling
+%bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
+# - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
 %bcond_without	gtk		# don't build libgcj GTK peer
 %bcond_without	apidocs		# do not build and package API docs
-%bcond_with	mozilla		# don't build libgcjwebplugin (needs fix for new xulrunner)
+%bcond_with	mozilla		# build libgcjwebplugin (needs fix for new xulrunner)
 %bcond_with	qt		# build libgcj Qt peer (currently doesn't build with libtool-2.x)
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
-%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
-%bcond_with	profiling	# build with profiling
-%bcond_without	python		# build without libstdc++ python pretty printers for gdb
+# - other:
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
 
 %if %{without cxx}
+%undefine	with_go
 %undefine	with_java
 %undefine	with_objcxx
 %endif
@@ -1341,6 +1347,59 @@ Static Objective C Library - 32-bit version.
 %description -n libobjc-multilib-static -l pl.UTF-8
 Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
 
+%package go
+Summary:	Go language support for gcc
+Summary(pl.UTF-8):	Obsługa języka Go dla kompilatora gcc
+License:	GPL v3+ (gcc), BSD (Go-specific part)
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description go
+This package adds Go language support to the GNU Compiler Collection.
+
+%description go -l pl.UTF-8
+Ten pakiet dodaje obsługę języka Go do kompilatora gcc.
+
+%package -n libgo
+Summary:	Go language library
+Summary(pl.UTF-8):	Biblioteka języka Go
+License:	BSD
+Group:		Libraries
+Requires:	libgcc >= %{epoch}:%{version}-%{release}
+
+%description -n libgo
+Go language library.
+
+%description -n libgo -l pl.UTF-8
+Biblioteka języka Go.
+
+%package -n libgo-devel
+Summary:	Development files for Go language library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go
+License:	BSD
+Group:		Development/Libraries
+Requires:	glibc-devel
+Requires:	libgo = %{epoch}:%{version}-%{release}
+
+%description -n libgo-devel
+Development files for Go language library.
+
+%description -n libgo-devel -l pl.UTF-8
+Pliki programistyczne biblioteki języka Go.
+
+%package -n libgo-static
+Summary:	Static Go language library
+Summary(pl.UTF-8):	Statyczna biblioteka języka Go
+License:	BSD
+Group:		Development/Libraries
+Requires:	libgo-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgo-static
+Static Go language library.
+
+%description -n libgo-static -l pl.UTF-8
+Statyczna biblioteka języka Go.
+
 %prep
 %setup -q
 %patch100 -p0
@@ -1403,7 +1462,7 @@ TEXCONFIG=false \
 	--enable-threads=posix \
 	--enable-linker-build-id \
 	--enable-linux-futex \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
 	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
 	--enable-c99 \
@@ -1707,6 +1766,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	java -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	go -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	go -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
 %post	-p /sbin/ldconfig -n libgcc-multilib
@@ -1749,6 +1814,8 @@ rm -rf $RPM_BUILD_ROOT
 [ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
 %post	-p /sbin/ldconfig -n libquadmath-multilib
 %postun	-p /sbin/ldconfig -n libquadmath-multilib
+%post	-p /sbin/ldconfig -n libgo
+%postun	-p /sbin/ldconfig -n libgo
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -2441,4 +2508,32 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
 %endif
+%endif
+
+%if %{with go}
+%files go
+%defattr(644,root,root,755)
+%doc gcc/go/gofrontend/{LICENSE,PATENTS,README}
+%attr(755,root,root) %{_bindir}/gccgo
+%attr(755,root,root) %{gcclibdir}/go1
+%dir %{_libdir}/go
+%{_libdir}/go/%{version}
+%{_mandir}/man1/gccgo.1*
+%{_infodir}/gccgo.info*
+
+%files -n libgo
+%defattr(644,root,root,755)
+%doc libgo/{LICENSE,PATENTS,README}
+%attr(755,root,root) %{_libdir}/libgo.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.0
+
+%files -n libgo-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgo.so
+%{_libdir}/libgo.la
+%{_libdir}/libgobegin.a
+
+%files -n libgo-static
+%defattr(644,root,root,755)
+%{_libdir}/libgo.a
 %endif
