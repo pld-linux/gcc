@@ -1353,12 +1353,29 @@ Summary(pl.UTF-8):	Obsługa języka Go dla kompilatora gcc
 License:	GPL v3+ (gcc), BSD (Go-specific part)
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgo-devel = %{epoch}:%{version}-%{release}
 
 %description go
 This package adds Go language support to the GNU Compiler Collection.
 
 %description go -l pl.UTF-8
 Ten pakiet dodaje obsługę języka Go do kompilatora gcc.
+
+%package go-multilib
+Summary:	32-bit Go language support for gcc
+Summary(pl.UTF-8):	Obsługa 32-bitowych binariów języka Go dla kompilatora gcc
+License:	GPL v3+ (gcc), BSD (Go-specific part)
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgo-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description go-multilib
+This package adds 32-bit Go language support to the GNU Compiler
+Collection.
+
+%description go-multilib -l pl.UTF-8
+Ten pakiet dodaje obsługę 32-bitowych binariów języka Go do
+kompilatora gcc.
 
 %package -n libgo
 Summary:	Go language library
@@ -1372,6 +1389,19 @@ Go language library.
 
 %description -n libgo -l pl.UTF-8
 Biblioteka języka Go.
+
+%package -n libgo-multilib
+Summary:	Go language library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka języka Go - wersja 32-bitowa
+License:	BSD
+Group:		Libraries
+Requires:	libgcc-multilib >= %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib
+Go language library - 32-bit version.
+
+%description -n libgo-multilib -l pl.UTF-8
+Biblioteka języka Go - wersja 32-bitowa.
 
 %package -n libgo-devel
 Summary:	Development files for Go language library
@@ -1387,6 +1417,20 @@ Development files for Go language library.
 %description -n libgo-devel -l pl.UTF-8
 Pliki programistyczne biblioteki języka Go.
 
+%package -n libgo-multilib-devel
+Summary:	Development files for Go language library - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go - wersja 32-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	glibc-devel
+Requires:	libgo-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib-devel
+Development files for Go language library - 32-bit version.
+
+%description -n libgo-multilib-devel -l pl.UTF-8
+Pliki programistyczne biblioteki języka Go - wersja 32-bitowa.
+
 %package -n libgo-static
 Summary:	Static Go language library
 Summary(pl.UTF-8):	Statyczna biblioteka języka Go
@@ -1399,6 +1443,19 @@ Static Go language library.
 
 %description -n libgo-static -l pl.UTF-8
 Statyczna biblioteka języka Go.
+
+%package -n libgo-multilib-static
+Summary:	Static Go language library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka języka Go - wersja 32-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	libgo-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib-static
+Static Go language library - 32-bit version.
+
+%description -n libgo-multilib-static -l pl.UTF-8
+Statyczna biblioteka języka Go - wersja 32-bitowa.
 
 %prep
 %setup -q
@@ -1816,6 +1873,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libquadmath-multilib
 %post	-p /sbin/ldconfig -n libgo
 %postun	-p /sbin/ldconfig -n libgo
+%post	-p /sbin/ldconfig -n libgo-multilib
+%postun	-p /sbin/ldconfig -n libgo-multilib
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -2521,11 +2580,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gccgo.1*
 %{_infodir}/gccgo.info*
 
+%if %{with multilib}
+%files go-multilib
+%defattr(644,root,root,755)
+%dir %{_libdir32}/go
+%{_libdir32}/go/%{version}
+%endif
+
 %files -n libgo
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgo.so.0
+
+%if %{with multilib}
+%files -n libgo-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.0
+%endif
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -2533,7 +2606,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgo.la
 %{_libdir}/libgobegin.a
 
+%if %{with multilib}
+%files -n libgo-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgo.so
+%{_libdir32}/libgo.la
+%{_libdir32}/libgobegin.a
+%endif
+
 %files -n libgo-static
 %defattr(644,root,root,755)
 %{_libdir}/libgo.a
+
+%if %{with multilib}
+%files -n libgo-multilib-static
+%defattr(644,root,root,755)
+%{_libdir32}/libgo.a
+%endif
 %endif
