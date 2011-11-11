@@ -78,7 +78,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -703,7 +703,6 @@ standardowej C++.
 Summary:	libstdc++ pretty printers for GDB
 Summary(pl.UTF-8):	Funkcje wypisujące dane libstdc++ dla GDB
 Group:		Development/Debuggers
-Requires:	python-gdb
 
 %description -n libstdc++-gdb
 This package contains Python scripts for GDB pretty printing of the
