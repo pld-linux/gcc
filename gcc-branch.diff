@@ -1,7 +1,7 @@
 Index: configure
 ===================================================================
---- configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -5117,7 +5117,7 @@
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $acx_cv_cc_gcc_supports_ada" >&5
  $as_echo "$acx_cv_cc_gcc_supports_ada" >&6; }
@@ -24,8 +24,8 @@ Index: configure
      ;;
 Index: libgcc/config.host
 ===================================================================
---- libgcc/config.host	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgcc/config.host	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgcc/config.host	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgcc/config.host	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -145,15 +145,6 @@
    asm_hidden_op=.private_extern
    tmake_file="t-darwin ${cpu_type}/t-darwin t-slibgcc-darwin"
@@ -44,8 +44,8 @@ Index: libgcc/config.host
    # machine-specific sections may refine and add to this
 Index: libgcc/generic-morestack.c
 ===================================================================
---- libgcc/generic-morestack.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgcc/generic-morestack.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgcc/generic-morestack.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgcc/generic-morestack.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -459,8 +459,8 @@
    sigemptyset (&__morestack_initial_sp.mask);
  
@@ -59,8 +59,8 @@ Index: libgcc/generic-morestack.c
       importantly, pthread_sigmask uses less stack space on x86_64.  */
 Index: libgcc/ChangeLog
 ===================================================================
---- libgcc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgcc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgcc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgcc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,16 @@
 +2011-12-15  H.J. Lu  <hongjiu.lu@intel.com>
 +
@@ -80,8 +80,8 @@ Index: libgcc/ChangeLog
  	* GCC 4.6.2 released.
 Index: libtool.m4
 ===================================================================
---- libtool.m4	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libtool.m4	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libtool.m4	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libtool.m4	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2273,7 +2273,7 @@
      objformat=`/usr/bin/objformat`
    else
@@ -120,8 +120,8 @@ Index: libtool.m4
          _LT_TAGVAR(ld_shlibs, $1)=no
 Index: libgomp/configure
 ===================================================================
---- libgomp/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgomp/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgomp/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgomp/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -9317,7 +9317,7 @@
        ;;
  
@@ -178,8 +178,8 @@ Index: libgomp/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libgomp/ChangeLog
 ===================================================================
---- libgomp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgomp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgomp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgomp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -190,8 +190,8 @@ Index: libgomp/ChangeLog
  	* GCC 4.6.2 released.
 Index: libquadmath/configure
 ===================================================================
---- libquadmath/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libquadmath/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libquadmath/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libquadmath/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8727,7 +8727,7 @@
        ;;
  
@@ -221,8 +221,8 @@ Index: libquadmath/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libquadmath/ChangeLog
 ===================================================================
---- libquadmath/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libquadmath/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libquadmath/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libquadmath/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -233,8 +233,8 @@ Index: libquadmath/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/c-family/ChangeLog
 ===================================================================
---- gcc/c-family/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-family/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-family/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-family/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,15 @@
 +2011-11-04  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -253,8 +253,8 @@ Index: gcc/c-family/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/c-family/c-common.c
 ===================================================================
---- gcc/c-family/c-common.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-family/c-common.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-family/c-common.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-family/c-common.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1236,13 +1236,7 @@
  	  && (op1 = get_base_address (op0)) != NULL_TREE
  	  && TREE_CODE (op1) == INDIRECT_REF
@@ -377,8 +377,8 @@ Index: gcc/c-family/c-common.c
  /* Warn for A ?: C expressions (with B omitted) where A is a boolean 
 Index: gcc/c-family/c-common.h
 ===================================================================
---- gcc/c-family/c-common.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-family/c-common.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-family/c-common.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-family/c-common.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -916,7 +916,8 @@
  
  extern void verify_sequence_points (tree);
@@ -391,15 +391,15 @@ Index: gcc/c-family/c-common.h
     Used to select diagnostic messages in lvalue_error and
 Index: gcc/DATESTAMP
 ===================================================================
---- gcc/DATESTAMP	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/DATESTAMP	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/DATESTAMP	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/DATESTAMP	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1 +1 @@
 -20111026
-+20111220
++20111229
 Index: gcc/configure
 ===================================================================
---- gcc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -7442,17 +7442,7 @@
    RANLIB="$ac_cv_prog_RANLIB"
  fi
@@ -493,8 +493,8 @@ Index: gcc/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: gcc/objc/objc-next-runtime-abi-01.c
 ===================================================================
---- gcc/objc/objc-next-runtime-abi-01.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/objc/objc-next-runtime-abi-01.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/objc/objc-next-runtime-abi-01.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/objc/objc-next-runtime-abi-01.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2871,12 +2871,15 @@
    return eh_id;
  }
@@ -514,8 +514,8 @@ Index: gcc/objc/objc-next-runtime-abi-01.c
  #endif
 Index: gcc/objc/objc-act.c
 ===================================================================
---- gcc/objc/objc-act.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/objc/objc-act.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/objc/objc-act.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/objc/objc-act.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3136,9 +3136,8 @@
    struct string_descriptor *desc, key;
    void **loc;
@@ -530,8 +530,8 @@ Index: gcc/objc/objc-act.c
    /* The target may have different ideas on how to construct an ObjC string 
 Index: gcc/objc/ChangeLog
 ===================================================================
---- gcc/objc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/objc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/objc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/objc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,18 @@
 +2011-11-12  Iain Sandoe  <iains@gcc.gnu.org>
 +
@@ -553,8 +553,8 @@ Index: gcc/objc/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/reorg.c
 ===================================================================
---- gcc/reorg.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/reorg.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/reorg.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/reorg.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3554,9 +3554,11 @@
  	    }
  	}
@@ -570,15 +570,72 @@ Index: gcc/reorg.c
  	     various code assumes that it is in a delay slot.  We could
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -1,3 +1,380 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,3 +1,437 @@
++2011-12-28  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	Backport from mainline
++	2011-12-28  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	PR target/51623
++	* config/rs6000/rs6000.c (rs6000_assemble_integer): Don't call
++	unlikely_text_section_p.  Instead check for being in a code
++	section.
++
++2011-12-23  Richard Guenther  <rguenther@suse.de>
++
++	PR rtl-optimization/50396
++	* simplify-rtx.c (simplify_binary_operation_1): Properly
++	guard code that only works for integers.
++
++2011-12-22  Doug Kwan  <dougkwan@google.com>
++
++	Backport from mainline
++	2011-03-23  Julian Brown  <julian@codesourcery.com>
++
++	* expr.c (expand_expr_real_1): Only use BLKmode for volatile
++	accesses which are not naturally aligned.
++
++	2011-11-20  Joey Ye  <joey.ye@arm.com>
++
++	* expr.c (expand_expr_real_1): Correctly handle strict volatile
++	bitfield loads smaller than mode size.
++
++2011-12-21  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/51643
++	* arm.c (arm_function_ok_for_sibcall): Use DECL_WEAK in previous
++	change.
++
++2011-12-21  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/51643
++	* arm.c (arm_function_ok_for_sibcall): Don't try to tailcall a
++	weak function on bare-metal EABI targets.
++
++2011-12-21  Uros Bizjak  <ubizjak@gmail.com>
++
++	Backport from mainline
++	2011-12-21  Richard Guenther  <rguenther@suse.de>
++
++	PR lto/41159
++	* tree-outof-ssa.c (insert_value_copy_on_edge): Use the
++	mode of the pseudo as destination mode.  Only assert that
++	is equal to the promoted mode of the decl if it is a REG.
++
++2011-12-21  Uros Bizjak  <ubizjak@gmail.com>
++
++	* config/alpha/linux-unwind.h: Update copyright years.
++	(MD_FROB_UPDATE_CONTEXT): New define.
++	(alpha_frob_update_context): New function.
++
 +2011-12-19  Martin Jambor  <mjambor@suse.cz>
 +
 +	PR tree-optimization/51583
@@ -959,7 +1016,7 @@ Index: gcc/ChangeLog
  2011-10-26  Release Manager
  
  	* GCC 4.6.2 released.
-@@ -144,8 +521,8 @@
+@@ -144,8 +578,8 @@
  
  2011-10-07  Bernd Schmidt  <bernds@codesourcery.com>
  
@@ -970,7 +1027,7 @@ Index: gcc/ChangeLog
  
  2011-10-06  Jakub Jelinek  <jakub@redhat.com>
  
-@@ -252,7 +629,7 @@
+@@ -252,7 +686,7 @@
  	* config/rs6000/rs6000.md (probe_stack): Use explicit operand.
  	* config/rs6000/rs6000.c (output_probe_stack_range): Likewise.
  
@@ -982,7 +1039,7 @@ Index: gcc/ChangeLog
 Index: gcc/testsuite/gcc.target/arm/pr49641.c
 ===================================================================
 --- gcc/testsuite/gcc.target/arm/pr49641.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/arm/pr49641.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.target/arm/pr49641.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,18 @@
 +/* { dg-do compile } */
 +/* { dg-options "-mthumb -O2" } */
@@ -1002,10 +1059,155 @@ Index: gcc/testsuite/gcc.target/arm/pr49641.c
 +   y = 0;
 +   foo(&v);
 +}
+Index: gcc/testsuite/gcc.target/arm/sibcall-2.c
+===================================================================
+--- gcc/testsuite/gcc.target/arm/sibcall-2.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/arm/sibcall-2.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -0,0 +1,12 @@
++/* { dg-require-effective-target arm_eabi } */
++/* { dg-do compile } */
++/* { dg-options "-O2 -mabi=aapcs" } */
++
++
++extern void __attribute__((weak)) wfunc(void);
++void main(void)
++{
++  wfunc();  /* Must not tail-call.  */
++}
++
++/* { dg-final { scan-assembler-not "b\[\\t \]+wfunc" } } */
+Index: gcc/testsuite/gcc.target/powerpc/pr51623.c
+===================================================================
+--- gcc/testsuite/gcc.target/powerpc/pr51623.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/powerpc/pr51623.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -0,0 +1,123 @@
++/* PR target/51623 */
++/* { dg-do compile { target { { powerpc*-*-linux* && ilp32 } || { powerpc-*-eabi* } } } } */
++/* { dg-options "-mrelocatable -ffreestanding" } */
++
++/* This generated an error, since the compiler was calling
++   unlikely_text_section_p in a context where it wasn't valid.  */
++
++typedef long long loff_t;
++typedef unsigned size_t;
++
++
++struct mtd_info {
++  unsigned writesize;
++  unsigned oobsize;
++  const char *name;
++};
++
++extern int strcmp(const char *,const char *);
++extern char * strchr(const char *,int);
++
++struct cmd_tbl_s {
++  char *name;
++};
++
++
++int printf(const char *fmt, ...) __attribute__ ((format (__printf__, 1, 2)));
++void* malloc(size_t);
++void free(void*);
++
++
++extern int nand_curr_device;
++extern struct mtd_info nand_info[];
++
++static int nand_dump(struct mtd_info *nand, unsigned long off, int only_oob)
++{
++  int i;
++  unsigned char *datbuf, *oobbuf, *p;
++
++  datbuf = malloc(nand->writesize + nand->oobsize);
++  oobbuf = malloc(nand->oobsize);
++  off &= ~(nand->writesize - 1);
++
++  printf("Page %08lx dump:\n", off);
++  i = nand->writesize >> 4;
++  p = datbuf;
++
++  while (i--) {
++    if (!only_oob)
++      printf("\t%02x %02x %02x %02x %02x %02x %02x %02x"
++	     "  %02x %02x %02x %02x %02x %02x %02x %02x\n",
++	     p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7],
++	     p[8], p[9], p[10], p[11], p[12], p[13], p[14],
++	     p[15]);
++    p += 16;
++  }
++
++  i = nand->oobsize >> 3;
++  free(datbuf);
++  free(oobbuf);
++
++  return 0;
++}
++
++int do_nand(struct cmd_tbl_s * cmdtp, int flag, int argc, char *argv[])
++{
++  int dev;
++  unsigned long  off;
++  char *cmd, *s;
++  struct mtd_info *nand;
++
++  if (argc < 2)
++    goto usage;
++
++  cmd = argv[1];
++
++  if (strcmp(cmd, "info") == 0) {
++    putc('\n');
++    return 0;
++  }
++
++  if (strcmp(cmd, "device") == 0) {
++    if (argc < 3) {
++      putc('\n');
++    }
++    dev = (int)simple_strtoul(argv[2], ((void *)0), 10);
++    nand_curr_device = dev;
++    return 0;
++  }
++
++  if (strcmp(cmd, "bad") != 0 && strcmp(cmd, "erase") != 0  )
++    goto usage;
++  
++  if (nand_curr_device < 0 ) {
++    return 1;
++  }
++  nand = &nand_info[nand_curr_device];
++
++  if (strcmp(cmd, "erase") == 0 || strcmp(cmd, "scrub") == 0) {
++    int clean = argc > 2 && !strcmp("clean", argv[2]);
++    int scrub = !strcmp(cmd, "scrub");
++    return 0;
++  }
++
++  if (strncmp(cmd, "dump", 4) == 0) {
++    if (argc < 3)
++      goto usage;
++
++    s = strchr(cmd, '.');
++    off = (int)simple_strtoul(argv[2], ((void *)0), 16);
++    
++    if (s != ((void *)0) && strcmp(s, ".oob") == 0)
++      nand_dump(nand, off, 1);
++    else
++      nand_dump(nand, off, 0);
++    
++    return 0;
++  }
++usage:
++  cmd_usage(cmdtp);
++  return 1;
++}
++
++void *ptr = do_nand;
 Index: gcc/testsuite/gcc.target/i386/pr51393.c
 ===================================================================
 --- gcc/testsuite/gcc.target/i386/pr51393.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/i386/pr51393.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.target/i386/pr51393.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,22 @@
 +/* { dg-do run } */
 +/* { dg-require-effective-target avx } */
@@ -1032,7 +1234,7 @@ Index: gcc/testsuite/gcc.target/i386/pr51393.c
 Index: gcc/testsuite/gcc.target/i386/pr48721.c
 ===================================================================
 --- gcc/testsuite/gcc.target/i386/pr48721.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/i386/pr48721.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.target/i386/pr48721.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,51 @@
 +/* PR rtl-optimization/48721 */
 +/* { dg-do compile } */
@@ -1088,7 +1290,7 @@ Index: gcc/testsuite/gcc.target/i386/pr48721.c
 Index: gcc/testsuite/gcc.target/i386/movdi-rex64.c
 ===================================================================
 --- gcc/testsuite/gcc.target/i386/movdi-rex64.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.target/i386/movdi-rex64.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.target/i386/movdi-rex64.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,11 @@
 +/* { dg-do compile { target *-*-linux* } } */
 +/* { dg-options "-fPIE" } */
@@ -1104,7 +1306,7 @@ Index: gcc/testsuite/gcc.target/i386/movdi-rex64.c
 Index: gcc/testsuite/gfortran.dg/whole_file_35.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/whole_file_35.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/whole_file_35.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/whole_file_35.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,28 @@
 +! { dg-do compile }
 +!
@@ -1137,7 +1339,7 @@ Index: gcc/testsuite/gfortran.dg/whole_file_35.f90
 Index: gcc/testsuite/gfortran.dg/move_alloc_8.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/move_alloc_8.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/move_alloc_8.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/move_alloc_8.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,106 @@
 +! { dg-do compile }
 +!
@@ -1248,7 +1450,7 @@ Index: gcc/testsuite/gfortran.dg/move_alloc_8.f90
 Index: gcc/testsuite/gfortran.dg/realloc_on_assign_8.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/realloc_on_assign_8.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/realloc_on_assign_8.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/realloc_on_assign_8.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,17 @@
 +! { dg-do compile }
 +!
@@ -1270,7 +1472,7 @@ Index: gcc/testsuite/gfortran.dg/realloc_on_assign_8.f90
 Index: gcc/testsuite/gfortran.dg/default_initialization_5.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/default_initialization_5.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/default_initialization_5.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/default_initialization_5.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,66 @@
 +! { dg-do  run }
 +! { dg-options "-fdump-tree-original" }
@@ -1341,7 +1543,7 @@ Index: gcc/testsuite/gfortran.dg/default_initialization_5.f90
 Index: gcc/testsuite/gfortran.dg/pr50875.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/pr50875.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/pr50875.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/pr50875.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,39 @@
 +! { dg-do compile { target { i?86-*-* x86_64-*-* } } }
 +! { dg-options "-O3 -mavx" }
@@ -1385,7 +1587,7 @@ Index: gcc/testsuite/gfortran.dg/pr50875.f90
 Index: gcc/testsuite/gfortran.dg/warn_function_without_result_2.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/warn_function_without_result_2.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/warn_function_without_result_2.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/warn_function_without_result_2.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,19 @@
 +! { dg-do compile }
 +! { dg-options "-Wall" }
@@ -1409,7 +1611,7 @@ Index: gcc/testsuite/gfortran.dg/warn_function_without_result_2.f90
 Index: gcc/testsuite/gfortran.dg/implicit_pure_1.f90
 ===================================================================
 --- gcc/testsuite/gfortran.dg/implicit_pure_1.f90	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gfortran.dg/implicit_pure_1.f90	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gfortran.dg/implicit_pure_1.f90	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,53 @@
 +! { dg-do run }
 +!
@@ -1467,7 +1669,7 @@ Index: gcc/testsuite/gfortran.dg/implicit_pure_1.f90
 Index: gcc/testsuite/gcc.c-torture/execute/pr51466.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/execute/pr51466.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/execute/pr51466.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/execute/pr51466.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,43 @@
 +/* PR tree-optimization/51466 */
 +
@@ -1515,7 +1717,7 @@ Index: gcc/testsuite/gcc.c-torture/execute/pr51466.c
 Index: gcc/testsuite/gcc.c-torture/execute/20111212-1.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/execute/20111212-1.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/execute/20111212-1.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/execute/20111212-1.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,34 @@
 +/* PR tree-optimization/50569 */
 +/* Reported by Paul Koning <pkoning@gcc.gnu.org> */
@@ -1554,7 +1756,7 @@ Index: gcc/testsuite/gcc.c-torture/execute/20111212-1.c
 Index: gcc/testsuite/gcc.c-torture/execute/pr51323.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/execute/pr51323.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/execute/pr51323.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/execute/pr51323.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,35 @@
 +/* PR middle-end/51323 */
 +
@@ -1594,7 +1796,7 @@ Index: gcc/testsuite/gcc.c-torture/execute/pr51323.c
 Index: gcc/testsuite/gcc.c-torture/execute/20111208-1.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/execute/20111208-1.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/execute/20111208-1.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/execute/20111208-1.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,94 @@
 +/* PR tree-optimization/51315 */
 +/* Reported by Jurij Smakov <jurij@wooyd.org> */
@@ -1693,7 +1895,7 @@ Index: gcc/testsuite/gcc.c-torture/execute/20111208-1.c
 Index: gcc/testsuite/gcc.c-torture/compile/pr51077.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/compile/pr51077.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/compile/pr51077.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/compile/pr51077.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,15 @@
 +/* PR middle-end/51077 */
 +
@@ -1713,7 +1915,7 @@ Index: gcc/testsuite/gcc.c-torture/compile/pr51077.c
 Index: gcc/testsuite/gcc.c-torture/compile/20110913-1.c
 ===================================================================
 --- gcc/testsuite/gcc.c-torture/compile/20110913-1.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.c-torture/compile/20110913-1.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.c-torture/compile/20110913-1.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,26 @@
 +struct ieee754_double {
 +  double d;
@@ -1743,8 +1945,8 @@ Index: gcc/testsuite/gcc.c-torture/compile/20110913-1.c
 +}
 Index: gcc/testsuite/gnat.dg/frame_overflow.adb
 ===================================================================
---- gcc/testsuite/gnat.dg/frame_overflow.adb	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/gnat.dg/frame_overflow.adb	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/testsuite/gnat.dg/frame_overflow.adb	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/gnat.dg/frame_overflow.adb	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,27 +1,20 @@
  -- { dg-do compile }
  
@@ -1791,7 +1993,7 @@ Index: gcc/testsuite/gnat.dg/frame_overflow.adb
 Index: gcc/testsuite/gnat.dg/frame_overflow.ads
 ===================================================================
 --- gcc/testsuite/gnat.dg/frame_overflow.ads	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gnat.dg/frame_overflow.ads	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gnat.dg/frame_overflow.ads	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,17 @@
 +with System;
 +
@@ -1812,8 +2014,8 @@ Index: gcc/testsuite/gnat.dg/frame_overflow.ads
 +end Frame_Overflow;
 Index: gcc/testsuite/gnat.dg/specs/addr1.ads
 ===================================================================
---- gcc/testsuite/gnat.dg/specs/addr1.ads	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/gnat.dg/specs/addr1.ads	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/testsuite/gnat.dg/specs/addr1.ads	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/gnat.dg/specs/addr1.ads	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -15,7 +15,7 @@
    end record;
    for Rec2'Size use 64;
@@ -1825,8 +2027,8 @@ Index: gcc/testsuite/gnat.dg/specs/addr1.ads
    for Obj1'Address use A'Address; -- { dg-bogus "alignment" }
 Index: gcc/testsuite/gcc.dg/pr45819.c
 ===================================================================
---- gcc/testsuite/gcc.dg/pr45819.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/gcc.dg/pr45819.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/testsuite/gcc.dg/pr45819.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/gcc.dg/pr45819.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,5 +1,5 @@
  /* { dg-do compile } */
 -/* { dg-options "-O2 -fdump-tree-optimized" } */
@@ -1837,7 +2039,7 @@ Index: gcc/testsuite/gcc.dg/pr45819.c
 Index: gcc/testsuite/gcc.dg/gomp/pr51339.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/gomp/pr51339.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/gomp/pr51339.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/gomp/pr51339.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,15 @@
 +/* PR c/51339 */
 +/* { dg-do compile } */
@@ -1856,8 +2058,8 @@ Index: gcc/testsuite/gcc.dg/gomp/pr51339.c
 +}
 Index: gcc/testsuite/gcc.dg/cpp/assert4.c
 ===================================================================
---- gcc/testsuite/gcc.dg/cpp/assert4.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/gcc.dg/cpp/assert4.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/testsuite/gcc.dg/cpp/assert4.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/gcc.dg/cpp/assert4.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,4 +1,4 @@
 -/* Copyright (C) 2003, 2006, 2008 Free Software Foundation, Inc.
 +/* Copyright (C) 2003, 2006, 2008, 2009, 2011 Free Software Foundation, Inc.
@@ -1876,7 +2078,7 @@ Index: gcc/testsuite/gcc.dg/cpp/assert4.c
 Index: gcc/testsuite/gcc.dg/pr50078.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/pr50078.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/pr50078.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/pr50078.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,14 @@
 +/* PR tree-optimization/50078 */
 +/* { dg-do compile } */
@@ -1895,7 +2097,7 @@ Index: gcc/testsuite/gcc.dg/pr50078.c
 Index: gcc/testsuite/gcc.dg/debug/dwarf2/pr51410.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/debug/dwarf2/pr51410.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/debug/dwarf2/pr51410.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/debug/dwarf2/pr51410.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,13 @@
 +/* PR debug/51410 */
 +/* { dg-do compile } */
@@ -1910,10 +2112,38 @@ Index: gcc/testsuite/gcc.dg/debug/dwarf2/pr51410.c
 +}
 +
 +/* { dg-final { scan-assembler-times "\\(DIE\[^\\r\\n\]*DW_TAG_variable\\)" 1 } } */
+Index: gcc/testsuite/gcc.dg/volatile-bitfields-1.c
+===================================================================
+--- gcc/testsuite/gcc.dg/volatile-bitfields-1.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/volatile-bitfields-1.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -0,0 +1,23 @@
++/* { dg-options "-fstrict-volatile-bitfields" } */
++/* { dg-do run } */
++
++extern int puts(const char *);
++extern void abort(void) __attribute__((noreturn));
++
++typedef struct {
++  volatile unsigned short a:8, b:8;
++} BitStruct;
++
++BitStruct bits = {1, 2};
++
++void check(int i, int j)
++{
++  if (i != 1 || j != 2) puts("FAIL"), abort();
++}
++
++int main ()
++{
++  check(bits.a, bits.b);
++
++  return 0;
++}
 Index: gcc/testsuite/gcc.dg/pr51408.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/pr51408.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/pr51408.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/pr51408.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,22 @@
 +/* This testcase used to fail because of a bug in 
 +   arm.md:*minmax_arithsi.  */
@@ -1937,10 +2167,37 @@ Index: gcc/testsuite/gcc.dg/pr51408.c
 +    abort ();
 +  return 0;
 +}
+Index: gcc/testsuite/gcc.dg/torture/pr50396.c
+===================================================================
+--- gcc/testsuite/gcc.dg/torture/pr50396.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
++++ gcc/testsuite/gcc.dg/torture/pr50396.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -0,0 +1,22 @@
++/* { dg-do run } */
++/* { dg-add-options ieee } */
++
++extern void abort (void);
++typedef float vf128 __attribute__((vector_size(16)));
++typedef float vf64 __attribute__((vector_size(8)));
++int main()
++{
++#if !__FINITE_MATH_ONLY__
++#if __FLT_HAS_QUIET_NAN__
++  vf128 v = (vf128){ 0.f, 0.f, 0.f, 0.f };
++  vf64 u = (vf64){ 0.f, 0.f };
++  v = v / (vf128){ 0.f, 0.f, 0.f, 0.f };
++  if (v[0] == v[0])
++    abort ();
++  u = u / (vf64){ 0.f, 0.f };
++  if (u[0] == u[0])
++    abort ();
++#endif
++#endif
++  return 0;
++}
 Index: gcc/testsuite/gcc.dg/tree-ssa/pr51583.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/tree-ssa/pr51583.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/tree-ssa/pr51583.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/tree-ssa/pr51583.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,34 @@
 +/* { dg-do compile } */
 +/* { dg-options "-O1" } */
@@ -1979,7 +2236,7 @@ Index: gcc/testsuite/gcc.dg/tree-ssa/pr51583.c
 Index: gcc/testsuite/gcc.dg/delay-slot-2.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/delay-slot-2.c	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/delay-slot-2.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/gcc.dg/delay-slot-2.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,116 @@
 +/* PR rtl-optimization/51187 */
 +/* Reported by Jurij Smakov <jurij@wooyd.org> */
@@ -2099,9 +2356,38 @@ Index: gcc/testsuite/gcc.dg/delay-slot-2.c
 +/* { dg-final { scan-assembler "printf" } } */
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -1,3 +1,226 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,3 +1,255 @@
++2011-12-28  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	Backport from mainline
++	2011-12-28  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	PR target/51623
++	* gcc.target/powerpc/pr51623.c: New file.
++
++2011-12-28  Uros Bizjak  <ubizjak@gmail.com>
++
++	* gcc.dg/torture/pr50396.c: Use dg-add-options ieee.
++
++2011-12-23  Richard Guenther  <rguenther@suse.de>
++
++	PR rtl-optimization/50396
++	* gcc.dg/torture/pr50396.c: New testcase.
++
++2011-12-22  Doug Kwan  <dougkwan@google.com>
++
++	Backport from mainline
++	2011-11-20  Joey Ye  <joey.ye@arm.com>
++
++	* gcc.dg/volatile-bitfields-1.c: New.
++
++2011-12-21  Richard Earnshaw  <rearnsha@arm.com>
++
++	PR target/51643
++	* gcc.target/arm/sibcall-2.c: New test.
++
 +2011-12-19  Martin Jambor  <mjambor@suse.cz>
 +
 +	PR tree-optimization/51583
@@ -2328,7 +2614,7 @@ Index: gcc/testsuite/ChangeLog
  2011-10-26  Release Manager
  
  	* GCC 4.6.2 released.
-@@ -9,9 +232,9 @@
+@@ -9,9 +261,9 @@
  
  2011-10-20  Uros Bizjak  <ubizjak@gmail.com>
  
@@ -2344,7 +2630,7 @@ Index: gcc/testsuite/ChangeLog
 Index: gcc/testsuite/g++.dg/vect/pr51485.cc
 ===================================================================
 --- gcc/testsuite/g++.dg/vect/pr51485.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/vect/pr51485.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/vect/pr51485.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,14 @@
 +/* { dg-do compile } */
 +
@@ -2363,7 +2649,7 @@ Index: gcc/testsuite/g++.dg/vect/pr51485.cc
 Index: gcc/testsuite/g++.dg/init/value10.C
 ===================================================================
 --- gcc/testsuite/g++.dg/init/value10.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/init/value10.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/init/value10.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,27 @@
 +// PR c++/51331
 +// { dg-do run }
@@ -2395,7 +2681,7 @@ Index: gcc/testsuite/g++.dg/init/value10.C
 Index: gcc/testsuite/g++.dg/other/enum2.C
 ===================================================================
 --- gcc/testsuite/g++.dg/other/enum2.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/other/enum2.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/other/enum2.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,3 @@
 +// PR c++/51248
 +
@@ -2403,7 +2689,7 @@ Index: gcc/testsuite/g++.dg/other/enum2.C
 Index: gcc/testsuite/g++.dg/other/offsetof7.C
 ===================================================================
 --- gcc/testsuite/g++.dg/other/offsetof7.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/other/offsetof7.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/other/offsetof7.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,17 @@
 +// PR c++/50608
 +// Testcase by <dberger@oubliette.org>
@@ -2425,7 +2711,7 @@ Index: gcc/testsuite/g++.dg/other/offsetof7.C
 Index: gcc/testsuite/g++.dg/tree-ssa/pr50622.C
 ===================================================================
 --- gcc/testsuite/g++.dg/tree-ssa/pr50622.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/tree-ssa/pr50622.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/tree-ssa/pr50622.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,30 @@
 +// { dg-do compile }
 +// { dg-options "-O2" }
@@ -2460,7 +2746,7 @@ Index: gcc/testsuite/g++.dg/tree-ssa/pr50622.C
 Index: gcc/testsuite/g++.dg/cpp0x/auto31.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/auto31.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/auto31.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/auto31.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,12 @@
 +// PR c++/51416
 +// { dg-options "-std=c++0x" }
@@ -2477,7 +2763,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/auto31.C
 Index: gcc/testsuite/g++.dg/cpp0x/pr50901.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/pr50901.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/pr50901.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/pr50901.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,9 @@
 +// { dg-options "-std=c++0x" }
 +
@@ -2490,8 +2776,8 @@ Index: gcc/testsuite/g++.dg/cpp0x/pr50901.C
 +int i = foo<float>(1);
 Index: gcc/testsuite/g++.dg/cpp0x/variadic103.C
 ===================================================================
---- gcc/testsuite/g++.dg/cpp0x/variadic103.C	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/testsuite/g++.dg/cpp0x/variadic103.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/testsuite/g++.dg/cpp0x/variadic103.C	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/testsuite/g++.dg/cpp0x/variadic103.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -5,7 +5,7 @@
  
  template<class T, class... Args>
@@ -2504,7 +2790,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/variadic103.C
 Index: gcc/testsuite/g++.dg/cpp0x/decltype35.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/decltype35.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/decltype35.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/decltype35.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,15 @@
 +// PR c++/50870
 +// { dg-options -std=c++0x }
@@ -2524,7 +2810,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/decltype35.C
 Index: gcc/testsuite/g++.dg/cpp0x/decltype36.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/decltype36.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/decltype36.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/decltype36.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,21 @@
 +// PR c++/51265
 +// { dg-options -std=c++0x }
@@ -2550,7 +2836,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/decltype36.C
 Index: gcc/testsuite/g++.dg/cpp0x/pr51150.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/pr51150.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/pr51150.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/pr51150.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,20 @@
 +// PR c++/51150
 +// { dg-options "-std=c++0x" }
@@ -2575,7 +2861,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/pr51150.C
 Index: gcc/testsuite/g++.dg/cpp0x/rv-cast3.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/rv-cast3.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/rv-cast3.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/rv-cast3.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,18 @@
 +// PR c++/51406
 +// { dg-do run }
@@ -2598,7 +2884,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/rv-cast3.C
 Index: gcc/testsuite/g++.dg/cpp0x/rv-cast4.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/rv-cast4.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/rv-cast4.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/cpp0x/rv-cast4.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,13 @@
 +// PR c++/51161
 +// { dg-options "-std=c++0x" }
@@ -2616,7 +2902,7 @@ Index: gcc/testsuite/g++.dg/cpp0x/rv-cast4.C
 Index: gcc/testsuite/g++.dg/torture/pr49720.C
 ===================================================================
 --- gcc/testsuite/g++.dg/torture/pr49720.C	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/torture/pr49720.C	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ gcc/testsuite/g++.dg/torture/pr49720.C	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,8 @@
 +/* { dg-do compile } */
 +
@@ -2628,8 +2914,8 @@ Index: gcc/testsuite/g++.dg/torture/pr49720.C
 +}
 Index: gcc/cp/typeck.c
 ===================================================================
---- gcc/cp/typeck.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/typeck.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/typeck.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/typeck.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -4835,9 +4835,7 @@
        && TREE_CONSTANT (TREE_OPERAND (val, 0)))
      {
@@ -2664,8 +2950,8 @@ Index: gcc/cp/typeck.c
    /* Resolve overloaded address here rather than once in
 Index: gcc/cp/init.c
 ===================================================================
---- gcc/cp/init.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/init.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/init.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/init.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -141,7 +141,9 @@
     zero-initialization does not simply mean filling the storage with
     zero bytes.  FIELD_SIZE, if non-NULL, is the bit size of the field,
@@ -2692,8 +2978,8 @@ Index: gcc/cp/init.c
        gcc_assert (!TYPE_NEEDS_CONSTRUCTING (type));
 Index: gcc/cp/class.c
 ===================================================================
---- gcc/cp/class.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/class.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/class.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/class.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -464,7 +464,14 @@
      /* Is this the base field created by build_base_field?  */
      if (TREE_CODE (field) == FIELD_DECL
@@ -2723,8 +3009,8 @@ Index: gcc/cp/class.c
        /* We use fold_build2 and fold_convert below to simplify the trees
 Index: gcc/cp/decl.c
 ===================================================================
---- gcc/cp/decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/decl.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/decl.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -11540,15 +11540,19 @@
  static void
  copy_type_enum (tree dst, tree src)
@@ -2771,8 +3057,8 @@ Index: gcc/cp/decl.c
  /* Build and install a CONST_DECL for an enumeration constant of the
 Index: gcc/cp/ChangeLog
 ===================================================================
---- gcc/cp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,57 @@
 +2011-12-16  Jason Merrill  <jason@redhat.com>
 +
@@ -2833,8 +3119,8 @@ Index: gcc/cp/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/cp/pt.c
 ===================================================================
---- gcc/cp/pt.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/pt.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/pt.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/pt.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -11439,6 +11439,9 @@
        mark_used (t);
        return t;
@@ -2869,8 +3155,8 @@ Index: gcc/cp/pt.c
  	      {
 Index: gcc/cp/semantics.c
 ===================================================================
---- gcc/cp/semantics.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/semantics.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/semantics.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/semantics.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3348,7 +3348,7 @@
      }
    if (TREE_CODE (expr) == INDIRECT_REF && REFERENCE_REF_P (expr))
@@ -2893,8 +3179,8 @@ Index: gcc/cp/semantics.c
  
 Index: gcc/cp/call.c
 ===================================================================
---- gcc/cp/call.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cp/call.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cp/call.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cp/call.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -4996,6 +4996,7 @@
      case POSTDECREMENT_EXPR:
      case REALPART_EXPR:
@@ -2905,8 +3191,8 @@ Index: gcc/cp/call.c
      case ARRAY_REF:
 Index: gcc/lto-cgraph.c
 ===================================================================
---- gcc/lto-cgraph.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto-cgraph.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto-cgraph.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto-cgraph.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1792,9 +1792,9 @@
  {
    const struct lto_function_header *header =
@@ -2922,8 +3208,8 @@ Index: gcc/lto-cgraph.c
    unsigned int i;
 Index: gcc/lto-streamer-out.c
 ===================================================================
---- gcc/lto-streamer-out.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto-streamer-out.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto-streamer-out.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto-streamer-out.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2408,7 +2408,7 @@
    enum gcc_plugin_symbol_kind kind;
    enum gcc_plugin_symbol_visibility visibility;
@@ -2962,8 +3248,8 @@ Index: gcc/lto-streamer-out.c
  
 Index: gcc/dwarf2out.c
 ===================================================================
---- gcc/dwarf2out.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/dwarf2out.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/dwarf2out.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/dwarf2out.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -4431,6 +4431,11 @@
    const char *section; /* Section this loclist is relative to */
    dw_loc_descr_ref expr;
@@ -3229,10 +3515,33 @@ Index: gcc/dwarf2out.c
  	DW_AT_location);
      }
  
+Index: gcc/expr.c
+===================================================================
+--- gcc/expr.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/expr.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -9189,8 +9189,16 @@
+ 		&& modifier != EXPAND_CONST_ADDRESS
+ 		&& modifier != EXPAND_INITIALIZER)
+ 	    /* If the field is volatile, we always want an aligned
+-	       access.  */
+-	    || (volatilep && flag_strict_volatile_bitfields > 0)
++	       access.  Do this in following two situations:
++	       1. the access is not already naturally
++	       aligned, otherwise "normal" (non-bitfield) volatile fields
++	       become non-addressable.
++	       2. the bitsize is narrower than the access size. Need
++	       to extract bitfields from the access.  */
++	    || (volatilep && flag_strict_volatile_bitfields > 0
++		&& (bitpos % GET_MODE_ALIGNMENT (mode) != 0 
++		    || (mode1 != BLKmode
++		        && bitsize < GET_MODE_SIZE (mode1) * BITS_PER_UNIT)))
+ 	    /* If the field isn't aligned enough to fetch as a memref,
+ 	       fetch it as a bit field.  */
+ 	    || (mode1 != BLKmode
 Index: gcc/ada/mlib-tgt-specific-darwin.adb
 ===================================================================
---- gcc/ada/mlib-tgt-specific-darwin.adb	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/mlib-tgt-specific-darwin.adb	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/mlib-tgt-specific-darwin.adb	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/mlib-tgt-specific-darwin.adb	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -36,8 +36,6 @@
  
     --  Non default subprograms
@@ -3268,8 +3577,8 @@ Index: gcc/ada/mlib-tgt-specific-darwin.adb
     Dynamic_Option_Ptr := Dynamic_Option'Access;
 Index: gcc/ada/init.c
 ===================================================================
---- gcc/ada/init.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/init.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/init.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/init.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2216,12 +2216,33 @@
    return 0;
  }
@@ -3307,8 +3616,8 @@ Index: gcc/ada/init.c
      case SIGSEGV:
 Index: gcc/ada/ChangeLog
 ===================================================================
---- gcc/ada/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,42 @@
 +2011-12-08  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -3354,8 +3663,8 @@ Index: gcc/ada/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/ada/gcc-interface/Makefile.in
 ===================================================================
---- gcc/ada/gcc-interface/Makefile.in	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/gcc-interface/Makefile.in	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/gcc-interface/Makefile.in	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/gcc-interface/Makefile.in	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2189,7 +2189,6 @@
  
    EH_MECHANISM=-gcc
@@ -3423,8 +3732,8 @@ Index: gcc/ada/gcc-interface/Makefile.in
  		| sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'`" \
 Index: gcc/ada/gcc-interface/decl.c
 ===================================================================
---- gcc/ada/gcc-interface/decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/gcc-interface/decl.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/gcc-interface/decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/gcc-interface/decl.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -808,16 +808,30 @@
  		    && No (Address_Clause (gnat_entity))))
  	    && TREE_CODE (TYPE_SIZE (gnu_type)) == INTEGER_CST)
@@ -3463,8 +3772,8 @@ Index: gcc/ada/gcc-interface/decl.c
  	      align = ceil_alignment (tree_low_cst (TYPE_SIZE (gnu_type), 1));
 Index: gcc/ada/Make-generated.in
 ===================================================================
---- gcc/ada/Make-generated.in	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ada/Make-generated.in	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ada/Make-generated.in	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ada/Make-generated.in	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -64,37 +64,6 @@
  	$(CP) $^ $(ADA_GEN_SUBDIR)/bldtools/nmake_s
  	(cd $(ADA_GEN_SUBDIR)/bldtools/nmake_s; gnatmake -q xnmake ; ./xnmake -s ../../nmake.ads )
@@ -3505,8 +3814,8 @@ Index: gcc/ada/Make-generated.in
  	$(ECHO) "pragma Style_Checks (Off);" >tmp-sdefault.adb
 Index: gcc/lto-streamer-in.c
 ===================================================================
---- gcc/lto-streamer-in.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto-streamer-in.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto-streamer-in.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto-streamer-in.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1366,9 +1366,9 @@
  {
    const struct lto_function_header *header;
@@ -3522,8 +3831,8 @@ Index: gcc/lto-streamer-in.c
  
 Index: gcc/c-decl.c
 ===================================================================
---- gcc/c-decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-decl.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-decl.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -721,7 +721,7 @@
  
  	  complete_array_type (&TREE_TYPE (decl), NULL_TREE, true);
@@ -3553,8 +3862,8 @@ Index: gcc/c-decl.c
    if (TREE_CODE (decl) == VAR_DECL)
 Index: gcc/fortran/trans-array.c
 ===================================================================
---- gcc/fortran/trans-array.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/trans-array.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/trans-array.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/trans-array.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -6772,8 +6772,17 @@
  			      gfc_array_index_type, cond,
  			      lbound, gfc_index_one_node);
@@ -3592,9 +3901,18 @@ Index: gcc/fortran/trans-array.c
  }
 Index: gcc/fortran/ChangeLog
 ===================================================================
---- gcc/fortran/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -1,3 +1,64 @@
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,3 +1,73 @@
++2011-12-22  Toon Moene  <toon@moene.org>
++
++	PR fortran/51310
++	* resolve.c (build_default_init_expr): Allow non-allocatable,
++	non-compile-time-constant-shape arrays to have a default
++	initializer.
++	* invoke.texi: Delete the restriction on automatic arrays not
++	being initialized by -finit-<type>=<constant>.
++
 +2011-12-15  Tobias Burnus  <burnus@net-b.de>
 +
 +	PR fortran/51550
@@ -3661,8 +3979,8 @@ Index: gcc/fortran/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/fortran/expr.c
 ===================================================================
---- gcc/fortran/expr.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/expr.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/expr.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/expr.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3679,6 +3679,8 @@
          if (!c->attr.pointer
  	     && gfc_has_default_initializer (c->ts.u.derived))
@@ -3682,9 +4000,9 @@ Index: gcc/fortran/expr.c
  gfc_expr *
 Index: gcc/fortran/invoke.texi
 ===================================================================
---- gcc/fortran/invoke.texi	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/invoke.texi	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -1438,10 +1438,18 @@
+--- gcc/fortran/invoke.texi	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/invoke.texi	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1438,10 +1438,16 @@
  the real and imaginary parts of local @code{COMPLEX} variables),
  @option{-finit-logical=@var{<true|false>}}, and
  @option{-finit-character=@var{n}} (where @var{n} is an ASCII character
@@ -3694,8 +4012,6 @@ Index: gcc/fortran/invoke.texi
 -future releases).
 +value) options.  These options do not initialize
 +@itemize @bullet
-+@item
-+automatic arrays
 +@item
 +allocatable arrays
 +@item
@@ -3709,8 +4025,8 @@ Index: gcc/fortran/invoke.texi
  and @code{COMPLEX} variables with a quiet NaN. For a signalling NaN
 Index: gcc/fortran/trans-types.c
 ===================================================================
---- gcc/fortran/trans-types.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/trans-types.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/trans-types.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/trans-types.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2092,6 +2092,9 @@
    gfc_component *to_cm;
    gfc_component *from_cm;
@@ -3723,8 +4039,8 @@ Index: gcc/fortran/trans-types.c
      return 0;
 Index: gcc/fortran/resolve.c
 ===================================================================
---- gcc/fortran/resolve.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/resolve.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/resolve.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/resolve.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3132,11 +3132,11 @@
  		     "procedure within a PURE procedure", name, &expr->where);
  	  t = FAILURE;
@@ -3750,6 +4066,15 @@ Index: gcc/fortran/resolve.c
  }
  
  
+@@ -9687,7 +9690,7 @@
+   int i;
+ 
+   /* These symbols should never have a default initialization.  */
+-  if ((sym->attr.dimension && !gfc_is_compile_time_shape (sym->as))
++  if (sym->attr.allocatable
+       || sym->attr.external
+       || sym->attr.dummy
+       || sym->attr.pointer
 @@ -11394,6 +11397,14 @@
  
    for (c = sym->components; c != NULL; c = c->next)
@@ -3767,8 +4092,8 @@ Index: gcc/fortran/resolve.c
  	  && (!c->attr.allocatable || (c->as && c->as->type != AS_DEFERRED)))
 Index: gcc/fortran/trans-decl.c
 ===================================================================
---- gcc/fortran/trans-decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/trans-decl.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/trans-decl.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/trans-decl.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -677,7 +677,7 @@
  	}
        else if (s->backend_decl)
@@ -3837,8 +4162,8 @@ Index: gcc/fortran/trans-decl.c
  	gfc_add_expr_to_block (&body, gfc_generate_return ());
 Index: gcc/fortran/check.c
 ===================================================================
---- gcc/fortran/check.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/check.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/check.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/check.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -485,10 +485,31 @@
        && (gfc_current_intrinsic_arg[n]->intent == INTENT_OUT
  	  || gfc_current_intrinsic_arg[n]->intent == INTENT_INOUT))
@@ -3877,8 +4202,8 @@ Index: gcc/fortran/check.c
    if (e->expr_type == EXPR_VARIABLE
 Index: gcc/fortran/dependency.c
 ===================================================================
---- gcc/fortran/dependency.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/fortran/dependency.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/fortran/dependency.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/fortran/dependency.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -163,9 +163,19 @@
  	  break;
  
@@ -3903,8 +4228,8 @@ Index: gcc/fortran/dependency.c
  	default:
 Index: gcc/regmove.c
 ===================================================================
---- gcc/regmove.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/regmove.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/regmove.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/regmove.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -860,7 +860,7 @@
  	  if (REG_N_CALLS_CROSSED (REGNO (src)) == 0)
  	    break;
@@ -3916,8 +4241,8 @@ Index: gcc/regmove.c
  	}
 Index: gcc/configure.ac
 ===================================================================
---- gcc/configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -807,17 +807,7 @@
  gcc_AC_PROG_LN_S
  ACX_PROG_LN($LN_S)
@@ -3939,15 +4264,15 @@ Index: gcc/configure.ac
  gcc_AC_PROG_INSTALL
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/BASE-VER	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/BASE-VER	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/BASE-VER	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1 +1 @@
 -4.6.2
 +4.6.3
 Index: gcc/df.h
 ===================================================================
---- gcc/df.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/df.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/df.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/df.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -53,7 +53,7 @@
  #define DF_RD      3      /* Reaching Defs. */
  #define DF_CHAIN   4      /* Def-Use and/or Use-Def Chains. */
@@ -3959,8 +4284,8 @@ Index: gcc/df.h
  #define DF_LAST_PROBLEM_PLUS1 (DF_MD + 1)
 Index: gcc/lto-section-in.c
 ===================================================================
---- gcc/lto-section-in.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto-section-in.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto-section-in.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto-section-in.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -296,7 +296,7 @@
      = (const struct lto_simple_header *) data;
  
@@ -3972,8 +4297,8 @@ Index: gcc/lto-section-in.c
      return NULL;
 Index: gcc/tree-vect-data-refs.c
 ===================================================================
---- gcc/tree-vect-data-refs.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/tree-vect-data-refs.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/tree-vect-data-refs.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/tree-vect-data-refs.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2631,6 +2631,16 @@
            return false;
          }
@@ -3993,8 +4318,8 @@ Index: gcc/tree-vect-data-refs.c
        /* If the dataref is in an inner-loop of the loop that is considered for
 Index: gcc/c-typeck.c
 ===================================================================
---- gcc/c-typeck.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-typeck.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-typeck.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-typeck.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3802,11 +3802,7 @@
        if (val && TREE_CODE (val) == INDIRECT_REF
            && TREE_CONSTANT (TREE_OPERAND (val, 0)))
@@ -4010,8 +4335,8 @@ Index: gcc/c-typeck.c
  
 Index: gcc/calls.c
 ===================================================================
---- gcc/calls.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/calls.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/calls.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/calls.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1548,6 +1548,131 @@
    return funexp;
  }
@@ -4184,8 +4509,8 @@ Index: gcc/calls.c
  	{
 Index: gcc/cfgcleanup.c
 ===================================================================
---- gcc/cfgcleanup.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/cfgcleanup.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/cfgcleanup.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/cfgcleanup.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1969,7 +1969,14 @@
  
    cond = get_condition (jump, &move_before, true, false);
@@ -4220,8 +4545,17 @@ Index: gcc/cfgcleanup.c
    do
 Index: gcc/simplify-rtx.c
 ===================================================================
---- gcc/simplify-rtx.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/simplify-rtx.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/simplify-rtx.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/simplify-rtx.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -2777,7 +2777,7 @@
+ 		}
+ 	    }
+ 	}
+-      else
++      else if (SCALAR_INT_MODE_P (mode))
+ 	{
+ 	  /* 0/x is 0 (or x&0 if x has side-effects).  */
+ 	  if (trueop0 == CONST0_RTX (mode)
 @@ -4177,10 +4177,20 @@
      {
        rtx x = XEXP (op0, 0);
@@ -4248,8 +4582,8 @@ Index: gcc/simplify-rtx.c
    /* (ne:SI (zero_extract:SI FOO (const_int 1) BAR) (const_int 0))) is
 Index: gcc/tree-sra.c
 ===================================================================
---- gcc/tree-sra.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/tree-sra.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/tree-sra.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/tree-sra.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1020,26 +1020,28 @@
    return false;
  }
@@ -4424,8 +4758,8 @@ Index: gcc/tree-sra.c
    return false;
 Index: gcc/lto/lto.c
 ===================================================================
---- gcc/lto/lto.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto/lto.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto/lto.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto/lto.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -198,7 +198,7 @@
    uint32_t ix;
    tree decl;
@@ -4493,8 +4827,8 @@ Index: gcc/lto/lto.c
          internal_error ("could not parse file offset");
 Index: gcc/lto/lto.h
 ===================================================================
---- gcc/lto/lto.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto/lto.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto/lto.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto/lto.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -60,6 +60,4 @@
    size_t len;
  };
@@ -4504,8 +4838,8 @@ Index: gcc/lto/lto.h
  #endif /* LTO_H */
 Index: gcc/lto/ChangeLog
 ===================================================================
---- gcc/lto/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,10 @@
 +2011-12-13  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -4519,8 +4853,8 @@ Index: gcc/lto/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/ipa-prop.c
 ===================================================================
---- gcc/ipa-prop.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/ipa-prop.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/ipa-prop.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/ipa-prop.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2868,9 +2868,9 @@
  {
    const struct lto_function_header *header =
@@ -4536,8 +4870,8 @@ Index: gcc/ipa-prop.c
    unsigned int i;
 Index: gcc/po/ChangeLog
 ===================================================================
---- gcc/po/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/po/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/po/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/po/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-10-30  Joseph Myers  <joseph@codesourcery.com>
 +
@@ -4548,8 +4882,8 @@ Index: gcc/po/ChangeLog
  	* GCC 4.6.2 released.
 Index: gcc/po/ja.po
 ===================================================================
---- gcc/po/ja.po	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/po/ja.po	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/po/ja.po	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/po/ja.po	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -20,7 +20,7 @@
  "Project-Id-Version: gcc 4.6.1\n"
  "Report-Msgid-Bugs-To: http://gcc.gnu.org/bugs.html\n"
@@ -6137,8 +6471,8 @@ Index: gcc/po/ja.po
  #, gcc-internal-format
 Index: gcc/tree-ssa-forwprop.c
 ===================================================================
---- gcc/tree-ssa-forwprop.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/tree-ssa-forwprop.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/tree-ssa-forwprop.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/tree-ssa-forwprop.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -872,7 +872,7 @@
  		     TREE_TYPE (gimple_assign_rhs1 (use_stmt))))
  	{
@@ -6189,8 +6523,8 @@ Index: gcc/tree-ssa-forwprop.c
  	  tidy_after_forward_propagate_addr (use_stmt);
 Index: gcc/varasm.c
 ===================================================================
---- gcc/varasm.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/varasm.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/varasm.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/varasm.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -6751,11 +6751,14 @@
    /* A non-decl is an entry in the constant pool.  */
    if (!DECL_P (exp))
@@ -6213,8 +6547,8 @@ Index: gcc/varasm.c
    else if (! TREE_PUBLIC (exp))
 Index: gcc/sched-deps.c
 ===================================================================
---- gcc/sched-deps.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/sched-deps.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/sched-deps.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/sched-deps.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2687,7 +2687,11 @@
  	  else
  	    sched_analyze_2 (deps, XEXP (link, 0), insn);
@@ -6230,8 +6564,8 @@ Index: gcc/sched-deps.c
  
 Index: gcc/tree-object-size.c
 ===================================================================
---- gcc/tree-object-size.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/tree-object-size.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/tree-object-size.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/tree-object-size.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -175,7 +175,7 @@
        unsigned HOST_WIDE_INT sz;
  
@@ -6241,10 +6575,27 @@ Index: gcc/tree-object-size.c
  	{
  	  sz = compute_builtin_object_size (TREE_OPERAND (pt_var, 0),
  					    object_size_type & ~1);
+Index: gcc/tree-outof-ssa.c
+===================================================================
+--- gcc/tree-outof-ssa.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/tree-outof-ssa.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -237,9 +237,10 @@
+ 
+   var = SSA_NAME_VAR (partition_to_var (SA.map, dest));
+   src_mode = TYPE_MODE (TREE_TYPE (src));
+-  dest_mode = promote_decl_mode (var, &unsignedp);
++  dest_mode = GET_MODE (SA.partition_to_pseudo[dest]);
+   gcc_assert (src_mode == TYPE_MODE (TREE_TYPE (var)));
+-  gcc_assert (dest_mode == GET_MODE (SA.partition_to_pseudo[dest]));
++  gcc_assert (!REG_P (SA.partition_to_pseudo[dest])
++	      || dest_mode == promote_decl_mode (var, &unsignedp));
+ 
+   if (src_mode != dest_mode)
+     {
 Index: gcc/lto-opts.c
 ===================================================================
---- gcc/lto-opts.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/lto-opts.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/lto-opts.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/lto-opts.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -358,7 +358,7 @@
    size_t len, l, skip;
    const char *data, *p;
@@ -6269,8 +6620,8 @@ Index: gcc/lto-opts.c
        p += skip;
 Index: gcc/c-parser.c
 ===================================================================
---- gcc/c-parser.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/c-parser.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/c-parser.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/c-parser.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -6294,7 +6294,7 @@
  	      c_parser_error (parser, "expected identifier");
  	    c_parser_skip_until_found (parser, CPP_CLOSE_PAREN,
@@ -6280,10 +6631,87 @@ Index: gcc/c-parser.c
  	  }
  	  break;
  	case RID_CHOOSE_EXPR:
+Index: gcc/config/alpha/linux-unwind.h
+===================================================================
+--- gcc/config/alpha/linux-unwind.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/alpha/linux-unwind.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,5 +1,5 @@
+ /* DWARF2 EH unwinding support for Alpha Linux.
+-   Copyright (C) 2004, 2005, 2009 Free Software Foundation, Inc.
++   Copyright (C) 2004, 2005, 2009, 2011 Free Software Foundation, Inc.
+ 
+ This file is part of GCC.
+ 
+@@ -36,16 +36,17 @@
+ {
+   unsigned int *pc = context->ra;
+   struct sigcontext *sc;
+-  long new_cfa, i;
++  long new_cfa;
++  int i;
+ 
+   if (pc[0] != 0x47fe0410		/* mov $30,$16 */
+-      || pc[2] != 0x00000083		/* callsys */)
++      || pc[2] != 0x00000083)		/* callsys */
+     return _URC_END_OF_STACK;
+   if (context->cfa == 0)
+     return _URC_END_OF_STACK;
+   if (pc[1] == 0x201f0067)		/* lda $0,NR_sigreturn */
+     sc = context->cfa;
+-  else if (pc[1] == 0x201f015f)	/* lda $0,NR_rt_sigreturn */
++  else if (pc[1] == 0x201f015f)		/* lda $0,NR_rt_sigreturn */
+     {
+       struct rt_sigframe {
+ 	struct siginfo info;
+@@ -55,6 +56,7 @@
+     }
+   else
+     return _URC_END_OF_STACK;
++
+   new_cfa = sc->sc_regs[30];
+   fs->regs.cfa_how = CFA_REG_OFFSET;
+   fs->regs.cfa_reg = 30;
+@@ -63,13 +65,13 @@
+     {
+       fs->regs.reg[i].how = REG_SAVED_OFFSET;
+       fs->regs.reg[i].loc.offset
+-	= (long)&sc->sc_regs[i] - new_cfa;
++	= (long) &sc->sc_regs[i] - new_cfa;
+     }
+   for (i = 0; i < 31; ++i)
+     {
+       fs->regs.reg[i+32].how = REG_SAVED_OFFSET;
+       fs->regs.reg[i+32].loc.offset
+-	= (long)&sc->sc_fpregs[i] - new_cfa;
++	= (long) &sc->sc_fpregs[i] - new_cfa;
+     }
+   fs->regs.reg[64].how = REG_SAVED_OFFSET;
+   fs->regs.reg[64].loc.offset = (long)&sc->sc_pc - new_cfa;
+@@ -78,3 +80,20 @@
+ 
+   return _URC_NO_REASON;
+ }
++
++#define MD_FROB_UPDATE_CONTEXT alpha_frob_update_context
++
++/* Fix up for signal handlers that don't have S flag set.  */
++
++static void
++alpha_frob_update_context (struct _Unwind_Context *context,
++			   _Unwind_FrameState *fs ATTRIBUTE_UNUSED)
++{
++  unsigned int *pc = context->ra;
++
++  if (pc[0] == 0x47fe0410		/* mov $30,$16 */
++      && pc[2] == 0x00000083		/* callsys */
++      && (pc[1] == 0x201f0067		/* lda $0,NR_sigreturn */
++	  || pc[1] == 0x201f015f))	/* lda $0,NR_rt_sigreturn */
++    _Unwind_SetSignalFrame (context, 1);
++}
 Index: gcc/config/sparc/sparc.md
 ===================================================================
---- gcc/config/sparc/sparc.md	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/sparc/sparc.md	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/sparc/sparc.md	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/sparc/sparc.md	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -28,6 +28,7 @@
    [(UNSPEC_MOVE_PIC		0)
     (UNSPEC_UPDATE_RETURN	1)
@@ -6463,8 +6891,8 @@ Index: gcc/config/sparc/sparc.md
    ""
 Index: gcc/config/sparc/sparc.c
 ===================================================================
---- gcc/config/sparc/sparc.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/sparc/sparc.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/sparc/sparc.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -4569,8 +4569,9 @@
        else if (actual_fsize <= 8192)
  	{
@@ -6497,8 +6925,8 @@ Index: gcc/config/sparc/sparc.c
  	{
 Index: gcc/config/sparc/sparc.h
 ===================================================================
---- gcc/config/sparc/sparc.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/sparc/sparc.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/sparc/sparc.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/sparc/sparc.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -408,6 +408,7 @@
  %{mcpu=sparclite:-Asparclite} \
  %{mcpu=sparclite86x:-Asparclite} \
@@ -6509,8 +6937,8 @@ Index: gcc/config/sparc/sparc.h
  %{mcpu=ultrasparc:%{!mv8plus:-Av9a}} \
 Index: gcc/config/i386/i386.md
 ===================================================================
---- gcc/config/i386/i386.md	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/i386/i386.md	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/i386/i386.md	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/i386/i386.md	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1960,7 +1960,7 @@
  
  (define_insn "*movdi_internal_rex64"
@@ -6707,8 +7135,8 @@ Index: gcc/config/i386/i386.md
    [(unspec_volatile [(match_operand:SWI48 0 "register_operand" "r")
 Index: gcc/config/i386/sse.md
 ===================================================================
---- gcc/config/i386/sse.md	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/i386/sse.md	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/i386/sse.md	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/i386/sse.md	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -4521,15 +4521,14 @@
    [(set (match_operand:V4DF 0 "register_operand"         "=x,x")
  	(vec_select:V4DF
@@ -6732,8 +7160,8 @@ Index: gcc/config/i386/sse.md
     (set_attr "mode" "V4DF")])
 Index: gcc/config/i386/freebsd.h
 ===================================================================
---- gcc/config/i386/freebsd.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/i386/freebsd.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/i386/freebsd.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/i386/freebsd.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -147,3 +147,6 @@
  #if FBSD_MAJOR >= 6
  #define SUBTARGET32_DEFAULT_CPU "i486"
@@ -6743,8 +7171,8 @@ Index: gcc/config/i386/freebsd.h
 +
 Index: gcc/config/i386/avxintrin.h
 ===================================================================
---- gcc/config/i386/avxintrin.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/i386/avxintrin.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/i386/avxintrin.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/i386/avxintrin.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -759,7 +759,7 @@
  
  #ifdef __x86_64__
@@ -6756,8 +7184,8 @@ Index: gcc/config/i386/avxintrin.h
    __Y = _mm_insert_epi64 (__Y, __D, __N % 2);
 Index: gcc/config/i386/i386.c
 ===================================================================
---- gcc/config/i386/i386.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/i386/i386.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/i386/i386.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/i386/i386.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -16329,7 +16329,6 @@
    basic_block bb = BLOCK_FOR_INSN (insn);
    int distance = 0;
@@ -6790,8 +7218,8 @@ Index: gcc/config/i386/i386.c
  		}
 Index: gcc/config/avr/libgcc.S
 ===================================================================
---- gcc/config/avr/libgcc.S	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/avr/libgcc.S	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/avr/libgcc.S	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/avr/libgcc.S	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -582,7 +582,16 @@
  	push r17
  	push r28
@@ -6843,8 +7271,8 @@ Index: gcc/config/avr/libgcc.S
  #endif /* defined (L_epilogue) */
 Index: gcc/config/avr/avr.md
 ===================================================================
---- gcc/config/avr/avr.md	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/avr/avr.md	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/avr/avr.md	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/avr/avr.md	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -299,7 +299,7 @@
    [(set (match_operand:HI 0 "stack_register_operand" "=q")
          (unspec_volatile:HI [(match_operand:HI 1 "register_operand"  "r")] 
@@ -6865,8 +7293,8 @@ Index: gcc/config/avr/avr.md
  	sei
 Index: gcc/config/avr/avr-devices.c
 ===================================================================
---- gcc/config/avr/avr-devices.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/avr/avr-devices.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/avr/avr-devices.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/avr/avr-devices.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -70,7 +70,7 @@
    { "attiny2313a",          ARCH_AVR25, "__AVR_ATtiny2313A__",      1, 0x0060, "tn2313a" },
    { "attiny24",             ARCH_AVR25, "__AVR_ATtiny24__",         1, 0x0060, "tn24" },
@@ -6887,8 +7315,8 @@ Index: gcc/config/avr/avr-devices.c
    { "at43usb355",           ARCH_AVR3, "__AVR_AT43USB355__",        0, 0x0060, "43355" },
 Index: gcc/config/avr/avr.c
 ===================================================================
---- gcc/config/avr/avr.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/avr/avr.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/avr/avr.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/avr/avr.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1879,9 +1879,12 @@
  	    }
  	  else if (test_hard_reg_class (STACK_REG, src))
@@ -6922,8 +7350,8 @@ Index: gcc/config/avr/avr.c
           "__zero_reg__ = 1\n", asm_out_file);
 Index: gcc/config/rs6000/rs6000.c
 ===================================================================
---- gcc/config/rs6000/rs6000.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/rs6000/rs6000.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/rs6000/rs6000.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/rs6000/rs6000.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2612,6 +2612,7 @@
       off.  */
    rs6000_altivec_abi = 1;
@@ -6940,6 +7368,15 @@ Index: gcc/config/rs6000/rs6000.c
  #else
        && DEFAULT_ABI == ABI_V4
        && !flag_pic
+@@ -16613,7 +16615,7 @@
+       if (TARGET_RELOCATABLE
+ 	  && in_section != toc_section
+ 	  && in_section != text_section
+-	  && !unlikely_text_section_p (in_section)
++	  && (in_section && (in_section->common.flags & SECTION_CODE)) == 0
+ 	  && !recurse
+ 	  && GET_CODE (x) != CONST_INT
+ 	  && GET_CODE (x) != CONST_DOUBLE
 @@ -20227,7 +20229,7 @@
  {
    /* This blockage is needed so that sched doesn't decide to move
@@ -7191,8 +7628,8 @@ Index: gcc/config/rs6000/rs6000.c
        par = rs6000_make_savres_rtx (info, frame_reg_rtx,
 Index: gcc/config/darwin.c
 ===================================================================
---- gcc/config/darwin.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/darwin.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/darwin.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/darwin.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1753,19 +1753,51 @@
    return (!strncmp ((const char *)p, "_OBJC_", 6));
  }
@@ -7423,9 +7860,24 @@ Index: gcc/config/darwin.c
       re-arranging data.  */
 Index: gcc/config/arm/arm.c
 ===================================================================
---- gcc/config/arm/arm.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/arm/arm.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -9812,6 +9812,9 @@
+--- gcc/config/arm/arm.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/arm/arm.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -5077,6 +5077,14 @@
+   if (IS_STACKALIGN (func_type))
+     return false;
+ 
++  /* The AAPCS says that, on bare-metal, calls to unresolved weak
++     references should become a NOP.  Don't convert such calls into
++     sibling calls.  */
++  if (TARGET_AAPCS_BASED
++      && arm_abi == ARM_ABI_AAPCS
++      && DECL_WEAK (decl))
++    return false;
++
+   /* Everything else is ok.  */
+   return true;
+ }
+@@ -9812,6 +9820,9 @@
    rtx base_reg_rtx = NULL;
    int i, stm_case;
  
@@ -7435,7 +7887,7 @@ Index: gcc/config/arm/arm.c
    /* Can only handle up to MAX_LDM_STM_OPS insns at present, though could be
       easily extended if required.  */
    gcc_assert (nops >= 2 && nops <= MAX_LDM_STM_OPS);
-@@ -9869,7 +9872,9 @@
+@@ -9869,7 +9880,9 @@
  	  /* If it isn't an integer register, then we can't do this.  */
  	  if (unsorted_regs[i] < 0
  	      || (TARGET_THUMB1 && unsorted_regs[i] > LAST_LO_REGNUM)
@@ -7446,7 +7898,7 @@ Index: gcc/config/arm/arm.c
  	      || (TARGET_THUMB2 && unsorted_regs[i] == SP_REGNUM)
  	      || unsorted_regs[i] > 14)
  	    return 0;
-@@ -19571,39 +19576,34 @@
+@@ -19571,39 +19584,34 @@
    emit_move_insn (mem, tmp2);
  }
  
@@ -7508,8 +7960,8 @@ Index: gcc/config/arm/arm.c
  /* Expand an expression EXP that calls a built-in function,
 Index: gcc/config/arm/arm.md
 ===================================================================
---- gcc/config/arm/arm.md	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/arm/arm.md	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/arm/arm.md	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/arm/arm.md	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3272,7 +3272,7 @@
      bool need_else;
  
@@ -7521,8 +7973,8 @@ Index: gcc/config/arm/arm.md
        need_else = false;
 Index: gcc/config/pa/pa.c
 ===================================================================
---- gcc/config/pa/pa.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/pa/pa.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/pa/pa.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/pa/pa.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1863,6 +1863,11 @@
    /* Handle the most common case: storing into a register.  */
    else if (register_operand (operand0, mode))
@@ -7537,8 +7989,8 @@ Index: gcc/config/pa/pa.c
  	      && cint_ok_for_move (INTVAL (operand1)))
 Index: gcc/config/pa/pa.h
 ===================================================================
---- gcc/config/pa/pa.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/config/pa/pa.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/config/pa/pa.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/config/pa/pa.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -848,6 +848,9 @@
     && (NEW_HP_ASSEMBLER						\
         || TARGET_GAS						\
@@ -7551,8 +8003,8 @@ Index: gcc/config/pa/pa.h
     && (!TARGET_64BIT						\
 Index: gcc/reload1.c
 ===================================================================
---- gcc/reload1.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ gcc/reload1.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- gcc/reload1.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ gcc/reload1.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -3899,6 +3899,10 @@
      if (XEXP (x, 0))
        set_label_offsets (XEXP (x, 0), NULL_RTX, 1);
@@ -7566,8 +8018,8 @@ Index: gcc/reload1.c
  
 Index: zlib/configure
 ===================================================================
---- zlib/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ zlib/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- zlib/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ zlib/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8600,7 +8600,7 @@
        ;;
  
@@ -7597,8 +8049,8 @@ Index: zlib/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: zlib/ChangeLog
 ===================================================================
---- zlib/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ zlib/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- zlib/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ zlib/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -7609,8 +8061,8 @@ Index: zlib/ChangeLog
  	* GCC 4.6.2 released.
 Index: libstdc++-v3/configure
 ===================================================================
---- libstdc++-v3/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -9698,7 +9698,7 @@
        ;;
  
@@ -7667,8 +8119,8 @@ Index: libstdc++-v3/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libstdc++-v3/include/debug/unordered_map
 ===================================================================
---- libstdc++-v3/include/debug/unordered_map	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/debug/unordered_map	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/debug/unordered_map	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/debug/unordered_map	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -276,6 +276,10 @@
        }
  
@@ -7693,8 +8145,8 @@ Index: libstdc++-v3/include/debug/unordered_map
  	__glibcxx_check_erase_range(__first, __last);
 Index: libstdc++-v3/include/debug/unordered_set
 ===================================================================
---- libstdc++-v3/include/debug/unordered_set	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/debug/unordered_set	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/debug/unordered_set	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/debug/unordered_set	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -269,6 +269,10 @@
        }
  
@@ -7719,8 +8171,8 @@ Index: libstdc++-v3/include/debug/unordered_set
  	__glibcxx_check_erase_range(__first, __last);
 Index: libstdc++-v3/include/debug/map.h
 ===================================================================
---- libstdc++-v3/include/debug/map.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/debug/map.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/debug/map.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/debug/map.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -273,6 +273,10 @@
  	this->_M_invalidate_if(_Equal(__position.base()));
  	return iterator(_Base::erase(__position.base()), this);
@@ -7734,8 +8186,8 @@ Index: libstdc++-v3/include/debug/map.h
        erase(iterator __position)
 Index: libstdc++-v3/include/debug/multimap.h
 ===================================================================
---- libstdc++-v3/include/debug/multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/debug/multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/debug/multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/debug/multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -254,6 +254,10 @@
  	this->_M_invalidate_if(_Equal(__position.base()));
  	return iterator(_Base::erase(__position.base()), this);
@@ -7749,8 +8201,8 @@ Index: libstdc++-v3/include/debug/multimap.h
        erase(iterator __position)
 Index: libstdc++-v3/include/std/condition_variable
 ===================================================================
---- libstdc++-v3/include/std/condition_variable	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/std/condition_variable	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/std/condition_variable	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/std/condition_variable	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -198,10 +198,25 @@
        void
        wait(_Lock& __lock)
@@ -7783,8 +8235,8 @@ Index: libstdc++-v3/include/std/condition_variable
  
 Index: libstdc++-v3/include/std/complex
 ===================================================================
---- libstdc++-v3/include/std/complex	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/std/complex	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/std/complex	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/std/complex	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,7 +1,7 @@
  // The template and inlines for the -*- C++ -*- complex number classes.
  
@@ -7812,8 +8264,8 @@ Index: libstdc++-v3/include/std/complex
  #if _GLIBCXX_USE_C99_COMPLEX_TR1
 Index: libstdc++-v3/include/ext/type_traits.h
 ===================================================================
---- libstdc++-v3/include/ext/type_traits.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/ext/type_traits.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/ext/type_traits.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/ext/type_traits.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,6 +1,7 @@
  // -*- C++ -*-
  
@@ -7901,8 +8353,8 @@ Index: libstdc++-v3/include/ext/type_traits.h
  _GLIBCXX_END_NAMESPACE_VERSION
 Index: libstdc++-v3/include/profile/map.h
 ===================================================================
---- libstdc++-v3/include/profile/map.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/profile/map.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/profile/map.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/profile/map.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -326,6 +326,10 @@
          __profcxx_map_to_unordered_map_erase(this, size(), 1);
          return __i;
@@ -7916,8 +8368,8 @@ Index: libstdc++-v3/include/profile/map.h
        erase(iterator __position)
 Index: libstdc++-v3/include/profile/multimap.h
 ===================================================================
---- libstdc++-v3/include/profile/multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/profile/multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/profile/multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/profile/multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -225,6 +225,10 @@
        iterator
        erase(const_iterator __position)
@@ -7931,8 +8383,8 @@ Index: libstdc++-v3/include/profile/multimap.h
        erase(iterator __position)
 Index: libstdc++-v3/include/bits/hashtable.h
 ===================================================================
---- libstdc++-v3/include/bits/hashtable.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/bits/hashtable.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/bits/hashtable.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/hashtable.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -440,6 +440,11 @@
        iterator
        erase(const_iterator);
@@ -7947,8 +8399,8 @@ Index: libstdc++-v3/include/bits/hashtable.h
  
 Index: libstdc++-v3/include/bits/stl_map.h
 ===================================================================
---- libstdc++-v3/include/bits/stl_map.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/bits/stl_map.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/bits/stl_map.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/stl_map.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -612,6 +612,11 @@
        iterator
        erase(const_iterator __position)
@@ -7963,8 +8415,8 @@ Index: libstdc++-v3/include/bits/stl_map.h
         *  @brief Erases an element from a %map.
 Index: libstdc++-v3/include/bits/stl_multimap.h
 ===================================================================
---- libstdc++-v3/include/bits/stl_multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/bits/stl_multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/bits/stl_multimap.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/stl_multimap.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -533,6 +533,11 @@
        iterator
        erase(const_iterator __position)
@@ -7979,8 +8431,8 @@ Index: libstdc++-v3/include/bits/stl_multimap.h
         *  @brief Erases an element from a %multimap.
 Index: libstdc++-v3/include/bits/stl_numeric.h
 ===================================================================
---- libstdc++-v3/include/bits/stl_numeric.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/bits/stl_numeric.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/bits/stl_numeric.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/stl_numeric.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -222,10 +222,10 @@
    /**
     *  @brief  Return list of partial sums
@@ -8015,10 +8467,64 @@ Index: libstdc++-v3/include/bits/stl_numeric.h
     *  @return  Iterator pointing just beyond the values written to result.
     */
    template<typename _InputIterator, typename _OutputIterator,
+Index: libstdc++-v3/include/bits/stl_uninitialized.h
+===================================================================
+--- libstdc++-v3/include/bits/stl_uninitialized.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/stl_uninitialized.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,7 +1,7 @@
+ // Raw memory manipulators -*- C++ -*-
+ 
+ // Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008,
+-// 2009, 2010
++// 2009, 2010, 2011
+ // Free Software Foundation, Inc.
+ //
+ // This file is part of the GNU ISO C++ Library.  This library is free
+@@ -530,7 +530,22 @@
+ 	__uninit_default_n(__first, __n);
+     }
+ 
++ template<typename _Tp, typename _Allocator>
++   inline auto
++   _Construct_default_a_impl(_Tp* __ptr, _Allocator& __alloc, void*)
++   -> decltype(__alloc.construct(__ptr))
++   { return __alloc.construct(__ptr); }
+ 
++  template<typename _Tp, typename _Allocator>
++   inline void
++   _Construct_default_a_impl(_Tp* __ptr, _Allocator& __alloc, ...)
++   { _Construct(__ptr); }
++
++  template<typename _Tp, typename _Allocator>
++   inline void
++   _Construct_default_a(_Tp* __ptr, _Allocator& __alloc)
++   { _Construct_default_a_impl(__ptr, __alloc, nullptr); }
++
+   // __uninitialized_default_a
+   // Fills [first, last) with std::distance(first, last) default
+   // constructed value_types(s), constructed with the allocator alloc.
+@@ -544,7 +559,7 @@
+       __try
+ 	{
+ 	  for (; __cur != __last; ++__cur)
+-	    __alloc.construct(std::__addressof(*__cur));
++	    _Construct_default_a(std::__addressof(*__cur), __alloc);
+ 	}
+       __catch(...)
+ 	{
+@@ -573,7 +588,7 @@
+       __try
+ 	{
+ 	  for (; __n > 0; --__n, ++__cur)
+-	    __alloc.construct(std::__addressof(*__cur));
++	    _Construct_default_a(std::__addressof(*__cur), __alloc);
+ 	}
+       __catch(...)
+ 	{
 Index: libstdc++-v3/include/bits/stl_tree.h
 ===================================================================
---- libstdc++-v3/include/bits/stl_tree.h	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/bits/stl_tree.h	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/bits/stl_tree.h	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/bits/stl_tree.h	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -760,6 +760,16 @@
  	_M_erase_aux(__position);
  	return __result._M_const_cast();
@@ -8038,8 +8544,8 @@ Index: libstdc++-v3/include/bits/stl_tree.h
        erase(iterator __position)
 Index: libstdc++-v3/include/c_global/cmath
 ===================================================================
---- libstdc++-v3/include/c_global/cmath	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/c_global/cmath	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/c_global/cmath	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/c_global/cmath	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,7 +1,7 @@
  // -*- C++ -*- C forwarding header.
  
@@ -8075,8 +8581,8 @@ Index: libstdc++-v3/include/c_global/cmath
        typedef typename __gnu_cxx::__promote_2<_Tp, _Up>::__type __type;
 Index: libstdc++-v3/include/tr1/complex
 ===================================================================
---- libstdc++-v3/include/tr1/complex	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/tr1/complex	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/tr1/complex	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/tr1/complex	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -185,12 +185,9 @@
      std::complex<_Tp>
      __complex_acosh(const std::complex<_Tp>& __z)
@@ -8095,8 +8601,8 @@ Index: libstdc++-v3/include/tr1/complex
  #if _GLIBCXX_USE_C99_COMPLEX_TR1
 Index: libstdc++-v3/include/tr1/poly_hermite.tcc
 ===================================================================
---- libstdc++-v3/include/tr1/poly_hermite.tcc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/include/tr1/poly_hermite.tcc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/include/tr1/poly_hermite.tcc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/include/tr1/poly_hermite.tcc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,6 +1,6 @@
  // Special functions -*- C++ -*-
  
@@ -8116,9 +8622,20 @@ Index: libstdc++-v3/include/tr1/poly_hermite.tcc
          }
 Index: libstdc++-v3/ChangeLog
 ===================================================================
---- libstdc++-v3/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
-@@ -1,3 +1,103 @@
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -1,3 +1,114 @@
++2011-12-19  Jonathan Wakely  <jwakely.gcc@gmail.com>
++
++	PR libstdc++/51626
++	* include/bits/stl_uninitialized.h (_Construct_default_a_impl): Define
++	overloaded functions to conditionally use allocator::construct.
++	(_Construct_default_a): Define to dispatch to appropriate
++	_Construct_default_a_impl overload.
++	(__uninitialized_default_a, __uninitialized_default_n_a): Use
++	_Construct_default_a.
++	* testsuite/20_util/allocator/51626.cc: New.
++
 +2011-12-19  Jonathan Wakely  <jwakely.gcc@gmail.com>
 +
 +	* testsuite/ext/type_traits/remove_unsigned_integer_neg.cc: Adjust
@@ -8225,7 +8742,7 @@ Index: libstdc++-v3/ChangeLog
 Index: libstdc++-v3/testsuite/26_numerics/complex/51083.cc
 ===================================================================
 --- libstdc++-v3/testsuite/26_numerics/complex/51083.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/26_numerics/complex/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/26_numerics/complex/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,54 @@
 +// { dg-options "-std=gnu++0x" }
 +//
@@ -8284,7 +8801,7 @@ Index: libstdc++-v3/testsuite/26_numerics/complex/51083.cc
 Index: libstdc++-v3/testsuite/26_numerics/complex/50880.cc
 ===================================================================
 --- libstdc++-v3/testsuite/26_numerics/complex/50880.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/26_numerics/complex/50880.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/26_numerics/complex/50880.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,53 @@
 +// { dg-options "-std=gnu++0x" }
 +//
@@ -8342,7 +8859,7 @@ Index: libstdc++-v3/testsuite/26_numerics/complex/50880.cc
 Index: libstdc++-v3/testsuite/26_numerics/cmath/51083.cc
 ===================================================================
 --- libstdc++-v3/testsuite/26_numerics/cmath/51083.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/26_numerics/cmath/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/26_numerics/cmath/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,62 @@
 +// { dg-options "-std=gnu++0x" }
 +//
@@ -8409,7 +8926,7 @@ Index: libstdc++-v3/testsuite/26_numerics/cmath/51083.cc
 Index: libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc
 ===================================================================
 --- libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,80 @@
 +// { dg-do run { target *-*-freebsd* *-*-netbsd* *-*-linux* *-*-solaris* *-*-cygwin *-*-darwin* alpha*-*-osf* mips-sgi-irix6* } }
 +// { dg-options " -std=gnu++0x -pthread" { target *-*-freebsd* *-*-netbsd* *-*-linux* alpha*-*-osf* mips-sgi-irix6* } }
@@ -8493,8 +9010,8 @@ Index: libstdc++-v3/testsuite/30_threads/condition_variable_any/50862.cc
 +}
 Index: libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc
 ===================================================================
---- libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -36,4 +36,4 @@
  }
  
@@ -8503,8 +9020,8 @@ Index: libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_integer_neg.cc
 +// { dg-error "declaration of" "" { target *-*-* } 107 }
 Index: libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc
 ===================================================================
---- libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -35,4 +35,4 @@
  }
  
@@ -8513,8 +9030,8 @@ Index: libstdc++-v3/testsuite/ext/type_traits/add_unsigned_floating_neg.cc
 +// { dg-error "no type" "" { target *-*-* } 70 } 
 Index: libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc
 ===================================================================
---- libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -35,4 +35,4 @@
  }
  
@@ -8523,8 +9040,8 @@ Index: libstdc++-v3/testsuite/ext/type_traits/remove_unsigned_floating_neg.cc
 +// { dg-error "no type" "" { target *-*-* } 113 }
 Index: libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc
 ===================================================================
---- libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -36,4 +36,4 @@
  }
  
@@ -8534,7 +9051,7 @@ Index: libstdc++-v3/testsuite/ext/type_traits/add_unsigned_integer_neg.cc
 Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/51083.cc
 ===================================================================
 --- libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/51083.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,54 @@
 +// { dg-options "-std=gnu++0x" }
 +//
@@ -8593,7 +9110,7 @@ Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/51083.cc
 Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/50880.cc
 ===================================================================
 --- libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/50880.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/50880.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/50880.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,51 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8649,7 +9166,7 @@ Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/complex/50880.cc
 Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/51083.cc
 ===================================================================
 --- libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/51083.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/51083.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,62 @@
 +// { dg-options "-std=gnu++0x" }
 +//
@@ -8716,7 +9233,7 @@ Index: libstdc++-v3/testsuite/tr1/8_c_compatibility/cmath/51083.cc
 Index: libstdc++-v3/testsuite/23_containers/unordered_map/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/unordered_map/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/unordered_map/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/unordered_map/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8759,7 +9276,7 @@ Index: libstdc++-v3/testsuite/23_containers/unordered_map/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/multimap/modifiers/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/multimap/modifiers/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/multimap/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/multimap/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8802,7 +9319,7 @@ Index: libstdc++-v3/testsuite/23_containers/multimap/modifiers/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/set/modifiers/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/set/modifiers/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/set/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/set/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8845,7 +9362,7 @@ Index: libstdc++-v3/testsuite/23_containers/set/modifiers/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/unordered_multimap/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/unordered_multimap/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/unordered_multimap/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/unordered_multimap/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8888,7 +9405,7 @@ Index: libstdc++-v3/testsuite/23_containers/unordered_multimap/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/unordered_set/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/unordered_set/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/unordered_set/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/unordered_set/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8931,7 +9448,7 @@ Index: libstdc++-v3/testsuite/23_containers/unordered_set/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/multiset/modifiers/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/multiset/modifiers/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/multiset/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/multiset/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -8974,7 +9491,7 @@ Index: libstdc++-v3/testsuite/23_containers/multiset/modifiers/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/unordered_multiset/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/unordered_multiset/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/unordered_multiset/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/unordered_multiset/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -9017,7 +9534,7 @@ Index: libstdc++-v3/testsuite/23_containers/unordered_multiset/erase/51142.cc
 Index: libstdc++-v3/testsuite/23_containers/map/modifiers/erase/51142.cc
 ===================================================================
 --- libstdc++-v3/testsuite/23_containers/map/modifiers/erase/51142.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
-+++ libstdc++-v3/testsuite/23_containers/map/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
++++ libstdc++-v3/testsuite/23_containers/map/modifiers/erase/51142.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -0,0 +1,38 @@
 +// Copyright (C) 2011 Free Software Foundation, Inc.
 +//
@@ -9057,10 +9574,81 @@ Index: libstdc++-v3/testsuite/23_containers/map/modifiers/erase/51142.cc
 +  if (it != s.end())
 +    s.erase(it);
 +}
+Index: libstdc++-v3/testsuite/20_util/allocator/51626.cc
+===================================================================
+--- libstdc++-v3/testsuite/20_util/allocator/51626.cc	(.../tags/gcc_4_6_2_release)	(wersja 0)
++++ libstdc++-v3/testsuite/20_util/allocator/51626.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
+@@ -0,0 +1,66 @@
++// Copyright (C) 2011 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++
++// { dg-options "-std=gnu++0x" }
++
++#include <memory>
++#include <vector>
++#include <testsuite_hooks.h>
++
++int count = 0;
++
++template <class T>
++  struct allocator98 : std::allocator<T>
++  {
++    template <class U> struct rebind { typedef allocator98<U> other; };
++
++    allocator98() { }
++
++    template <class U> allocator98(const allocator98<U>&) { };
++
++    void construct(T* p, const T& val)
++    {
++      ++count;
++      std::allocator<T>::construct(p, val);
++    }
++  };
++
++template <class T>
++  struct allocator11 : std::allocator<T>
++  {
++    template <class U> struct rebind { typedef allocator11<U> other; };
++
++    allocator11() { }
++
++    template <class U> allocator11(const allocator11<U>&) { };
++
++    template<typename... Args>
++      void construct(T* p, Args&&... args)
++      {
++	++count;
++	std::allocator<T>::construct(p, std::forward<Args>(args)...);
++      }
++  };
++
++int main()
++{
++  std::vector< int, allocator98<int> > v98(1);
++  VERIFY( count == 0 );
++
++  std::vector< int, allocator11<int> > v11(1);
++  VERIFY( count == 1 );
++}
 Index: configure.ac
 ===================================================================
---- configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -2428,10 +2428,6 @@
      extra_arflags_for_target=" -X32_64"
      extra_nmflags_for_target=" -B -X32_64"
@@ -9074,8 +9662,8 @@ Index: configure.ac
      ;;
 Index: libobjc/configure
 ===================================================================
---- libobjc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libobjc/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libobjc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libobjc/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8797,7 +8797,7 @@
        ;;
  
@@ -9105,8 +9693,8 @@ Index: libobjc/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libobjc/ChangeLog
 ===================================================================
---- libobjc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libobjc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libobjc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libobjc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -9117,8 +9705,8 @@ Index: libobjc/ChangeLog
  	* GCC 4.6.2 released.
 Index: libgfortran/configure
 ===================================================================
---- libgfortran/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgfortran/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgfortran/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgfortran/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -10326,7 +10326,7 @@
        ;;
  
@@ -9175,8 +9763,8 @@ Index: libgfortran/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libgfortran/ChangeLog
 ===================================================================
---- libgfortran/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libgfortran/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libgfortran/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libgfortran/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -9187,8 +9775,8 @@ Index: libgfortran/ChangeLog
  	* GCC 4.6.2 released.
 Index: libada/Makefile.in
 ===================================================================
---- libada/Makefile.in	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libada/Makefile.in	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libada/Makefile.in	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libada/Makefile.in	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -70,6 +70,7 @@
  version := $(shell cat $(srcdir)/../gcc/BASE-VER)
  libsubdir := $(libdir)/gcc/$(target_noncanonical)/$(version)$(MULTISUBDIR)
@@ -9232,8 +9820,8 @@ Index: libada/Makefile.in
  	$(MAKE) -C $(GCC_DIR)/ada $(LIBADA_FLAGS_TO_PASS) install-gnatlib
 Index: libada/ChangeLog
 ===================================================================
---- libada/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libada/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libada/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libada/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,9 @@
 +2011-11-13  Iain Sandoe  <iains@gcc.gnu.org>
 +
@@ -9246,8 +9834,8 @@ Index: libada/ChangeLog
  	* GCC 4.6.2 released.
 Index: libmudflap/configure
 ===================================================================
---- libmudflap/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libmudflap/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libmudflap/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libmudflap/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8818,7 +8818,7 @@
        ;;
  
@@ -9277,8 +9865,8 @@ Index: libmudflap/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libmudflap/ChangeLog
 ===================================================================
---- libmudflap/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libmudflap/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libmudflap/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libmudflap/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -9289,8 +9877,8 @@ Index: libmudflap/ChangeLog
  	* GCC 4.6.2 released.
 Index: boehm-gc/ChangeLog
 ===================================================================
---- boehm-gc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ boehm-gc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- boehm-gc/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ boehm-gc/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -9301,8 +9889,8 @@ Index: boehm-gc/ChangeLog
  	* GCC 4.6.2 released.
 Index: boehm-gc/configure
 ===================================================================
---- boehm-gc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ boehm-gc/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- boehm-gc/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ boehm-gc/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -9604,7 +9604,7 @@
        ;;
  
@@ -9359,8 +9947,8 @@ Index: boehm-gc/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libiberty/ChangeLog
 ===================================================================
---- libiberty/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libiberty/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libiberty/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libiberty/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,17 @@
 +2011-11-13  Iain Sandoe  <iains@gcc.gnu.org>
 +
@@ -9381,8 +9969,8 @@ Index: libiberty/ChangeLog
  	* GCC 4.6.2 released.
 Index: libiberty/simple-object-mach-o.c
 ===================================================================
---- libiberty/simple-object-mach-o.c	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libiberty/simple-object-mach-o.c	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libiberty/simple-object-mach-o.c	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libiberty/simple-object-mach-o.c	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,5 +1,5 @@
  /* simple-object-mach-o.c -- routines to manipulate Mach-O object files.
 -   Copyright 2010 Free Software Foundation, Inc.
@@ -10130,8 +10718,8 @@ Index: libiberty/simple-object-mach-o.c
  
 Index: ChangeLog
 ===================================================================
---- ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,17 @@
 +2011-12-18  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -10152,8 +10740,8 @@ Index: ChangeLog
  	* GCC 4.6.2 released.
 Index: lto-plugin/configure
 ===================================================================
---- lto-plugin/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ lto-plugin/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- lto-plugin/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ lto-plugin/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8733,7 +8733,7 @@
        ;;
  
@@ -10183,8 +10771,8 @@ Index: lto-plugin/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: lto-plugin/ChangeLog
 ===================================================================
---- lto-plugin/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ lto-plugin/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- lto-plugin/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ lto-plugin/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -10195,8 +10783,8 @@ Index: lto-plugin/ChangeLog
  	* GCC 4.6.2 released.
 Index: libffi/configure
 ===================================================================
---- libffi/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libffi/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libffi/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libffi/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -9001,7 +9001,7 @@
        ;;
  
@@ -10226,8 +10814,8 @@ Index: libffi/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libffi/ChangeLog
 ===================================================================
---- libffi/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libffi/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libffi/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libffi/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -10238,8 +10826,8 @@ Index: libffi/ChangeLog
  	* GCC 4.6.2 released.
 Index: libssp/configure
 ===================================================================
---- libssp/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libssp/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libssp/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libssp/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -8864,7 +8864,7 @@
        ;;
  
@@ -10269,8 +10857,8 @@ Index: libssp/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libssp/ChangeLog
 ===================================================================
---- libssp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libssp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libssp/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libssp/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -10281,8 +10869,8 @@ Index: libssp/ChangeLog
  	* GCC 4.6.2 released.
 Index: config/ChangeLog
 ===================================================================
---- config/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ config/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- config/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ config/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,7 @@
 +2011-12-18  Eric Botcazou  <ebotcazou@adacore.com>
 +
@@ -10293,8 +10881,8 @@ Index: config/ChangeLog
  	* GCC 4.6.2 released.
 Index: config/acx.m4
 ===================================================================
---- config/acx.m4	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ config/acx.m4	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- config/acx.m4	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ config/acx.m4	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -356,9 +356,9 @@
  ac_c_preproc_warn_flag=yes])# AC_PROG_CPP_WERROR
  
@@ -10319,8 +10907,8 @@ Index: config/acx.m4
    have_gnat=no
 Index: libjava/libltdl/configure
 ===================================================================
---- libjava/libltdl/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/libltdl/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/libltdl/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/libltdl/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -7355,7 +7355,7 @@
        ;;
  
@@ -10341,8 +10929,8 @@ Index: libjava/libltdl/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libjava/libltdl/ChangeLog
 ===================================================================
---- libjava/libltdl/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/libltdl/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/libltdl/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/libltdl/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,8 @@
 +2011-11-20  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -10354,8 +10942,8 @@ Index: libjava/libltdl/ChangeLog
  	* GCC 4.6.2 released.
 Index: libjava/libltdl/acinclude.m4
 ===================================================================
---- libjava/libltdl/acinclude.m4	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/libltdl/acinclude.m4	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/libltdl/acinclude.m4	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/libltdl/acinclude.m4	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1377,7 +1377,7 @@
    esac
    shlibpath_var=LD_LIBRARY_PATH
@@ -10385,8 +10973,8 @@ Index: libjava/libltdl/acinclude.m4
        _LT_AC_TAGVAR(hardcode_minus_L, $1)=yes
 Index: libjava/configure.ac
 ===================================================================
---- libjava/configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/configure.ac	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/configure.ac	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1060,7 +1060,7 @@
       *-*-cygwin*)
  	# Don't set THREADLIBS here.  Cygwin doesn't have -lpthread.
@@ -10398,8 +10986,8 @@ Index: libjava/configure.ac
  	# which is required at link-time to select -lc_r *instead* of -lc.
 Index: libjava/classpath/config.rpath
 ===================================================================
---- libjava/classpath/config.rpath	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/classpath/config.rpath	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/classpath/config.rpath	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/classpath/config.rpath	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -361,7 +361,7 @@
        hardcode_libdir_flag_spec='-R$libdir'
        hardcode_direct=yes
@@ -10420,8 +11008,8 @@ Index: libjava/classpath/config.rpath
          library_names_spec='$libname$shrext' ;;
 Index: libjava/classpath/configure
 ===================================================================
---- libjava/classpath/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/classpath/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/classpath/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/classpath/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -10025,7 +10025,7 @@
        ;;
  
@@ -10478,8 +11066,8 @@ Index: libjava/classpath/configure
    freebsd3.[01]* | freebsdelf3.[01]*)
 Index: libjava/classpath/ChangeLog.gcj
 ===================================================================
---- libjava/classpath/ChangeLog.gcj	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/classpath/ChangeLog.gcj	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/classpath/ChangeLog.gcj	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/classpath/ChangeLog.gcj	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,9 @@
 +2011-11-29  Andreas Tobler  <andreast@fgznet.ch>
 +
@@ -10492,8 +11080,8 @@ Index: libjava/classpath/ChangeLog.gcj
  	* config.rpath, ltcf-c.sh, ltcf-gcj.sh, ltconfig: Remove
 Index: libjava/ChangeLog
 ===================================================================
---- libjava/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,16 @@
 +2011-11-24  Jakub Jelinek  <jakub@redhat.com>
 +
@@ -10513,8 +11101,8 @@ Index: libjava/ChangeLog
  	* GCC 4.6.2 released.
 Index: libjava/prims.cc
 ===================================================================
---- libjava/prims.cc	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/prims.cc	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/prims.cc	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/prims.cc	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -38,7 +38,6 @@
  #endif
  
@@ -10575,8 +11163,8 @@ Index: libjava/prims.cc
      {
 Index: libjava/configure
 ===================================================================
---- libjava/configure	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ libjava/configure	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- libjava/configure	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ libjava/configure	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -11560,7 +11560,7 @@
        ;;
  
@@ -10651,8 +11239,8 @@ Index: libjava/configure
  	# which is required at link-time to select -lc_r *instead* of -lc.
 Index: maintainer-scripts/ChangeLog
 ===================================================================
---- maintainer-scripts/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ maintainer-scripts/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- maintainer-scripts/ChangeLog	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ maintainer-scripts/ChangeLog	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -1,3 +1,8 @@
 +2011-11-23  Gerald Pfeifer  <gerald@pfeifer.com>
 +
@@ -10664,8 +11252,8 @@ Index: maintainer-scripts/ChangeLog
  	* GCC 4.6.2 released.
 Index: maintainer-scripts/update_web_docs_svn
 ===================================================================
---- maintainer-scripts/update_web_docs_svn	(.../tags/gcc_4_6_2_release)	(wersja 182550)
-+++ maintainer-scripts/update_web_docs_svn	(.../branches/gcc-4_6-branch)	(wersja 182550)
+--- maintainer-scripts/update_web_docs_svn	(.../tags/gcc_4_6_2_release)	(wersja 182722)
++++ maintainer-scripts/update_web_docs_svn	(.../branches/gcc-4_6-branch)	(wersja 182722)
 @@ -93,6 +93,7 @@
  
  if [ ! -d $DOCSDIR ]; then
