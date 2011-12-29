@@ -110,6 +110,7 @@ BuildRequires:	automake >= 1:1.9.3
 BuildRequires:	binutils >= 2:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
+BuildRequires:	cloog-ppl-devel
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
@@ -138,6 +139,7 @@ BuildRequires:	glibc-devel(sparcv9)
 BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
+BuildRequires:	ppl-devel
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -1553,6 +1555,8 @@ TEXCONFIG=false \
 	%{!?with_java:--without-x} \
 	%{?with_fortran:--enable-cmath} \
 	--with-long-double-128 \
+	--with-ppl \
+	--with-cloog-ppl \
 %ifarch ppc ppc64
 	--enable-secureplt \
 %endif
