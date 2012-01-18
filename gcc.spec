@@ -107,7 +107,7 @@ BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
 BuildRequires:	automake >= 1:1.9.3
 # binutils 2.17.50.0.9 or newer are required for fixing PR middle-end/20218.
-BuildRequires:	binutils >= 2:2.17.50.0.9-1
+BuildRequires:	binutils >= 3:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
 BuildRequires:	cloog-ppl-devel
