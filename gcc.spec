@@ -42,6 +42,14 @@
 %undefine	with_profiling
 %endif
 
+%if %{without java}
+%undefine	with_alsa
+%undefine	with_dssi
+%undefine	with_mozilla
+# gtk/qt gets pulled too, in next if
+%undefine	with_x
+%endif
+
 %if %{without x}
 %undefine	with_gtk
 %undefine	with_qt
