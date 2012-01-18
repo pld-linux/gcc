@@ -56,7 +56,7 @@
 %endif
 
 %define		major_ver	4.4
-%define		minor_ver	4
+%define		minor_ver	6
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 
@@ -66,17 +66,17 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	7ff5ce9e5f0b088ab48720bbd7203530
+# Source0-md5:	ab525d429ee4425050a554bc9247d6c4
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-4.5.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
-# svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_4_4_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch > gcc-branch.diff
-Patch100:	%{name}-branch.diff
+# svn diff svn://gcc.gnu.org/svn/gcc//tags/gcc_4_4_6_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_4-branch > gcc-branch.diff
+#Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-nolocalefiles.patch
 Patch2:		%{name}-nodebug.patch
@@ -122,7 +122,7 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	mpfr-devel >= 2.3.0
-BuildRequires:	rpmbuild(macros) >= 1.211
+BuildRequires:	rpmbuild(macros) >= 1.583
 BuildRequires:	texinfo >= 4.1
 BuildRequires:	zlib-devel
 %if %{with java}
@@ -173,8 +173,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_libdir32	/usr/lib
 %endif
 
-%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
+%define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char -gdwarf-3
 %define		filterout_ld	-Wl,--as-needed
+
+# TODO: correct these or document
+%define		skip_post_check_so	libxmlj.so.0.0.0 libgcj-tools.so.10.0.0 lib-gnu-awt-xlib.so.10.0.0 libmudflap.so.0.0.0 libmudflapth.so.0.0.0
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -1374,7 +1377,7 @@ Statyczne biblioteki Obiektowego C.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -1452,6 +1455,8 @@ TEXCONFIG=false \
 	--with-gnu-ld \
 	--with-demangler-in-ld \
 	--with-system-zlib \
+	--with-ppl=no \
+	--with-cloog=no \
 	--with-slibdir=%{_slibdir} \
 %ifnarch ia64
 	--without-system-libunwind \
