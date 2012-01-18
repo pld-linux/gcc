@@ -185,7 +185,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		filterout_ld	-Wl,--as-needed
 
 # TODO: correct these or document
-%define		skip_so_java	libxmlj.so.0.0.0 libgcj-tools.so.10.0.0 lib-gnu-awt-xlib.so.10.0.0 libmudflap.so.0.0.0 libmudflapth.so.0.0.0
+%define		skip_so_java	libxmlj.so.0.0.0 libgcj.so.10.0.0 libgcj-tools.so.10.0.0 lib-gnu-awt-xlib.so.10.0.0 libmudflap.so.0.0.0 libmudflapth.so.0.0.0
 # libstdc++.so.6.0.13 symbol: ___tls_get_addr
 %define		skip_post_check_so	libstdc\\+\\+.so.6.0.* %{skip_so_java}
 
