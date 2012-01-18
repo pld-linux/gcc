@@ -112,7 +112,7 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gettext-devel
-BuildRequires:	glibc-devel >= 6:2.4-1
+BuildRequires:	glibc-devel >= 6:2.3.4-1.5
 %if %{with multilib}
 BuildRequires:	gcc(multilib)
 %ifarch %{x8664}
