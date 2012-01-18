@@ -1397,9 +1397,9 @@ Statyczne biblioteki Obiektowego C.
 %if %{with qt}
 %patch8 -p1
 %endif
-%patch9 -p1
+%{!?with_bootstrap:patch9 -p1}
 %patch10 -p0
-%patch11 -p0
+%{!?with_bootstrap:%patch11 -p0}
 
 mv ChangeLog ChangeLog.general
 
