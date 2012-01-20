@@ -187,7 +187,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # TODO: correct these or document
 %define		skip_so_java	libxmlj.so.0.0.0 libgcj.so.10.0.0 libgcj-tools.so.10.0.0 lib-gnu-awt-xlib.so.10.0.0 libmudflap.so.0.0.0 libmudflapth.so.0.0.0
 # libstdc++.so.6.0.13 symbol: ___tls_get_addr
-%define		skip_post_check_so	libstdc\\+\\+.so.6.0.* %{skip_so_java}
+# ac-ppc: libgcc_s.so.1 __libc_stack_end
+%define		skip_post_check_so	libstdc\\+\\+.so.6.0.* libgcc_s.so.1 %{skip_so_java}
 
 %description
 A compiler aimed at integrating all the optimizations and features
