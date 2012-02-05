@@ -17,13 +17,13 @@ Summary(es):	Colección de compiladores GNU: el compilador C y ficheros compartid
 Summary(pl):	Kolekcja kompilatorów GNU: kompilator C i pliki wspó³dzielone
 Summary(pt_BR):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
-Version:	3.4.5
-Release:	2.1
+Version:	3.4.6
+Release:	1
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	7c3c3c3e764dcee5eb771432062d69e1
+# Source0-md5:	4a21ac777d4b5617283ce488b808da7b
 Source1:	http://ep09.pld-linux.org/~djrzulf/gcc33/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	4736f3422ddfb808423b745629acc321
 Source2:	http://www.trl.ibm.com/projects/security/ssp/gcc2_95_3/gcc_stack_protect.m4.gz
@@ -642,7 +642,7 @@ rm -rf obj-%{_target_platform} && install -d obj-%{_target_platform} && cd obj-%
 
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcflags}" \
-CC="$CC" \
+CC="%{__cc}" \
 TEXCONFIG=false \
 ../configure \
 	--prefix=%{_prefix} \
