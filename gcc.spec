@@ -75,6 +75,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		rpmcflags	-O2 -mtune=ultrasparc
 %endif
 
+%ifarch ppc
+# ac-ppc: libgcc_s.so.1 __libc_stack_end
+# ac-ppc: libgcc_s_nof.so.1 __libc_stack_end
+%define     skip_post_check_so  libgcc_s.so.1
+%endif
+
 %description
 A compiler aimed at integrating all the optimizations and features
 necessary for a high-performance and stable development environment.
