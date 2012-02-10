@@ -18,7 +18,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	3.4.6
-Release:	1
+Release:	2
 Epoch:		5
 License:	GPL
 Group:		Development/Languages
@@ -78,7 +78,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %ifarch ppc
 # ac-ppc: libgcc_s.so.1 __libc_stack_end
 # ac-ppc: libgcc_s_nof.so.1 __libc_stack_end
-%define     skip_post_check_so  libgcc_s.so.1
+%define     skip_post_check_so  libgcc_s.so.1 libgcc_s_nof.so.1
 %endif
 
 %description
