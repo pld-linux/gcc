@@ -89,7 +89,7 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_6_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_6_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_6-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
