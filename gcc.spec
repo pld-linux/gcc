@@ -78,7 +78,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -102,6 +102,7 @@ Patch10:	%{name}-moresparcs.patch
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=41757
 Patch12:	%{name}-plugin-decl-hook.patch
 Patch13:	issue4664051.patch
+Patch14:	%{name}-extern-template-sed.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -1479,6 +1480,7 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch10 -p1
 %patch12 -p1
 %patch13 -p0
+%patch14 -p1
 
 mv ChangeLog ChangeLog.general
 
