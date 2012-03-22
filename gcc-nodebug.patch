@@ -1,27 +1,6 @@
---- a/Makefile.in	2006-07-02 15:31:20.000000000 +0200
-+++ b/Makefile.in	2006-07-02 20:55:33.573762250 +0200
-@@ -274,7 +274,7 @@
- 
- # Flags to pass to stage2 and later makes.  They are defined
- # here so that they can be overridden by Makefile fragments.
--BOOT_CFLAGS= -g -O2
-+BOOT_CFLAGS= -O2
- BOOT_LDFLAGS=
- 
- BISON = @BISON@
---- a/gcc/Makefile.in	2008-02-25 15:53:34.000000000 +0100
-+++ b/gcc/Makefile.in	2008-03-03 16:42:29.000000000 +0100
-@@ -560,7 +560,7 @@
- 
- # Options to use when compiling libgcc2.a.
- #
--LIBGCC2_DEBUG_CFLAGS = -g
-+LIBGCC2_DEBUG_CFLAGS =
- LIBGCC2_CFLAGS = -O2 $(LIBGCC2_INCLUDES) $(GCC_CFLAGS) $(TARGET_LIBGCC2_CFLAGS) \
- 		 $(LIBGCC2_DEBUG_CFLAGS) $(GTHREAD_FLAGS) \
- 		 -DIN_LIBGCC2 -D__GCC_FLOAT_NOT_NEEDED \
---- a/gcc/ada/gcc-interface/Makefile.in	2004-09-13 12:18:40.000000000 +0200
-+++ b/gcc/ada/gcc-interface/Makefile.in	2004-09-26 11:40:30.070894416 +0200
+diff -urN gcc-4.7.0.org/gcc/ada/gcc-interface/Makefile.in gcc-4.7.0/gcc/ada/gcc-interface/Makefile.in
+--- gcc-4.7.0.org/gcc/ada/gcc-interface/Makefile.in	2012-02-24 17:17:01.000000000 +0100
++++ gcc-4.7.0/gcc/ada/gcc-interface/Makefile.in	2012-03-22 15:46:37.236129553 +0100
 @@ -66,7 +66,7 @@
  # CFLAGS is for the user to override to, e.g., do a bootstrap with -O2.
  # BOOT_CFLAGS is the value of CFLAGS to pass
@@ -31,61 +10,118 @@
  BOOT_CFLAGS = -O $(CFLAGS)
  # These exists to be overridden by the t-* files, respectively.
  T_CFLAGS =
-@@ -102,9 +102,9 @@
+@@ -105,11 +105,11 @@
+ GNATBIND_FLAGS = -static -x
  ADA_CFLAGS =
  ADAFLAGS = -W -Wall -gnatpg -gnata
- SOME_ADAFLAGS =-gnata
 -FORCE_DEBUG_ADAFLAGS = -g
 +FORCE_DEBUG_ADAFLAGS =
- GNATLIBFLAGS = -gnatpg -nostdinc
+ NO_SIBLING_ADAFLAGS = -fno-optimize-sibling-calls
+ NO_REORDER_ADAFLAGS = -fno-toplevel-reorder
+ GNATLIBFLAGS = -W -Wall -gnatpg -nostdinc
 -GNATLIBCFLAGS = -g -O2
 +GNATLIBCFLAGS = -O2
+ PICFLAG_FOR_TARGET = @PICFLAG_FOR_TARGET@
  # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
  # should be autodetected during the configuration of libada and passed down to
- # here, but we need something for --disable-libada and hope for the best.
---- a/libada/Makefile.in	2005-11-04 13:49:08.000000000 +0000
-+++ b/libada/Makefile.in	2005-11-24 23:52:14.739531296 +0000
-@@ -49,13 +49,13 @@
- LDFLAGS=
- 
- # The tedious process of getting CFLAGS right.
--CFLAGS=-g
-+CFLAGS=
- LOOSE_WARN = -W -Wall -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes
- GCC_WARN_CFLAGS = $(LOOSE_WARN)
- WARN_CFLAGS = @warn_cflags@
- 
- TARGET_LIBGCC2_CFLAGS=
+@@ -2739,7 +2739,7 @@
+ 	cd $(RTSDIR) && \
+ 	../../gnatsym -s SYMVEC_$$$$.opt \
+ 	$(LIBGNAT_OBJS) $(GNATRTL_NONTASKING_OBJS) && \
+-	../../xgcc -g -B../../ -shared -shared-libgcc \
++	../../xgcc -B../../ -shared -shared-libgcc \
+ 	   -o libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) libgnat.a \
+ 	   sys\$$library:trace.exe \
+ 	   --for-linker=/noinform \
+@@ -2748,7 +2748,7 @@
+ 	cd $(RTSDIR) && \
+ 	../../gnatsym -s SYMVEC_$$$$.opt \
+ 	$(GNATRTL_TASKING_OBJS) && \
+-	../../xgcc -g -B../../ -shared -shared-libgcc \
++	../../xgcc -B../../ -shared -shared-libgcc \
+ 	   -o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+ 	   libgnarl.a libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
+ 	   sys\$$library:trace.exe \
+diff -urN gcc-4.7.0.org/libada/Makefile.in gcc-4.7.0/libada/Makefile.in
+--- gcc-4.7.0.org/libada/Makefile.in	2012-02-24 17:17:01.000000000 +0100
++++ gcc-4.7.0/libada/Makefile.in	2012-03-22 15:46:37.016124154 +0100
+@@ -54,7 +54,7 @@
+ CFLAGS=-g
+ PICFLAG = @PICFLAG@
+ GNATLIBFLAGS= -W -Wall -gnatpg -nostdinc
 -GNATLIBCFLAGS= -g -O2
 +GNATLIBCFLAGS= -O2
- GNATLIBCFLAGS_FOR_C = $(GNATLIBCFLAGS) $(TARGET_LIBGCC2_CFLAGS) -fexceptions \
- 	-DIN_RTS @have_getipinfo@
+ GNATLIBCFLAGS_FOR_C = -W -Wall $(GNATLIBCFLAGS) $(PICFLAG) \
+ 	-fexceptions -DIN_RTS @have_getipinfo@
  
---- a/libffi/Makefile.in	2004-08-30 17:42:59.000000000 +0200
-+++ b/libffi/Makefile.in	2004-09-26 11:44:10.789340112 +0200
-@@ -453,7 +453,7 @@
- 	$(am__append_21) $(am__append_22)
+diff -urN gcc-4.7.0.org/libffi/Makefile.am gcc-4.7.0/libffi/Makefile.am
+--- gcc-4.7.0.org/libffi/Makefile.am	2012-02-27 11:00:12.000000000 +0100
++++ gcc-4.7.0/libffi/Makefile.am	2012-03-22 15:46:33.659375098 +0100
+@@ -168,7 +168,7 @@
+ libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
+ nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
+ 
+-AM_CFLAGS = -Wall -g -fexceptions
++AM_CFLAGS = -Wall -fexceptions
+ 
+ LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
+ 
+diff -urN gcc-4.7.0.org/libffi/Makefile.in gcc-4.7.0/libffi/Makefile.in
+--- gcc-4.7.0.org/libffi/Makefile.in	2012-03-22 08:37:39.000000000 +0100
++++ gcc-4.7.0/libffi/Makefile.in	2012-03-22 15:46:37.216129063 +0100
+@@ -475,7 +475,7 @@
+ 	$(am__append_24) $(am__append_25)
  libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
  nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
 -AM_CFLAGS = -Wall -g -fexceptions
 +AM_CFLAGS = -Wall -fexceptions
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
- libffi_la_LDFLAGS = -version-info `grep -v '^\#' $(srcdir)/libtool-version` $(LTLDFLAGS)
+ libffi_la_LDFLAGS = -version-info `grep -v '^\#' $(srcdir)/libtool-version` $(LTLDFLAGS) $(AM_LTLDFLAGS)
  AM_CPPFLAGS = -I. -I$(top_srcdir)/include -Iinclude -I$(top_srcdir)/src
---- a/libffi/Makefile.am	2008-05-09 12:10:53.000000000 +0200
-+++ b/libffi/Makefile.am	2008-11-28 02:02:01.690063811 +0100
-@@ -154,7 +154,7 @@
- libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
- nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
+diff -urN gcc-4.7.0.org/libgcc/Makefile.in gcc-4.7.0/libgcc/Makefile.in
+--- gcc-4.7.0.org/libgcc/Makefile.in	2011-11-22 04:01:02.000000000 +0100
++++ gcc-4.7.0/libgcc/Makefile.in	2012-03-22 15:46:37.229462724 +0100
+@@ -221,7 +221,7 @@
  
--AM_CFLAGS = -Wall -g -fexceptions
-+AM_CFLAGS = -Wall -fexceptions
- 
- LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
- 
---- a/libjava/Makefile.am	2004-09-10 10:22:58.000000000 +0200
-+++ b/libjava/Makefile.am	2004-09-26 11:46:24.041082768 +0200
-@@ -179,7 +179,7 @@
+ # Options to use when compiling libgcc2.a.
+ #
+-LIBGCC2_DEBUG_CFLAGS = -g
++LIBGCC2_DEBUG_CFLAGS =
+ LIBGCC2_CFLAGS = -O2 $(LIBGCC2_INCLUDES) $(GCC_CFLAGS) $(HOST_LIBGCC2_CFLAGS) \
+ 		 $(LIBGCC2_DEBUG_CFLAGS) -DIN_LIBGCC2 \
+ 		 -fbuilding-libgcc -fno-stack-protector \
+diff -urN gcc-4.7.0.org/libjava/classpath/tools/Makefile.am gcc-4.7.0/libjava/classpath/tools/Makefile.am
+--- gcc-4.7.0.org/libjava/classpath/tools/Makefile.am	2011-09-29 13:37:47.000000000 +0200
++++ gcc-4.7.0/libjava/classpath/tools/Makefile.am	2012-03-22 15:46:33.626040947 +0100
+@@ -355,8 +355,8 @@
+ if JAVA_MAINTAINER_MODE
+ ## Compile ASM separately as it is latin-1 encoded.
+ 	AC=`echo $(JCOMPILER) | sed -e 's/UTF-8/ISO-8859-1/g'`; \
+-	  $$AC -g -w -d $(srcdir)/asm @asm.lst
+-	$(JCOMPILER) $(USE_JAVAC_FLAGS) -g -d $(srcdir)/classes @classes.lst @vm-tools.lst
++	  $$AC -w -d $(srcdir)/asm @asm.lst
++	$(JCOMPILER) $(USE_JAVAC_FLAGS) -d $(srcdir)/classes @classes.lst @vm-tools.lst
+ endif
+ ## END GCJ LOCAL
+ ## Copy over tools resource files.
+diff -urN gcc-4.7.0.org/libjava/classpath/tools/Makefile.in gcc-4.7.0/libjava/classpath/tools/Makefile.in
+--- gcc-4.7.0.org/libjava/classpath/tools/Makefile.in	2011-09-29 13:37:47.000000000 +0200
++++ gcc-4.7.0/libjava/classpath/tools/Makefile.in	2012-03-22 15:46:37.172794665 +0100
+@@ -1413,8 +1413,8 @@
+ 	fi
+ 	cat classes.lst asm.lst vm-tools.lst > all-classes.lst
+ @JAVA_MAINTAINER_MODE_TRUE@	AC=`echo $(JCOMPILER) | sed -e 's/UTF-8/ISO-8859-1/g'`; \
+-@JAVA_MAINTAINER_MODE_TRUE@	  $$AC -g -w -d $(srcdir)/asm @asm.lst
+-@JAVA_MAINTAINER_MODE_TRUE@	$(JCOMPILER) $(USE_JAVAC_FLAGS) -g -d $(srcdir)/classes @classes.lst @vm-tools.lst
++@JAVA_MAINTAINER_MODE_TRUE@	  $$AC -w -d $(srcdir)/asm @asm.lst
++@JAVA_MAINTAINER_MODE_TRUE@	$(JCOMPILER) $(USE_JAVAC_FLAGS) -d $(srcdir)/classes @classes.lst @vm-tools.lst
+ 	@list=`cd $(srcdir)/resource && find gnu/classpath/tools com/sun/tools/javac \
+ 	       sun/rmi/rmic $(GJDOC_EX) -name \*.properties -print -o -name \*.jav -print`; \
+ 	for p in $$list; do \
+diff -urN gcc-4.7.0.org/libjava/Makefile.am gcc-4.7.0/libjava/Makefile.am
+--- gcc-4.7.0.org/libjava/Makefile.am	2011-08-05 16:37:48.000000000 +0200
++++ gcc-4.7.0/libjava/Makefile.am	2012-03-22 15:46:33.516038248 +0100
+@@ -399,7 +399,7 @@
  ## Extra CFLAGS used for JNI C sources shared with GNU Classpath.
  PEDANTIC_CFLAGS = -ansi -pedantic -Wall -Wno-long-long
  
@@ -94,14 +130,130 @@
  JC1FLAGS = @LIBGCJ_JAVAFLAGS@ $(GCJFLAGS)
  
  LIBFFIINCS = @LIBFFIINCS@
---- a/libjava/Makefile.in	2004-09-19 19:47:04.000000000 +0200
-+++ b/libjava/Makefile.in	2004-09-26 11:47:02.431246576 +0200
-@@ -4167,7 +4167,7 @@
- @USING_GCC_FALSE@AM_CFLAGS = @LIBGCJ_CFLAGS@
- @USING_GCC_TRUE@AM_CFLAGS = @LIBGCJ_CFLAGS@ $(WARNINGS)
+diff -urN gcc-4.7.0.org/libjava/Makefile.in gcc-4.7.0/libjava/Makefile.in
+--- gcc-4.7.0.org/libjava/Makefile.in	2012-03-22 08:37:39.000000000 +0100
++++ gcc-4.7.0/libjava/Makefile.in	2012-03-22 15:46:37.049458306 +0100
+@@ -1032,7 +1032,7 @@
+ @BUILD_LIBGCJ_REDUCED_REFLECTION_FALSE@LIBGCJ_REDUCED_REFLECTION_FLAGS = 
+ @BUILD_LIBGCJ_REDUCED_REFLECTION_TRUE@LIBGCJ_REDUCED_REFLECTION_FLAGS = -freduced-reflection
  PEDANTIC_CFLAGS = -ansi -pedantic -Wall -Wno-long-long
 -JCFLAGS = -g
 +JCFLAGS =
  JC1FLAGS = @LIBGCJ_JAVAFLAGS@ $(GCJFLAGS)
- AM_CPPFLAGS = -I$(top_srcdir) -Iinclude -I$(top_srcdir)/include \
- 	$(GCINCS) $(THREADINCS) $(INCLTDL) \
+ AM_CPPFLAGS = -I$(top_srcdir) \
+ 	-Iinclude -I$(top_srcdir)/include \
+diff -urN gcc-4.7.0.org/libjava/testsuite/Makefile.am gcc-4.7.0/libjava/testsuite/Makefile.am
+--- gcc-4.7.0.org/libjava/testsuite/Makefile.am	2010-05-04 00:37:50.000000000 +0200
++++ gcc-4.7.0/libjava/testsuite/Makefile.am	2012-03-22 15:46:33.522705078 +0100
+@@ -83,11 +83,11 @@
+ 	  testtmpdir=`echo $$test | sed -e 's,/,_,g'`T; \
+ 	  rm -rf $$testtmpdir; $(mkdir_p) $$testtmpdir; \
+ 	  if test -n "$$testdep"; then \
+-	    $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
++	    $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
+ 	      $(top_builddir)/libgcj-$(gcc_version).jar::$$testtmpdir \
+ 	      -d $$testtmpdir $(srcdir)/$$testdep || exit; \
+ 	  fi; \
+-	  $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
++	  $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
+ 	    $(top_builddir)/libgcj-$(gcc_version).jar:$$testtmpdir \
+ 	    -d $$testtmpdir $(srcdir)/$$test || exit; \
+ 	  case "$$test" in \
+diff -urN gcc-4.7.0.org/libjava/testsuite/Makefile.in gcc-4.7.0/libjava/testsuite/Makefile.in
+--- gcc-4.7.0.org/libjava/testsuite/Makefile.in	2011-04-08 16:16:38.000000000 +0200
++++ gcc-4.7.0/libjava/testsuite/Makefile.in	2012-03-22 15:46:37.029457815 +0100
+@@ -569,11 +569,11 @@
+ @JAVA_MAINTAINER_MODE_TRUE@	  testtmpdir=`echo $$test | sed -e 's,/,_,g'`T; \
+ @JAVA_MAINTAINER_MODE_TRUE@	  rm -rf $$testtmpdir; $(mkdir_p) $$testtmpdir; \
+ @JAVA_MAINTAINER_MODE_TRUE@	  if test -n "$$testdep"; then \
+-@JAVA_MAINTAINER_MODE_TRUE@	    $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
++@JAVA_MAINTAINER_MODE_TRUE@	    $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
+ @JAVA_MAINTAINER_MODE_TRUE@	      $(top_builddir)/libgcj-$(gcc_version).jar::$$testtmpdir \
+ @JAVA_MAINTAINER_MODE_TRUE@	      -d $$testtmpdir $(srcdir)/$$testdep || exit; \
+ @JAVA_MAINTAINER_MODE_TRUE@	  fi; \
+-@JAVA_MAINTAINER_MODE_TRUE@	  $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
++@JAVA_MAINTAINER_MODE_TRUE@	  $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
+ @JAVA_MAINTAINER_MODE_TRUE@	    $(top_builddir)/libgcj-$(gcc_version).jar:$$testtmpdir \
+ @JAVA_MAINTAINER_MODE_TRUE@	    -d $$testtmpdir $(srcdir)/$$test || exit; \
+ @JAVA_MAINTAINER_MODE_TRUE@	  case "$$test" in \
+diff -urN gcc-4.7.0.org/libstdc++-v3/include/Makefile.am gcc-4.7.0/libstdc++-v3/include/Makefile.am
+--- gcc-4.7.0.org/libstdc++-v3/include/Makefile.am	2011-12-01 03:20:32.000000000 +0100
++++ gcc-4.7.0/libstdc++-v3/include/Makefile.am	2012-03-22 15:46:33.492704342 +0100
+@@ -1154,22 +1154,22 @@
+ # Build two precompiled C++ includes, stdc++.h.gch/*.gch
+ ${pch1a_output}: ${allstamped} ${host_builddir}/c++config.h ${pch1_source}
+ 	-mkdir -p ${pch1_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g -std=gnu++0x ${pch1_source} \
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -std=gnu++0x ${pch1_source} \
+ 	-o $@
+ 
+ ${pch1b_output}: ${allstamped} ${host_builddir}/c++config.h ${pch1_source}
+ 	-mkdir -p ${pch1_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch1_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch1_source} -o $@
+ 
+ # Build a precompiled TR1 include, stdtr1c++.h.gch/O2.gch
+ ${pch2_output}: ${pch2_source} ${pch1_output}
+ 	-mkdir -p ${pch2_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch2_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch2_source} -o $@
+ 
+ # Build a precompiled extension include, extc++.h.gch/O2.gch
+ ${pch3_output}: ${pch3_source} ${pch2_output}
+ 	-mkdir -p ${pch3_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch3_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch3_source} -o $@
+ 
+ # For robustness sake (in light of junk files or in-source
+ # configuration), copy from the build or source tree to the install
+diff -urN gcc-4.7.0.org/libstdc++-v3/include/Makefile.in gcc-4.7.0/libstdc++-v3/include/Makefile.in
+--- gcc-4.7.0.org/libstdc++-v3/include/Makefile.in	2012-02-17 21:26:32.000000000 +0100
++++ gcc-4.7.0/libstdc++-v3/include/Makefile.in	2012-03-22 15:46:36.926121945 +0100
+@@ -1543,22 +1543,22 @@
+ # Build two precompiled C++ includes, stdc++.h.gch/*.gch
+ ${pch1a_output}: ${allstamped} ${host_builddir}/c++config.h ${pch1_source}
+ 	-mkdir -p ${pch1_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g -std=gnu++0x ${pch1_source} \
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -std=gnu++0x ${pch1_source} \
+ 	-o $@
+ 
+ ${pch1b_output}: ${allstamped} ${host_builddir}/c++config.h ${pch1_source}
+ 	-mkdir -p ${pch1_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch1_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch1_source} -o $@
+ 
+ # Build a precompiled TR1 include, stdtr1c++.h.gch/O2.gch
+ ${pch2_output}: ${pch2_source} ${pch1_output}
+ 	-mkdir -p ${pch2_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch2_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch2_source} -o $@
+ 
+ # Build a precompiled extension include, extc++.h.gch/O2.gch
+ ${pch3_output}: ${pch3_source} ${pch2_output}
+ 	-mkdir -p ${pch3_output_builddir}
+-	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch3_source} -o $@
++	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch3_source} -o $@
+ 
+ # For robustness sake (in light of junk files or in-source
+ # configuration), copy from the build or source tree to the install
+diff -urN gcc-4.7.0.org/Makefile.in gcc-4.7.0/Makefile.in
+--- gcc-4.7.0.org/Makefile.in	2012-01-02 11:59:04.000000000 +0100
++++ gcc-4.7.0/Makefile.in	2012-03-22 15:46:37.012790739 +0100
+@@ -364,7 +364,7 @@
+ 
+ # Flags to pass to stage2 and later makes.  They are defined
+ # here so that they can be overridden by Makefile fragments.
+-BOOT_CFLAGS= -g -O2
++BOOT_CFLAGS= -O2
+ BOOT_LDFLAGS=
+ BOOT_ADAFLAGS=-gnatpg -gnata
+ 
+@@ -574,7 +574,7 @@
+ LIBCFLAGS_FOR_TARGET = $(CFLAGS_FOR_TARGET)
+ LIBCXXFLAGS_FOR_TARGET = $(CXXFLAGS_FOR_TARGET) -fno-implicit-templates
+ LDFLAGS_FOR_TARGET = @LDFLAGS_FOR_TARGET@
+-GOCFLAGS_FOR_TARGET = -O2 -g
++GOCFLAGS_FOR_TARGET = -O2
+ 
+ FLAGS_FOR_TARGET = @FLAGS_FOR_TARGET@
+ SYSROOT_CFLAGS_FOR_TARGET = @SYSROOT_CFLAGS_FOR_TARGET@
