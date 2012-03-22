@@ -70,7 +70,7 @@
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	12
+%define		gcj_soname_ver	13
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
