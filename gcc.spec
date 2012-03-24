@@ -5,6 +5,7 @@
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
+#   libitm (intel-transactional-memory library).
 #
 # Conditional build:
 # - languages:
@@ -98,6 +99,7 @@ Patch4:		%{name}-sparc64-ada_fix.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
+Patch9:		%{name}-libjava-symvers.patch
 Patch10:	%{name}-moresparcs.patch
 
 Patch13:	issue4664051.patch
@@ -202,7 +204,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
 
-%define		skip_post_check_so	'.*(libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
+%define		skip_post_check_so	'.*(libgo|libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -1477,6 +1479,7 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %if %{with qt}
 %patch8 -p1
 %endif
+%patch9 -p0
 # update if you need it
 #%patch10 -p1
 
@@ -1564,11 +1567,16 @@ TEXCONFIG=false \
 %endif
 %if %{with cxx}
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
+	--enable-libstdcxx-visibility \
 	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
 	--enable-libstdcxx-allocator=new \
+	--enable-libstdcxx-threads \
+	--enable-libstdcxx-time=rt \
+	--enable-symvers=gnu-versioned-namespace \
 %endif
 %if %{with java}
+	--enable-static-libjava=yes \
 	--enable-libjava-multilib=no \
 	%{!?with_alsa:--disable-alsa} \
 	%{!?with_dssi:--disable-dssi} \
@@ -1933,28 +1941,34 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/float.h
 %{gcclibdir}/include/iso646.h
 %{gcclibdir}/include/limits.h
+%{gcclibdir}/include/stdalign.h
 %{gcclibdir}/include/stdarg.h
 %{gcclibdir}/include/stdbool.h
 %{gcclibdir}/include/stddef.h
 %{gcclibdir}/include/stdfix.h
 %{gcclibdir}/include/stdint.h
 %{gcclibdir}/include/stdint-gcc.h
+%{gcclibdir}/include/stdnoreturn.h
 %{gcclibdir}/include/syslimits.h
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
 %ifarch %{ix86} %{x8664}
-%{gcclibdir}/include/abmintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avxintrin.h
+%{gcclibdir}/include/avx2intrin.h
 %{gcclibdir}/include/bmiintrin.h
+%{gcclibdir}/include/bmi2intrin.h
 %{gcclibdir}/include/bmmintrin.h
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
+%{gcclibdir}/include/f16cintrin.h
+%{gcclibdir}/include/fmaintrin.h
 %{gcclibdir}/include/fma4intrin.h
 %{gcclibdir}/include/ia32intrin.h
 %{gcclibdir}/include/immintrin.h
 %{gcclibdir}/include/lwpintrin.h
+%{gcclibdir}/include/lzcntintrin.h
 %{gcclibdir}/include/mm3dnow.h
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/mmintrin.h
@@ -2127,7 +2141,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/adainclude
 %dir %{gcclibdir}/adalib
 %{gcclibdir}/adalib/*.ali
-%{gcclibdir}/adalib/g-trasym.o
 %ifarch %{ix86} %{x8664}
 %{gcclibdir}/adalib/libgmem.a
 %endif
@@ -2145,7 +2158,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/adainclude
 %dir %{gcclibdir}/32/adalib
 %{gcclibdir}/32/adalib/*.ali
-%{gcclibdir}/32/adalib/g-trasym.o
 %ifarch %{ix86} %{x8664}
 %{gcclibdir}/32/adalib/libgmem.a
 %endif
@@ -2169,14 +2181,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
-%{gcclibdir}/adalib/libgnala.a
 %{gcclibdir}/adalib/libgnarl.a
 %{gcclibdir}/adalib/libgnat.a
 
 %if %{with multilib}
 %files -n libgnat-multilib-static
 %defattr(644,root,root,755)
-%{gcclibdir}/32/adalib/libgnala.a
 %{gcclibdir}/32/adalib/libgnarl.a
 %{gcclibdir}/32/adalib/libgnat.a
 %endif
@@ -2206,13 +2216,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.6
+%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.7
 
 %if %{with multilib}
 %files -n libstdc++-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.6
+%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.7
 %endif
 
 %if %{with python}
@@ -2222,7 +2232,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.6.0.16-gdb.py
+%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.7.0.0-gdb.py
 %endif
 
 %files -n libstdc++-devel
@@ -2278,6 +2288,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgfortran.so
 %{_libdir}/libgfortran.spec
 %{_libdir}/libgfortran.la
+%{gcclibdir}/libcaf_single.a
+%{gcclibdir}/libcaf_single.la
 %{gcclibdir}/libgfortranbegin.la
 %{gcclibdir}/libgfortranbegin.a
 %{_infodir}/gfortran.info*
@@ -2290,6 +2302,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgfortran.so
 %{_libdir32}/libgfortran.spec
 %{_libdir32}/libgfortran.la
+%{gcclibdir}/32/libcaf_single.a
+%{gcclibdir}/32/libcaf_single.la
 %{gcclibdir}/32/libgfortranbegin.la
 %{gcclibdir}/32/libgfortranbegin.a
 %endif
@@ -2559,13 +2573,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
 %attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libobjc.so.3
+%attr(755,root,root) %ghost %{_libdir}/libobjc.so.4
 
 %if %{with multilib}
 %files -n libobjc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.3
+%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.4
 %endif
 
 %files -n libobjc-static
