@@ -1,7 +1,152 @@
+Index: libgomp/ChangeLog
+===================================================================
+--- libgomp/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libgomp/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,8 @@
++2012-03-22  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/52547
++	* testsuite/libgomp.c/pr52547.c: New test.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.
+Index: libgomp/testsuite/libgomp.c/pr52547.c
+===================================================================
+--- libgomp/testsuite/libgomp.c/pr52547.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ libgomp/testsuite/libgomp.c/pr52547.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,36 @@
++/* PR middle-end/52547 */
++/* { dg-do run } */
++
++extern void abort (void);
++
++__attribute__((noinline, noclone)) int
++baz (int *x, int (*fn) (int *))
++{
++  return fn (x);
++}
++
++__attribute__((noinline, noclone)) int
++foo (int x, int *y)
++{
++  int i, e = 0;
++#pragma omp parallel for reduction(|:e)
++  for (i = 0; i < x; ++i)
++    {
++      __label__ lab;
++      int bar (int *z) { return z - y; }
++      if (baz (&y[i], bar) != i)
++	e |= 1;
++    }
++  return e;
++}
++
++int
++main ()
++{
++  int a[100], i;
++  for (i = 0; i < 100; i++)
++    a[i] = i;
++  if (foo (100, a))
++    abort ();
++  return 0;
++}
+Index: libstdc++-v3/include/Makefile.in
+===================================================================
+--- libstdc++-v3/include/Makefile.in	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/include/Makefile.in	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1497,7 +1497,7 @@
+ 	sed -e "s,define __GLIBCXX__,define __GLIBCXX__ $$date," \
+ 	-e "s,define _GLIBCXX_INLINE_VERSION, define _GLIBCXX_INLINE_VERSION $$ns_version," \
+ 	-e "s,define _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY, define _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY $$visibility," \
+-	-e "s,define _GLIBCXX_EXTERN_TEMPLATE, define _GLIBCXX_EXTERN_TEMPLATE $$externtemplate," \
++	-e "s,define _GLIBCXX_EXTERN_TEMPLATE$$, define _GLIBCXX_EXTERN_TEMPLATE $$externtemplate," \
+ 	-e "$$ldbl_compat" \
+ 	    < ${glibcxx_srcdir}/include/bits/c++config > $@ ;\
+ 	sed -e 's/HAVE_/_GLIBCXX_HAVE_/g' \
+Index: libstdc++-v3/include/debug/safe_iterator.h
+===================================================================
+--- libstdc++-v3/include/debug/safe_iterator.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/include/debug/safe_iterator.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,6 +1,6 @@
+ // Safe iterator implementation  -*- C++ -*-
+ 
+-// Copyright (C) 2003, 2004, 2005, 2006, 2009, 2010, 2011
++// Copyright (C) 2003, 2004, 2005, 2006, 2009, 2010, 2011, 2012
+ // Free Software Foundation, Inc.
+ //
+ // This file is part of the GNU ISO C++ Library.  This library is free
+@@ -169,7 +169,25 @@
+ 			      ._M_iterator(__x, "other"));
+       }
+ 
++#ifdef __GXX_EXPERIMENTAL_CXX0X__
+       /**
++       * @brief Move construction.
++       * @post __x is singular and unattached
++       */
++      _Safe_iterator(_Safe_iterator&& __x) : _M_current()
++      {
++	_GLIBCXX_DEBUG_VERIFY(!__x._M_singular()
++			      || __x._M_current == _Iterator(),
++			      _M_message(__msg_init_copy_singular)
++			      ._M_iterator(*this, "this")
++			      ._M_iterator(__x, "other"));
++	std::swap(_M_current, __x._M_current);
++	this->_M_attach(__x._M_sequence);
++	__x._M_detach();
++      }
++#endif
++
++      /**
+        *  @brief Converting constructor from a mutable iterator to a
+        *  constant iterator.
+       */
+@@ -208,7 +226,28 @@
+ 	return *this;
+       }
+ 
++#ifdef __GXX_EXPERIMENTAL_CXX0X__
+       /**
++       * @brief Move assignment.
++       * @post __x is singular and unattached
++       */
++      _Safe_iterator&
++      operator=(_Safe_iterator&& __x)
++      {
++	_GLIBCXX_DEBUG_VERIFY(!__x._M_singular()
++			      || __x._M_current == _Iterator(),
++			      _M_message(__msg_copy_singular)
++			      ._M_iterator(*this, "this")
++			      ._M_iterator(__x, "other"));
++	_M_current = __x._M_current;
++	_M_attach(__x._M_sequence);
++	__x._M_detach();
++	__x._M_current = _Iterator();
++	return *this;
++      }
++#endif
++
++      /**
+        *  @brief Iterator dereference.
+        *  @pre iterator is dereferenceable
+        */
+@@ -422,7 +461,9 @@
+       /// Is this iterator equal to the sequence's before_begin() iterator if
+       /// any?
+       bool _M_is_before_begin() const
+-      { return _BeforeBeginHelper<_Sequence>::_M_Is(base(), _M_get_sequence()); }
++      {
++	return _BeforeBeginHelper<_Sequence>::_M_Is(base(), _M_get_sequence());
++      }
+     };
+ 
+   template<typename _IteratorL, typename _IteratorR, typename _Sequence>
 Index: libstdc++-v3/include/std/array
 ===================================================================
---- libstdc++-v3/include/std/array	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ libstdc++-v3/include/std/array	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- libstdc++-v3/include/std/array	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/include/std/array	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1,6 +1,7 @@
  // <array> -*- C++ -*-
  
@@ -23,11 +168,156 @@ Index: libstdc++-v3/include/std/array
        }
  #endif
  
+Index: libstdc++-v3/include/bits/forward_list.h
+===================================================================
+--- libstdc++-v3/include/bits/forward_list.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/include/bits/forward_list.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,6 +1,6 @@
+ // <forward_list.h> -*- C++ -*-
+ 
+-// Copyright (C) 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
++// Copyright (C) 2008, 2009, 2010, 2011, 2012 Free Software Foundation, Inc.
+ //
+ // This file is part of the GNU ISO C++ Library.  This library is free
+ // software; you can redistribute it and/or modify it under the
+@@ -606,8 +606,8 @@
+        *  in the range [@a __first,@a __last).
+        *
+        *  Note that the assignment completely changes the %forward_list and
+-       *  that the resulting %forward_list's size is the same as the number
+-       *  of elements assigned.  Old data may be lost.
++       *  that the number of elements of the resulting %forward_list's is the
++       *  same as the number of elements assigned.  Old data is lost.
+        */
+       template<typename _InputIterator>
+         void
+@@ -622,10 +622,10 @@
+        *  @param  __n  Number of elements to be assigned.
+        *  @param  __val  Value to be assigned.
+        *
+-       *  This function fills a %forward_list with @a __n copies of the given
+-       *  value.  Note that the assignment completely changes the
+-       *  %forward_list and that the resulting %forward_list's size is the
+-       *  same as the number of elements assigned.  Old data may be lost.
++       *  This function fills a %forward_list with @a __n copies of the
++       *  given value.  Note that the assignment completely changes the
++       *  %forward_list, and that the resulting %forward_list has __n
++       *  elements.  Old data is lost.
+        */
+       void
+       assign(size_type __n, const _Tp& __val)
+@@ -744,7 +744,7 @@
+       { return this->_M_impl._M_head._M_next == 0; }
+ 
+       /**
+-       *  Returns the largest possible size of %forward_list.
++       *  Returns the largest possible number of elements of %forward_list.
+        */
+       size_type
+       max_size() const noexcept
+@@ -997,9 +997,9 @@
+        *
+        *  This function will %resize the %forward_list to the specified
+        *  number of elements.  If the number is smaller than the
+-       *  %forward_list's current size the %forward_list is truncated,
+-       *  otherwise the %forward_list is extended and the new elements
+-       *  are default constructed.
++       *  %forward_list's current number of elements the %forward_list
++       *  is truncated, otherwise the %forward_list is extended and the
++       *  new elements are default constructed.
+        */
+       void
+       resize(size_type __sz);
+@@ -1012,9 +1012,9 @@
+        *
+        *  This function will %resize the %forward_list to the specified
+        *  number of elements.  If the number is smaller than the
+-       *  %forward_list's current size the %forward_list is truncated,
+-       *  otherwise the %forward_list is extended and new elements are
+-       *  populated with given data.
++       *  %forward_list's current number of elements the %forward_list
++       *  is truncated, otherwise the %forward_list is extended and new
++       *  elements are populated with given data.
+        */
+       void
+       resize(size_type __sz, const value_type& __val);
+@@ -1240,11 +1240,11 @@
+    *  @brief  Forward list equality comparison.
+    *  @param  __lx  A %forward_list
+    *  @param  __ly  A %forward_list of the same type as @a __lx.
+-   *  @return  True iff the size and elements of the forward lists are equal.
++   *  @return  True iff the elements of the forward lists are equal.
+    *
+-   *  This is an equivalence relation.  It is linear in the size of the
+-   *  forward lists.  Deques are considered equivalent if corresponding
+-   *  elements compare equal.
++   *  This is an equivalence relation.  It is linear in the number of 
++   *  elements of the forward lists.  Deques are considered equivalent
++   *  if corresponding elements compare equal.
+    */
+   template<typename _Tp, typename _Alloc>
+     bool
+@@ -1257,8 +1257,9 @@
+    *  @param  __ly  A %forward_list of the same type as @a __lx.
+    *  @return  True iff @a __lx is lexicographically less than @a __ly.
+    *
+-   *  This is a total ordering relation.  It is linear in the size of the
+-   *  forward lists.  The elements must be comparable with @c <.
++   *  This is a total ordering relation.  It is linear in the number of 
++   *  elements of the forward lists.  The elements must be comparable
++   *  with @c <.
+    *
+    *  See std::lexicographical_compare() for how the determination is made.
+    */
+Index: libstdc++-v3/include/Makefile.am
+===================================================================
+--- libstdc++-v3/include/Makefile.am	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/include/Makefile.am	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,7 +1,7 @@
+ ## Makefile for the include subdirectory of the GNU C++ Standard library.
+ ##
+ ## Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+-## 2011
++## 2011, 2012
+ ## Free Software Foundation, Inc.
+ ##
+ ## This file is part of the libstdc++ version 3 distribution.
+@@ -1105,7 +1105,7 @@
+ 	sed -e "s,define __GLIBCXX__,define __GLIBCXX__ $$date," \
+ 	-e "s,define _GLIBCXX_INLINE_VERSION, define _GLIBCXX_INLINE_VERSION $$ns_version," \
+ 	-e "s,define _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY, define _GLIBCXX_HAVE_ATTRIBUTE_VISIBILITY $$visibility," \
+-	-e "s,define _GLIBCXX_EXTERN_TEMPLATE, define _GLIBCXX_EXTERN_TEMPLATE $$externtemplate," \
++	-e "s,define _GLIBCXX_EXTERN_TEMPLATE$$, define _GLIBCXX_EXTERN_TEMPLATE $$externtemplate," \
+ 	-e "$$ldbl_compat" \
+ 	    < ${glibcxx_srcdir}/include/bits/c++config > $@ ;\
+ 	sed -e 's/HAVE_/_GLIBCXX_HAVE_/g' \
 Index: libstdc++-v3/ChangeLog
 ===================================================================
---- libstdc++-v3/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185695)
-@@ -1,3 +1,8 @@
+--- libstdc++-v3/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,30 @@
++2012-03-23  David S. Miller  <davem@davemloft.net>
++
++	* config/abi/post/sparc-linux-gnu/baseline_symbols.txt: Update.
++
++2012-03-23  Paolo Carlini  <paolo.carlini@oracle.com>
++
++	* include/bits/forward_list.h: Fix comments.
++
++2012-03-23  Paweł Sikora  <pawel.sikora@agmk.net>
++
++	PR libstdc++/52540
++	* include/Makefile.am (c++config.h): Fix sed rule to not break
++	the _GLIBCXX_EXTERN_TEMPLATE redefinition.
++	* include/Makefile.in: Regenerate.
++
++2012-03-22  Jonathan Wakely  <jwakely.gcc@gmail.com>
++
++	PR libstdc++/52433
++	* include/debug/safe_iterator.h (_Safe_iterator): Add move
++	constructor and move assignment operator.
++	* testsuite/23_containers/vector/debug/52433.cc: New.
++
 +2012-03-22  Paolo Carlini  <paolo.carlini@oracle.com>
 +
 +	* include/std/array (array<>::at(size_type) const): Fix version
@@ -36,17 +326,696 @@ Index: libstdc++-v3/ChangeLog
  2012-03-22  Release Manager
  
  	* GCC 4.7.0 released.
+Index: libstdc++-v3/testsuite/23_containers/vector/debug/52433.cc
+===================================================================
+--- libstdc++-v3/testsuite/23_containers/vector/debug/52433.cc	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ libstdc++-v3/testsuite/23_containers/vector/debug/52433.cc	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,43 @@
++// Copyright (C) 2012 Free Software Foundation, Inc.
++//
++// This file is part of the GNU ISO C++ Library.  This library is free
++// software; you can redistribute it and/or modify it under the
++// terms of the GNU General Public License as published by the
++// Free Software Foundation; either version 3, or (at your option)
++// any later version.
++//
++// This library is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++//
++// You should have received a copy of the GNU General Public License along
++// with this library; see the file COPYING3.  If not see
++// <http://www.gnu.org/licenses/>.
++//
++// { dg-require-debug-mode "" }
++// { dg-options "-std=gnu++0x" }
++// { dg-do compile }
++
++// PR libstdc++/52433
++
++#include <vector>
++
++struct X
++{
++    std::vector<int>::iterator i;
++
++    X() = default;
++    X(const X&) = default;
++    X(X&&) = default;
++    X& operator=(const X&) = default;
++    X& operator=(X&&) = default;
++};
++
++X test01()
++{
++    X x;
++    x = X();
++    return x;
++}
++
+Index: libstdc++-v3/config/abi/post/sparc-linux-gnu/baseline_symbols.txt
+===================================================================
+--- libstdc++-v3/config/abi/post/sparc-linux-gnu/baseline_symbols.txt	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libstdc++-v3/config/abi/post/sparc-linux-gnu/baseline_symbols.txt	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -43,6 +43,10 @@
+ FUNC:_ZN11__gnu_debug19_Safe_sequence_base18_M_detach_singularEv@@GLIBCXX_3.4
+ FUNC:_ZN11__gnu_debug19_Safe_sequence_base22_M_revalidate_singularEv@@GLIBCXX_3.4
+ FUNC:_ZN11__gnu_debug19_Safe_sequence_base7_M_swapERS0_@@GLIBCXX_3.4
++FUNC:_ZN11__gnu_debug25_Safe_local_iterator_base9_M_attachEPNS_19_Safe_sequence_baseEb@@GLIBCXX_3.4.17
++FUNC:_ZN11__gnu_debug25_Safe_local_iterator_base9_M_detachEv@@GLIBCXX_3.4.17
++FUNC:_ZN11__gnu_debug30_Safe_unordered_container_base13_M_detach_allEv@@GLIBCXX_3.4.17
++FUNC:_ZN11__gnu_debug30_Safe_unordered_container_base7_M_swapERS0_@@GLIBCXX_3.4.17
+ FUNC:_ZN14__gnu_parallel9_Settings3getEv@@GLIBCXX_3.4.10
+ FUNC:_ZN14__gnu_parallel9_Settings3setERS0_@@GLIBCXX_3.4.10
+ FUNC:_ZN9__gnu_cxx12__atomic_addEPVii@@GLIBCXX_3.4
+@@ -877,6 +881,7 @@
+ FUNC:_ZNSaIwEC2Ev@@GLIBCXX_3.4
+ FUNC:_ZNSaIwED1Ev@@GLIBCXX_3.4
+ FUNC:_ZNSaIwED2Ev@@GLIBCXX_3.4
++FUNC:_ZNSbIwSt11char_traitsIwESaIwEE10_S_compareEjj@@GLIBCXX_3.4.16
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE12_Alloc_hiderC1EPwRKS1_@@GLIBCXX_3.4
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE12_Alloc_hiderC2EPwRKS1_@@GLIBCXX_3.4
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE12_M_leak_hardEv@@GLIBCXX_3.4
+@@ -961,6 +966,7 @@
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE7replaceEjjRKS2_jj@@GLIBCXX_3.4
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE7replaceEjjjw@@GLIBCXX_3.4
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE7reserveEj@@GLIBCXX_3.4
++FUNC:_ZNSbIwSt11char_traitsIwESaIwEE8pop_backEv@@GLIBCXX_3.4.17
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE9_M_assignEPwjw@@GLIBCXX_3.4.5
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE9_M_assignEPwjw@GLIBCXX_3.4
+ FUNC:_ZNSbIwSt11char_traitsIwESaIwEE9_M_mutateEjjj@@GLIBCXX_3.4
+@@ -1116,6 +1122,7 @@
+ FUNC:_ZNSolsEt@@GLIBCXX_3.4
+ FUNC:_ZNSolsEx@@GLIBCXX_3.4
+ FUNC:_ZNSolsEy@@GLIBCXX_3.4
++FUNC:_ZNSs10_S_compareEjj@@GLIBCXX_3.4.16
+ FUNC:_ZNSs12_Alloc_hiderC1EPcRKSaIcE@@GLIBCXX_3.4
+ FUNC:_ZNSs12_Alloc_hiderC2EPcRKSaIcE@@GLIBCXX_3.4
+ FUNC:_ZNSs12_M_leak_hardEv@@GLIBCXX_3.4
+@@ -1200,6 +1207,7 @@
+ FUNC:_ZNSs7replaceEjjRKSsjj@@GLIBCXX_3.4
+ FUNC:_ZNSs7replaceEjjjc@@GLIBCXX_3.4
+ FUNC:_ZNSs7reserveEj@@GLIBCXX_3.4
++FUNC:_ZNSs8pop_backEv@@GLIBCXX_3.4.17
+ FUNC:_ZNSs9_M_assignEPcjc@@GLIBCXX_3.4.5
+ FUNC:_ZNSs9_M_assignEPcjc@GLIBCXX_3.4
+ FUNC:_ZNSs9_M_mutateEjjj@@GLIBCXX_3.4
+@@ -1433,6 +1441,9 @@
+ FUNC:_ZNSt13__future_base12_Result_baseD0Ev@@GLIBCXX_3.4.15
+ FUNC:_ZNSt13__future_base12_Result_baseD1Ev@@GLIBCXX_3.4.15
+ FUNC:_ZNSt13__future_base12_Result_baseD2Ev@@GLIBCXX_3.4.15
++FUNC:_ZNSt13__future_base19_Async_state_commonD0Ev@@GLIBCXX_3.4.17
++FUNC:_ZNSt13__future_base19_Async_state_commonD1Ev@@GLIBCXX_3.4.17
++FUNC:_ZNSt13__future_base19_Async_state_commonD2Ev@@GLIBCXX_3.4.17
+ FUNC:_ZNSt13bad_exceptionD0Ev@@GLIBCXX_3.4
+ FUNC:_ZNSt13bad_exceptionD1Ev@@GLIBCXX_3.4
+ FUNC:_ZNSt13bad_exceptionD2Ev@@GLIBCXX_3.4
+@@ -1741,6 +1752,8 @@
+ FUNC:_ZNSt15__exception_ptrneERKNS_13exception_ptrES2_@@CXXABI_1.3.3
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE10pubseekoffExSt12_Ios_SeekdirSt13_Ios_Openmode@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE10pubseekposESt4fposI11__mbstate_tESt13_Ios_Openmode@@GLIBCXX_3.4
++FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE12__safe_gbumpEi@@GLIBCXX_3.4.16
++FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE12__safe_pbumpEi@@GLIBCXX_3.4.16
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE4setgEPcS3_S3_@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE4setpEPcS3_@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEE4syncEv@@GLIBCXX_3.4
+@@ -1780,6 +1793,8 @@
+ FUNC:_ZNSt15basic_streambufIcSt11char_traitsIcEEaSERKS2_@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE10pubseekoffExSt12_Ios_SeekdirSt13_Ios_Openmode@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE10pubseekposESt4fposI11__mbstate_tESt13_Ios_Openmode@@GLIBCXX_3.4
++FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE12__safe_gbumpEi@@GLIBCXX_3.4.16
++FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE12__safe_pbumpEi@@GLIBCXX_3.4.16
+ FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE4setgEPwS3_S3_@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE4setpEPwS3_@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_streambufIwSt11char_traitsIwEE4syncEv@@GLIBCXX_3.4
+@@ -1824,6 +1839,7 @@
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE7_M_syncEPcjj@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE7seekoffExSt12_Ios_SeekdirSt13_Ios_Openmode@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE7seekposESt4fposI11__mbstate_tESt13_Ios_Openmode@@GLIBCXX_3.4
++FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE8_M_pbumpEPcS4_x@@GLIBCXX_3.4.16
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE8overflowEi@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE9pbackfailEi@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIcSt11char_traitsIcESaIcEE9showmanycEv@@GLIBCXX_3.4.6
+@@ -1841,6 +1857,7 @@
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE7_M_syncEPwjj@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE7seekoffExSt12_Ios_SeekdirSt13_Ios_Openmode@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE7seekposESt4fposI11__mbstate_tESt13_Ios_Openmode@@GLIBCXX_3.4
++FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE8_M_pbumpEPwS4_x@@GLIBCXX_3.4.16
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE8overflowEj@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE9pbackfailEj@@GLIBCXX_3.4
+ FUNC:_ZNSt15basic_stringbufIwSt11char_traitsIwESaIwEE9showmanycEv@@GLIBCXX_3.4.6
+@@ -2145,6 +2162,7 @@
+ FUNC:_ZNSt6localeD2Ev@@GLIBCXX_3.4
+ FUNC:_ZNSt6localeaSERKS_@@GLIBCXX_3.4
+ FUNC:_ZNSt6thread15_M_start_threadESt10shared_ptrINS_10_Impl_baseEE@@GLIBCXX_3.4.11
++FUNC:_ZNSt6thread20hardware_concurrencyEv@@GLIBCXX_3.4.17
+ FUNC:_ZNSt6thread4joinEv@@GLIBCXX_3.4.11
+ FUNC:_ZNSt6thread6detachEv@@GLIBCXX_3.4.11
+ FUNC:_ZNSt7codecvtIcc11__mbstate_tEC1EP15__locale_structj@@GLIBCXX_3.4
+@@ -2640,14 +2658,17 @@
+ FUNC:_ZnwjRKSt9nothrow_t@@GLIBCXX_3.4
+ FUNC:__atomic_flag_for_address@@GLIBCXX_3.4.11
+ FUNC:__atomic_flag_wait_explicit@@GLIBCXX_3.4.11
++FUNC:__cxa_allocate_dependent_exception@@CXXABI_1.3.6
+ FUNC:__cxa_allocate_exception@@CXXABI_1.3
+ FUNC:__cxa_bad_cast@@CXXABI_1.3
+ FUNC:__cxa_bad_typeid@@CXXABI_1.3
+ FUNC:__cxa_begin_catch@@CXXABI_1.3
+ FUNC:__cxa_call_unexpected@@CXXABI_1.3
+ FUNC:__cxa_current_exception_type@@CXXABI_1.3
++FUNC:__cxa_deleted_virtual@@CXXABI_1.3.6
+ FUNC:__cxa_demangle@@CXXABI_1.3
+ FUNC:__cxa_end_catch@@CXXABI_1.3
++FUNC:__cxa_free_dependent_exception@@CXXABI_1.3.6
+ FUNC:__cxa_free_exception@@CXXABI_1.3
+ FUNC:__cxa_get_exception_ptr@@CXXABI_1.3.1
+ FUNC:__cxa_get_globals@@CXXABI_1.3
+@@ -2658,6 +2679,7 @@
+ FUNC:__cxa_pure_virtual@@CXXABI_1.3
+ FUNC:__cxa_rethrow@@CXXABI_1.3
+ FUNC:__cxa_throw@@CXXABI_1.3
++FUNC:__cxa_tm_cleanup@@CXXABI_TM_1
+ FUNC:__cxa_vec_cctor@@CXXABI_1.3
+ FUNC:__cxa_vec_cleanup@@CXXABI_1.3
+ FUNC:__cxa_vec_ctor@@CXXABI_1.3
+@@ -2701,7 +2723,9 @@
+ OBJECT:0:CXXABI_1.3.3
+ OBJECT:0:CXXABI_1.3.4
+ OBJECT:0:CXXABI_1.3.5
++OBJECT:0:CXXABI_1.3.6
+ OBJECT:0:CXXABI_LDBL_1.3
++OBJECT:0:CXXABI_TM_1
+ OBJECT:0:GLIBCXX_3.4
+ OBJECT:0:GLIBCXX_3.4.1
+ OBJECT:0:GLIBCXX_3.4.10
+@@ -2710,6 +2734,8 @@
+ OBJECT:0:GLIBCXX_3.4.13
+ OBJECT:0:GLIBCXX_3.4.14
+ OBJECT:0:GLIBCXX_3.4.15
++OBJECT:0:GLIBCXX_3.4.16
++OBJECT:0:GLIBCXX_3.4.17
+ OBJECT:0:GLIBCXX_3.4.2
+ OBJECT:0:GLIBCXX_3.4.3
+ OBJECT:0:GLIBCXX_3.4.4
+@@ -2737,6 +2763,7 @@
+ OBJECT:12:_ZTIN9__gnu_cxx13stdio_filebufIwSt11char_traitsIwEEE@@GLIBCXX_3.4
+ OBJECT:12:_ZTIN9__gnu_cxx18stdio_sync_filebufIcSt11char_traitsIcEEE@@GLIBCXX_3.4
+ OBJECT:12:_ZTIN9__gnu_cxx18stdio_sync_filebufIwSt11char_traitsIwEEE@@GLIBCXX_3.4
++OBJECT:12:_ZTINSt13__future_base19_Async_state_commonE@@GLIBCXX_3.4.17
+ OBJECT:12:_ZTINSt17__gnu_cxx_ldbl1287num_getIcSt19istreambuf_iteratorIcSt11char_traitsIcEEEE@@GLIBCXX_LDBL_3.4
+ OBJECT:12:_ZTINSt17__gnu_cxx_ldbl1287num_getIwSt19istreambuf_iteratorIwSt11char_traitsIwEEEE@@GLIBCXX_LDBL_3.4
+ OBJECT:12:_ZTINSt17__gnu_cxx_ldbl1287num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEEE@@GLIBCXX_LDBL_3.4
+@@ -3245,6 +3272,7 @@
+ OBJECT:20:_ZTSSt15underflow_error@@GLIBCXX_3.4
+ OBJECT:20:_ZTVNSt13__future_base11_State_baseE@@GLIBCXX_3.4.15
+ OBJECT:20:_ZTVNSt13__future_base12_Result_baseE@@GLIBCXX_3.4.15
++OBJECT:20:_ZTVNSt13__future_base19_Async_state_commonE@@GLIBCXX_3.4.17
+ OBJECT:20:_ZTVNSt8ios_base7failureE@@GLIBCXX_3.4
+ OBJECT:20:_ZTVSt10bad_typeid@@GLIBCXX_3.4
+ OBJECT:20:_ZTVSt10lock_error@@GLIBCXX_3.4.11
+@@ -3437,6 +3465,7 @@
+ OBJECT:40:_ZTVSt19basic_ostringstreamIwSt11char_traitsIwESaIwEE@@GLIBCXX_3.4
+ OBJECT:40:_ZTVSt8time_getIcSt19istreambuf_iteratorIcSt11char_traitsIcEEE@@GLIBCXX_3.4
+ OBJECT:40:_ZTVSt8time_getIwSt19istreambuf_iteratorIwSt11char_traitsIwEEE@@GLIBCXX_3.4
++OBJECT:41:_ZTSNSt13__future_base19_Async_state_commonE@@GLIBCXX_3.4.17
+ OBJECT:41:_ZTSSt15basic_streambufIcSt11char_traitsIcEE@@GLIBCXX_3.4
+ OBJECT:41:_ZTSSt15basic_streambufIwSt11char_traitsIwEE@@GLIBCXX_3.4
+ OBJECT:44:_ZTVN10__cxxabiv117__class_type_infoE@@CXXABI_1.3
+Index: libiberty/ChangeLog
+===================================================================
+--- libiberty/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libiberty/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,8 @@
++2012-03-22  Jason Merrill  <jason@redhat.com>
++
++	* cp-demangle.c (cplus_demangle_operators): Add li.
++	(d_unqualified_name): Handle it specially.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.
+Index: libiberty/testsuite/demangle-expected
+===================================================================
+--- libiberty/testsuite/demangle-expected	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libiberty/testsuite/demangle-expected	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -4073,6 +4073,8 @@
+ _Z2f1IiEDTnw_T_ilEES0_
+ decltype (new int{}) f1<int>(int)
+ --format=gnu-v3
++_Zli2_wPKc
++operator"" _w(char const*)
+ _Z1fIiEDTnw_Dapifp_EET_
+ decltype (new auto({parm#1})) f<int>(int)
+ --format=gnu-v3
+Index: libiberty/cp-demangle.c
+===================================================================
+--- libiberty/cp-demangle.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libiberty/cp-demangle.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1419,7 +1419,12 @@
+ 
+       ret = d_operator_name (di);
+       if (ret != NULL && ret->type == DEMANGLE_COMPONENT_OPERATOR)
+-	di->expansion += sizeof "operator" + ret->u.s_operator.op->len - 2;
++	{
++	  di->expansion += sizeof "operator" + ret->u.s_operator.op->len - 2;
++	  if (!strcmp (ret->u.s_operator.op->code, "li"))
++	    ret = d_make_comp (di, DEMANGLE_COMPONENT_UNARY, ret,
++			       d_source_name (di));
++	}
+       return ret;
+     }
+   else if (peek == 'C' || peek == 'D')
+@@ -1596,6 +1601,7 @@
+   { "ix", NL ("[]"),        2 },
+   { "lS", NL ("<<="),       2 },
+   { "le", NL ("<="),        2 },
++  { "li", NL ("operator\"\" "), 1 },
+   { "ls", NL ("<<"),        2 },
+   { "lt", NL ("<"),         2 },
+   { "mI", NL ("-="),        2 },
+Index: libgcc/ChangeLog
+===================================================================
+--- libgcc/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libgcc/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,30 @@
++2012-03-22  Georg-Johann Lay  <avr@gjlay.de>
++
++	Backport from 2012-03-07 mainline r185033.
++
++	PR target/52507
++	* config/avr/lib1funcs.S (__movmemx_hi): Fix loop label in RAM-part.
++
++	Backport from 2012-03-07 mainline r185031.
++
++	PR target/52505
++	* config/avr/lib1funcs.S (__xload_1): Don't read unintentionally
++	from RAM.
++
++	Backport from 2012-03-07 mainline r185030.
++
++	PR target/52461
++	PR target/52508
++	* config/avr/lib1funcs.S (__do_copy_data): Clear RAMPZ after usage
++	if RAMPZ affects reading from RAM.
++	(__tablejump_elpm__): Ditto.
++	(.xload): Ditto.
++	(__movmemx_hi): Ditto.
++	(__do_global_ctors): Right condition for RAMPZ usage is "have ELPM".
++	(__do_global_dtors): Ditto.
++	(__xload_1, __xload_2, __xload_3, __xload_4): Ditto.
++	(__movmemx_hi): Ditto.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.
+Index: libgcc/config/avr/lib1funcs.S
+===================================================================
+--- libgcc/config/avr/lib1funcs.S	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libgcc/config/avr/lib1funcs.S	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1893,6 +1893,10 @@
+ 	cpc	r27, r17
+ 	brne	.L__do_copy_data_loop
+ #endif /* !defined(__AVR_HAVE_ELPMX__) && !defined(__AVR_HAVE_ELPM__) */
++#if defined (__AVR_HAVE_ELPM__) && defined (__AVR_HAVE_RAMPD__)
++	;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
++	out	__RAMPZ__, __zero_reg__
++#endif /* ELPM && RAMPD */
+ ENDF __do_copy_data
+ #endif /* L_copy_data */
+ 
+@@ -1920,7 +1924,7 @@
+ #ifdef L_ctors
+ 	.section .init6,"ax",@progbits
+ DEFUN __do_global_ctors
+-#if defined(__AVR_HAVE_RAMPZ__)
++#if defined(__AVR_HAVE_ELPM__)
+ 	ldi	r17, hi8(__ctors_start)
+ 	ldi	r28, lo8(__ctors_end)
+ 	ldi	r29, hi8(__ctors_end)
+@@ -1953,14 +1957,14 @@
+ 	cpi	r28, lo8(__ctors_start)
+ 	cpc	r29, r17
+ 	brne	.L__do_global_ctors_loop
+-#endif /* defined(__AVR_HAVE_RAMPZ__) */
++#endif /* defined(__AVR_HAVE_ELPM__) */
+ ENDF __do_global_ctors
+ #endif /* L_ctors */
+ 
+ #ifdef L_dtors
+ 	.section .fini6,"ax",@progbits
+ DEFUN __do_global_dtors
+-#if defined(__AVR_HAVE_RAMPZ__)
++#if defined(__AVR_HAVE_ELPM__)
+ 	ldi	r17, hi8(__dtors_end)
+ 	ldi	r28, lo8(__dtors_start)
+ 	ldi	r29, hi8(__dtors_start)
+@@ -1993,7 +1997,7 @@
+ 	cpi	r28, lo8(__dtors_end)
+ 	cpc	r29, r17
+ 	brne	.L__do_global_dtors_loop
+-#endif /* defined(__AVR_HAVE_RAMPZ__) */
++#endif /* defined(__AVR_HAVE_ELPM__) */
+ ENDF __do_global_dtors
+ #endif /* L_dtors */
+ 
+@@ -2001,18 +2005,21 @@
+     
+ #ifdef L_tablejump_elpm
+ DEFUN __tablejump_elpm__
+-#if defined (__AVR_HAVE_ELPM__)
+-#if defined (__AVR_HAVE_LPMX__)
++#if defined (__AVR_HAVE_ELPMX__)
+ 	elpm	__tmp_reg__, Z+
+ 	elpm	r31, Z
+ 	mov	r30, __tmp_reg__
++#if defined (__AVR_HAVE_RAMPD__)
++	;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
++	out	__RAMPZ__, __zero_reg__
++#endif /* RAMPD */
+ #if defined (__AVR_HAVE_EIJMP_EICALL__)
+ 	eijmp
+ #else
+ 	ijmp
+ #endif
+ 
+-#else
++#elif defined (__AVR_HAVE_ELPM__)
+ 	elpm
+ 	adiw	r30, 1
+ 	push	r0
+@@ -2024,7 +2031,6 @@
+ #endif
+ 	ret
+ #endif
+-#endif /* defined (__AVR_HAVE_ELPM__) */
+ ENDF __tablejump_elpm__
+ #endif /* defined (L_tablejump_elpm) */
+ 
+@@ -2114,11 +2120,18 @@
+     adiw    r30, 1
+ .endif
+ #endif
++#if defined (__AVR_HAVE_ELPM__) && defined (__AVR_HAVE_RAMPD__)
++.if \dest == D0+\n-1
++    ;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
++    out     __RAMPZ__, __zero_reg__
++.endif
++#endif
+ .endm ; .xload
+ 
+ #if defined (L_xload_1)
+ DEFUN __xload_1
+-#if defined (__AVR_HAVE_LPMX__) && !defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_LPMX__) && !defined (__AVR_HAVE_ELPM__)
++    sbrc    HHI8, 7
+     ld      D0, Z
+     sbrs    HHI8, 7
+     lpm     D0, Z
+@@ -2126,14 +2139,14 @@
+ #else
+     sbrc    HHI8, 7
+     rjmp    1f
+-#if defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_ELPM__)
+     out     __RAMPZ__, HHI8
+-#endif /* __AVR_HAVE_RAMPZ__ */
++#endif /* __AVR_HAVE_ELPM__ */
+     .xload  D0, 1
+     ret
+ 1:  ld      D0, Z
+     ret
+-#endif /* LPMx && ! RAMPZ */
++#endif /* LPMx && ! ELPM */
+ ENDF __xload_1
+ #endif /* L_xload_1 */
+ 
+@@ -2141,9 +2154,9 @@
+ DEFUN __xload_2
+     sbrc    HHI8, 7
+     rjmp    1f
+-#if defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_ELPM__)
+     out     __RAMPZ__, HHI8
+-#endif /* __AVR_HAVE_RAMPZ__ */
++#endif /* __AVR_HAVE_ELPM__ */
+     .xload  D0, 2
+     .xload  D1, 2
+     ret
+@@ -2157,9 +2170,9 @@
+ DEFUN __xload_3
+     sbrc    HHI8, 7
+     rjmp    1f
+-#if defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_ELPM__)
+     out     __RAMPZ__, HHI8
+-#endif /* __AVR_HAVE_RAMPZ__ */
++#endif /* __AVR_HAVE_ELPM__ */
+     .xload  D0, 3
+     .xload  D1, 3
+     .xload  D2, 3
+@@ -2175,9 +2188,9 @@
+ DEFUN __xload_4
+     sbrc    HHI8, 7
+     rjmp    1f
+-#if defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_ELPM__)
+     out     __RAMPZ__, HHI8
+-#endif /* __AVR_HAVE_RAMPZ__ */
++#endif /* __AVR_HAVE_ELPM__ */
+     .xload  D0, 4
+     .xload  D1, 4
+     .xload  D2, 4
+@@ -2219,7 +2232,7 @@
+ 
+ ;; Read from Flash
+ 
+-#if defined (__AVR_HAVE_RAMPZ__)
++#if defined (__AVR_HAVE_ELPM__)
+     out     __RAMPZ__, HHI8
+ #endif
+ 
+@@ -2243,6 +2256,10 @@
+     st      X+, r0
+     sbiw    LOOP, 1
+     brne    0b
++#if defined (__AVR_HAVE_ELPM__) && defined (__AVR_HAVE_RAMPD__)
++    ;; Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM
++    out	__RAMPZ__, __zero_reg__
++#endif /* ELPM && RAMPD */
+     ret
+ 
+ ;; Read from RAM
+@@ -2252,7 +2269,7 @@
+     ;; and store that Byte to RAM Destination
+     st      X+, r0
+     sbiw    LOOP, 1
+-    brne    0b
++    brne    1b
+     ret
+ ENDF __movmemx_hi
+ 
+Index: gcc/c-family/ChangeLog
+===================================================================
+--- gcc/c-family/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/c-family/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,8 @@
++2012-03-23  William Bader  <williambader@hotmail.com>
++
++	PR c/52682
++	* c-lex.c (c_lex_with_flags): Avoid declarations after stmts.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.
+Index: gcc/c-family/c-lex.c
+===================================================================
+--- gcc/c-family/c-lex.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/c-family/c-lex.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -342,6 +342,8 @@
+ 
+ 	if (flags & CPP_N_USERDEF)
+ 	  {
++	    char *str;
++	    tree literal;
+ 	    tree suffix_id = get_identifier (suffix);
+ 	    int len = tok->val.str.len - strlen (suffix);
+ 	    /* If this is going to be used as a C string to pass to a
+@@ -350,9 +352,9 @@
+ 					    (const char *) tok->val.str.text);
+ 	    TREE_TYPE (num_string) = char_array_type_node;
+ 	    num_string = fix_string_type (num_string);
+-	    char *str = CONST_CAST (char *, TREE_STRING_POINTER (num_string));
++	    str = CONST_CAST (char *, TREE_STRING_POINTER (num_string));
+ 	    str[len] = '\0';
+-	    tree literal = build_userdef_literal (suffix_id, *value,
++	    literal = build_userdef_literal (suffix_id, *value,
+ 						  num_string);
+ 	    *value = literal;
+ 	  }
+Index: gcc/DATESTAMP
+===================================================================
+--- gcc/DATESTAMP	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/DATESTAMP	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1 +1 @@
+-20120322
++20120323
 Index: gcc/DEV-PHASE
 ===================================================================
---- gcc/DEV-PHASE	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/DEV-PHASE	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/DEV-PHASE	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/DEV-PHASE	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -0,0 +1 @@
 +prerelease
 Index: gcc/ChangeLog
 ===================================================================
---- gcc/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185695)
-@@ -1,3 +1,28 @@
+--- gcc/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,173 @@
++2012-03-23  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	Backported from mainline
++	2012-03-06  Michael Meissner  <meissner@linux.vnet.ibm.com>
++
++	PR target/50310
++	* config/rs6000/vector.md (vector_uneq<mode>): Add support for
++	UNEQ, LTGT, ORDERED, and UNORDERED IEEE vector comparisons.
++	(vector_ltgt<mode>): Likewise.
++	(vector_ordered<mode>): Likewise.
++	(vector_unordered<mode>): Likewise.
++	* config/rs6000/rs6000.c (rs6000_emit_vector_compare_inner): Likewise.
++
++2012-03-23  Joern Rennecke  <joern.rennecke@embecosm.com>
++
++	* config/epiphany/epiphany.c (epiphany_function_value_regno_p):
++	Make static.
++
++2012-03-22  Kaz Kojima  <kkojima@gcc.gnu.org>
++
++	Backported from mainline
++	2012-03-02  Kaz Kojima  <kkojima@gcc.gnu.org>
++
++	PR target/48596
++	PR target/48806
++	* config/sh/sh.c (sh_register_move_cost): Increase cost between
++	GENERAL_REGS and FP_REGS for SImode.
++
++2012-03-22  Jakub Jelinek  <jakub@redhat.com>
++
++	PR middle-end/52547
++	* tree-nested.c (convert_tramp_reference_stmt): Call declare_vars
++	on any new_local_var_chain vars declared during recursing on
++	GIMPLE_OMP_PARALLEL or GIMPLE_OMP_TASK body.
++
++2012-03-22  Georg-Johann Lay  <avr@gjlay.de>
++
++	Backport from 2012-03-22 mainline r185692.
++
++	PR target/52496
++	* config/avr/avr.md (unspec): Remove UNSPEC_MEMORY_BARRIER.
++	(unspecv): Add UNSPECV_MEMORY_BARRIER.
++	(cli_sei): Use unspec_volatile instead of unspec for memory barrier.
++	(delay_cycles_1, delay_cycles_2): Ditto.
++	(delay_cycles_3, delay_cycles_4): Ditto.
++	(nopv, *nopv): Ditto.
++	(sleep, *sleep): Ditto.
++	(wdr, *wdr): Ditto.
++
++	Backport from 2012-03-21 mainline r185605.
++
++	PR rtl-optimization/52543
++	PR target/52461
++	* config/avr/avr-protos.h (avr_load_lpm): New prototype.
++	* config/avr/avr.c (avr_mode_dependent_address_p): New function.
++	(TARGET_MODE_DEPENDENT_ADDRESS_P): New define.
++	(avr_load_libgcc_p): Restrict to __flash loads.
++	(avr_out_lpm): Only handle 1-byte loads from __flash.
++	(avr_load_lpm): New function.
++	(avr_find_unused_d_reg): Remove.
++	(avr_out_lpm_no_lpmx): Remove.
++	(adjust_insn_length): Handle ADJUST_LEN_LOAD_LPM.
++	* config/avr/avr.md (unspec): Add UNSPEC_LPM.
++	(load_<mode>_libgcc): Use UNSPEC_LPM instead of MEM.
++	(load_<mode>, load_<mode>_clobber): New insns.
++	(mov<mode>): For multi-byte move from non-generic
++	16-bit address spaces: Expand to load_<mode> resp.
++	load_<mode>_clobber.
++	(load<mode>_libgcc): Remove expander.
++	(split-lpmx): Remove split.
++
++	Backport from 2012-03-13 mainline r185329.
++
++	PR target/52488
++	* config/avr/avr.c (avr_prologue_setup_frame): Cut down stack
++	offset (size) to a value the insns can deal with.
++	(expand_epilogue): Ditto.
++
++	Backport from 2012-03-12 mainline r185256.
++
++	PR target/52499
++	* config/avr/avr.c (avr_mode_code_base_reg_class): Change return
++	type from reg_class_t to enum reg_class.
++	* config/avr/avr-protos.h (avr_mode_code_base_reg_class): Ditto.
++
++	Backport from 2012-03-12 mainline r185253.
++
++	PR target/52148
++	* config/avr/avr.c (avr_out_movmem): Fix typo in output template
++	for the case ADDR_SPACE_FLASH and AVR_HAVE_LPMX introduced in
++	r184615 from 2012-02-28.
++
++	Backport from 2012-03-08 mainline r185105.
++
++	* config/avr/avr.md (*addhi3, addhi3_clobber): Add "w" alternative
++	for constants in [-63,63].
++
++	Backport from 2012-03-08 mainline r185100.
++
++	PR target/52496
++	* config/avr/avr.c (avr_mem_clobber): New static function.
++	(avr_expand_delay_cycles): Add memory clobber operand to
++	delay_cycles_1, delay_cycles_2, delay_cycles_3, delay_cycles_4.
++	* config/avr/avr.md (unspec): Add UNSPEC_MEMORY_BARRIER.
++	(enable_interrupt, disable_interrupt): New expander.
++	(nopv, sleep, wdr): New expanders.
++	(delay_cycles_1): Add memory clobber.
++	(delay_cycles_2): Add memory clobber.
++	(delay_cycles_3): Add memory clobber.
++	(delay_cycles_4): Add memory clobber.
++	(cli_sei): New insn from former "enable_interrupt",
++	"disable_interrupt" with memory clobber.
++	(*wdt): New insn from former "wdt" with memory clobber.
++	(*nopv): Similar, but for "nopv".
++	(*sleep): Similar, but for "sleep".
++
++	Backport from 2012-03-07 mainline r185043.
++
++	PR target/52484
++	* config/avr/avr.md (xload<mode>_A): Add R22... to register footprint.
++
++	Backport from 2012-03-07 mainline r185032.
++
++	PR target/52506
++	* gcc/config/avr/avr.c (expand_epilogue): Fix order of restoration
++	to: RAMPZ, RAMPY, RAMPX, RAMPD.
++	(expand_prologue): Only clear RAMPZ if it has effect on RAM-read.
++
++	Backport from 2012-03-07 mainline r185031.
++
++	PR target/52505
++	* config/avr/avr.c (avr_out_xload): Don't read unintentionally
++	from RAM.
++	* config/avr/avr.md (xload_8): Adjust insn length.
++
++	Backport from 2012-03-07 mainline r185030.
++
++	PR target/52461
++	* gcc/config/avr/avr.c (avr_out_lpm): Clear RAMPZ after usage
++	if RAMPZ affects reading from RAM.
++
++	Backport from 2012-03-05 mainline r184919.
++
++	* config/avr/avr.md (*umaddqihi4.2): New insn-and-split.
++
 +2012-03-22  Georg-Johann Lay  <avr@gjlay.de>
 +
 +	Backport from mainline r185259.
@@ -75,10 +1044,354 @@ Index: gcc/ChangeLog
  2012-03-22  Release Manager
  
  	* GCC 4.7.0 released.
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-1-0.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-1-0.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-1-0.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99" } */
++/* { dg-do run } */
++
++#define __as __flash
++
++#include "addr-space-1.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-1-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-1-1.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-1-1.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99 -Tavr51-flash1.x" } */
++/* { dg-do run } */
++
++#define __as __flash1
++
++#include "addr-space-1.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-2-0.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-2-0.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-2-0.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99" } */
++/* { dg-do run } */
++
++#define __as __flash
++
++#include "addr-space-2.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-2-1.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-2-1.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-2-1.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99 -Tavr51-flash1.x" } */
++/* { dg-do run } */
++
++#define __as __flash1
++
++#include "addr-space-2.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-1-x.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-1-x.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-1-x.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99" } */
++/* { dg-do run } */
++
++#define __as __memx
++
++#include "addr-space-1.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-1.h
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-1.h	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-1.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,83 @@
++#include <stdlib.h>
++#include <string.h>
++
++typedef struct
++{
++  char i1;
++  short i2;
++  long i4;
++  long long i8;
++  char str[2][10];
++} a_t;
++
++const __as a_t A =
++  {
++    12, 345, 678910, 1234567891011ll,
++    {
++      "xxx..xxx",
++      "yyy..yyy"
++    }
++  };
++
++const __as volatile a_t V =
++  {
++    12+1, 345+1, 678910+1, 1234567891011ll+1,
++    {
++      "XXX..XXX",
++      "YYY..YYY"
++    }
++  };
++
++a_t A2;
++volatile a_t V2;
++
++int main (void)
++{
++  if (A.i1 != 12
++      || A.i1 != V.i1 -1)
++    abort();
++
++  if (A.i2 != 345
++      || A.i2 != V.i2 -1)
++    abort();
++
++  if (A.i4 != 678910
++      || A.i4 != V.i4 -1)
++    abort();
++
++  if (A.i8 != 1234567891011ll
++      || A.i8 != V.i8 -1)
++    abort();
++
++  A2 = A;
++  V2 = V;
++
++  if (A2.i1 != 12
++      || A2.i1 != V2.i1 -1)
++    abort();
++
++  if (A2.i2 != 345
++      || A2.i2 != V2.i2 -1)
++    abort();
++
++  if (A2.i4 != 678910
++      || A2.i4 != V2.i4 -1)
++    abort();
++
++  if (A2.i8 != 1234567891011ll
++      || A2.i8 != V2.i8 -1)
++    abort();
++
++  if (strcmp (A2.str[0], "xxx..xxx"))
++    abort();
++  if (strcmp (A2.str[1], "yyy..yyy"))
++    abort();
++
++  if (strcmp ((const char*) V2.str[0], "XXX..XXX"))
++    abort();
++  if (strcmp ((const char*) V2.str[1], "YYY..YYY"))
++   abort();
++  
++  exit (0);
++  return 0;
++}
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-2-x.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-2-x.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-2-x.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,9 @@
++/* { dg-options "-std=gnu99 -Wa,--no-warn" } */
++/* { dg-do run } */
++
++/* --no-warn because: "assembling 24-bit address needs binutils extension"
++   see binutils PR13503.  */
++
++#define __as __memx
++
++#include "addr-space-2.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-2.h
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-2.h	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-2.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,106 @@
++extern void exit (int);
++extern void abort (void);
++
++typedef struct T
++{
++  char val;
++  const __as struct T *l, *r;
++} tree;
++
++/*
++                    abcd   
++                   /    \
++                 ab      cd
++                /  \    /  \
++               a    b  c    d
++*/
++
++const __as tree a = { 'a', 0, 0 };
++const __as tree b = { 'b', 0, 0 };
++const __as tree c = { 'c', 0, 0 };
++const __as tree d = { 'd', 0, 0 };
++
++const __as tree ab = { 'A', &a, &b };
++const __as tree cd = { 'C', &c, &d };
++
++const __as tree abcd = { '*', &ab, &cd };
++
++static void
++test1 (void)
++{
++  if (abcd.val != '*')
++    abort();
++
++  if (abcd.l->val != 'A')
++    abort();
++  if (abcd.r->val != 'C')
++    abort();
++
++  if (abcd.l->l->val != 'a')
++    abort();
++  if (abcd.l->r->val != 'b')
++    abort();
++  if (abcd.r->l->val != 'c')
++    abort();
++  if (abcd.r->r->val != 'd')
++    abort();
++}
++
++static void
++test2 (const __as tree *t)
++{
++  if (t->val != '*')
++    abort();
++
++  if (t->l->val != 'A')
++    abort();
++  if (t->r->val != 'C')
++    abort();
++
++  if (t->l->l->val != 'a')
++    abort();
++  if (t->l->r->val != 'b')
++    abort();
++  if (t->r->l->val != 'c')
++    abort();
++  if (t->r->r->val != 'd')
++    abort();
++}
++
++static void
++test3 (const __as tree *pt)
++{
++  tree t = *pt;
++  
++  if (t.val != '*')
++    abort();
++
++  if (t.l->val != 'A')
++    abort();
++  if (t.r->val != 'C')
++    abort();
++
++  if (t.l->l->val != 'a')
++    abort();
++  if (t.l->r->val != 'b')
++    abort();
++  if (t.r->l->val != 'c')
++    abort();
++  if (t.r->r->val != 'd')
++    abort();
++}
++
++int main (void)
++{
++  const __as tree *t = &abcd;
++  test1();
++  test2 (&abcd);
++  test3 (&abcd);
++
++  __asm ("" : "+r" (t));
++  test2 (t);
++  test3 (t);
++  
++  exit (0);
++  return 0;
++}
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-1-g.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-1-g.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-1-g.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99" } */
++/* { dg-do run } */
++
++#define __as
++
++#include "addr-space-1.h"
+Index: gcc/testsuite/gcc.target/avr/torture/addr-space-2-g.c
+===================================================================
+--- gcc/testsuite/gcc.target/avr/torture/addr-space-2-g.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gcc.target/avr/torture/addr-space-2-g.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,6 @@
++/* { dg-options "-std=gnu99" } */
++/* { dg-do run } */
++
++#define __as
++
++#include "addr-space-2.h"
+Index: gcc/testsuite/gcc.target/avr/progmem.h
+===================================================================
+--- gcc/testsuite/gcc.target/avr/progmem.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/testsuite/gcc.target/avr/progmem.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -5,6 +5,7 @@
+             static const char __c[] PROGMEM = (s);          \
+             &__c[0];}))
+ 
++#ifdef __AVR_HAVE_LPMX__
+ #define pgm_read_char(addr)                                 \
+     (__extension__({                                        \
+             unsigned int __addr16 = (unsigned int)(addr);   \
+@@ -12,3 +13,13 @@
+             __asm__ ("lpm %0, %a1"                          \
+                      : "=r" (__result) : "z" (__addr16));   \
+             __result; }))
++#else
++#define pgm_read_char(addr)                                 \
++    (__extension__({                                        \
++            unsigned int __addr16 = (unsigned int)(addr);   \
++            char __result;                                  \
++            __asm__ ("lpm" "\n\t"                           \
++                     "mov %0, r0"                           \
++                     : "=r" (__result) : "z" (__addr16));   \
++            __result; }))
++#endif
+Index: gcc/testsuite/gfortran.dg/intrinsic_8.f90
+===================================================================
+--- gcc/testsuite/gfortran.dg/intrinsic_8.f90	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/gfortran.dg/intrinsic_8.f90	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,23 @@
++! { dg-do compile }
++!
++! PR fortran/52452
++!
++! Contributed by Roger Ferrer Ibanez
++!
++PROGRAM test_etime
++    IMPLICIT NONE
++    INTRINSIC :: etime
++    REAL(4) :: tarray(1:2)
++    REAL(4) :: result
++
++    CALL etime(tarray, result)
++END PROGRAM test_etime
++
++subroutine test_etime2
++    IMPLICIT NONE
++    INTRINSIC :: etime
++    REAL(4) :: tarray(1:2)
++    REAL(4) :: result
++
++    result = etime(tarray)
++END subroutine test_etime2
 Index: gcc/testsuite/gcc.dg/Wunused-var-3.c
 ===================================================================
 --- gcc/testsuite/gcc.dg/Wunused-var-3.c	(.../tags/gcc_4_7_0_release)	(wersja 0)
-+++ gcc/testsuite/gcc.dg/Wunused-var-3.c	(.../branches/gcc-4_7-branch)	(wersja 185695)
++++ gcc/testsuite/gcc.dg/Wunused-var-3.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -0,0 +1,34 @@
 +/* PR c/52577 */
 +/* { dg-do compile } */
@@ -116,9 +1429,53 @@ Index: gcc/testsuite/gcc.dg/Wunused-var-3.c
 +}
 Index: gcc/testsuite/ChangeLog
 ===================================================================
---- gcc/testsuite/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185695)
-@@ -1,3 +1,16 @@
+--- gcc/testsuite/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/testsuite/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,60 @@
++2012-03-22  Paolo Carlini  <paolo.carlini@oracle.com>
++
++	PR c++/52487
++	* g++.dg/cpp0x/lambda/lambda-ice7.C: New.
++
++2012-03-22  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/52452
++	* gfortran.dg/intrinsic_8.f90: New.
++
++2012-03-22  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c++/52671
++	* g++.dg/ext/attrib44.C: New test.
++
++2012-03-22  Jason Merrill  <jason@redhat.com>
++
++	* g++.dg/torture/pr52582.C: New.
++
++2012-03-22  Georg-Johann Lay  <avr@gjlay.de>
++
++	Backport from 2012-03-20 mainline r185583.
++
++	* gcc.target/avr/progmem.h (pgm_read_char): Define depending on
++	__AVR_HAVE_LPMX__
++
++	Backport from 2012-03-20 mainline r185570.
++
++	PR target/49868
++	* gcc.target/avr/torture/addr-space-2.h: New file.
++	* gcc.target/avr/torture/addr-space-2-g.h: New test.
++	* gcc.target/avr/torture/addr-space-2-0.h: New test.
++	* gcc.target/avr/torture/addr-space-2-1.h: New test.
++	* gcc.target/avr/torture/addr-space-2-x.h: New test.
++
++	Backport from 2012-03-12 mainline r185255.
++
++	PR target/49868
++	* gcc.target/avr/torture/addr-space-1.h: New file.
++	* gcc.target/avr/torture/addr-space-g.h: New test.
++	* gcc.target/avr/torture/addr-space-0.h: New test.
++	* gcc.target/avr/torture/addr-space-1.h: New test.
++	* gcc.target/avr/torture/addr-space-x.h: New test.
++
 +2012-03-22  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from mainline
@@ -128,17 +1485,40 @@ Index: gcc/testsuite/ChangeLog
 +	* g++.dg/cpp0x/udlit-args2.C: New test.
 +
 +	2012-03-13  Jakub Jelinek  <jakub@redhat.com>
-+ 
++
 +	PR c/52577
 +	* gcc.dg/Wunused-var-3.c: New test.
 +
  2012-03-22  Release Manager
  
  	* GCC 4.7.0 released.
+Index: gcc/testsuite/g++.dg/ext/attrib44.C
+===================================================================
+--- gcc/testsuite/g++.dg/ext/attrib44.C	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/ext/attrib44.C	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,4 @@
++// PR c++/52671
++// { dg-do compile }
++__attribute__ ((deprecated)) enum E { E0 };	// { dg-warning "attribute ignored in declaration of" }
++// { dg-message "must follow the" "" { target *-*-* } 3 }
+Index: gcc/testsuite/g++.dg/cpp0x/lambda/lambda-ice7.C
+===================================================================
+--- gcc/testsuite/g++.dg/cpp0x/lambda/lambda-ice7.C	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/cpp0x/lambda/lambda-ice7.C	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,9 @@
++// PR c++/52487
++// { dg-options "-std=c++0x" }
++
++struct A;         // { dg-error "forward declaration" }
++
++void foo(A& a)
++{
++  [=](){a;};      // { dg-error "invalid use of incomplete type" }
++}
 Index: gcc/testsuite/g++.dg/cpp0x/udlit-args2.C
 ===================================================================
 --- gcc/testsuite/g++.dg/cpp0x/udlit-args2.C	(.../tags/gcc_4_7_0_release)	(wersja 0)
-+++ gcc/testsuite/g++.dg/cpp0x/udlit-args2.C	(.../branches/gcc-4_7-branch)	(wersja 185695)
++++ gcc/testsuite/g++.dg/cpp0x/udlit-args2.C	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -0,0 +1,15 @@
 +// PR c++/52521
 +// { dg-do compile }
@@ -155,11 +1535,98 @@ Index: gcc/testsuite/g++.dg/cpp0x/udlit-args2.C
 +int operator "" _b (const char *);
 +int b = 123_b;
 +int b2 = "abc"_b;
+Index: gcc/testsuite/g++.dg/torture/pr52582.C
+===================================================================
+--- gcc/testsuite/g++.dg/torture/pr52582.C	(.../tags/gcc_4_7_0_release)	(wersja 0)
++++ gcc/testsuite/g++.dg/torture/pr52582.C	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -0,0 +1,23 @@
++// PR c++/52582
++
++inline void *operator new (__SIZE_TYPE__, void *p) throw ()
++{
++  return p;
++}
++struct B
++{
++  virtual ~B ();
++  B ();
++};
++struct A : B
++{
++  A () : B () {}
++  virtual void bar ();
++};
++void
++foo ()
++{
++  char a[64];
++  B *b = new (&a) A ();
++  b->~B ();
++}
+Index: gcc/cp/class.c
+===================================================================
+--- gcc/cp/class.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/cp/class.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -3145,8 +3145,9 @@
+ 	CLASSTYPE_NON_AGGREGATE (t) = 1;
+ 
+       /* If at least one non-static data member is non-literal, the whole
+-         class becomes non-literal.  */
+-      if (!literal_type_p (type))
++         class becomes non-literal.  Note: if the type is incomplete we
++	 will complain later on.  */
++      if (COMPLETE_TYPE_P (type) && !literal_type_p (type))
+         CLASSTYPE_LITERAL_P (t) = false;
+ 
+       /* A standard-layout class is a class that:
+Index: gcc/cp/decl.c
+===================================================================
+--- gcc/cp/decl.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/cp/decl.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -4219,7 +4219,8 @@
+   if (declspecs->attributes)
+     {
+       location_t loc = input_location;
+-      if (!CLASSTYPE_TEMPLATE_INSTANTIATION (declared_type))
++      if (!CLASS_TYPE_P (declared_type)
++	  || !CLASSTYPE_TEMPLATE_INSTANTIATION (declared_type))
+ 	/* For a non-template class, use the name location; for a template
+ 	   class (an explicit instantiation), use the current location.  */
+ 	input_location = location_of (declared_type);
+Index: gcc/cp/method.c
+===================================================================
+--- gcc/cp/method.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/cp/method.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1590,6 +1590,7 @@
+       DECL_DELETED_FN (fn) = deleted_p;
+       DECL_DECLARED_CONSTEXPR_P (fn) = constexpr_p;
+     }
++  DECL_EXTERNAL (fn) = true;
+   DECL_NOT_REALLY_EXTERN (fn) = 1;
+   DECL_DECLARED_INLINE_P (fn) = 1;
+   gcc_assert (!TREE_USED (fn));
 Index: gcc/cp/ChangeLog
 ===================================================================
---- gcc/cp/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/cp/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185695)
-@@ -1,3 +1,13 @@
+--- gcc/cp/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/cp/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,30 @@
++2012-03-22  Paolo Carlini  <paolo.carlini@oracle.com>
++
++	PR c++/52487
++	* class.c (check_field_decls): Call literal_type_p only
++	on complete types.
++
++2012-03-22  Jakub Jelinek  <jakub@redhat.com>
++
++	PR c++/52671
++	* decl.c (check_tag_decl): Only use CLASSTYPE_TEMPLATE_INSTANTIATION
++	on CLASS_TYPE_P types.
++
++2012-03-22  Jason Merrill  <jason@redhat.com>
++
++	PR c++/52582
++	* method.c (implicitly_declare_fn): Set DECL_EXTERNAL.
++
 +2012-03-22  Jakub Jelinek  <jakub@redhat.com>
 +
 +	Backported from mainline
@@ -175,8 +1642,8 @@ Index: gcc/cp/ChangeLog
  	* GCC 4.7.0 released.
 Index: gcc/cp/parser.c
 ===================================================================
---- gcc/cp/parser.c	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/cp/parser.c	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/cp/parser.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/cp/parser.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1,6 +1,6 @@
  /* C++ Parser.
     Copyright (C) 2000, 2001, 2002, 2003, 2004,
@@ -200,17 +1667,93 @@ Index: gcc/cp/parser.c
  	    return fn;
  	}
      }
+Index: gcc/fortran/ChangeLog
+===================================================================
+--- gcc/fortran/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/fortran/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,9 @@
++2012-03-22  Tobias Burnus  <burnus@net-b.de>
++
++	PR fortran/52452
++	* resolve.c (resolve_intrinsic): Don't search for a
++	function if we know that it is a subroutine.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.
+Index: gcc/fortran/resolve.c
+===================================================================
+--- gcc/fortran/resolve.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/fortran/resolve.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1496,7 +1496,7 @@
+ 
+   if (sym->intmod_sym_id)
+     isym = gfc_intrinsic_function_by_id ((gfc_isym_id) sym->intmod_sym_id);
+-  else
++  else if (!sym->attr.subroutine)
+     isym = gfc_find_function (sym->name);
+ 
+   if (isym)
 Index: gcc/BASE-VER
 ===================================================================
---- gcc/BASE-VER	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/BASE-VER	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/BASE-VER	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/BASE-VER	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1 +1 @@
 -4.7.0
 +4.7.1
+Index: gcc/tree-nested.c
+===================================================================
+--- gcc/tree-nested.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/tree-nested.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1954,6 +1954,7 @@
+ convert_tramp_reference_stmt (gimple_stmt_iterator *gsi, bool *handled_ops_p,
+ 			      struct walk_stmt_info *wi)
+ {
++  struct nesting_info *info = (struct nesting_info *) wi->info;
+   gimple stmt = gsi_stmt (*gsi);
+ 
+   switch (gimple_code (stmt))
+@@ -1966,16 +1967,33 @@
+ 	for (i = 0; i < nargs; i++)
+ 	  walk_tree (gimple_call_arg_ptr (stmt, i), convert_tramp_reference_op,
+ 		     wi, NULL);
++	break;
++      }
+ 
+-	*handled_ops_p = true;
+-	return NULL_TREE;
++    case GIMPLE_OMP_PARALLEL:
++    case GIMPLE_OMP_TASK:
++      {
++	tree save_local_var_chain;
++        walk_gimple_op (stmt, convert_tramp_reference_op, wi);
++	save_local_var_chain = info->new_local_var_chain;
++	info->new_local_var_chain = NULL;
++        walk_body (convert_tramp_reference_stmt, convert_tramp_reference_op,
++		   info, gimple_omp_body (stmt));
++	if (info->new_local_var_chain)
++	  declare_vars (info->new_local_var_chain,
++			gimple_seq_first_stmt (gimple_omp_body (stmt)),
++			false);
++	info->new_local_var_chain = save_local_var_chain;
+       }
++      break;
+ 
+     default:
++      *handled_ops_p = false;
++      return NULL_TREE;
+       break;
+     }
+ 
+-  *handled_ops_p = false;
++  *handled_ops_p = true;
+   return NULL_TREE;
+ }
+ 
 Index: gcc/output.h
 ===================================================================
---- gcc/output.h	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/output.h	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/output.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/output.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -446,8 +446,8 @@
  #define SECTION_STYLE_MASK 0x600000	/* bits used for SECTION_STYLE */
  #define SECTION_COMMON   0x800000	/* contains common data */
@@ -224,8 +1767,8 @@ Index: gcc/output.h
     to using a special assembler directive.  */
 Index: gcc/c-parser.c
 ===================================================================
---- gcc/c-parser.c	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/c-parser.c	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/c-parser.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/c-parser.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1,7 +1,7 @@
  /* Parser for C and Objective-C.
     Copyright (C) 1987, 1988, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
@@ -257,8 +1800,8 @@ Index: gcc/c-parser.c
  		c_build_vec_perm_expr
 Index: gcc/config/i386/nmmintrin.h
 ===================================================================
---- gcc/config/i386/nmmintrin.h	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/config/i386/nmmintrin.h	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/config/i386/nmmintrin.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/i386/nmmintrin.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1,4 +1,4 @@
 -/* Copyright (C) 2007, 2009 Free Software Foundation, Inc.
 +/* Copyright (C) 2007, 2009, 2012 Free Software Foundation, Inc.
@@ -276,8 +1819,8 @@ Index: gcc/config/i386/nmmintrin.h
     User Guide and Reference, version 10.0.  */
 Index: gcc/config/i386/smmintrin.h
 ===================================================================
---- gcc/config/i386/smmintrin.h	(.../tags/gcc_4_7_0_release)	(wersja 185695)
-+++ gcc/config/i386/smmintrin.h	(.../branches/gcc-4_7-branch)	(wersja 185695)
+--- gcc/config/i386/smmintrin.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/i386/smmintrin.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
 @@ -1,4 +1,4 @@
 -/* Copyright (C) 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 +/* Copyright (C) 2007, 2008, 2009, 2010, 2012 Free Software Foundation, Inc.
@@ -295,3 +1838,1589 @@ Index: gcc/config/i386/smmintrin.h
  /* Implemented from the specification included in the Intel C++ Compiler
     User Guide and Reference, version 10.0.  */
  
+Index: gcc/config/sh/sh.c
+===================================================================
+--- gcc/config/sh/sh.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/sh/sh.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,6 +1,6 @@
+ /* Output routines for GCC for Renesas / SuperH SH.
+    Copyright (C) 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+-   2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011
++   2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012
+    Free Software Foundation, Inc.
+    Contributed by Steve Chamberlain (sac@cygnus.com).
+    Improved by Jim Wilson (wilson@cygnus.com).
+@@ -11497,9 +11497,16 @@
+        && REGCLASS_HAS_GENERAL_REG (srcclass))
+       || (REGCLASS_HAS_GENERAL_REG (dstclass)
+ 	  && REGCLASS_HAS_FP_REG (srcclass)))
+-    return ((TARGET_SHMEDIA ? 4 : TARGET_FMOVD ? 8 : 12)
+-	    * ((GET_MODE_SIZE (mode) + 7) / 8U));
++    {
++      /* Discourage trying to use fp regs for a pointer.  This also
++	 discourages fp regs with SImode because Pmode is an alias
++	 of SImode on this target.  See PR target/48596.  */
++      int addend = (mode == Pmode) ? 40 : 0;
+ 
++      return (((TARGET_SHMEDIA ? 4 : TARGET_FMOVD ? 8 : 12) + addend)
++	      * ((GET_MODE_SIZE (mode) + 7) / 8U));
++    }
++
+   if ((dstclass == FPUL_REGS
+        && REGCLASS_HAS_GENERAL_REG (srcclass))
+       || (srcclass == FPUL_REGS
+Index: gcc/config/avr/avr.md
+===================================================================
+--- gcc/config/avr/avr.md	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/avr/avr.md	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -63,6 +63,7 @@
+   [UNSPEC_STRLEN
+    UNSPEC_MOVMEM
+    UNSPEC_INDEX_JMP
++   UNSPEC_LPM
+    UNSPEC_FMUL
+    UNSPEC_FMULS
+    UNSPEC_FMULSU
+@@ -77,6 +78,7 @@
+    UNSPECV_WRITE_SP
+    UNSPECV_GOTO_RECEIVER
+    UNSPECV_ENABLE_IRQS
++   UNSPECV_MEMORY_BARRIER
+    UNSPECV_NOP
+    UNSPECV_SLEEP
+    UNSPECV_WDR
+@@ -139,7 +141,7 @@
+   "out_bitop, out_plus, out_plus_noclobber, plus64, addto_sp,
+    tsthi, tstpsi, tstsi, compare, compare64, call,
+    mov8, mov16, mov24, mov32, reload_in16, reload_in24, reload_in32,
+-   xload, movmem,
++   xload, movmem, load_lpm,
+    ashlqi, ashrqi, lshrqi,
+    ashlhi, ashrhi, lshrhi,
+    ashlsi, ashrsi, lshrsi,
+@@ -363,36 +365,63 @@
+ ;;========================================================================
+ ;; Move stuff around
+ 
+-(define_expand "load<mode>_libgcc"
+-  [(set (match_dup 3)
+-        (match_dup 2))
+-   (set (reg:MOVMODE 22)
+-        (match_operand:MOVMODE 1 "memory_operand" ""))
+-   (set (match_operand:MOVMODE 0 "register_operand" "")
+-        (reg:MOVMODE 22))]
+-  "avr_load_libgcc_p (operands[1])"
+-  {
+-    operands[3] = gen_rtx_REG (HImode, REG_Z);
+-    operands[2] = force_operand (XEXP (operands[1], 0), NULL_RTX);
+-    operands[1] = replace_equiv_address (operands[1], operands[3]);
+-    set_mem_addr_space (operands[1], ADDR_SPACE_FLASH);
+-  })
+-    
++;; Represent a load from __flash that needs libgcc support as UNSPEC.
++;; This is legal because we read from non-changing memory.
++;; For rationale see the FIXME below.
++
++;; "load_psi_libgcc"    
++;; "load_si_libgcc"    
++;; "load_sf_libgcc"    
+ (define_insn "load_<mode>_libgcc"
+   [(set (reg:MOVMODE 22)
+-        (match_operand:MOVMODE 0 "memory_operand" "m,m"))]
+-  "avr_load_libgcc_p (operands[0])
+-   && REG_P (XEXP (operands[0], 0))
+-   && REG_Z == REGNO (XEXP (operands[0], 0))"
++        (unspec:MOVMODE [(reg:HI REG_Z)]
++                        UNSPEC_LPM))]
++  ""
+   {
+-    operands[0] = GEN_INT (GET_MODE_SIZE (<MODE>mode));
+-    return "%~call __load_%0";
++    rtx n_bytes = GEN_INT (GET_MODE_SIZE (<MODE>mode));
++    output_asm_insn ("%~call __load_%0", &n_bytes);
++    return "";
+   }
+-  [(set_attr "length" "1,2")
+-   (set_attr "isa" "rjmp,jmp")
++  [(set_attr "type" "xcall")
+    (set_attr "cc" "clobber")])
+ 
+ 
++;; Similar for inline reads from flash.  We use UNSPEC instead
++;; of MEM for the same reason as above: PR52543.
++;; $1 contains the memory segment.
++
++(define_insn "load_<mode>"
++  [(set (match_operand:MOVMODE 0 "register_operand" "=r")
++        (unspec:MOVMODE [(reg:HI REG_Z)
++                         (match_operand:QI 1 "reg_or_0_operand" "rL")]
++                        UNSPEC_LPM))]
++  "(CONST_INT_P (operands[1]) && AVR_HAVE_LPMX)
++   || (REG_P (operands[1]) && AVR_HAVE_ELPMX)"
++  {
++    return avr_load_lpm (insn, operands, NULL);
++  }
++  [(set_attr "adjust_len" "load_lpm")
++   (set_attr "cc" "clobber")])
++
++
++;; Similar to above for the complementary situation when there is no [E]LPMx.
++;; Clobber Z in that case.
++
++(define_insn "load_<mode>_clobber"
++  [(set (match_operand:MOVMODE 0 "register_operand" "=r")
++        (unspec:MOVMODE [(reg:HI REG_Z)
++                         (match_operand:QI 1 "reg_or_0_operand" "rL")]
++                        UNSPEC_LPM))
++   (clobber (reg:HI REG_Z))]
++  "!((CONST_INT_P (operands[1]) && AVR_HAVE_LPMX)
++     || (REG_P (operands[1]) && AVR_HAVE_ELPMX))"
++  {
++    return avr_load_lpm (insn, operands, NULL);
++  }
++  [(set_attr "adjust_len" "load_lpm")
++   (set_attr "cc" "clobber")])
++
++
+ (define_insn_and_split "xload8_A"
+   [(set (match_operand:QI 0 "register_operand" "=r")
+         (match_operand:QI 1 "memory_operand"    "m"))
+@@ -418,9 +447,15 @@
+     DONE;
+   })
+ 
++;; "xloadqi_A"
++;; "xloadhi_A"
++;; "xloadpsi_A"
++;; "xloadsi_A"
++;; "xloadsf_A"
+ (define_insn_and_split "xload<mode>_A"
+   [(set (match_operand:MOVMODE 0 "register_operand" "=r")
+         (match_operand:MOVMODE 1 "memory_operand"    "m"))
++   (clobber (reg:MOVMODE 22))
+    (clobber (reg:QI 21))
+    (clobber (reg:HI REG_Z))]
+   "can_create_pseudo_p()
+@@ -461,7 +496,7 @@
+   {
+     return avr_out_xload (insn, operands, NULL);
+   }
+-  [(set_attr "length" "3,4")
++  [(set_attr "length" "4,4")
+    (set_attr "adjust_len" "*,xload")
+    (set_attr "isa" "lpmx,lpm")
+    (set_attr "cc" "none")])
+@@ -532,12 +567,55 @@
+       DONE;
+     }
+ 
++    /* For old devices without LPMx, prefer __flash loads per libcall.  */
++
+     if (avr_load_libgcc_p (src))
+       {
+-        /* For the small devices, do loads per libgcc call.  */
+-        emit_insn (gen_load<mode>_libgcc (dest, src));
++        emit_move_insn (gen_rtx_REG (Pmode, REG_Z),
++                        force_reg (Pmode, XEXP (src, 0)));
++
++        emit_insn (gen_load_<mode>_libgcc ());
++        emit_move_insn (dest, gen_rtx_REG (<MODE>mode, 22));
+         DONE;
+       }
++
++    /* ; FIXME:  Hack around PR rtl-optimization/52543.
++       ; lower-subreg.c splits loads from the 16-bit address spaces which
++       ; causes code bloat because each load need his setting of RAMPZ.
++       ; Moreover, the split will happen in such a way that the loads don't
++       ; take advantage of POST_INC addressing.  Thus, we use UNSPEC to
++       ; represent these loads instead.  Notice that this is legitimate
++       ; because the memory content does not change:  Loads from the same
++       ; address will yield the same value.
++       ; POST_INC addressing would make the addresses mode_dependent and could
++       ; work around that PR, too.  However, notice that it is *not* legitimate
++       ; to expand to POST_INC at expand time:  The following passes assert
++       ; that pre-/post-modify addressing is introduced by .auto_inc_dec and
++       ; does not exist before that pass.  */
++
++    if (avr_mem_flash_p (src)
++        && (GET_MODE_SIZE (<MODE>mode) > 1
++            || MEM_ADDR_SPACE (src) != ADDR_SPACE_FLASH))
++      {
++        rtx xsegment = GEN_INT (avr_addrspace[MEM_ADDR_SPACE (src)].segment);
++        if (!AVR_HAVE_ELPM)
++          xsegment = const0_rtx;
++        if (xsegment != const0_rtx)
++          xsegment = force_reg (QImode, xsegment);
++
++        emit_move_insn (gen_rtx_REG (Pmode, REG_Z),
++                        force_reg (Pmode, XEXP (src, 0)));
++
++        if ((CONST_INT_P (xsegment) && AVR_HAVE_LPMX)
++            || (REG_P (xsegment) && AVR_HAVE_ELPMX))
++          emit_insn (gen_load_<mode> (dest, xsegment));
++        else
++          emit_insn (gen_load_<mode>_clobber (dest, xsegment));
++        DONE;
++      }
++
++    /* ; The only address-space for which we use plain MEM and reload
++       ; machinery are 1-byte loads from __flash.  */
+   })
+ 
+ ;;========================================================================
+@@ -677,40 +755,6 @@
+     operands[5] = gen_rtx_REG (HImode, REGNO (operands[3]));
+   })
+ 
+-;; For LPM loads from AS1 we split 
+-;;    R = *Z
+-;; to
+-;;    R = *Z++
+-;;    Z = Z - sizeof (R)
+-;;
+-;; so that the second instruction can be optimized out.
+-
+-(define_split ; "split-lpmx"
+-  [(set (match_operand:HISI 0 "register_operand" "")
+-        (match_operand:HISI 1 "memory_operand" ""))]
+-  "reload_completed
+-   && AVR_HAVE_LPMX"
+-  [(set (match_dup 0)
+-        (match_dup 2))
+-   (set (match_dup 3)
+-        (plus:HI (match_dup 3)
+-                 (match_dup 4)))]
+-  {
+-     rtx addr = XEXP (operands[1], 0);
+-
+-     if (!avr_mem_flash_p (operands[1])
+-         || !REG_P (addr)
+-         || reg_overlap_mentioned_p (addr, operands[0]))
+-       {
+-         FAIL;
+-       }
+-
+-    operands[2] = replace_equiv_address (operands[1],
+-                                         gen_rtx_POST_INC (Pmode, addr));
+-    operands[3] = addr;
+-    operands[4] = gen_int_mode (-GET_MODE_SIZE (<MODE>mode), HImode);
+-  })
+-
+ ;;==========================================================================
+ ;; xpointer move (24 bit)
+   
+@@ -1081,15 +1125,16 @@
+    (set_attr "adjust_len" "addto_sp")])
+ 
+ (define_insn "*addhi3"
+-  [(set (match_operand:HI 0 "register_operand"          "=r,d,d")
+-        (plus:HI (match_operand:HI 1 "register_operand" "%0,0,0")
+-                 (match_operand:HI 2 "nonmemory_operand" "r,s,n")))]
++  [(set (match_operand:HI 0 "register_operand"          "=r,d,!w,d")
++        (plus:HI (match_operand:HI 1 "register_operand" "%0,0,0 ,0")
++                 (match_operand:HI 2 "nonmemory_operand" "r,s,IJ,n")))]
+   ""
+   {
+     static const char * const asm_code[] =
+       {
+         "add %A0,%A2\;adc %B0,%B2",
+         "subi %A0,lo8(-(%2))\;sbci %B0,hi8(-(%2))",
++        "",
+         ""
+       };
+ 
+@@ -1098,9 +1143,9 @@
+ 
+     return avr_out_plus_noclobber (operands, NULL, NULL);
+   }
+-  [(set_attr "length" "2,2,2")
+-   (set_attr "adjust_len" "*,*,out_plus_noclobber")
+-   (set_attr "cc" "set_n,set_czn,out_plus_noclobber")])
++  [(set_attr "length" "2,2,2,2")
++   (set_attr "adjust_len" "*,*,out_plus_noclobber,out_plus_noclobber")
++   (set_attr "cc" "set_n,set_czn,out_plus_noclobber,out_plus_noclobber")])
+ 
+ ;; Adding a constant to NO_LD_REGS might have lead to a reload of
+ ;; that constant to LD_REGS.  We don't add a scratch to *addhi3
+@@ -1138,10 +1183,10 @@
+               (clobber (match_dup 2))])])
+ 
+ (define_insn "addhi3_clobber"
+-  [(set (match_operand:HI 0 "register_operand"           "=d,l")
+-        (plus:HI (match_operand:HI 1 "register_operand"  "%0,0")
+-                 (match_operand:HI 2 "const_int_operand"  "n,n")))
+-   (clobber (match_scratch:QI 3                          "=X,&d"))]
++  [(set (match_operand:HI 0 "register_operand"           "=!w,d,r")
++        (plus:HI (match_operand:HI 1 "register_operand"   "%0,0,0")
++                 (match_operand:HI 2 "const_int_operand"  "IJ,n,n")))
++   (clobber (match_scratch:QI 3                           "=X,X,&d"))]
+   ""
+   {
+     gcc_assert (REGNO (operands[0]) == REGNO (operands[1]));
+@@ -1692,6 +1737,29 @@
+ 
+ ;; Handle small constants
+ 
++;; Special case of a += 2*b as frequently seen with accesses to int arrays.
++;; This is shorter, faster than MUL and has lower register pressure.
++
++(define_insn_and_split "*umaddqihi4.2"
++  [(set (match_operand:HI 0 "register_operand"                                  "=r")
++        (plus:HI (mult:HI (zero_extend:HI (match_operand:QI 1 "register_operand" "r"))
++                          (const_int 2))
++                 (match_operand:HI 2 "register_operand"                          "r")))]
++  "!reload_completed
++   && !reg_overlap_mentioned_p (operands[0], operands[1])"
++  { gcc_unreachable(); }
++  "&& 1"
++  [(set (match_dup 0)
++        (match_dup 2))
++   ; *addhi3_zero_extend
++   (set (match_dup 0)
++        (plus:HI (zero_extend:HI (match_dup 1))
++                 (match_dup 0)))
++   ; *addhi3_zero_extend
++   (set (match_dup 0)
++        (plus:HI (zero_extend:HI (match_dup 1))
++                 (match_dup 0)))])
++
+ ;; "umaddqihi4.uconst"
+ ;; "maddqihi4.sconst"
+ (define_insn_and_split "*<extend_u>maddqihi4.<extend_su>const"
+@@ -5198,18 +5266,36 @@
+    (set_attr "length" "1")])
+ 
+ ;; Enable Interrupts
+-(define_insn "enable_interrupt"
+-  [(unspec_volatile [(const_int 1)] UNSPECV_ENABLE_IRQS)]
++(define_expand "enable_interrupt"
++  [(clobber (const_int 0))]
+   ""
+-  "sei"
+-  [(set_attr "length" "1")
+-   (set_attr "cc" "none")])
++  {
++    rtx mem = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++    MEM_VOLATILE_P (mem) = 1;
++    emit_insn (gen_cli_sei (const1_rtx, mem));
++    DONE;
++  })
+ 
+ ;; Disable Interrupts
+-(define_insn "disable_interrupt"
+-  [(unspec_volatile [(const_int 0)] UNSPECV_ENABLE_IRQS)]
++(define_expand "disable_interrupt"
++  [(clobber (const_int 0))]
+   ""
+-  "cli"
++  {
++    rtx mem = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++    MEM_VOLATILE_P (mem) = 1;
++    emit_insn (gen_cli_sei (const0_rtx, mem));
++    DONE;
++  })
++
++(define_insn "cli_sei"
++  [(unspec_volatile [(match_operand:QI 0 "const_int_operand" "L,P")]
++                    UNSPECV_ENABLE_IRQS)
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))]
++  ""
++  "@
++	cli
++	sei"
+   [(set_attr "length" "1")
+    (set_attr "cc" "none")])
+ 
+@@ -5316,10 +5402,12 @@
+   [(unspec_volatile [(match_operand:QI 0 "const_int_operand" "n")
+                      (const_int 1)]
+                     UNSPECV_DELAY_CYCLES)
+-   (clobber (match_scratch:QI 1 "=&d"))]
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))
++   (clobber (match_scratch:QI 2 "=&d"))]
+   ""
+-  "ldi %1,lo8(%0)
+-	1: dec %1
++  "ldi %2,lo8(%0)
++	1: dec %2
+ 	brne 1b"
+   [(set_attr "length" "3")
+    (set_attr "cc" "clobber")])
+@@ -5328,11 +5416,13 @@
+   [(unspec_volatile [(match_operand:HI 0 "const_int_operand" "n")
+                      (const_int 2)]
+                     UNSPECV_DELAY_CYCLES)
+-   (clobber (match_scratch:HI 1 "=&w"))]
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))
++   (clobber (match_scratch:HI 2 "=&w"))]
+   ""
+-  "ldi %A1,lo8(%0)
+-	ldi %B1,hi8(%0)
+-	1: sbiw %A1,1
++  "ldi %A2,lo8(%0)
++	ldi %B2,hi8(%0)
++	1: sbiw %A2,1
+ 	brne 1b"
+   [(set_attr "length" "4")
+    (set_attr "cc" "clobber")])
+@@ -5341,16 +5431,18 @@
+   [(unspec_volatile [(match_operand:SI 0 "const_int_operand" "n")
+                      (const_int 3)]
+                     UNSPECV_DELAY_CYCLES)
+-   (clobber (match_scratch:QI 1 "=&d"))
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))
+    (clobber (match_scratch:QI 2 "=&d"))
+-   (clobber (match_scratch:QI 3 "=&d"))]
++   (clobber (match_scratch:QI 3 "=&d"))
++   (clobber (match_scratch:QI 4 "=&d"))]
+   ""
+-  "ldi %1,lo8(%0)
+-	ldi %2,hi8(%0)
+-	ldi %3,hlo8(%0)
+-	1: subi %1,1
+-	sbci %2,0
++  "ldi %2,lo8(%0)
++	ldi %3,hi8(%0)
++	ldi %4,hlo8(%0)
++	1: subi %2,1
+ 	sbci %3,0
++	sbci %4,0
+ 	brne 1b"
+   [(set_attr "length" "7")
+    (set_attr "cc" "clobber")])
+@@ -5359,19 +5451,21 @@
+   [(unspec_volatile [(match_operand:SI 0 "const_int_operand" "n")
+                      (const_int 4)]
+                     UNSPECV_DELAY_CYCLES)
+-   (clobber (match_scratch:QI 1 "=&d"))
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))
+    (clobber (match_scratch:QI 2 "=&d"))
+    (clobber (match_scratch:QI 3 "=&d"))
+-   (clobber (match_scratch:QI 4 "=&d"))]
++   (clobber (match_scratch:QI 4 "=&d"))
++   (clobber (match_scratch:QI 5 "=&d"))]
+   ""
+-  "ldi %1,lo8(%0)
+-	ldi %2,hi8(%0)
+-	ldi %3,hlo8(%0)
+-	ldi %4,hhi8(%0)
+-	1: subi %1,1
+-	sbci %2,0
++  "ldi %2,lo8(%0)
++	ldi %3,hi8(%0)
++	ldi %4,hlo8(%0)
++	ldi %5,hhi8(%0)
++	1: subi %2,1
+ 	sbci %3,0
+ 	sbci %4,0
++	sbci %5,0
+ 	brne 1b"
+   [(set_attr "length" "9")
+    (set_attr "cc" "clobber")])
+@@ -5757,9 +5851,23 @@
+ ;; CPU instructions
+ 
+ ;; NOP taking 1 or 2 Ticks 
+-(define_insn "nopv"
++(define_expand "nopv"
++  [(parallel [(unspec_volatile [(match_operand:SI 0 "const_int_operand" "")] 
++                               UNSPECV_NOP)
++              (set (match_dup 1)
++                   (unspec_volatile:BLK [(match_dup 1)]
++                                        UNSPECV_MEMORY_BARRIER))])]
++  ""
++  {
++    operands[1] = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++    MEM_VOLATILE_P (operands[1]) = 1;
++  })
++
++(define_insn "*nopv"
+   [(unspec_volatile [(match_operand:SI 0 "const_int_operand" "P,K")] 
+-                    UNSPECV_NOP)]
++                    UNSPECV_NOP)
++   (set (match_operand:BLK 1 "" "")
++	(unspec_volatile:BLK [(match_dup 1)] UNSPECV_MEMORY_BARRIER))]
+   ""
+   "@
+ 	nop
+@@ -5768,17 +5876,43 @@
+    (set_attr "cc" "none")])
+ 
+ ;; SLEEP
+-(define_insn "sleep"
+-  [(unspec_volatile [(const_int 0)] UNSPECV_SLEEP)]
++(define_expand "sleep"
++  [(parallel [(unspec_volatile [(const_int 0)] UNSPECV_SLEEP)
++              (set (match_dup 0)
++                   (unspec_volatile:BLK [(match_dup 0)]
++                                        UNSPECV_MEMORY_BARRIER))])]
+   ""
++  {
++    operands[0] = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++    MEM_VOLATILE_P (operands[0]) = 1;
++  })
++
++(define_insn "*sleep"
++  [(unspec_volatile [(const_int 0)] UNSPECV_SLEEP)
++   (set (match_operand:BLK 0 "" "")
++	(unspec_volatile:BLK [(match_dup 0)] UNSPECV_MEMORY_BARRIER))]
++  ""
+   "sleep"
+   [(set_attr "length" "1")
+    (set_attr "cc" "none")])
+  
+ ;; WDR
+-(define_insn "wdr"
+-  [(unspec_volatile [(const_int 0)] UNSPECV_WDR)]
++(define_expand "wdr"
++  [(parallel [(unspec_volatile [(const_int 0)] UNSPECV_WDR)
++              (set (match_dup 0)
++                   (unspec_volatile:BLK [(match_dup 0)]
++                                        UNSPECV_MEMORY_BARRIER))])]
+   ""
++  {
++    operands[0] = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++    MEM_VOLATILE_P (operands[0]) = 1;
++  })
++
++(define_insn "*wdr"
++  [(unspec_volatile [(const_int 0)] UNSPECV_WDR)
++   (set (match_operand:BLK 0 "" "")
++	(unspec_volatile:BLK [(match_dup 0)] UNSPECV_MEMORY_BARRIER))]
++  ""
+   "wdr"
+   [(set_attr "length" "1")
+    (set_attr "cc" "none")])
+Index: gcc/config/avr/avr-protos.h
+===================================================================
+--- gcc/config/avr/avr-protos.h	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/avr/avr-protos.h	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -75,6 +75,8 @@
+ extern const char *avr_out_ashrpsi3 (rtx, rtx*, int*);
+ extern const char *avr_out_lshrpsi3 (rtx, rtx*, int*);
+ 
++extern const char* avr_load_lpm (rtx, rtx*, int*);
++
+ extern bool avr_rotate_bytes (rtx operands[]);
+ 
+ extern void expand_prologue (void);
+@@ -115,7 +117,7 @@
+ extern RTX_CODE avr_normalize_condition (RTX_CODE condition);
+ extern void out_shift_with_cnt (const char *templ, rtx insn,
+ 				rtx operands[], int *len, int t_len);
+-extern reg_class_t avr_mode_code_base_reg_class (enum machine_mode, addr_space_t, RTX_CODE, RTX_CODE);
++extern enum reg_class avr_mode_code_base_reg_class (enum machine_mode, addr_space_t, RTX_CODE, RTX_CODE);
+ extern bool avr_regno_mode_code_ok_for_base_p (int, enum machine_mode, addr_space_t, RTX_CODE, RTX_CODE);
+ extern rtx avr_incoming_return_addr_rtx (void);
+ extern rtx avr_legitimize_reload_address (rtx*, enum machine_mode, int, int, int, int, rtx (*)(rtx,int));
+Index: gcc/config/avr/avr.c
+===================================================================
+--- gcc/config/avr/avr.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/avr/avr.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -827,7 +827,11 @@
+   bool isr_p = cfun->machine->is_interrupt || cfun->machine->is_signal;
+   int live_seq = sequent_regs_live ();
+ 
++  HOST_WIDE_INT size_max
++    = (HOST_WIDE_INT) GET_MODE_MASK (AVR_HAVE_8BIT_SP ? QImode : Pmode);
++
+   bool minimize = (TARGET_CALL_PROLOGUES
++                   && size < size_max
+                    && live_seq
+                    && !isr_p
+                    && !cfun->machine->is_OS_task
+@@ -933,6 +937,7 @@
+               leaf function and thus X has already been saved.  */
+               
+           int irq_state = -1;
++          HOST_WIDE_INT size_cfa = size;
+           rtx fp_plus_insns, fp, my_fp;
+ 
+           gcc_assert (frame_pointer_needed
+@@ -951,6 +956,27 @@
+               my_fp = all_regs_rtx[FRAME_POINTER_REGNUM];
+             }
+ 
++          /* Cut down size and avoid size = 0 so that we don't run
++             into ICE like PR52488 in the remainder.  */
++
++          if (size > size_max)
++            {
++              /* Don't error so that insane code from newlib still compiles
++                 and does not break building newlib.  As PR51345 is implemented
++                 now, there are multilib variants with -mtiny-stack.
++                 
++                 If user wants sanity checks he can use -Wstack-usage=
++                 or similar options.
++
++                 For CFA we emit the original, non-saturated size so that
++                 the generic machinery is aware of the real stack usage and
++                 will print the above diagnostic as expected.  */
++              
++              size = size_max;
++            }
++
++          size = trunc_int_for_mode (size, GET_MODE (my_fp));
++          
+           /************  Method 1: Adjust frame pointer  ************/
+           
+           start_sequence ();
+@@ -975,7 +1001,7 @@
+               RTX_FRAME_RELATED_P (insn) = 1;
+               add_reg_note (insn, REG_CFA_ADJUST_CFA,
+                             gen_rtx_SET (VOIDmode, fp,
+-                                         plus_constant (fp, -size)));
++                                         plus_constant (fp, -size_cfa)));
+             }
+           
+           /* Copy to stack pointer.  Note that since we've already
+@@ -1003,7 +1029,7 @@
+               add_reg_note (insn, REG_CFA_ADJUST_CFA,
+                             gen_rtx_SET (VOIDmode, stack_pointer_rtx,
+                                          plus_constant (stack_pointer_rtx,
+-                                                        -size)));
++                                                        -size_cfa)));
+             }
+           
+           fp_plus_insns = get_insns ();
+@@ -1026,7 +1052,7 @@
+               add_reg_note (insn, REG_CFA_ADJUST_CFA,
+                             gen_rtx_SET (VOIDmode, stack_pointer_rtx,
+                                          plus_constant (stack_pointer_rtx,
+-                                                        -size)));
++                                                        -size_cfa)));
+               if (frame_pointer_needed)
+                 {
+                   insn = emit_move_insn (fp, stack_pointer_rtx);
+@@ -1048,7 +1074,7 @@
+               emit_insn (fp_plus_insns);
+             }
+ 
+-          cfun->machine->stack_usage += size;
++          cfun->machine->stack_usage += size_cfa;
+         } /* !minimize && size != 0 */
+     } /* !minimize */
+ }
+@@ -1123,11 +1149,11 @@
+           emit_push_sfr (rampy_rtx, false /* frame-related */, true /* clr */);
+         }
+ 
+-      if (AVR_HAVE_RAMPZ 
++      if (AVR_HAVE_RAMPZ
+           && TEST_HARD_REG_BIT (set, REG_Z)
+           && TEST_HARD_REG_BIT (set, REG_Z + 1))
+         {
+-          emit_push_sfr (rampz_rtx, false /* frame-related */, true /* clr */);
++          emit_push_sfr (rampz_rtx, false /* frame-related */, AVR_HAVE_RAMPD);
+         }
+     }  /* is_interrupt is_signal */
+ 
+@@ -1261,6 +1287,7 @@
+       int irq_state = -1;
+       rtx fp, my_fp;
+       rtx fp_plus_insns;
++      HOST_WIDE_INT size_max;
+ 
+       gcc_assert (frame_pointer_needed
+                   || !isr_p
+@@ -1277,6 +1304,13 @@
+                   
+           my_fp = all_regs_rtx[FRAME_POINTER_REGNUM];
+         }
++
++      /* For rationale see comment in prologue generation.  */
++
++      size_max = (HOST_WIDE_INT) GET_MODE_MASK (GET_MODE (my_fp));
++      if (size > size_max)
++        size = size_max;
++      size = trunc_int_for_mode (size, GET_MODE (my_fp));
+               
+       /********** Method 1: Adjust fp register  **********/
+               
+@@ -1347,12 +1381,12 @@
+       /* Restore RAMPZ/Y/X/D using tmp_reg as scratch.
+          The conditions to restore them must be tha same as in prologue.  */
+       
+-      if (AVR_HAVE_RAMPX
+-          && TEST_HARD_REG_BIT (set, REG_X)
+-          && TEST_HARD_REG_BIT (set, REG_X + 1))
++      if (AVR_HAVE_RAMPZ
++          && TEST_HARD_REG_BIT (set, REG_Z)
++          && TEST_HARD_REG_BIT (set, REG_Z + 1))
+         {
+           emit_pop_byte (TMP_REGNO);
+-          emit_move_insn (rampx_rtx, tmp_reg_rtx);
++          emit_move_insn (rampz_rtx, tmp_reg_rtx);
+         }
+ 
+       if (AVR_HAVE_RAMPY
+@@ -1364,12 +1398,12 @@
+           emit_move_insn (rampy_rtx, tmp_reg_rtx);
+         }
+ 
+-      if (AVR_HAVE_RAMPZ
+-          && TEST_HARD_REG_BIT (set, REG_Z)
+-          && TEST_HARD_REG_BIT (set, REG_Z + 1))
++      if (AVR_HAVE_RAMPX
++          && TEST_HARD_REG_BIT (set, REG_X)
++          && TEST_HARD_REG_BIT (set, REG_X + 1))
+         {
+           emit_pop_byte (TMP_REGNO);
+-          emit_move_insn (rampz_rtx, tmp_reg_rtx);
++          emit_move_insn (rampx_rtx, tmp_reg_rtx);
+         }
+ 
+       if (AVR_HAVE_RAMPD)
+@@ -1423,6 +1457,22 @@
+ }
+ 
+ 
++/* Implement `TARGET_MODE_DEPENDENT_ADDRESS_P'.  */
++
++/* FIXME:  PSImode addresses are not mode-dependent in themselves.
++      This hook just serves to hack around PR rtl-optimization/52543 by
++      claiming that PSImode addresses (which are used for the 24-bit
++      address space __memx) were mode-dependent so that lower-subreg.s
++      will skip these addresses.  See also the similar FIXME comment along
++      with mov<mode> expanders in avr.md.  */
++
++static bool
++avr_mode_dependent_address_p (const_rtx addr)
++{
++  return GET_MODE (addr) != Pmode;
++}
++
++
+ /* Helper function for `avr_legitimate_address_p'.  */
+ 
+ static inline bool
+@@ -2435,7 +2485,8 @@
+         
+   return (n_bytes > 2
+           && !AVR_HAVE_LPMX
+-          && avr_mem_flash_p (op));
++          && MEM_P (op)
++          && MEM_ADDR_SPACE (op) == ADDR_SPACE_FLASH);
+ }
+ 
+ /* Return true if a value of mode MODE is read by __xload_* function.  */
+@@ -2450,155 +2501,6 @@
+ }
+ 
+ 
+-/* Find an unused d-register to be used as scratch in INSN.
+-   EXCLUDE is either NULL_RTX or some register. In the case where EXCLUDE
+-   is a register, skip all possible return values that overlap EXCLUDE.
+-   The policy for the returned register is similar to that of
+-   `reg_unused_after', i.e. the returned register may overlap the SET_DEST
+-   of INSN.
+-
+-   Return a QImode d-register or NULL_RTX if nothing found.  */
+-
+-static rtx
+-avr_find_unused_d_reg (rtx insn, rtx exclude)
+-{
+-  int regno;
+-  bool isr_p = (interrupt_function_p (current_function_decl)
+-                || signal_function_p (current_function_decl));
+-
+-  for (regno = 16; regno < 32; regno++)
+-    {
+-      rtx reg = all_regs_rtx[regno];
+-      
+-      if ((exclude
+-           && reg_overlap_mentioned_p (exclude, reg))
+-          || fixed_regs[regno])
+-        {
+-          continue;
+-        }
+-
+-      /* Try non-live register */
+-
+-      if (!df_regs_ever_live_p (regno)
+-          && (TREE_THIS_VOLATILE (current_function_decl)
+-              || cfun->machine->is_OS_task
+-              || cfun->machine->is_OS_main
+-              || (!isr_p && call_used_regs[regno])))
+-        {
+-          return reg;
+-        }
+-
+-      /* Any live register can be used if it is unused after.
+-         Prologue/epilogue will care for it as needed.  */
+-      
+-      if (df_regs_ever_live_p (regno)
+-          && reg_unused_after (insn, reg))
+-        {
+-          return reg;
+-        }
+-    }
+-
+-  return NULL_RTX;
+-}
+-
+-
+-/* Helper function for the next function in the case where only restricted
+-   version of LPM instruction is available.  */
+-
+-static const char*
+-avr_out_lpm_no_lpmx (rtx insn, rtx *xop, int *plen)
+-{
+-  rtx dest = xop[0];
+-  rtx addr = xop[1];
+-  int n_bytes = GET_MODE_SIZE (GET_MODE (dest));
+-  int regno_dest;
+-
+-  regno_dest = REGNO (dest);
+-
+-  /* The implicit target register of LPM.  */
+-  xop[3] = lpm_reg_rtx;
+-
+-  switch (GET_CODE (addr))
+-    {
+-    default:
+-      gcc_unreachable();
+-
+-    case REG:
+-
+-      gcc_assert (REG_Z == REGNO (addr));
+-
+-      switch (n_bytes)
+-        {
+-        default:
+-          gcc_unreachable();
+-
+-        case 1:
+-          avr_asm_len ("%4lpm", xop, plen, 1);
+-
+-          if (regno_dest != LPM_REGNO)
+-            avr_asm_len ("mov %0,%3", xop, plen, 1);
+-
+-          return "";
+-
+-        case 2:
+-          if (REGNO (dest) == REG_Z)
+-            return avr_asm_len ("%4lpm"      CR_TAB
+-                                "push %3"    CR_TAB
+-                                "adiw %2,1"  CR_TAB
+-                                "%4lpm"      CR_TAB
+-                                "mov %B0,%3" CR_TAB
+-                                "pop %A0", xop, plen, 6);
+-          
+-          avr_asm_len ("%4lpm"      CR_TAB
+-                       "mov %A0,%3" CR_TAB
+-                       "adiw %2,1"  CR_TAB
+-                       "%4lpm"      CR_TAB
+-                       "mov %B0,%3", xop, plen, 5);
+-                
+-          if (!reg_unused_after (insn, addr))
+-            avr_asm_len ("sbiw %2,1", xop, plen, 1);
+-          
+-          break; /* 2 */
+-        }
+-      
+-      break; /* REG */
+-
+-    case POST_INC:
+-
+-      gcc_assert (REG_Z == REGNO (XEXP (addr, 0))
+-                  && n_bytes <= 4);
+-
+-      if (regno_dest == LPM_REGNO)
+-        avr_asm_len ("%4lpm"      CR_TAB
+-                     "adiw %2,1", xop, plen, 2);
+-      else
+-        avr_asm_len ("%4lpm"      CR_TAB
+-                     "mov %A0,%3" CR_TAB
+-                     "adiw %2,1", xop, plen, 3);
+-
+-      if (n_bytes >= 2)
+-        avr_asm_len ("%4lpm"      CR_TAB
+-                     "mov %B0,%3" CR_TAB
+-                     "adiw %2,1", xop, plen, 3);
+-
+-      if (n_bytes >= 3)
+-        avr_asm_len ("%4lpm"      CR_TAB
+-                     "mov %C0,%3" CR_TAB
+-                     "adiw %2,1", xop, plen, 3);
+-
+-      if (n_bytes >= 4)
+-        avr_asm_len ("%4lpm"      CR_TAB
+-                     "mov %D0,%3" CR_TAB
+-                     "adiw %2,1", xop, plen, 3);
+-
+-      break; /* POST_INC */
+-      
+-    } /* switch CODE (addr) */
+-      
+-  return "";
+-}
+-
+-
+ /* If PLEN == NULL: Ouput instructions to load a value from a memory location
+    OP[1] in AS1 to register OP[0].
+    If PLEN != 0 set *PLEN to the length in words of the instruction sequence.
+@@ -2607,13 +2509,11 @@
+ static const char*
+ avr_out_lpm (rtx insn, rtx *op, int *plen)
+ {
+-  rtx xop[6];
++  rtx xop[3];
+   rtx dest = op[0];
+   rtx src = SET_SRC (single_set (insn));
+   rtx addr;
+   int n_bytes = GET_MODE_SIZE (GET_MODE (dest));
+-  int regno_dest;
+-  int segment;
+   RTX_CODE code;
+   addr_space_t as = MEM_ADDR_SPACE (src);
+ 
+@@ -2634,135 +2534,126 @@
+   gcc_assert (REG_P (dest));
+   gcc_assert (REG == code || POST_INC == code);
+ 
++  /* Only 1-byte moves from __flash are representes as open coded
++     mov insns.  All other loads from flash are not handled here but
++     by some UNSPEC instead, see respective FIXME in machine description.  */
++  
++  gcc_assert (as == ADDR_SPACE_FLASH);
++  gcc_assert (n_bytes == 1);
++
+   xop[0] = dest;
+-  xop[1] = addr;
+-  xop[2] = lpm_addr_reg_rtx;
+-  xop[4] = xstring_empty;
+-  xop[5] = tmp_reg_rtx;
++  xop[1] = lpm_addr_reg_rtx;
++  xop[2] = lpm_reg_rtx;
+ 
+-  regno_dest = REGNO (dest);
+-
+-  segment = avr_addrspace[as].segment;
+-
+-  /* Set RAMPZ as needed.  */
+-
+-  if (segment)
++  switch (code)
+     {
+-      xop[4] = GEN_INT (segment);
+-      
+-      if (xop[3] = avr_find_unused_d_reg (insn, lpm_addr_reg_rtx),
+-          xop[3])
+-        {
+-          avr_asm_len ("ldi %3,%4" CR_TAB
+-                       "out __RAMPZ__,%3", xop, plen, 2);
+-        }
+-      else if (segment == 1)
+-        {
+-          avr_asm_len ("clr %5" CR_TAB
+-                       "inc %5" CR_TAB
+-                       "out __RAMPZ__,%5", xop, plen, 3);
+-        }
+-      else
+-        {
+-          avr_asm_len ("mov %5,%2"         CR_TAB
+-                       "ldi %2,%4"         CR_TAB
+-                       "out __RAMPZ__,%2"  CR_TAB
+-                       "mov %2,%5", xop, plen, 4);
+-        }
+-      
+-      xop[4] = xstring_e;
+-
+-      if (!AVR_HAVE_ELPMX)
+-        return avr_out_lpm_no_lpmx (insn, xop, plen);
+-    }
+-  else if (!AVR_HAVE_LPMX)
+-    {
+-      return avr_out_lpm_no_lpmx (insn, xop, plen);
+-    }
+-
+-  /* We have [E]LPMX: Output reading from Flash the comfortable way.  */
+-
+-  switch (GET_CODE (addr))
+-    {
+     default:
+       gcc_unreachable();
+ 
+     case REG:
+ 
+       gcc_assert (REG_Z == REGNO (addr));
++      
++      return AVR_HAVE_LPMX
++        ? avr_asm_len ("lpm %0,%a1", xop, plen, 1)
++        : avr_asm_len ("lpm" CR_TAB
++                       "mov %0,%2", xop, plen, 2);
++      
++    case POST_INC:
++      
++      gcc_assert (REG_Z == REGNO (XEXP (addr, 0)));
+ 
+-      switch (n_bytes)
+-        {
+-        default:
+-          gcc_unreachable();
++      return AVR_HAVE_LPMX
++        ? avr_asm_len ("lpm %0,%a1+", xop, plen, 1)
++        : avr_asm_len ("lpm"        CR_TAB
++                       "adiw %1, 1" CR_TAB
++                       "mov %0,%2", xop, plen, 3);
++    }
+ 
+-        case 1:
+-          return avr_asm_len ("%4lpm %0,%a2", xop, plen, 1);
++  return "";
++}
+ 
+-        case 2:
+-          if (REGNO (dest) == REG_Z)
+-            return avr_asm_len ("%4lpm %5,%a2+" CR_TAB
+-                                "%4lpm %B0,%a2" CR_TAB
+-                                "mov %A0,%5", xop, plen, 3);
+-          else
+-            {
+-              avr_asm_len ("%4lpm %A0,%a2+" CR_TAB
+-                           "%4lpm %B0,%a2", xop, plen, 2);
+-                
+-              if (!reg_unused_after (insn, addr))
+-                avr_asm_len ("sbiw %2,1", xop, plen, 1);
+-            }
+-          
+-          break; /* 2 */
+ 
+-        case 3:
++/* If PLEN == NULL: Ouput instructions to load $0 with a value from
++   flash address $1:Z.  If $1 = 0 we can use LPM to read, otherwise
++   use ELPM.
++   If PLEN != 0 set *PLEN to the length in words of the instruction sequence.
++   Return "".  */
+ 
+-          avr_asm_len ("%4lpm %A0,%a2+" CR_TAB
+-                       "%4lpm %B0,%a2+" CR_TAB
+-                       "%4lpm %C0,%a2", xop, plen, 3);
+-                
+-          if (!reg_unused_after (insn, addr))
+-            avr_asm_len ("sbiw %2,2", xop, plen, 1);
+-
+-          break; /* 3 */
++const char*
++avr_load_lpm (rtx insn, rtx *op, int *plen)
++{
++  rtx xop[4];
++  int n, n_bytes = GET_MODE_SIZE (GET_MODE (op[0]));
++  rtx xsegment = op[1];
++  bool clobber_z = PARALLEL == GET_CODE (PATTERN (insn));
++  bool r30_in_tmp = false;
++  
++  if (plen)
++    *plen = 0;
++  
++  xop[1] = lpm_addr_reg_rtx;
++  xop[2] = lpm_reg_rtx;
++  xop[3] = xstring_empty;
++  
++  /* Set RAMPZ as needed.  */
++  
++  if (REG_P (xsegment))
++    {
++      avr_asm_len ("out __RAMPZ__,%0", &xsegment, plen, 1);
++      xop[3] = xstring_e;
++    }
++  
++  /* Load the individual bytes from LSB to MSB.  */
++  
++  for (n = 0; n < n_bytes; n++)
++    {
++      xop[0] = all_regs_rtx[REGNO (op[0]) + n];
+       
+-        case 4:
+-
+-          avr_asm_len ("%4lpm %A0,%a2+" CR_TAB
+-                       "%4lpm %B0,%a2+", xop, plen, 2);
+-          
+-          if (REGNO (dest) == REG_Z - 2)
+-            return avr_asm_len ("%4lpm %5,%a2+" CR_TAB
+-                                "%4lpm %C0,%a2"          CR_TAB
+-                                "mov %D0,%5", xop, plen, 3);
+-          else
++      if ((CONST_INT_P (xsegment) && AVR_HAVE_LPMX)
++          || (REG_P (xsegment) && AVR_HAVE_ELPMX))
++        {
++          if (n == n_bytes-1)
++            avr_asm_len ("%3lpm %0,%a1", xop, plen, 1);
++          else if (REGNO (xop[0]) == REG_Z)
+             {
+-              avr_asm_len ("%4lpm %C0,%a2+" CR_TAB
+-                           "%4lpm %D0,%a2", xop, plen, 2);
+-                
+-              if (!reg_unused_after (insn, addr))
+-                avr_asm_len ("sbiw %2,3", xop, plen, 1);
++              avr_asm_len ("%3lpm %2,%a1+", xop, plen, 1);
++              r30_in_tmp = true;
+             }
++          else
++            avr_asm_len ("%3lpm %0,%a1+", xop, plen, 1);
++        }
++      else
++        {
++          gcc_assert (clobber_z);
++          
++          avr_asm_len ("%3lpm" CR_TAB
++                       "mov %0,%2", xop, plen, 2);
+ 
+-          break; /* 4 */
+-        } /* n_bytes */
++          if (n != n_bytes-1)
++            avr_asm_len ("adiw %1,1", xop, plen, 1);
++        }
++    }
++  
++  if (r30_in_tmp)
++    avr_asm_len ("mov %1,%2", xop, plen, 1);
++  
++  if (!clobber_z
++      && n_bytes > 1
++      && !reg_unused_after (insn, lpm_addr_reg_rtx)
++      && !reg_overlap_mentioned_p (op[0], lpm_addr_reg_rtx))
++    {
++      xop[2] = GEN_INT (n_bytes-1);
++      avr_asm_len ("sbiw %1,%2", xop, plen, 1);
++    }
++  
++  if (REG_P (xsegment) && AVR_HAVE_RAMPD)
++    {
++      /* Reset RAMPZ to 0 so that EBI devices don't read garbage from RAM */
+       
+-      break; /* REG */
++      avr_asm_len ("out __RAMPZ__,__zero_reg__", xop, plen, 1);
++    }
+ 
+-    case POST_INC:
+-
+-      gcc_assert (REG_Z == REGNO (XEXP (addr, 0))
+-                  && n_bytes <= 4);
+-
+-      avr_asm_len                    ("%4lpm %A0,%a2+", xop, plen, 1);
+-      if (n_bytes >= 2)  avr_asm_len ("%4lpm %B0,%a2+", xop, plen, 1);
+-      if (n_bytes >= 3)  avr_asm_len ("%4lpm %C0,%a2+", xop, plen, 1);
+-      if (n_bytes >= 4)  avr_asm_len ("%4lpm %D0,%a2+", xop, plen, 1);
+-
+-      break; /* POST_INC */
+-
+-    } /* switch CODE (addr) */
+-      
+   return "";
+ }
+ 
+@@ -2782,8 +2673,9 @@
+   if (plen)
+     *plen = 0;
+ 
+-  avr_asm_len ("ld %3,%a2" CR_TAB
+-               "sbrs %1,7", xop, plen, 2);
++  avr_asm_len ("sbrc %1,7" CR_TAB
++               "ld %3,%a2" CR_TAB
++               "sbrs %1,7", xop, plen, 3);
+ 
+   avr_asm_len (AVR_HAVE_LPMX ? "lpm %3,%a2" : "lpm", xop, plen, 1);
+ 
+@@ -2794,13 +2686,11 @@
+ }
+ 
+ 
+-const char *
+-output_movqi (rtx insn, rtx operands[], int *l)
++const char*
++output_movqi (rtx insn, rtx operands[], int *real_l)
+ {
+-  int dummy;
+   rtx dest = operands[0];
+   rtx src = operands[1];
+-  int *real_l = l;
+   
+   if (avr_mem_flash_p (src)
+       || avr_mem_flash_p (dest))
+@@ -2808,10 +2698,8 @@
+       return avr_out_lpm (insn, operands, real_l);
+     }
+ 
+-  if (!l)
+-    l = &dummy;
+-
+-  *l = 1;
++  if (real_l)
++    *real_l = 1;
+   
+   if (register_operand (dest, QImode))
+     {
+@@ -2829,10 +2717,10 @@
+           output_reload_in_const (operands, NULL_RTX, real_l, false);
+           return "";
+         }
+-      else if (GET_CODE (src) == MEM)
++      else if (MEM_P (src))
+ 	return out_movqi_r_mr (insn, operands, real_l); /* mov r,m */
+     }
+-  else if (GET_CODE (dest) == MEM)
++  else if (MEM_P (dest))
+     {
+       rtx xop[2];
+ 
+@@ -6533,6 +6421,7 @@
+     case ADJUST_LEN_MOV32: output_movsisf (insn, op, &len); break;
+     case ADJUST_LEN_MOVMEM: avr_out_movmem (insn, op, &len); break;
+     case ADJUST_LEN_XLOAD: avr_out_xload (insn, op, &len); break;
++    case ADJUST_LEN_LOAD_LPM: avr_load_lpm (insn, op, &len); break;
+ 
+     case ADJUST_LEN_TSTHI: avr_out_tsthi (insn, op, &len); break;
+     case ADJUST_LEN_TSTPSI: avr_out_tstpsi (insn, op, &len); break;
+@@ -8975,7 +8864,7 @@
+ 
+ /* Implement `MODE_CODE_BASE_REG_CLASS'.  */
+ 
+-reg_class_t
++enum reg_class
+ avr_mode_code_base_reg_class (enum machine_mode mode ATTRIBUTE_UNUSED,
+                               addr_space_t as, RTX_CODE outer_code,
+                               RTX_CODE index_code ATTRIBUTE_UNUSED)
+@@ -9568,7 +9457,8 @@
+ static bool
+ avr_reg_ok_for_pgm_addr (rtx reg, bool strict)
+ {
+-  gcc_assert (REG_P (reg));
++  if (!REG_P (reg))
++    return false;
+ 
+   if (strict)
+     {
+@@ -9916,7 +9806,7 @@
+     case ADDR_SPACE_FLASH:
+ 
+       if (AVR_HAVE_LPMX)
+-        avr_asm_len ("lpm %2,%Z+", xop, plen, 1);
++        avr_asm_len ("lpm %2,Z+", xop, plen, 1);
+       else
+         avr_asm_len ("lpm" CR_TAB
+                      "adiw r30,1", xop, plen, 2);
+@@ -9965,6 +9855,14 @@
+ 
+ /* Helper for __builtin_avr_delay_cycles */
+ 
++static rtx
++avr_mem_clobber (void)
++{
++  rtx mem = gen_rtx_MEM (BLKmode, gen_rtx_SCRATCH (Pmode));
++  MEM_VOLATILE_P (mem) = 1;
++  return mem;
++}
++
+ static void
+ avr_expand_delay_cycles (rtx operands0)
+ {
+@@ -9976,7 +9874,8 @@
+     {
+       loop_count = ((cycles - 9) / 6) + 1;
+       cycles_used = ((loop_count - 1) * 6) + 9;
+-      emit_insn (gen_delay_cycles_4 (gen_int_mode (loop_count, SImode)));
++      emit_insn (gen_delay_cycles_4 (gen_int_mode (loop_count, SImode),
++                                     avr_mem_clobber()));
+       cycles -= cycles_used;
+     }
+   
+@@ -9986,7 +9885,8 @@
+       if (loop_count > 0xFFFFFF)
+         loop_count = 0xFFFFFF;
+       cycles_used = ((loop_count - 1) * 5) + 7;
+-      emit_insn (gen_delay_cycles_3 (gen_int_mode (loop_count, SImode)));
++      emit_insn (gen_delay_cycles_3 (gen_int_mode (loop_count, SImode),
++                                     avr_mem_clobber()));
+       cycles -= cycles_used;
+     }
+   
+@@ -9996,7 +9896,8 @@
+       if (loop_count > 0xFFFF)
+         loop_count = 0xFFFF;
+       cycles_used = ((loop_count - 1) * 4) + 5;
+-      emit_insn (gen_delay_cycles_2 (gen_int_mode (loop_count, HImode)));
++      emit_insn (gen_delay_cycles_2 (gen_int_mode (loop_count, HImode),
++                                     avr_mem_clobber()));
+       cycles -= cycles_used;
+     }
+   
+@@ -10006,7 +9907,8 @@
+       if (loop_count > 255) 
+         loop_count = 255;
+       cycles_used = loop_count * 3;
+-      emit_insn (gen_delay_cycles_1 (gen_int_mode (loop_count, QImode)));
++      emit_insn (gen_delay_cycles_1 (gen_int_mode (loop_count, QImode),
++                                     avr_mem_clobber()));
+       cycles -= cycles_used;
+       }
+   
+@@ -11007,6 +10909,9 @@
+ #undef  TARGET_ADDR_SPACE_LEGITIMIZE_ADDRESS
+ #define TARGET_ADDR_SPACE_LEGITIMIZE_ADDRESS avr_addr_space_legitimize_address
+ 
++#undef  TARGET_MODE_DEPENDENT_ADDRESS_P
++#define TARGET_MODE_DEPENDENT_ADDRESS_P avr_mode_dependent_address_p
++
+ #undef  TARGET_PRINT_OPERAND
+ #define TARGET_PRINT_OPERAND avr_print_operand
+ #undef  TARGET_PRINT_OPERAND_ADDRESS
+Index: gcc/config/epiphany/epiphany.c
+===================================================================
+--- gcc/config/epiphany/epiphany.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/epiphany/epiphany.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1417,7 +1417,7 @@
+   return gen_rtx_REG (mode, 0);
+ }
+ 
+-bool
++static bool
+ epiphany_function_value_regno_p (const unsigned int regno ATTRIBUTE_UNUSED)
+ {
+   return regno == 0;
+Index: gcc/config/rs6000/vector.md
+===================================================================
+--- gcc/config/rs6000/vector.md	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/rs6000/vector.md	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -516,6 +516,94 @@
+   "VECTOR_UNIT_ALTIVEC_P (<MODE>mode)"
+   "")
+ 
++(define_insn_and_split "*vector_uneq<mode>"
++  [(set (match_operand:VEC_F 0 "vfloat_operand" "")
++	(uneq:VEC_F (match_operand:VEC_F 1 "vfloat_operand" "")
++		    (match_operand:VEC_F 2 "vfloat_operand" "")))]
++  "VECTOR_UNIT_ALTIVEC_OR_VSX_P (<MODE>mode)"
++  "#"
++  ""
++  [(set (match_dup 3)
++	(gt:VEC_F (match_dup 1)
++		  (match_dup 2)))
++   (set (match_dup 4)
++	(gt:VEC_F (match_dup 2)
++		  (match_dup 1)))
++   (set (match_dup 0)
++	(not:VEC_F (ior:VEC_F (match_dup 3)
++			      (match_dup 4))))]
++  "
++{
++  operands[3] = gen_reg_rtx (<MODE>mode);
++  operands[4] = gen_reg_rtx (<MODE>mode);
++}")
++
++(define_insn_and_split "*vector_ltgt<mode>"
++  [(set (match_operand:VEC_F 0 "vfloat_operand" "")
++	(ltgt:VEC_F (match_operand:VEC_F 1 "vfloat_operand" "")
++		    (match_operand:VEC_F 2 "vfloat_operand" "")))]
++  "VECTOR_UNIT_ALTIVEC_OR_VSX_P (<MODE>mode)"
++  "#"
++  ""
++  [(set (match_dup 3)
++	(gt:VEC_F (match_dup 1)
++		  (match_dup 2)))
++   (set (match_dup 4)
++	(gt:VEC_F (match_dup 2)
++		  (match_dup 1)))
++   (set (match_dup 0)
++	(ior:VEC_F (match_dup 3)
++		   (match_dup 4)))]
++  "
++{
++  operands[3] = gen_reg_rtx (<MODE>mode);
++  operands[4] = gen_reg_rtx (<MODE>mode);
++}")
++
++(define_insn_and_split "*vector_ordered<mode>"
++  [(set (match_operand:VEC_F 0 "vfloat_operand" "")
++	(ordered:VEC_F (match_operand:VEC_F 1 "vfloat_operand" "")
++		       (match_operand:VEC_F 2 "vfloat_operand" "")))]
++  "VECTOR_UNIT_ALTIVEC_OR_VSX_P (<MODE>mode)"
++  "#"
++  ""
++  [(set (match_dup 3)
++	(ge:VEC_F (match_dup 1)
++		  (match_dup 2)))
++   (set (match_dup 4)
++	(ge:VEC_F (match_dup 2)
++		  (match_dup 1)))
++   (set (match_dup 0)
++	(ior:VEC_F (match_dup 3)
++		   (match_dup 4)))]
++  "
++{
++  operands[3] = gen_reg_rtx (<MODE>mode);
++  operands[4] = gen_reg_rtx (<MODE>mode);
++}")
++
++(define_insn_and_split "*vector_unordered<mode>"
++  [(set (match_operand:VEC_F 0 "vfloat_operand" "")
++	(unordered:VEC_F (match_operand:VEC_F 1 "vfloat_operand" "")
++			 (match_operand:VEC_F 2 "vfloat_operand" "")))]
++  "VECTOR_UNIT_ALTIVEC_OR_VSX_P (<MODE>mode)"
++  "#"
++  ""
++  [(set (match_dup 3)
++	(ge:VEC_F (match_dup 1)
++		  (match_dup 2)))
++   (set (match_dup 4)
++	(ge:VEC_F (match_dup 2)
++		  (match_dup 1)))
++   (set (match_dup 0)
++	(not:VEC_F (ior:VEC_F (match_dup 3)
++			      (match_dup 4))))]
++  "
++{
++  operands[3] = gen_reg_rtx (<MODE>mode);
++  operands[4] = gen_reg_rtx (<MODE>mode);
++}")
++
+ ;; Note the arguments for __builtin_altivec_vsel are op2, op1, mask
+ ;; which is in the reverse order that we want
+ (define_expand "vector_select_<mode>"
+Index: gcc/config/rs6000/rs6000.c
+===================================================================
+--- gcc/config/rs6000/rs6000.c	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ gcc/config/rs6000/rs6000.c	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -16137,6 +16137,10 @@
+     case EQ:
+     case GT:
+     case GTU:
++    case ORDERED:
++    case UNORDERED:
++    case UNEQ:
++    case LTGT:
+       mask = gen_reg_rtx (mode);
+       emit_insn (gen_rtx_SET (VOIDmode,
+ 			      mask,
+Index: libgo/go/syscall/syscall_unix.go
+===================================================================
+--- libgo/go/syscall/syscall_unix.go	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libgo/go/syscall/syscall_unix.go	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -31,6 +31,7 @@
+ // expects a 32-bit one.
+ func Syscall(trap, a1, a2, a3 uintptr) (r1, r2 uintptr, err Errno) {
+ 	Entersyscall()
++	SetErrno(0)
+ 	var r uintptr
+ 	if unsafe.Sizeof(r) == 4 {
+ 		r1 := c_syscall32(int32(trap), int32(a1), int32(a2), int32(a3), 0, 0, 0)
+@@ -46,6 +47,7 @@
+ 
+ func Syscall6(trap, a1, a2, a3, a4, a5, a6 uintptr) (r1, r2 uintptr, err Errno) {
+ 	Entersyscall()
++	SetErrno(0)
+ 	var r uintptr
+ 	if unsafe.Sizeof(r) == 4 {
+ 		r1 := c_syscall32(int32(trap), int32(a1), int32(a2), int32(a3),
+@@ -63,6 +65,7 @@
+ 
+ func RawSyscall(trap, a1, a2, a3 uintptr) (r1, r2 uintptr, err Errno) {
+ 	var r uintptr
++	SetErrno(0)
+ 	if unsafe.Sizeof(r) == 4 {
+ 		r1 := c_syscall32(int32(trap), int32(a1), int32(a2), int32(a3), 0, 0, 0)
+ 		r = uintptr(r1)
+@@ -76,6 +79,7 @@
+ 
+ func RawSyscall6(trap, a1, a2, a3, a4, a5, a6 uintptr) (r1, r2 uintptr, err Errno) {
+ 	var r uintptr
++	SetErrno(0)
+ 	if unsafe.Sizeof(r) == 4 {
+ 		r1 := c_syscall32(int32(trap), int32(a1), int32(a2), int32(a3),
+ 			int32(a4), int32(a5), int32(a6))
+Index: libffi/src/powerpc/aix.S
+===================================================================
+--- libffi/src/powerpc/aix.S	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libffi/src/powerpc/aix.S	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,5 +1,5 @@
+ /* -----------------------------------------------------------------------
+-   aix.S - Copyright (c) 2002,2009 Free Software Foundation, Inc.
++   aix.S - Copyright (c) 2002, 2009 Free Software Foundation, Inc.
+    based on darwin.S by John Hornkvist
+ 
+    PowerPC Assembly glue.
+@@ -79,6 +79,8 @@
+ 	.set f20,20
+ 	.set f21,21
+ 
++	.extern .ffi_prep_args
++
+ #define LIBFFI_ASM
+ #include <fficonfig.h>
+ #include <ffi.h>
+@@ -125,6 +127,7 @@
+ 	/* Call ffi_prep_args.  */
+ 	mr	r4, r1
+ 	bl	.ffi_prep_args
++	nop
+ 
+ 	/* Now do the call.  */
+ 	ld	r0, 0(r29)
+@@ -226,6 +229,7 @@
+ 	/* Call ffi_prep_args.  */
+ 	mr	r4, r1
+ 	bl	.ffi_prep_args
++	nop
+ 
+ 	/* Now do the call.  */
+ 	lwz	r0, 0(r29)
+Index: libffi/src/powerpc/aix_closure.S
+===================================================================
+--- libffi/src/powerpc/aix_closure.S	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libffi/src/powerpc/aix_closure.S	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -79,6 +79,8 @@
+ 	.set f20,20
+ 	.set f21,21
+ 
++	.extern .ffi_closure_helper_DARWIN
++
+ #define LIBFFI_ASM
+ #define JUMPTARGET(name) name
+ #define L(x) x
+@@ -165,6 +167,7 @@
+ 
+ 	/* look up the proper starting point in table  */
+ 	/* by using return type as offset */
++	lhz	r3, 10(r3)	/* load type from return type */
+ 	ld	r4, LC..60(2)	/* get address of jump table */
+ 	sldi	r3, r3, 4	/* now multiply return type by 16 */
+ 	ld	r0, 240+16(r1)	/* load return address */
+@@ -337,8 +340,9 @@
+ 
+ 	/* look up the proper starting point in table  */
+ 	/* by using return type as offset */
++	lhz	r3, 6(r3)	/* load type from return type */
+ 	lwz	r4, LC..60(2)	/* get address of jump table */
+-	slwi	r3, r3, 4	/* now multiply return type by 4 */
++	slwi	r3, r3, 4	/* now multiply return type by 16 */
+ 	lwz	r0, 176+8(r1)	/* load return address */
+ 	add	r3, r3, r4	/* add contents of table to table address */
+ 	mtctr	r3
+Index: libffi/ChangeLog
+===================================================================
+--- libffi/ChangeLog	(.../tags/gcc_4_7_0_release)	(wersja 185750)
++++ libffi/ChangeLog	(.../branches/gcc-4_7-branch)	(wersja 185750)
+@@ -1,3 +1,17 @@
++2012-03-22  David Edelsohn  <dje.gcc@gmail.com>
++
++	Backport from mainline:
++	2012-03-09  David Edelsohn  <dje.gcc@gmail.com>
++
++	* src/powerpc/aix_closure.S (ffi_closure_ASM): Adjust for Darwin64
++	change to return value of ffi_closure_helper_DARWIN and load type
++	from return type.
++
++	From Tom Honermann <tom.honermann@oracle.com>:
++	* src/powerpc/aix.S: Declare .ffi_prep_args.  Insert nops after
++	branch instructions.
++	* src/powerpc/aix_closure.S: Declare .ffi_closure_helper_DARWIN.
++
+ 2012-03-22  Release Manager
+ 
+ 	* GCC 4.7.0 released.

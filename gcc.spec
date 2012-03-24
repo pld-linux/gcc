@@ -101,7 +101,6 @@ Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 
 Patch13:	issue4664051.patch
-Patch14:	%{name}-extern-template-sed.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -1482,7 +1481,6 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 #%patch10 -p1
 
 %patch13 -p0
-%patch14 -p1
 
 mv ChangeLog ChangeLog.general
 
