@@ -98,7 +98,7 @@ Patch4:		%{name}-sparc64-ada_fix.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-libjava-symvers.patch
+Patch9:		%{name}-symvers.patch
 Patch10:	%{name}-moresparcs.patch
 
 Patch13:	issue4664051.patch
@@ -1573,7 +1573,6 @@ TEXCONFIG=false \
 	--enable-libstdcxx-allocator=new \
 	--enable-libstdcxx-threads \
 	--enable-libstdcxx-time=rt \
-	--enable-symvers=gnu-versioned-namespace \
 %endif
 %if %{with java}
 	--enable-static-libjava=yes \
