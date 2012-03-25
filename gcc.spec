@@ -5,7 +5,6 @@
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
-#   libitm (intel-transactional-memory library).
 #
 # Conditional build:
 # - languages:
@@ -1562,6 +1561,7 @@ TEXCONFIG=false \
 	--with-long-double-128 \
 	--with-ppl \
 	--with-cloog-ppl \
+	--enable-libitm \
 %ifarch ppc ppc64
 	--enable-secureplt \
 %endif
@@ -1664,10 +1664,19 @@ echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/libssp.so
+
+libitm=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libitm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf %{_slibdir}/$libitm $RPM_BUILD_ROOT%{_libdir}/libitm.so
+
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
+
+libitm=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libitm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir32}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir32}
+ln -sf %{_slibdir32}/$libitm $RPM_BUILD_ROOT%{_libdir32}/libitm.so
 %endif
 
 %if %{with fortran}
@@ -1726,7 +1735,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/%{_target_platform}/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
-for f in libssp.la libssp_nonshared.la \
+for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
@@ -1747,7 +1756,7 @@ do
 	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
 done
 %if %{with multilib}
-for f in libssp.la libssp_nonshared.la \
+for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
@@ -1914,9 +1923,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/gcc.info*
 %{_infodir}/gccinstall.info*
 %{_infodir}/gccint.info*
+%{_infodir}/libitm.info*
 %attr(755,root,root) /lib/cpp
 %attr(755,root,root) %{_slibdir}/libgcc_s.so
+%attr(755,root,root) %{_libdir}/libitm.so
 %attr(755,root,root) %{_libdir}/libssp.so
+%{_libdir}/libitm.la
+%{_libdir}/libitm.a
 %{_libdir}/libssp.la
 %{_libdir}/libssp.a
 %{_libdir}/libssp_nonshared.la
@@ -2016,7 +2029,10 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/libgcc.a
 %{gcclibdir}/32/libgcc_eh.a
 %{gcclibdir}/32/libgcov.a
+%attr(755,root,root) %{_libdir32}/libitm.so
 %attr(755,root,root) %{_libdir32}/libssp.so
+%{_libdir32}/libitm.la
+%{_libdir32}/libitm.a
 %{_libdir32}/libssp.la
 %{_libdir32}/libssp.a
 %{_libdir32}/libssp_nonshared.la
@@ -2026,15 +2042,19 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgcc_s.so.1
+%attr(755,root,root) %{_slibdir}/libitm.so.*.*.*
 %attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir}/libitm.so.1
 %attr(755,root,root) %ghost %{_slibdir}/libssp.so.0
 
 %if %{with multilib}
 %files -n libgcc-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgcc_s.so.1
+%attr(755,root,root) %{_slibdir32}/libitm.so.*.*.*
 %attr(755,root,root) %{_slibdir32}/libssp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
+%attr(755,root,root) %ghost %{_slibdir32}/libitm.so.1
 %endif
 
 %if %{with gomp}
