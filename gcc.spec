@@ -64,7 +64,7 @@
 %endif
 
 %define		major_ver	4.4
-%define		minor_ver	6
+%define		minor_ver	7
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 
@@ -79,7 +79,7 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	ab525d429ee4425050a554bc9247d6c4
+# Source0-md5:	295709feb4441b04e87dea3f1bab4281
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-4.5.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
@@ -1674,6 +1674,9 @@ cat cpplib.lang >> gcc.lang
 %find_lang libstdc\+\+
 install libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %endif
+
+# always -f, as "dir" is created depending which texlive version is installed
+%{__rm} -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
