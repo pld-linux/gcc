@@ -1635,6 +1635,7 @@ cd builddir
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p gcc/specs $RPM_BUILD_ROOT%{gcclibdir}
+cp -p %{_target_platform}/libitm/libitm.spec $RPM_BUILD_ROOT%{gcclibdir}
 
 %if %{with multilib}
 # create links
@@ -1787,8 +1788,8 @@ install -d $RPM_BUILD_ROOT%{py_sitescriptdir}
 mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
 %if %{with java}
 mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_sitescriptdir}
-%endif
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' $RPM_BUILD_ROOT%{_bindir}/aot-compile
+%endif
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
 %py_postclean
@@ -1939,6 +1940,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/libgcc.a
 %{gcclibdir}/libgcc_eh.a
 %{gcclibdir}/libgcov.a
+%{gcclibdir}/libitm.spec
 %{gcclibdir}/specs
 %{gcclibdir}/crt*.o
 %attr(755,root,root) %{gcclibdir}/cc1
