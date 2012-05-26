@@ -78,7 +78,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1912,6 +1912,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cc
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_bindir}/gcc
+%attr(755,root,root) %{_bindir}/gcc-ar
+%attr(755,root,root) %{_bindir}/gcc-nm
+%attr(755,root,root) %{_bindir}/gcc-ranlib
 #%attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
 %{_mandir}/man1/cc.1*
