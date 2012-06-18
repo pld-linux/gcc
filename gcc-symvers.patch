@@ -1,0 +1,22 @@
+--- libstdc++-v3/configure.orig	2012-03-02 08:13:55.000000000 +0100
++++ libstdc++-v3/configure	2012-03-25 12:31:53.278684698 +0200
+@@ -64773,7 +64773,7 @@
+ 	  	        esac
+ 
+ else
+-  enable_symvers=yes
++  enable_symvers=gnu-versioned-namespace
+ fi
+ 
+ 
+--- libstdc++-v3/configure.ac.orig	2012-03-25 12:31:14.966921062 +0200
++++ libstdc++-v3/configure.ac	2012-03-25 12:30:07.363809031 +0200
+@@ -308,7 +308,7 @@
+ 
+ GCC_HEADER_STDINT(include/gstdint.h)
+ 
+-GLIBCXX_ENABLE_SYMVERS([yes])
++GLIBCXX_ENABLE_SYMVERS([gnu-versioned-namespace])
+ AC_SUBST(libtool_VERSION)
+ 
+ GLIBCXX_ENABLE_LIBSTDCXX_VISIBILITY([yes])

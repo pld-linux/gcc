@@ -32,6 +32,13 @@
 # - other:
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
+%bcond_with	symvers		# enable versioned symbols in libstdc++ (WARNING: changes soname from .so.6 to so.7)
+
+%if %{with symvers}
+%define		cxx_sover	7
+%else
+%define		cxx_sover	6
+%endif
 
 %if %{without cxx}
 %undefine	with_go
@@ -135,6 +142,7 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 %endif
 BuildRequires:	gmp-devel >= 4.1
+BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	ppl-devel
@@ -1476,6 +1484,9 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %if %{with qt}
 %patch8 -p1
 %endif
+%if %{with symvers}
+%patch9 -p0
+%endif
 # update if you need it
 #%patch10 -p1
 
@@ -2238,13 +2249,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.7
+%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.%{cxx_sover}
 
 %if %{with multilib}
 %files -n libstdc++-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.7
+%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.%{cxx_sover}
 %endif
 
 %if %{with python}
@@ -2254,7 +2265,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.7.0.0-gdb.py
+%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %endif
 
 %files -n libstdc++-devel
