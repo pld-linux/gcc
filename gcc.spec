@@ -78,7 +78,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -98,9 +98,7 @@ Patch4:		%{name}-sparc64-ada_fix.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-symvers.patch
 Patch10:	%{name}-moresparcs.patch
-
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
@@ -1478,7 +1476,6 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %if %{with qt}
 %patch8 -p1
 %endif
-%patch9 -p0
 # update if you need it
 #%patch10 -p1
 
@@ -1573,6 +1570,7 @@ TEXCONFIG=false \
 	--enable-libstdcxx-allocator=new \
 	--enable-libstdcxx-threads \
 	--enable-libstdcxx-time=rt \
+	--enable-symvers=gnu \
 %endif
 %if %{with java}
 	--enable-static-libjava=yes \
