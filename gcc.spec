@@ -105,7 +105,6 @@ Patch4:		%{name}-sparc64-ada_fix.patch
 Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
-Patch9:		%{name}-symvers.patch
 Patch10:	%{name}-moresparcs.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
@@ -1485,9 +1484,6 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %if %{with qt}
 %patch8 -p1
 %endif
-%if %{with symvers}
-%patch9 -p0
-%endif
 # update if you need it
 #%patch10 -p1
 
@@ -1582,7 +1578,7 @@ TEXCONFIG=false \
 	--enable-libstdcxx-allocator=new \
 	--enable-libstdcxx-threads \
 	--enable-libstdcxx-time=rt \
-	%{!?with_symvers:--enable-symvers=gnu} \
+	--enable-symvers=gnu%{?with_symvers:-versioned-namespace} \
 %endif
 %if %{with java}
 	--enable-static-libjava=yes \
