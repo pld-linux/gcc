@@ -1571,6 +1571,7 @@ TEXCONFIG=false \
 %ifarch ppc ppc64
 	--enable-secureplt \
 %endif
+	--enable-initfini-array \
 %if %{with cxx}
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 	--enable-libstdcxx-visibility \
