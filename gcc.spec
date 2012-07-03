@@ -1531,7 +1531,6 @@ TEXCONFIG=false \
 	--enable-checking=release \
 	--enable-gnu-unique-object \
 	--with-linker-hash-style=gnu \
-	--enable-checking=release \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-linker-build-id \
