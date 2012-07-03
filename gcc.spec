@@ -1523,6 +1523,7 @@ TEXCONFIG=false \
 	--x-libraries=%{_libdir} \
 	--enable-checking=release \
 	--enable-gnu-unique-object \
+	--with-linker-hash-style=gnu \
 	--enable-shared \
 	--enable-threads=posix \
 	--enable-linker-build-id \
