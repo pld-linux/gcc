@@ -16,6 +16,8 @@
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
 # - features:
+%bcond_with	cloogpplleg	# use cloog-ppl-legacy (0.15.x) backend (instead of cloog-isl)
+%bcond_with	cloogppl	# use cloog-ppl 0.16.1 backend (instead of cloog-isl)
 %bcond_without	gomp		# build without OpenMP support
 %bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
@@ -72,6 +74,16 @@
 %undefine	with_ada
 %endif
 
+%if %{with cloogppl}
+%define	cloog_backend	ppl
+%else
+%if %{with cloogpplleg}
+%define	cloog_backend	ppl-legacy
+%else
+%define	cloog_backend	isl
+%endif
+%endif
+
 %define		major_ver	4.7
 %define		minor_ver	1
 %define		major_ecj_ver	4.5
@@ -99,6 +111,7 @@ Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
+Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
@@ -115,7 +128,16 @@ BuildRequires:	automake >= 1:1.9.3
 BuildRequires:	binutils >= 3:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
-BuildRequires:	cloog-ppl-devel
+%if %{with cloogppl}
+BuildRequires:	cloog-ppl-devel >= 0.16.1
+%else
+%if %{with cloogpplleg}
+BuildRequires:	cloog-ppl-devel >= 0.15.9
+BuildRequires:	cloog-ppl-devel < 0.16
+%else
+BuildRequires:	cloog-isl-devel >= 0.16.1
+%endif
+%endif
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
@@ -145,7 +167,7 @@ BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
-BuildRequires:	ppl-devel
+BuildRequires:	ppl-devel >= 0.11
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -1473,6 +1495,7 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %setup -q
 %patch100 -p0
 %patch0 -p1
+%patch1 -p1
 # update if it makes speed difference for you
 #%patch2 -p1
 %patch3 -p1
@@ -1528,80 +1551,81 @@ TEXCONFIG=false \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--x-libraries=%{_libdir} \
-	--enable-checking=release \
-	--enable-gnu-unique-object \
-	--with-linker-hash-style=gnu \
-	--enable-shared \
-	--enable-threads=posix \
-	--enable-linker-build-id \
-	--enable-linux-futex \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
-	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
-	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
+	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
+	--disable-build-with-cxx \
+	--disable-build-poststage1-with-cxx \
 	--enable-c99 \
-	--enable-long-long \
-	--enable-decimal-float=yes \
-	%{!?with_multilib:--disable-multilib} \
-	--enable-nls \
-	--disable-werror \
-	--enable-lto \
-	--enable-plugin \
+	--enable-checking=release \
 %ifarch %{ix86} %{x8664}
 	--disable-cld \
 %endif
+	--enable-cloog-backend=%{cloog_backend} \
+	%{?with_fortran:--enable-cmath} \
+	--enable-decimal-float \
+	--enable-gnu-unique-object \
+	--enable-initfini-array \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
+	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
+	--enable-libitm \
+	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
+	--enable-linker-build-id \
+	--enable-linux-futex \
+	--enable-long-long \
+	%{!?with_multilib:--disable-multilib} \
+	--enable-nls \
+	--enable-lto \
+	--enable-plugin \
+%ifarch ppc ppc64
+	--enable-secureplt \
+%endif
+	--enable-shared \
+	--enable-threads=posix \
+	--disable-werror \
+	--with-cloog \
 %ifarch sparc64
 	--with-cpu=ultrasparc \
 %endif
+	--with-demangler-in-ld \
 	--with-gnu-as \
 	--with-gnu-ld \
-	--with-demangler-in-ld \
-	--with-system-zlib \
+	--with-linker-hash-style=gnu \
+	--with-long-double-128 \
+	--with-ppl \
 	--with-slibdir=%{_slibdir} \
 %ifnarch ia64
 	--without-system-libunwind \
 %else
 	--with-system-libunwind \
 %endif
+	--with-system-zlib \
 	%{!?with_java:--without-x} \
-	%{?with_fortran:--enable-cmath} \
-	--with-long-double-128 \
-	--with-ppl \
-	--with-cloog-ppl \
-	--enable-libitm \
-%ifarch ppc ppc64
-	--enable-secureplt \
-%endif
-	--enable-initfini-array \
-	--disable-build-with-cxx \
-	--disable-build-poststage1-with-cxx \
 %if %{with cxx}
-	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
-	--enable-libstdcxx-visibility \
-	--disable-libstdcxx-pch \
 	--enable-__cxa_atexit \
 	--enable-libstdcxx-allocator=new \
+	--disable-libstdcxx-pch \
 	--enable-libstdcxx-threads \
 	--enable-libstdcxx-time=rt \
+	--enable-libstdcxx-visibility \
 	--enable-symvers=gnu%{?with_symvers:-versioned-namespace} \
+	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
 %endif
 %if %{with java}
-	--enable-static-libjava=yes \
-	--enable-libjava-multilib=no \
 	%{!?with_alsa:--disable-alsa} \
 	%{!?with_dssi:--disable-dssi} \
 	--disable-gconf-peer \
+	%{?with_gtk:--enable-gtk-cairo} \
 %if %{with x}
 	--enable-java-awt="xlib%{?with_gtk:,gtk}%{?with_qt:,qt}" \
 %endif
-	%{?with_mozilla:--enable-plugin} \
+	--enable-jni \
 	--enable-libgcj \
 	--enable-libgcj-multifile \
 	--enable-libgcj-database \
-	%{?with_gtk:--enable-gtk-cairo} \
-	--enable-jni \
+	--disable-libjava-multilib \
+	%{?with_mozilla:--enable-plugin} \
+	--enable-static-libjava \
 	--enable-xmlj \
 %endif
-	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
 	--with-pkgversion="PLD-Linux" \
 	--with-bugurl="http://bugs.pld-linux.org" \
 	%{_target_platform}
