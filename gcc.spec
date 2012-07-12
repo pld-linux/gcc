@@ -1669,7 +1669,6 @@ cd builddir
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -p gcc/specs $RPM_BUILD_ROOT%{gcclibdir}
-cp -p %{_target_platform}/libitm/libitm.spec $RPM_BUILD_ROOT%{gcclibdir}
 
 %if %{with multilib}
 # create links
@@ -1967,6 +1966,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libssp.so
 %{_libdir}/libitm.la
 %{_libdir}/libitm.a
+%{_libdir}/libitm.spec
 %{_libdir}/libssp.la
 %{_libdir}/libssp.a
 %{_libdir}/libssp_nonshared.la
@@ -1977,7 +1977,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/libgcc.a
 %{gcclibdir}/libgcc_eh.a
 %{gcclibdir}/libgcov.a
-%{gcclibdir}/libitm.spec
 %{gcclibdir}/specs
 %{gcclibdir}/crt*.o
 %attr(755,root,root) %{gcclibdir}/cc1
