@@ -1,6 +1,6 @@
---- a/gcc/config/rs6000/t-linux64	2007-09-27 21:56:06.000000000 +0200
-+++ b/gcc/config/rs6000/t-linux64	2008-03-04 15:59:23.000000000 +0100
-@@ -14,13 +14,13 @@
+--- gcc-4.7.1/gcc/config/rs6000/t-linux64.orig	2011-11-02 16:23:48.000000000 +0100
++++ gcc-4.7.1/gcc/config/rs6000/t-linux64	2012-07-12 18:36:30.279053123 +0200
+@@ -26,10 +26,10 @@
  # it doesn't tell anything about the 32bit libraries on those systems.  Set
  # MULTILIB_OSDIRNAMES according to what is found on the target.
  
@@ -17,6 +17,3 @@
 +MULTILIB_EXCLUSIONS     =
 +MULTILIB_OSDIRNAMES	= ../lib64 $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)
 +MULTILIB_MATCHES        =
- 
- softfp_wrap_start := '\#ifndef __powerpc64__'
- softfp_wrap_end := '\#endif'

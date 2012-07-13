@@ -33,6 +33,7 @@
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 # - other:
 %bcond_without	bootstrap	# omit 3-stage bootstrap
+%bcond_with	ppc64_nof	# "nof" multilib target in ppc64 compiler
 %bcond_with	tests		# torture gcc
 %bcond_with	symvers		# enable versioned symbols in libstdc++ (WARNING: changes soname from .so.6 to so.7)
 
@@ -1496,19 +1497,16 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch100 -p0
 %patch0 -p1
 %patch1 -p1
-# update if it makes speed difference for you
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 
-# update if you need it
-#%patch6 -p1
+%{!?with_ppc64_nof:%patch6 -p1}
 %patch7 -p0
 %if %{with qt}
 %patch8 -p1
 %endif
-# update if you need it
-#%patch10 -p1
+%patch10 -p1
 
 %patch13 -p0
 
@@ -1806,6 +1804,11 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcc
 cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcclibdir}/include
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/install-tools
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/include-fixed
+
+# plugin, .la not needed
+%{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la
+# already packaged in binutils-devel
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libiberty.a
 
 %if %{with python}
 for LIB in lib lib64; do
