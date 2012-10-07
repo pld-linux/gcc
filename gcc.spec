@@ -1700,6 +1700,10 @@ libitm=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libitm.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libitm $RPM_BUILD_ROOT%{_libdir}/libitm.so
 
+libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf %{_slibdir}/$libgompm $RPM_BUILD_ROOT%{_libdir}/libgomp.so
+
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
@@ -1708,6 +1712,10 @@ ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 libitm=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libitm.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libitm $RPM_BUILD_ROOT%{_libdir32}/libitm.so
+
+libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
+ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 %endif
 
 %if %{with fortran}
@@ -2100,14 +2108,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgomp.so.1
+%attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
 
 %if %{with multilib}
 %files -n libgomp-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgomp.so.1
+%attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
 %endif
 
 %files -n libgomp-devel
