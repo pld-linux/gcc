@@ -66,11 +66,6 @@
 %undefine	with_multilib
 %endif
 
-#ifarch i386 i486
-# __i686.get_pc_thunk.bx undefined in libgo (TODO: recheck on gcc updates)
-#undefine	with_go
-#endif
-
 %ifarch sparc64
 %undefine	with_ada
 %endif
