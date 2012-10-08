@@ -204,6 +204,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
 
+# functions with printf format attribute but with special parser and also
+# receiving non constant format strings
+%define		Werror_cflags	%{nil}
+
 %define		skip_post_check_so	'.*(libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
 %description
