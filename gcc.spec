@@ -98,7 +98,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -231,6 +231,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
+
+# functions with printf format attribute but with special parser and also
+# receiving non constant format strings
+%define		Werror_cflags	%{nil}
 
 %define		skip_post_check_so	'.*(libgo|libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
