@@ -66,10 +66,10 @@
 %undefine	with_multilib
 %endif
 
-%ifarch i386 i486
+#ifarch i386 i486
 # __i686.get_pc_thunk.bx undefined in libgo (TODO: recheck on gcc updates)
-%undefine	with_go
-%endif
+#undefine	with_go
+#endif
 
 %ifarch sparc64
 %undefine	with_ada
@@ -120,6 +120,7 @@ Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
+Patch11:	libgo-werror.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
@@ -1511,6 +1512,7 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch8 -p1
 %endif
 %patch10 -p1
+%patch11 -p1
 
 %patch13 -p0
 
