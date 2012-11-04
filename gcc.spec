@@ -21,7 +21,7 @@
 %bcond_without	gomp		# build without OpenMP support
 %bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
-%bcond_with	profiling	# build with profiling
+%bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
 # - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
