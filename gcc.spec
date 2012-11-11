@@ -93,7 +93,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	6
+Release:	7
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -149,7 +149,7 @@ BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 BuildRequires:	gcc(multilib)
 %ifarch %{x8664}
-BuildRequires:	glibc-devel(i686)
+BuildRequires:	glibc-devel(ix86)
 %endif
 %ifarch ppc64
 BuildRequires:	glibc-devel(ppc)
@@ -275,7 +275,7 @@ Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
 %{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	libgcc32
 %ifarch %{x8664}
-Requires:	glibc-devel(i686)
+Requires:	glibc-devel(ix86)
 %endif
 %ifarch ppc64
 Requires:	glibc-devel(ppc)
