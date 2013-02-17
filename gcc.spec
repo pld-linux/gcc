@@ -2577,6 +2577,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgij.a
 %{?with_x:%{_libdir}/lib-gnu-awt-xlib.a}
 %{_libdir}/%{gcjdbexecdir}/libjvm.a
+%endif
 
 %files -n libffi
 %defattr(644,root,root,755)
@@ -2616,7 +2617,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libffi.a
-%endif
 %endif
 
 %if %{with objc}
