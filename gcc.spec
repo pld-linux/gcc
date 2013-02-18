@@ -1753,6 +1753,7 @@ cd ..
 install -d java-doc
 cp -f libjava/READ* java-doc
 ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
+%endif
 
 # still not installed by gcc?
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc ] || exit 1
@@ -1767,7 +1768,6 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
-%endif
 %endif
 
 %if %{with objc}
