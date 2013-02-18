@@ -1757,6 +1757,7 @@ ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 
 # still not installed by gcc?
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc ] || exit 1
+install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir},
