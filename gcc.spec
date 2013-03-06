@@ -21,7 +21,7 @@
 %bcond_without	gomp		# build without OpenMP support
 %bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
-%bcond_with	profiling	# build with profiling
+%bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
 # - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
@@ -66,11 +66,6 @@
 %undefine	with_multilib
 %endif
 
-%ifarch i386 i486
-# __i686.get_pc_thunk.bx undefined in libgo (TODO: recheck on gcc updates)
-%undefine	with_go
-%endif
-
 %ifarch sparc64
 %undefine	with_ada
 %endif
@@ -86,7 +81,7 @@
 %endif
 
 %define		major_ver	4.7
-%define		minor_ver	1
+%define		minor_ver	2
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -98,19 +93,20 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	9
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	933e6f15f51c031060af64a9e14149ff
+# Source0-md5:	cc308a0891e778cfda7a151ab8a6e762
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
+# Patch100-md5:	34d2f91a58f942cf98a15e73614625c9
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
@@ -120,6 +116,7 @@ Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
+Patch11:	libgo-werror.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
@@ -152,7 +149,7 @@ BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 BuildRequires:	gcc(multilib)
 %ifarch %{x8664}
-BuildRequires:	glibc-devel(i686)
+BuildRequires:	glibc-devel(ix86)
 %endif
 %ifarch ppc64
 BuildRequires:	glibc-devel(ppc)
@@ -232,6 +229,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
 
+# functions with printf format attribute but with special parser and also
+# receiving non constant format strings
+%define		Werror_cflags	%{nil}
+
 %define		skip_post_check_so	'.*(libgo|libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
 %description
@@ -274,7 +275,7 @@ Requires:	libgcc-multilib = %{epoch}:%{version}-%{release}
 %{?with_multilib:Provides:	gcc(multilib)}
 Obsoletes:	libgcc32
 %ifarch %{x8664}
-Requires:	glibc-devel(i686)
+Requires:	glibc-devel(ix86)
 %endif
 %ifarch ppc64
 Requires:	glibc-devel(ppc)
@@ -1507,6 +1508,7 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch8 -p1
 %endif
 %patch10 -p1
+%patch11 -p1
 
 %patch13 -p0
 
@@ -1638,7 +1640,7 @@ all $(all):
 		%{?with_bootstrap:%{?with_profiling:profiledbootstrap}} \
 		GCJFLAGS="%{rpmcflags}" \
 		BOOT_CFLAGS="%{rpmcflags}" \
-		STAGE1_CFLAGS="%{rpmcflags} -O0" \
+		STAGE1_CFLAGS="%{rpmcflags} -O1 -g0" \
 		GNATLIBCFLAGS="%{rpmcflags}" \
 		LDFLAGS_FOR_TARGET="%{rpmldflags}" \
 		mandir=%{_mandir} \
@@ -1700,6 +1702,10 @@ libitm=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libitm.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libitm $RPM_BUILD_ROOT%{_libdir}/libitm.so
 
+libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
+
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
@@ -1708,6 +1714,10 @@ ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 libitm=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libitm.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libitm $RPM_BUILD_ROOT%{_libdir32}/libitm.so
+
+libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
+ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 %endif
 
 %if %{with fortran}
@@ -1743,9 +1753,11 @@ cd ..
 install -d java-doc
 cp -f libjava/READ* java-doc
 ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
+%endif
 
 # still not installed by gcc?
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc ] || exit 1
+install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir},
@@ -1757,7 +1769,6 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
-%endif
 %endif
 
 %if %{with objc}
@@ -2100,14 +2111,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgomp.so.1
+%attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
 
 %if %{with multilib}
 %files -n libgomp-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgomp.so.1
+%attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
 %endif
 
 %files -n libgomp-devel
@@ -2292,7 +2303,10 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/usr/lib*/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%{_datadir}/gdb/auto-load/usr/%{_lib}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%if %{with multilib}
+%{_datadir}/gdb/auto-load/usr/lib/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%endif
 %endif
 
 %files -n libstdc++-devel
@@ -2564,6 +2578,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgij.a
 %{?with_x:%{_libdir}/lib-gnu-awt-xlib.a}
 %{_libdir}/%{gcjdbexecdir}/libjvm.a
+%endif
 
 %files -n libffi
 %defattr(644,root,root,755)
@@ -2603,7 +2618,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libffi.a
-%endif
 %endif
 
 %if %{with objc}
