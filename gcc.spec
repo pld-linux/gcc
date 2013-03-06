@@ -868,7 +868,7 @@ Suporte Fortran 95 para o GCC.
 
 %package fortran-multilib
 Summary:	Fortran 95 32-bit support for gcc
-Summary(pl.UTF-8):	Obsługa binariów 32-bitowych Fortrana 95 dla gcc
+Summary(pl.UTF-8):	Obsługa binariów 32-bitowych Fortranu 95 dla gcc
 Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
@@ -885,7 +885,7 @@ kompilatora gcc.
 %package -n libgfortran
 Summary:	Fortran 95 Library
 Summary(es.UTF-8):	Biblioteca de Fortran 95
-Summary(pl.UTF-8):	Biblioteka Fortrana 95
+Summary(pl.UTF-8):	Biblioteka Fortranu 95
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Requires:	libquadmath = %{epoch}:%{version}-%{release}
@@ -898,11 +898,11 @@ Fortran 95 Library.
 Biblioteca de Fortran 95.
 
 %description -n libgfortran -l pl.UTF-8
-Biblioteka Fortrana 95.
+Biblioteka Fortranu 95.
 
 %package -n libgfortran-multilib
 Summary:	Fortran 95 Library - 32-bit version
-Summary(pl.UTF-8):	Biblioteka Fortrana 95 - wersja 32-bitowa
+Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
@@ -911,12 +911,12 @@ Requires:	libquadmath-multilib = %{epoch}:%{version}-%{release}
 Fortran 95 Library - 32-bit version.
 
 %description -n libgfortran-multilib -l pl.UTF-8
-Biblioteka Fortrana 95 - wersja 32-bitowa.
+Biblioteka Fortranu 95 - wersja 32-bitowa.
 
 %package -n libgfortran-static
 Summary:	Static Fortran 95 Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
-Summary(pl.UTF-8):	Statyczna Biblioteka Fortrana 95
+Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
@@ -929,11 +929,11 @@ Static Fortran 95 Library.
 Bibliotecas estáticas de Fortran 95.
 
 %description -n libgfortran-static -l pl.UTF-8
-Statyczna biblioteka Fortrana 95.
+Statyczna biblioteka Fortranu 95.
 
 %package -n libgfortran-multilib-static
 Summary:	Static Fortran 95 Library - 32-bit version
-Summary(pl.UTF-8):	Statyczna Biblioteka Fortrana 95 - wersja 32-bitowa
+Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja 32-bitowa
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
 Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
@@ -942,7 +942,7 @@ Requires:	libgfortran-multilib = %{epoch}:%{version}-%{release}
 Static Fortran 95 Library - 32-bit version.
 
 %description -n libgfortran-multilib-static -l pl.UTF-8
-Statyczna biblioteka Fortrana 95 - wersja 32-bitowa.
+Statyczna biblioteka Fortranu 95 - wersja 32-bitowa.
 
 %package -n libquadmath
 Summary:	GCC __float128 shared support library
