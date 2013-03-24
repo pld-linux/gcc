@@ -93,7 +93,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	10
+Release:	11
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -1692,7 +1692,7 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-gcj \
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
-echo ".so gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
+echo ".so man1/gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir}
@@ -1722,7 +1722,7 @@ ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
 %if %{with fortran}
 ln -sf gfortran $RPM_BUILD_ROOT%{_bindir}/g95
-echo ".so gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
+echo ".so man1/gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 %endif
 
 %if %{with ada}
