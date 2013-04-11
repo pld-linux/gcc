@@ -81,7 +81,7 @@
 %endif
 
 %define		major_ver	4.7
-%define		minor_ver	2
+%define		minor_ver	3
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -93,20 +93,20 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	11
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	cc308a0891e778cfda7a151ab8a6e762
+# Source0-md5:	86f428a30379bdee0224e353ee2f999e
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	34d2f91a58f942cf98a15e73614625c9
+# Patch100-md5:	ed71b602ecff35de8f4678e27dd9c2ef
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
@@ -116,7 +116,6 @@ Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
-Patch11:	libgo-werror.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
@@ -1508,7 +1507,6 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch8 -p1
 %endif
 %patch10 -p1
-%patch11 -p1
 
 %patch13 -p0
 

@@ -1,6 +1,6 @@
 --- gcc-4.7.1/gcc/config/rs6000/t-linux64.orig	2011-11-02 16:23:48.000000000 +0100
 +++ gcc-4.7.1/gcc/config/rs6000/t-linux64	2012-07-12 18:36:30.279053123 +0200
-@@ -26,10 +26,10 @@
+@@ -26,12 +26,10 @@
  # it doesn't tell anything about the 32bit libraries on those systems.  Set
  # MULTILIB_OSDIRNAMES according to what is found on the target.
  
@@ -11,9 +11,11 @@
  MULTILIB_EXTRA_OPTS     = fPIC mstrict-align
 -MULTILIB_EXCEPTIONS     = m64/msoft-float
 -MULTILIB_EXCLUSIONS     = m64/!m32/msoft-float
--MULTILIB_OSDIRNAMES	= ../lib64 $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib) nof
--MULTILIB_MATCHES        = $(MULTILIB_MATCHES_FLOAT)
+-MULTILIB_OSDIRNAMES	= ../lib64$(call if_multiarch,:powerpc64-linux-gnu)
 +MULTILIB_EXCEPTIONS     =
 +MULTILIB_EXCLUSIONS     =
-+MULTILIB_OSDIRNAMES	= ../lib64 $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)
+ MULTILIB_OSDIRNAMES    += $(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
+-MULTILIB_OSDIRNAMES    += nof
+-MULTILIB_MATCHES        = $(MULTILIB_MATCHES_FLOAT)
 +MULTILIB_MATCHES        =
+
