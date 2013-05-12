@@ -1589,6 +1589,7 @@ TEXCONFIG=false \
 	--with-linker-hash-style=gnu \
 	--with-long-double-128 \
 	--with-ppl \
+	--disable-ppl-version-check \
 	--with-slibdir=%{_slibdir} \
 %ifnarch ia64
 	--without-system-libunwind \
