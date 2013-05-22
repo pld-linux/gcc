@@ -1,0 +1,49 @@
+Index: Makefile.in
+===================================================================
+--- Makefile.in	(.../tags/gcc_4_8_0_release)	(revision 199208)
++++ Makefile.in	(.../branches/gcc-4_8-branch)	(revision 199208)
+@@ -38710,8 +38710,13 @@
+ @if target-libffi
+ maybe-install-target-libffi: install-target-libffi
+ 
+-# Dummy target for uninstallable.
+-install-target-libffi:
++install-target-libffi: installdirs
++	@: $(MAKE); $(unstage)
++	@r=`${PWD_COMMAND}`; export r; \
++	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
++	$(NORMAL_TARGET_EXPORTS) \
++	(cd $(TARGET_SUBDIR)/libffi && \
++	  $(MAKE) $(TARGET_FLAGS_TO_PASS)  install)
+ 
+ @endif target-libffi
+ 
+@@ -38725,8 +38720,13 @@
+ @if target-libffi
+ maybe-install-strip-target-libffi: install-strip-target-libffi
+ 
+-# Dummy target for uninstallable.
+-install-strip-target-libffi:
++install-strip-target-libffi: installdirs
++	@: $(MAKE); $(unstage)
++	@r=`${PWD_COMMAND}`; export r; \
++	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \
++	$(NORMAL_TARGET_EXPORTS) \
++	(cd $(TARGET_SUBDIR)/libffi && \
++	  $(MAKE) $(TARGET_FLAGS_TO_PASS)  install-strip)
+ 
+ @endif target-libffi
+ 
+Index: Makefile.def
+===================================================================
+--- Makefile.def	(.../tags/gcc_4_8_0_release)	(revision 199208)
++++ Makefile.def	(.../branches/gcc-4_8-branch)	(revision 199208)
+@@ -138,7 +138,7 @@
+                    missing=maintainer-clean; };
+ target_modules = { module= winsup; };
+ target_modules = { module= libgloss; no_check=true; };
+-target_modules = { module= libffi; no_install=true; };
++target_modules = { module= libffi; };
+ target_modules = { module= libjava; raw_cxx=true;
+                    extra_configure_flags="$(EXTRA_CONFIGARGS_LIBJAVA)"; };
+ target_modules = { module= zlib; };
