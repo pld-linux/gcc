@@ -17,10 +17,10 @@
  main ()
  {
  #if CLOOG_VERSION_MAJOR != 0 \
--    || CLOOG_VERSION_MINOR != 16 \
--    || CLOOG_VERSION_REVISION < 1
-+    || CLOOG_VERSION_MINOR < 16 \
-+    || (CLOOG_VERSION_MINOR == 16 && CLOOG_VERSION_REVISION < 1)
+-    || CLOOG_VERSION_MINOR != 17 \
+-    || CLOOG_VERSION_REVISION < 0
++    || CLOOG_VERSION_MINOR < 17 \
++    || (CLOOG_VERSION_MINOR == 17 && CLOOG_VERSION_REVISION < 0)
      choke me
     #endif
    ;

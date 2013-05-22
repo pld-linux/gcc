@@ -29,9 +29,9 @@
 +  LIBRARY_VERSION := $(LIB_VERSION)
 +endif
 +
+ # HP/PA Linux
  ifeq ($(strip $(filter-out hppa% linux%,$(arch) $(osys))),)
    LIBGNAT_TARGET_PAIRS = \
-   a-intnam.ads<a-intnam-linux.ads \
 --- a/gcc/ada/system-linux-sparc64.ads	1970-01-01 00:00:00.000000000 +0000
 +++ b/gcc/ada/system-linux-sparc64.ads	2005-05-21 18:34:52.000000000 +0000
 @@ -0,0 +1,151 @@

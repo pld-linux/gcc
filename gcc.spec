@@ -1,6 +1,8 @@
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.9
 #
 # TODO:
+# - update files
+# - update issue4664051.patch
 # - gconf peer? (but libgcj needs split anyway)
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
@@ -33,7 +35,6 @@
 %bcond_without	x		# don't build libgcj Xlib-dependent AWTs (incl. GTK/Qt)
 # - other:
 %bcond_without	bootstrap	# omit 3-stage bootstrap
-%bcond_with	ppc64_nof	# "nof" multilib target in ppc64 compiler
 %bcond_with	tests		# torture gcc
 %bcond_with	symvers		# enable versioned symbols in libstdc++ (WARNING: changes soname from .so.6 to so.7)
 
@@ -80,12 +81,12 @@
 %endif
 %endif
 
-%define		major_ver	4.7
-%define		minor_ver	3
+%define		major_ver	4.8
+%define		minor_ver	0
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	13
+%define		gcj_soname_ver	14
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -93,29 +94,29 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	86f428a30379bdee0224e353ee2f999e
+# Source0-md5:	e6040024eb9e761c3bea348d1fa5abb0
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_7_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_7-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	ed71b602ecff35de8f4678e27dd9c2ef
+# Patch100-md5:	ac423abd2e4312e1117296711359a42b
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
-Patch6:		%{name}-ppc64-m32-m64-multilib-only.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
+Patch11:	%{name}-install-libffi.patch
 Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
@@ -1501,14 +1502,14 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 %patch3 -p1
 %patch4 -p1
 
-%{!?with_ppc64_nof:%patch6 -p1}
 %patch7 -p0
 %if %{with qt}
 %patch8 -p1
 %endif
 %patch10 -p1
+%patch11 -p0
 
-%patch13 -p0
+#patch13 -p0
 
 mv ChangeLog ChangeLog.general
 
@@ -2688,13 +2689,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.0
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.3
 
 %if %{with multilib}
 %files -n libgo-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.0
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.3
 %endif
 
 %files -n libgo-devel
