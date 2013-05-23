@@ -1,8 +1,6 @@
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.9
 #
 # TODO:
-# - update files
-# - update issue4664051.patch
 # - gconf peer? (but libgcj needs split anyway)
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
@@ -124,7 +122,6 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
-Patch13:	issue4664051.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -1642,8 +1639,6 @@ libraries.
 %endif
 %patch10 -p1
 %patch11 -p0
-
-#patch13 -p0
 
 mv ChangeLog ChangeLog.general
 
