@@ -25,6 +25,9 @@
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
+%bcond_without	asan		# build without Address Sanitizer library
+%bcond_without	tsan		# build without Thread Sanitizer library
+%bcond_without	atomic		# build without library for atomic operations not supported by hardware
 # - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
@@ -65,6 +68,10 @@
 
 %ifnarch %{x8664} ppc64 s390x sparc64
 %undefine	with_multilib
+%endif
+
+%ifnarch %{x8664}
+%undefine	with_tsan
 %endif
 
 %ifarch sparc64
@@ -1493,6 +1500,133 @@ Static Go language library - 32-bit version.
 %description -n libgo-multilib-static -l pl.UTF-8
 Statyczna biblioteka języka Go - wersja 32-bitowa.
 
+%package -n libasan
+Summary:	The Address Sanitizer library
+Group:		Libraries
+
+%description -n libasan
+This package contains the Address Sanitizer library
+which is used for -fsanitize=address instrumented programs.
+
+%package -n libasan-multilib
+Summary:	The Address Sanitizer library - 32-bit version
+Group:		Libraries
+
+%description -n libasan-multilib
+This package contains 32-bit version of the Address Sanitizer library
+which is used for -fsanitize=address instrumented programs.
+
+%package -n libasan-devel
+Summary:	Development files for the Address Sanitizer library
+Group:		Development/Libraries
+Requires:	libasan = %{epoch}:%{version}-%{release}
+
+%description -n libasan-devel
+This package contains development files for the Address Sanitizer
+library.
+
+%package -n libasan-multilib-devel
+Summary:	Development files for the Address Sanitizer library - 32-bit version
+Group:		Development/Libraries
+Requires:	libasan-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libasan-multilib-devel
+This package contains 32-bit version of the development files for the
+Address Sanitizer static library.
+
+%package -n libasan-static
+Summary:	The Address Sanitizer static library
+Group:		Development/Libraries
+Requires:	libasan-devel = %{epoch}:%{version}-%{release}
+
+%description -n libasan-static
+This package contains Address Sanitizer static library.
+
+%package -n libasan-multilib-static
+Summary:	The Address Sanitizer static library - 32-bit version
+Group:		Development/Libraries
+Requires:	libasan-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description -n libasan-multilib-static
+This package contains 32-bit version of the Address Sanitizer static
+library.
+
+%package -n libtsan
+Summary:	The Thread Sanitizer library
+Group:		Libraries
+
+%description -n libtsan
+This package contains the Thread Sanitizer library
+which is used for -fsanitize=thread instrumented programs.
+
+%package -n libtsan-devel
+Summary:	Development files for the Thread Sanitizer library
+Group:		Development/Libraries
+Requires:	libtsan = %{epoch}:%{version}-%{release}
+
+%description -n libtsan-devel
+This package contains development files for Thread Sanitizer library.
+
+%package -n libtsan-static
+Summary:	The Thread Sanitizer static library
+Group:		Development/Libraries
+Requires:	libtsan-devel = %{epoch}:%{version}-%{release}
+
+%description -n libtsan-static
+This package contains Thread Sanitizer static library.
+
+%package -n libatomic
+Summary:	The GNU Atomic library
+Group:		Libraries
+
+%description -n libatomic
+This package contains the GNU Atomic library
+which is a GCC support library for atomic operations
+not supported by hardware.
+
+%package -n libatomic-multilib
+Summary:	The GNU Atomic library - 32-bit version
+Group:		Libraries
+
+%description -n libatomic-multilib
+This package contains 32-bit version of the GNU Atomic library
+which is a GCC support library for atomic operations
+not supported by hardware.
+
+%package -n libatomic-devel
+Summary:	Development files for the GNU Atomic library
+Group:		Development/Libraries
+Requires:	libatomic = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-devel
+This package contains development files for the GNU Atomic libraries.
+
+%package -n libatomic-multilib-devel
+Summary:	Development files for the GNU Atomic static library - 32-bit version
+Group:		Development/Libraries
+Requires:	libatomic-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-multilib-devel
+This package contains 32-bit version of the Development files for the
+GNU Atomic libraries.
+
+%package -n libatomic-static
+Summary:	The GNU Atomic static library
+Group:		Development/Libraries
+Requires:	libatomic-devel = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-static
+This package contains GNU Atomic static libraries.
+
+%package -n libatomic-multilib-static
+Summary:	The GNU Atomic static library - 32-bit version
+Group:		Development/Libraries
+Requires:	libatomic-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-multilib-static
+This package contains 32-bit version of the GNU Atomic static
+libraries.
+
 %prep
 %setup -q
 %patch100 -p0
@@ -1781,6 +1915,9 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
+	%{?with_asan:libasan.la} \
+	%{?with_tsan:libtsan.la} \
+	%{?with_atomic:libatomic.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 %if %{with java}
 	libffi.la libgcj.la libgcj-tools.la libgij.la \
@@ -1802,6 +1939,8 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
+	%{?with_asan:libasan.la} \
+	%{?with_atomic:libatomic.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 	%{?with_java:libffi.la} \
 	%{?with_objc:libobjc.la};
@@ -1931,6 +2070,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libgcj
 %post	-p /sbin/ldconfig -n libffi
 %postun	-p /sbin/ldconfig -n libffi
+%post	-n libffi-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
 %post	-p /sbin/ldconfig -n libffi-multilib
 %postun	-p /sbin/ldconfig -n libffi-multilib
 %post	-p /sbin/ldconfig -n libobjc
@@ -1949,6 +2090,16 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libgo
 %post	-p /sbin/ldconfig -n libgo-multilib
 %postun	-p /sbin/ldconfig -n libgo-multilib
+%post	-p /sbin/ldconfig -n libasan
+%postun	-p /sbin/ldconfig -n libasan
+%post	-p /sbin/ldconfig -n libasan-multilib
+%postun	-p /sbin/ldconfig -n libasan-multilib
+%post	-p /sbin/ldconfig -n libtsan
+%postun	-p /sbin/ldconfig -n libtsan
+%post	-p /sbin/ldconfig -n libatomic
+%postun	-p /sbin/ldconfig -n libatomic
+%post	-p /sbin/ldconfig -n libatomic-multilib
+%postun	-p /sbin/ldconfig -n libatomic-multilib
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -2046,6 +2197,14 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
 %{gcclibdir}/include/xopintrin.h
+%{gcclibdir}/include/adxintrin.h
+%{gcclibdir}/include/fxsrintrin.h
+%{gcclibdir}/include/prfchwintrin.h
+%{gcclibdir}/include/rdseedintrin.h
+%{gcclibdir}/include/rtmintrin.h
+%{gcclibdir}/include/xsaveintrin.h
+%{gcclibdir}/include/xsaveoptintrin.h
+%{gcclibdir}/include/xtestintrin.h
 %endif
 %ifarch arm
 %{gcclibdir}/include/arm_neon.h
@@ -2601,6 +2760,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/ffitarget.h
 %{_pkgconfigdir}/libffi.pc
 %{_mandir}/man3/ffi*.3*
+%{_infodir}/libffi.info*
 
 %if %{with multilib}
 %files -n libffi-multilib-devel
@@ -2720,5 +2880,98 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libgo.a
+%endif
+%endif
+
+%if %{with asan}
+%files -n libasan
+%defattr(644,root,root,755)
+%doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
+%attr(755,root,root) %{_libdir}/libasan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.0
+
+%if %{with multilib}
+%files -n libasan-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.0
+%endif
+
+%files -n libasan-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libasan.so
+%{_libdir}/libasan_preinit.o
+%{_libdir}/libasan.la
+
+%if %{with multilib}
+%files -n libasan-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libasan.so
+%{_libdir32}/libasan_preinit.o
+%{_libdir32}/libasan.la
+%endif
+
+%files -n libasan-static
+%defattr(644,root,root,755)
+%{_libdir}/libasan.a
+
+%if %{with multilib}
+%files -n libasan-multilib-static
+%defattr(644,root,root,755)
+%{_libdir32}/libasan.a
+%endif
+%endif
+
+%if %{with tsan}
+%files -n libtsan
+%defattr(644,root,root,755)
+%doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
+%attr(755,root,root) %{_libdir}/libtsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libtsan.so.0
+
+%files -n libtsan-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libtsan.so
+%{_libdir}/libtsan.la
+
+%files -n libtsan-static
+%defattr(644,root,root,755)
+%{_libdir}/libtsan.a
+%endif
+
+%if %{with atomic}
+%files -n libatomic
+%defattr(644,root,root,755)
+%doc libatomic/ChangeLog*
+%attr(755,root,root) %{_libdir}/libatomic.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libatomic.so.1
+
+%if %{with multilib}
+%files -n libatomic-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libatomic.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libatomic.so.1
+%endif
+
+%files -n libatomic-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libatomic.so
+%{_libdir}/libatomic.la
+
+%if %{with multilib}
+%files -n libatomic-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libatomic.so
+%{_libdir32}/libatomic.la
+%endif
+
+%files -n libatomic-static
+%defattr(644,root,root,755)
+%{_libdir}/libatomic.a
+
+%if %{with multilib}
+%files -n libatomic-multilib-static
+%defattr(644,root,root,755)
+%{_libdir32}/libatomic.a
 %endif
 %endif
