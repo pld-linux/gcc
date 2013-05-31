@@ -87,7 +87,7 @@
 %endif
 
 %define		major_ver	4.8
-%define		minor_ver	0
+%define		minor_ver	1
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -104,15 +104,15 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	e6040024eb9e761c3bea348d1fa5abb0
+# Source0-md5:	3b2386c114cd74185aa3754b58a79304
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	ac423abd2e4312e1117296711359a42b
+# Patch100-md5:	4ccf20c90f2b2fb2d7faf704efd14bd5
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
