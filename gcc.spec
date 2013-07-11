@@ -88,6 +88,7 @@
 
 %define		major_ver	4.8
 %define		minor_ver	1
+%define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 %define		gcj_soname_ver	14
@@ -98,16 +99,15 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	3b2386c114cd74185aa3754b58a79304
 Source1:	%{name}-optimize-la.pl
-# ecj.jar from latest stable eclipse.org release
-Source2:	http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/eclipse/downloads/drops4/R-4.2.2-201302041200/ecj-4.2.2.jar
-# Source2-md5:	04bc498fd6d5ace9d4e303cdc9fa2199
+Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
+# Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
