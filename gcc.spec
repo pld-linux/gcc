@@ -87,7 +87,7 @@
 %endif
 
 %define		major_ver	4.8
-%define		minor_ver	1
+%define		minor_ver	2
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -99,20 +99,20 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	3b2386c114cd74185aa3754b58a79304
+# Source0-md5:	a3d7d63b9cb6b6ea049469a0c4a43c9d
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	4ccf20c90f2b2fb2d7faf704efd14bd5
+# Patch100-md5:	b8ce1d213a03bae80a9ec461b3535c37
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
@@ -2844,13 +2844,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.3
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.4
 
 %if %{with multilib}
 %files -n libgo-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.3
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.4
 %endif
 
 %files -n libgo-devel
