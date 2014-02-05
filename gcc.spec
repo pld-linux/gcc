@@ -99,7 +99,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	5
+Release:	6
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -134,8 +134,8 @@ BuildRequires:	chrpath >= 0.13-2
 BuildRequires:	cloog-ppl-devel >= 0.16.1
 %else
 %if %{with cloogpplleg}
-BuildRequires:	cloog-ppl-devel >= 0.15.9
 BuildRequires:	cloog-ppl-devel < 0.16
+BuildRequires:	cloog-ppl-devel >= 0.15.9
 %else
 BuildRequires:	cloog-isl-devel >= 0.16.1
 %endif
@@ -165,8 +165,8 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparcv9)
 %endif
 %endif
-BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	gmp-c++-devel >= 4.1
+BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	ppl-devel >= 0.11
@@ -1502,8 +1502,8 @@ Summary:	The Address Sanitizer library
 Group:		Libraries
 
 %description -n libasan
-This package contains the Address Sanitizer library
-which is used for -fsanitize=address instrumented programs.
+This package contains the Address Sanitizer library which is used for
+-fsanitize=address instrumented programs.
 
 %package -n libasan-multilib
 Summary:	The Address Sanitizer library - 32-bit version
@@ -1553,8 +1553,8 @@ Summary:	The Thread Sanitizer library
 Group:		Libraries
 
 %description -n libtsan
-This package contains the Thread Sanitizer library
-which is used for -fsanitize=thread instrumented programs.
+This package contains the Thread Sanitizer library which is used for
+-fsanitize=thread instrumented programs.
 
 %package -n libtsan-devel
 Summary:	Development files for the Thread Sanitizer library
@@ -1577,18 +1577,17 @@ Summary:	The GNU Atomic library
 Group:		Libraries
 
 %description -n libatomic
-This package contains the GNU Atomic library
-which is a GCC support library for atomic operations
-not supported by hardware.
+This package contains the GNU Atomic library which is a GCC support
+library for atomic operations not supported by hardware.
 
 %package -n libatomic-multilib
 Summary:	The GNU Atomic library - 32-bit version
 Group:		Libraries
 
 %description -n libatomic-multilib
-This package contains 32-bit version of the GNU Atomic library
-which is a GCC support library for atomic operations
-not supported by hardware.
+This package contains 32-bit version of the GNU Atomic library which
+is a GCC support library for atomic operations not supported by
+hardware.
 
 %package -n libatomic-devel
 Summary:	Development files for the GNU Atomic library
@@ -2037,6 +2036,18 @@ rm -rf $RPM_BUILD_ROOT
 %postun	go -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	-n libquadmath-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	-n libquadmath-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%post	-n libffi-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	-n libffi-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
 %post	-p /sbin/ldconfig -n libgcc-multilib
@@ -2065,20 +2076,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libgcj
 %post	-p /sbin/ldconfig -n libffi
 %postun	-p /sbin/ldconfig -n libffi
-%post	-n libffi-devel -p /sbin/postshell
--/usr/sbin/fix-info-dir -c %{_infodir}
 %post	-p /sbin/ldconfig -n libffi-multilib
 %postun	-p /sbin/ldconfig -n libffi-multilib
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib
 %postun	-p /sbin/ldconfig -n libobjc-multilib
-%post -n libquadmath
-/sbin/ldconfig
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
-%postun -n libquadmath
-/sbin/ldconfig
-[ ! -x /usr/sbin/fix-info-dir ] || /usr/sbin/fix-info-dir -c %{_infodir} >/dev/null 2>&1
+%post	-p /sbin/ldconfig -n libquadmath
+%postun	-p /sbin/ldconfig -n libquadmath
 %post	-p /sbin/ldconfig -n libquadmath-multilib
 %postun	-p /sbin/ldconfig -n libquadmath-multilib
 %post	-p /sbin/ldconfig -n libgo
