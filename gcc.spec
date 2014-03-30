@@ -99,7 +99,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	7
+Release:	8
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -836,6 +836,9 @@ Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
 Summary:	C++ standard library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
