@@ -1502,22 +1502,35 @@ Statyczna biblioteka języka Go - wersja 32-bitowa.
 
 %package -n libasan
 Summary:	The Address Sanitizer library
+Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów
 Group:		Libraries
 
 %description -n libasan
 This package contains the Address Sanitizer library which is used for
 -fsanitize=address instrumented programs.
 
+%description -n libasan -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Address Sanitizer, służącą do
+kontroli adresów w programach kompilowanych z opcją
+-fsanitize=address.
+
 %package -n libasan-multilib
 Summary:	The Address Sanitizer library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja 32-bitowa
 Group:		Libraries
 
 %description -n libasan-multilib
 This package contains 32-bit version of the Address Sanitizer library
 which is used for -fsanitize=address instrumented programs.
 
+%description -n libasan-multilib -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję biblioteki Address Sanitizer,
+służącej do kontroli adresów w programach kompilowanych z opcją
+-fsanitize=address.
+
 %package -n libasan-devel
 Summary:	Development files for the Address Sanitizer library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer
 Group:		Development/Libraries
 Requires:	libasan = %{epoch}:%{version}-%{release}
 
@@ -1525,25 +1538,38 @@ Requires:	libasan = %{epoch}:%{version}-%{release}
 This package contains development files for the Address Sanitizer
 library.
 
+%description -n libasan-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Address Sanitizer.
+
 %package -n libasan-multilib-devel
 Summary:	Development files for the Address Sanitizer library - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja 32-bitowa
 Group:		Development/Libraries
 Requires:	libasan-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libasan-multilib-devel
-This package contains 32-bit version of the development files for the
-Address Sanitizer static library.
+This package contains the development files for 32-bit version of the
+Address Sanitizer library.
+
+%description -n libasan-multilib-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
+Address Sanitizer.
 
 %package -n libasan-static
 Summary:	The Address Sanitizer static library
+Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer
 Group:		Development/Libraries
 Requires:	libasan-devel = %{epoch}:%{version}-%{release}
 
 %description -n libasan-static
 This package contains Address Sanitizer static library.
 
+%description -n libasan-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Address Sanitizer.
+
 %package -n libasan-multilib-static
 Summary:	The Address Sanitizer static library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer - wersja 32-bitowa
 Group:		Development/Libraries
 Requires:	libasan-multilib-devel = %{epoch}:%{version}-%{release}
 
@@ -1551,40 +1577,63 @@ Requires:	libasan-multilib-devel = %{epoch}:%{version}-%{release}
 This package contains 32-bit version of the Address Sanitizer static
 library.
 
+%description -n libasan-multilib-static -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Address
+Sanitizer.
+
 %package -n libtsan
 Summary:	The Thread Sanitizer library
+Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości
 Group:		Libraries
 
 %description -n libtsan
 This package contains the Thread Sanitizer library which is used for
 -fsanitize=thread instrumented programs.
 
+%description -n libtsan -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Thread Sanitizer, służącą do kontroli
+wielowątkowości w programach kompilowanych z opcją -fsanitize=thread.
+
 %package -n libtsan-devel
 Summary:	Development files for the Thread Sanitizer library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Thread Sanitizer
 Group:		Development/Libraries
 Requires:	libtsan = %{epoch}:%{version}-%{release}
 
 %description -n libtsan-devel
 This package contains development files for Thread Sanitizer library.
 
+%description -n libtsan-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Address Sanitizer.
+
 %package -n libtsan-static
 Summary:	The Thread Sanitizer static library
+Summary(pl.UTF-8):	Statyczna biblioteka Thread Sanitizer
 Group:		Development/Libraries
 Requires:	libtsan-devel = %{epoch}:%{version}-%{release}
 
 %description -n libtsan-static
 This package contains Thread Sanitizer static library.
 
+%description -n libtsan-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Thread Sanitizer.
+
 %package -n libatomic
 Summary:	The GNU Atomic library
+Summary(pl.UTF-8):	Biblioteka GNU Atomic
 Group:		Libraries
 
 %description -n libatomic
 This package contains the GNU Atomic library which is a GCC support
 library for atomic operations not supported by hardware.
 
+%description -n libatomic -l pl.UTF-8
+Ten pakiet zawiera bibliotekę GNU Atomic, będącą biblioteką GCC
+wspierającą operacje atomowe na sprzęcie ich nie obsługującym.
+
 %package -n libatomic-multilib
 Summary:	The GNU Atomic library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka GNU Atomic - wersja 32-bitowa
 Group:		Libraries
 
 %description -n libatomic-multilib
@@ -1592,39 +1641,61 @@ This package contains 32-bit version of the GNU Atomic library which
 is a GCC support library for atomic operations not supported by
 hardware.
 
+%description -n libatomic-multilib -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję biblioteki GNU Atomic, będącej
+biblioteką GCC wspierającą operacje atomowe na sprzęcie ich nie
+obsługującym.
+
 %package -n libatomic-devel
 Summary:	Development files for the GNU Atomic library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic
 Group:		Development/Libraries
 Requires:	libatomic = %{epoch}:%{version}-%{release}
 
 %description -n libatomic-devel
-This package contains development files for the GNU Atomic libraries.
+This package contains development files for the GNU Atomic library.
+
+%description -n libatomic-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki GNU Atomic.
 
 %package -n libatomic-multilib-devel
 Summary:	Development files for the GNU Atomic static library - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic - wersja 32-bitowa
 Group:		Development/Libraries
 Requires:	libatomic-multilib = %{epoch}:%{version}-%{release}
 
 %description -n libatomic-multilib-devel
-This package contains 32-bit version of the Development files for the
-GNU Atomic libraries.
+This package contains the development files for 32-bit version of the
+GNU Atomic library.
+
+%description -n libatomic-multilib-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
+GNU Atomic.
 
 %package -n libatomic-static
 Summary:	The GNU Atomic static library
+Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic
 Group:		Development/Libraries
 Requires:	libatomic-devel = %{epoch}:%{version}-%{release}
 
 %description -n libatomic-static
-This package contains GNU Atomic static libraries.
+This package contains GNU Atomic static library.
+
+%description -n libatomic-static
+Ten pakiet zawiera statyczną bibliotekę GNU Atomic.
 
 %package -n libatomic-multilib-static
 Summary:	The GNU Atomic static library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic - wersja 32-bitowa
 Group:		Development/Libraries
 Requires:	libatomic-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libatomic-multilib-static
 This package contains 32-bit version of the GNU Atomic static
-libraries.
+library.
+
+%description -n libatomic-multilib-static -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 
 %prep
 %setup -q
