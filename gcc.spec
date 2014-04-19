@@ -45,12 +45,13 @@
 %define		cxx_sover	6
 %endif
 
+# go, java and objcxx require C++
 %if %{without cxx}
 %undefine	with_go
 %undefine	with_java
 %undefine	with_objcxx
 %endif
-
+# objcxx requires objc
 %if %{without objc}
 %undefine	with_objcxx
 %endif
@@ -66,6 +67,14 @@
 
 %ifnarch %{x8664} ppc64 s390x sparc64
 %undefine	with_multilib
+%endif
+
+%ifnarch %{ix86} %{x8664} arm ppc ppc64 sh sparc sparcv9 sparc64
+%undefine	with_atomic
+%endif
+
+%ifnarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
+%undefine	with_asan
 %endif
 
 %ifnarch %{x8664}
