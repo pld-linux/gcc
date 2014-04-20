@@ -16,8 +16,6 @@
 %bcond_without	objc		# build without Objective-C support
 %bcond_without	objcxx		# build without Objective-C++ support
 # - features:
-%bcond_with	cloogpplleg	# use cloog-ppl-legacy (0.15.x) backend (instead of cloog-isl)
-%bcond_with	cloogppl	# use cloog-ppl 0.16.1 backend (instead of cloog-isl)
 %bcond_without	gomp		# build without OpenMP support
 %bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
@@ -87,16 +85,6 @@
 %undefine	with_ada
 %endif
 
-%if %{with cloogppl}
-%define	cloog_backend	ppl
-%else
-%if %{with cloogpplleg}
-%define	cloog_backend	ppl-legacy
-%else
-%define	cloog_backend	isl
-%endif
-%endif
-
 %define		major_ver	4.8
 %define		minor_ver	2
 %define		major_ecj_ver	4.5
@@ -141,16 +129,8 @@ BuildRequires:	automake >= 1:1.9.3
 BuildRequires:	binutils >= 3:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
-%if %{with cloogppl}
-BuildRequires:	cloog-ppl-devel >= 0.16.1
-%else
-%if %{with cloogpplleg}
-BuildRequires:	cloog-ppl-devel < 0.16
-BuildRequires:	cloog-ppl-devel >= 0.15.9
-%else
-BuildRequires:	cloog-isl-devel >= 0.16.1
-%endif
-%endif
+BuildRequires:	cloog-isl-devel >= 0.17.0
+BuildRequires:	cloog-isl-devel < 0.19
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
@@ -178,6 +158,8 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	gmp-devel >= 4.1
+BuildRequires:	isl-devel >= 0.10
+BuildRequires:	isl-devel < 0.13
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	ppl-devel >= 0.11
@@ -1773,7 +1755,6 @@ TEXCONFIG=false \
 %ifarch %{ix86} %{x8664}
 	--disable-cld \
 %endif
-	--enable-cloog-backend=%{cloog_backend} \
 	%{?with_fortran:--enable-cmath} \
 	--enable-decimal-float \
 	--enable-gnu-unique-object \
