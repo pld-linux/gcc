@@ -1,4 +1,4 @@
-# NOTE: despite lower soname, libffi is newer than standalone 3.0.9
+# NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # TODO:
 # - gconf peer? (but libgcj needs split anyway)
@@ -26,6 +26,8 @@
 %bcond_without	asan		# build without Address Sanitizer library
 %bcond_without	tsan		# build without Thread Sanitizer library
 %bcond_without	atomic		# build without library for atomic operations not supported by hardware
+%bcond_without	gcc_libffi	# packaging gcc libffi for system usage
+				# note: libgcj and libgo always have convenience gcc libffi linked in
 # - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
 %bcond_without	dssi		# don't build libgcj DSSI MIDI interface
@@ -69,7 +71,7 @@
 %undefine	with_multilib
 %endif
 
-%ifnarch %{ix86} %{x8664} arm ppc ppc64 sh sparc sparcv9 sparc64
+%ifnarch %{ix86} %{x8664} alpha arm ppc ppc64 sh sparc sparcv9 sparc64
 %undefine	with_atomic
 %endif
 
@@ -1720,7 +1722,9 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %patch8 -p1
 %endif
 %patch10 -p1
+%if %{with gcc_libffi}
 %patch11 -p0
+%endif
 
 mv ChangeLog ChangeLog.general
 
@@ -1966,6 +1970,7 @@ cp -f libjava/READ* java-doc
 ln -sf libgcj-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/libgcj.jar
 %endif
 
+%if %{with gcc_libffi}
 # still not installed by gcc?
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdir}/libffi.pc ] || exit 1
 install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
@@ -1980,6 +1985,7 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
+%endif
 %endif
 
 %if %{with objc}
@@ -1997,7 +2003,8 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_atomic:libatomic.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 %if %{with java}
-	libffi.la libgcj.la libgcj-tools.la libgij.la \
+	%{?with_gcc_libffi:libffi.la} \
+	libgcj.la libgcj-tools.la libgij.la \
 	%{gcjdbexecdir}/libjvm.la \
 	%{gcjdbexecdir}/libxmlj.la \
 	%{?with_x:lib-gnu-awt-xlib.la} \
@@ -2019,7 +2026,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_asan:libasan.la} \
 	%{?with_atomic:libatomic.la} \
 	%{?with_mudflap:libmudflap.la libmudflapth.la} \
-	%{?with_java:libffi.la} \
+	%{?with_java:%{?with_gcc_libffi:libffi.la}} \
 	%{?with_objc:libobjc.la};
 do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
@@ -2822,6 +2829,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{gcjdbexecdir}/libjvm.a
 %endif
 
+%if %{with gcc_libffi}
 %files -n libffi
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,ChangeLog.libgcj,LICENSE,README}
@@ -2861,6 +2869,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-multilib-static
 %defattr(644,root,root,755)
 %{_libdir32}/libffi.a
+%endif
 %endif
 
 %if %{with objc}
