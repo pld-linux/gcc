@@ -37,9 +37,10 @@
  @direntry
 -* gcc: (gcc).                  The GNU Compiler Collection.
 -* g++: (gcc).                  The GNU C++ compiler.
+-* gcov: (gcc) Gcov.            @command{gcov}---a test coverage program.
 +* gcc: (gcc).				The GNU Compiler Collection
 +* g++: (gcc).				The GNU C++ compiler
- * gcov: (gcc) Gcov.            @command{gcov}---a test coverage program.
++* gcov: (gcc) Gcov.			@command{gcov}---a test coverage program
  @end direntry
  This file documents the use of the GNU compilers.
 --- a/gcc/doc/gccint.texi	2004-05-24 00:54:29.000000000 +0200
@@ -133,11 +134,11 @@
 +* jcf-dump: (gcj)jcf-dump.		Print information about Java class files
 +* gij: (gcj)gij.			GNU interpreter for Java bytecode
 +* jv-convert: (gcj)jv-convert.		Convert file from one encoding to another
-+* gcj-dbtool: (gcj)gcj-dbtool.		Db tool.
-+* grmic: (gcj)grmic.			Generate stubs for Remote Method Invocation.
-+* gc-analyze: (gcj)gc-analyze.		Analyze Garbage Collector (GC) memory dumps.
-+* aot-compile:				Compile bytecode to native and generate databases.
-+* rebuild-gcj-db:			Merge the per-solib databases made by aot-compile into one system-wide database.
++* gcj-dbtool: (gcj)gcj-dbtool.		Db tool
++* grmic: (gcj)grmic.			Generate stubs for Remote Method Invocation
++* gc-analyze: (gcj)gc-analyze.		Analyze Garbage Collector (GC) memory dumps
++* aot-compile: (gcj)aot-compile.	Compile bytecode to native and generate databases
++* rebuild-gcj-db: (gcj)rebuild-gcj-db.	Merge the per-solib databases made by aot-compile into one system-wide database
  @end direntry
  @end format
  
@@ -317,3 +318,59 @@
  @end direntry
  @end format
  
+--- gcc-4.8.2/libjava/classpath/doc/cp-tools.texinfo.orig	2013-02-21 10:40:44.000000000 +0100
++++ gcc-4.8.2/libjava/classpath/doc/cp-tools.texinfo	2014-04-21 08:05:30.116078643 +0200
+@@ -35,9 +35,9 @@
+ @ifnotplaintext
+ @setchapternewpage on
+ 
+-@dircategory GNU Libraries
++@dircategory Libraries:
+ @direntry
+-* Classpath Tools: (cp-tools).  GNU Classpath Tools Guide
++* Classpath Tools: (cp-tools).		GNU Classpath Tools Guide
+ @end direntry
+ @end ifnotplaintext
+ @end ifinfo
+--- gcc-4.8.2/libgomp/libgomp.texi.orig	2013-01-14 19:18:49.000000000 +0100
++++ gcc-4.8.2/libgomp/libgomp.texi	2014-04-21 08:06:10.259411139 +0200
+@@ -29,9 +29,9 @@
+ @end copying
+ 
+ @ifinfo
+-@dircategory GNU Libraries
++@dircategory Libraries:
+ @direntry
+-* libgomp: (libgomp).                    GNU OpenMP runtime library
++* libgomp: (libgomp).			GNU OpenMP runtime library
+ @end direntry
+ 
+ This manual documents the GNU implementation of the OpenMP API for 
+--- gcc-4.8.2/libitm/libitm.texi.orig	2013-02-03 18:46:11.000000000 +0100
++++ gcc-4.8.2/libitm/libitm.texi	2014-04-21 08:06:38.919410542 +0200
+@@ -18,9 +18,9 @@
+ @end copying
+ 
+ @ifinfo
+-@dircategory GNU Libraries
++@dircategory Libraries:
+ @direntry
+-* libitm: (libitm).                    GNU Transactional Memory Library
++* libitm: (libitm).			GNU Transactional Memory Library
+ @end direntry
+ 
+ This manual documents the GNU Transactional Memory Library.
+--- gcc-4.8.2/libquadmath/libquadmath.texi.orig	2013-01-22 09:23:32.000000000 +0100
++++ gcc-4.8.2/libquadmath/libquadmath.texi	2014-04-21 08:07:12.262743180 +0200
+@@ -23,9 +23,9 @@
+ @end copying
+ 
+ @ifinfo
+-@dircategory GNU Libraries
++@dircategory Libraries:
+ @direntry
+-* libquadmath: (libquadmath).                  GCC Quad-Precision Math Library
++* libquadmath: (libquadmath).		GCC Quad-Precision Math Library
+ @end direntry
+ 
+ This manual documents the GCC Quad-Precision Math Library API.
