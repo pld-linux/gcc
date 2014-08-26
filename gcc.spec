@@ -111,7 +111,7 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	15a183f399428683132fe283a444d6ef
+# Patch100-md5:	5b673f632d01fb855533083ba84fba1e
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
