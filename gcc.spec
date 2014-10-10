@@ -98,7 +98,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -111,7 +111,7 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	d319158cb79ab67a3f0e6005f7c2b1f7
+# Patch100-md5:	36e22cc051adc6de015a3fd3073906c5
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
