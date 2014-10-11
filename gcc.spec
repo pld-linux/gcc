@@ -98,7 +98,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -121,6 +121,7 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
+Patch12:	gcc-4.9-isl-0.13-hack.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -158,8 +159,7 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	gmp-devel >= 4.1
-BuildRequires:	isl-devel >= 0.10
-BuildRequires:	isl-devel < 0.13
+BuildRequires:	isl-devel >= 0.13
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	ppl-devel >= 0.11
@@ -1707,6 +1707,8 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %if %{with gcc_libffi}
 %patch11 -p0
 %endif
+
+%patch12 -p1
 
 mv ChangeLog ChangeLog.general
 
