@@ -117,6 +117,8 @@ Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-sparc64-ada_fix.patch
+Patch5:		%{name}-4.9-isl-0.13-hack.patch
+Patch6:		%{name}-pr61164.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
@@ -158,8 +160,7 @@ BuildRequires:	glibc-devel(sparcv9)
 %endif
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	gmp-devel >= 4.1
-BuildRequires:	isl-devel >= 0.10
-BuildRequires:	isl-devel < 0.13
+BuildRequires:	isl-devel >= 0.13
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 BuildRequires:	ppl-devel >= 0.11
@@ -1698,7 +1699,8 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-
+%patch5 -p1
+%patch6 -p1
 %patch7 -p0
 %if %{with qt}
 %patch8 -p1
