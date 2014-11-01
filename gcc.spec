@@ -102,7 +102,7 @@ Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	https://ftp.gnu.org/gnu/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	4df8ee253b7f3863ad0b86359cd39c43
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
@@ -111,7 +111,7 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	f8beb59356a676acef07ec19e1fef2b5
+# Patch100-md5:	372b68ca84755a8182cf2aac6f93de13
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
