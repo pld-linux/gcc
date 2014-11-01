@@ -86,8 +86,8 @@
 %endif
 
 %define		major_ver	4.9
-%define		minor_ver	1
-%define		major_ecj_ver	4.5
+%define		minor_ver	2
+%define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 %define		gcj_soname_ver	14
@@ -102,16 +102,16 @@ Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	fddf71348546af523353bd43d34919c1
+Source0:	https://ftp.gnu.org/gnu/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
+# Source0-md5:	4df8ee253b7f3863ad0b86359cd39c43
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
-# Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
+# Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_1_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	5b673f632d01fb855533083ba84fba1e
+# Patch100-md5:	f8beb59356a676acef07ec19e1fef2b5
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
@@ -1705,6 +1705,7 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %if %{with qt}
 %patch8 -p1
 %endif
+%patch9 -p1
 %patch10 -p1
 %if %{with gcc_libffi}
 %patch11 -p0
@@ -1760,6 +1761,7 @@ TEXCONFIG=false \
 	%{?with_fortran:--enable-cmath} \
 	--enable-decimal-float \
 	--enable-gnu-unique-object \
+	--enable-gnu-indirect-function \
 	--enable-initfini-array \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
@@ -1779,6 +1781,12 @@ TEXCONFIG=false \
 	--enable-threads=posix \
 	--disable-werror \
 	--with-cloog \
+%ifarch %{ix86}
+	--with-arch=x86-64 \
+%endif
+%ifarch %{x8664}
+	--with-arch-32=x86-64 \
+%endif
 %ifarch sparc64
 	--with-cpu=ultrasparc \
 %endif
@@ -1826,7 +1834,8 @@ TEXCONFIG=false \
 %endif
 	--with-pkgversion="PLD-Linux" \
 	--with-bugurl="http://bugs.pld-linux.org" \
-	%{_target_platform}
+	--host=%{_target_platform} \
+	--build=%{_target_platform}
 
 cd ..
 
