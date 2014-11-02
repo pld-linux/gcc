@@ -17,7 +17,6 @@
 %bcond_without	objcxx		# build without Objective-C++ support
 # - features:
 %bcond_without	gomp		# build without OpenMP support
-%bcond_without	mudflap		# build without Mudflap pointer debugging support
 %bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
 %bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
@@ -90,7 +89,7 @@
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	14
+%define		gcj_soname_ver	15
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -231,7 +230,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libgo|libmudflap|libmudflapth|libxmlj|lib-gnu-awt-xlib)\.so.*'
+%define		skip_post_check_so	'.*(libgo|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -410,102 +409,59 @@ Static GNU OpenMP library - 32-bit version.
 %description -n libgomp-multilib-static -l pl.UTF-8
 Statyczna biblioteka GNU OpenMP - wersja 32-bitowa.
 
-%package -n libmudflap
-Summary:	GCC mudflap shared support libraries
-Summary(pl.UTF-8):	Współdzielone biblioteki wspomagająca GCC mudflap
+%package -n libcilkrts
+Summary:	GCC cilk+ shared support libraries
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
-%description -n libmudflap
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations.
+%description -n libcilkrts
+This package contains the Cilk+ runtime library.
 
-%description -n libmudflap -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic.
-
-%package -n libmudflap-multilib
-Summary:	GCC mudflap shared support libraries - 32-bit version
-Summary(pl.UTF-8):	Współdzielone biblioteki wspomagająca GCC mudflap - wersja 32-bitowa
+%package -n libcilkrts-multilib
+Summary:	GCC cilk+ shared support libraries - 32-bit version
 License:	GPL v2+ with unlimited link permission
 Group:		Libraries
 
-%description -n libmudflap-multilib
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains 32-bit version.
+%description -n libcilkrts-multilib
+This package contains the Cilk+ runtime library. This package contains
+32-bit version.
 
-%description -n libmudflap-multilib -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic. Ten pakiet zawiera wersje 32-bitowe.
-
-%package -n libmudflap-devel
-Summary:	Development files for GCC mudflap libraries
-Summary(pl.UTF-8):	Pliki programistyczne bibliotek GCC mudflap
+%package -n libcilkrts-devel
+Summary:	Development files for GCC cilk+ libraries
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libmudflap = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts = %{epoch}:%{version}-%{release}
 
-%description -n libmudflap-devel
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains development
-files.
+%description -n libcilkrts-devel
+This package contains development files for cilk+ library.
 
-%description -n libmudflap-devel -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
-programistyczne.
-
-%package -n libmudflap-multilib-devel
-Summary:	Development files for 32-bit version of GCC mudflap libraries
-Summary(pl.UTF-8):	Pliki programistyczne wersji 32-bitowych bibliotek GCC mudflap
+%package -n libcilkrts-multilib-devel
+Summary:	Development files for 32-bit version of GCC cilk+ libraries
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
 
-%description -n libmudflap-multilib-devel
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains development
-files for 32-bit version of the libraries.
+%description -n libcilkrts-multilib-devel
+This package contains development files for 32-bit version of the
+cilk+ libraries.
 
-%description -n libmudflap-multilib-devel -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic. Ten pakiet zawiera pliki
-programistyczne wersji 32-bitowych bibliotek.
-
-%package -n libmudflap-static
-Summary:	Static GCC mudflap libraries
-Summary(pl.UTF-8):	Statyczne biblioteki GCC mudflap
+%package -n libcilkrts-static
+Summary:	Static GCC cilk+ libraries
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libmudflap-devel = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
 
-%description -n libmudflap-static
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains static
-libraries.
+%description -n libcilkrts-static
+This package contains static cilk+ libraries.
 
-%description -n libmudflap-static -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
-statyczne.
-
-%package -n libmudflap-multilib-static
-Summary:	Static GCC mudflap libraries - 32-bit version
-Summary(pl.UTF-8):	Statyczne biblioteki GCC mudflap - wersje 32-bitowa
+%package -n libcilkrts-multilib-static
+Summary:	Static GCC cilk+ libraries - 32-bit version
 License:	GPL v2+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libmudflap-multilib-devel = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts-multilib-devel = %{epoch}:%{version}-%{release}
 
-%description -n libmudflap-multilib-static
-The libmudflap libraries are used by GCC for instrumenting pointer and
-array dereferencing operations. This package contains 32-bit static
-libraries.
-
-%description -n libmudflap-multilib-static -l pl.UTF-8
-Biblioteki libmudflap są używane przez GCC do obsługi operacji
-dereferencji wspaźników i tablic. Ten pakiet zawiera biblioteki
-statyczne 32-bitowe.
-
+%description -n libcilkrts-multilib-static
+This package contains 32-bit static cilk+ libraries.
 %package ada
 Summary:	Ada support for gcc
 Summary(es.UTF-8):	Soporte de Ada para gcc
@@ -1504,9 +1460,8 @@ This package contains the Address Sanitizer library which is used for
 -fsanitize=address instrumented programs.
 
 %description -n libasan -l pl.UTF-8
-Ten pakiet zawiera bibliotekę Address Sanitizer, służącą do
-kontroli adresów w programach kompilowanych z opcją
--fsanitize=address.
+Ten pakiet zawiera bibliotekę Address Sanitizer, służącą do kontroli
+adresów w programach kompilowanych z opcją -fsanitize=address.
 
 %package -n libasan-multilib
 Summary:	The Address Sanitizer library - 32-bit version
@@ -1575,6 +1530,45 @@ library.
 Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Address
 Sanitizer.
 
+%package -n liblsan
+Summary:	The Leak Sanitizer library
+Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli adresów
+Group:		Libraries
+
+%description -n liblsan
+This package contains the Leak Sanitizer library which is used for
+-fsanitize=leak instrumented programs.
+
+%description -n liblsan -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Leak Sanitizer, służącą do
+kontroli adresów w programach kompilowanych z opcją
+-fsanitize=leak.
+
+%package -n liblsan-devel
+Summary:	Development files for the Leak Sanitizer library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer
+Group:		Development/Libraries
+Requires:	liblsan = %{epoch}:%{version}-%{release}
+
+%description -n liblsan-devel
+This package contains development files for the Leak Sanitizer
+library.
+
+%description -n liblsan-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Leak Sanitizer.
+
+%package -n liblsan-static
+Summary:	The Leak Sanitizer static library
+Summary(pl.UTF-8):	Statyczna biblioteka Leak Sanitizer
+Group:		Development/Libraries
+Requires:	liblsan-devel = %{epoch}:%{version}-%{release}
+
+%description -n liblsan-static
+This package contains Leak Sanitizer static library.
+
+%description -n liblsan-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Leak Sanitizer.
+
 %package -n libtsan
 Summary:	The Thread Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości
@@ -1611,6 +1605,90 @@ This package contains Thread Sanitizer static library.
 
 %description -n libtsan-static -l pl.UTF-8
 Ten pakiet zawiera statyczną bibliotekę Thread Sanitizer.
+
+%package -n libubsan
+Summary:	The Undefined Behavior Sanitizer library
+Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli adresów
+Group:		Libraries
+
+%description -n libubsan
+This package contains the Undefined Behavior Sanitizer library which is used for
+-fsanitize=undefined instrumented programs.
+
+%description -n libubsan -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Undefined Behavior Sanitizer, służącą do
+kontroli adresów w programach kompilowanych z opcją
+-fsanitize=undefined.
+
+%package -n libubsan-multilib
+Summary:	The Undefined Behavior Sanitizer library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli adresów - wersja 32-bitowa
+Group:		Libraries
+
+%description -n libubsan-multilib
+This package contains 32-bit version of the Undefined Behavior
+Sanitizer library which is used for -fsanitize=undefined instrumented
+programs.
+
+%description -n libubsan-multilib -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję biblioteki Undefined Behavior
+Sanitizer, służącej do kontroli adresów w programach kompilowanych z
+opcją -fsanitize=undefined.
+
+%package -n libubsan-devel
+Summary:	Development files for the Undefined Behavior Sanitizer library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer
+Group:		Development/Libraries
+Requires:	libubsan = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-devel
+This package contains development files for the Undefined Behavior
+Sanitizer library.
+
+%description -n libubsan-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Undefined Behavior
+Sanitizer.
+
+%package -n libubsan-multilib-devel
+Summary:	Development files for the Undefined Behavior Sanitizer library - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer - wersja 32-bitowa
+Group:		Development/Libraries
+Requires:	libubsan-multilib = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-multilib-devel
+This package contains the development files for 32-bit version of the
+Undefined Behavior Sanitizer library.
+
+%description -n libubsan-multilib-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
+Undefined Behavior Sanitizer.
+
+%package -n libubsan-static
+Summary:	The Undefined Behavior Sanitizer static library
+Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer
+Group:		Development/Libraries
+Requires:	libubsan-devel = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-static
+This package contains Undefined Behavior Sanitizer static library.
+
+%description -n libubsan-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Undefined Behavior Sanitizer.
+
+%package -n libubsan-multilib-static
+Summary:	The Undefined Behavior Sanitizer static library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer - wersja 32-bitowa
+Group:		Development/Libraries
+Requires:	libubsan-multilib-devel = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-multilib-static
+This package contains 32-bit version of the Undefined Behavior
+Sanitizer static library.
+
+%description -n libubsan-multilib-static -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Undefined
+Behavior Sanitizer.
+
 
 %package -n libatomic
 Summary:	The GNU Atomic library
@@ -1685,8 +1763,7 @@ Group:		Development/Libraries
 Requires:	libatomic-multilib-devel = %{epoch}:%{version}-%{release}
 
 %description -n libatomic-multilib-static
-This package contains 32-bit version of the GNU Atomic static
-library.
+This package contains 32-bit version of the GNU Atomic static library.
 
 %description -n libatomic-multilib-static -l pl.UTF-8
 Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
@@ -1705,7 +1782,6 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %if %{with qt}
 %patch8 -p1
 %endif
-%patch9 -p1
 %patch10 -p1
 %if %{with gcc_libffi}
 %patch11 -p0
@@ -1766,7 +1842,6 @@ TEXCONFIG=false \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
 	--enable-libitm \
-	--%{?with_mudflap:en}%{!?with_mudflap:dis}able-libmudflap \
 	--enable-linker-build-id \
 	--enable-linux-futex \
 	--enable-long-long \
@@ -1991,9 +2066,10 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_asan:libasan.la} \
+	liblsan.la \
 	%{?with_tsan:libtsan.la} \
+	libubsan.la \
 	%{?with_atomic:libatomic.la} \
-	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 %if %{with java}
 	%{?with_gcc_libffi:libffi.la} \
 	libgcj.la libgcj-tools.la libgij.la \
@@ -2016,8 +2092,8 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_asan:libasan.la} \
+	libubsan.la \
 	%{?with_atomic:libatomic.la} \
-	%{?with_mudflap:libmudflap.la libmudflapth.la} \
 	%{?with_java:%{?with_gcc_libffi:libffi.la}} \
 	%{?with_objc:libobjc.la};
 do
@@ -2033,8 +2109,6 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcc
 
 # plugin, .la not needed
 %{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la
-# already packaged in binutils-devel
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libiberty.a
 
 %if %{with python}
 for LIB in lib lib64; do
@@ -2078,6 +2152,10 @@ cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 
 # always -f, as "dir" is created depending which texlive version is installed
 %{__rm} -f $RPM_BUILD_ROOT%{_infodir}/dir
+
+# is anything using this?
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libvtv*
+%{?with_multilib:%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*}
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
@@ -2130,6 +2208,10 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-n libffi-devel -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post   -p /sbin/ldconfig -n libcilkrts
+%postun -p /sbin/ldconfig -n libcilkrts
+%post   -p /sbin/ldconfig -n libcilkrts-multilib
+%postun -p /sbin/ldconfig -n libcilkrts-multilib
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
 %post	-p /sbin/ldconfig -n libgcc-multilib
@@ -2138,10 +2220,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libgomp
 %post	-p /sbin/ldconfig -n libgomp-multilib
 %postun	-p /sbin/ldconfig -n libgomp-multilib
-%post	-p /sbin/ldconfig -n libmudflap
-%postun	-p /sbin/ldconfig -n libmudflap
-%post	-p /sbin/ldconfig -n libmudflap-multilib
-%postun	-p /sbin/ldconfig -n libmudflap-multilib
 %post	-p /sbin/ldconfig -n libgnat
 %postun	-p /sbin/ldconfig -n libgnat
 %post	-p /sbin/ldconfig -n libgnat-multilib
@@ -2176,8 +2254,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libasan
 %post	-p /sbin/ldconfig -n libasan-multilib
 %postun	-p /sbin/ldconfig -n libasan-multilib
+%post	-p /sbin/ldconfig -n liblsan
+%postun	-p /sbin/ldconfig -n liblsan
 %post	-p /sbin/ldconfig -n libtsan
 %postun	-p /sbin/ldconfig -n libtsan
+%post   -p /sbin/ldconfig -n libubsan
+%postun -p /sbin/ldconfig -n libubsan
+%post   -p /sbin/ldconfig -n libubsan-multilib
+%postun -p /sbin/ldconfig -n libubsan-multilib
 %post	-p /sbin/ldconfig -n libatomic
 %postun	-p /sbin/ldconfig -n libatomic
 %post	-p /sbin/ldconfig -n libatomic-multilib
@@ -2214,6 +2298,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libitm.la
 %{_libdir}/libitm.a
 %{_libdir}/libitm.spec
+%{_libdir}/libsanitizer.spec
 %{_libdir}/libssp.la
 %{_libdir}/libssp.a
 %{_libdir}/libssp_nonshared.la
@@ -2233,6 +2318,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{gcclibdir}/liblto_plugin.so*
 %{gcclibdir}/plugin
 %dir %{gcclibdir}/include
+%dir %{gcclibdir}/include/sanitizer
+%{gcclibdir}/include/sanitizer/common_interface_defs.h
 %dir %{gcclibdir}/include/ssp
 %{gcclibdir}/include/ssp/*.h
 %{gcclibdir}/include/float.h
@@ -2240,6 +2327,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/limits.h
 %{gcclibdir}/include/stdalign.h
 %{gcclibdir}/include/stdarg.h
+%{gcclibdir}/include/stdatomic.h
 %{gcclibdir}/include/stdbool.h
 %{gcclibdir}/include/stddef.h
 %{gcclibdir}/include/stdfix.h
@@ -2250,28 +2338,38 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
 %ifarch %{ix86} %{x8664}
+%{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
-%{gcclibdir}/include/avxintrin.h
 %{gcclibdir}/include/avx2intrin.h
-%{gcclibdir}/include/bmiintrin.h
+%{gcclibdir}/include/avx512cdintrin.h
+%{gcclibdir}/include/avx512erintrin.h
+%{gcclibdir}/include/avx512fintrin.h
+%{gcclibdir}/include/avx512pfintrin.h
+%{gcclibdir}/include/avxintrin.h
 %{gcclibdir}/include/bmi2intrin.h
+%{gcclibdir}/include/bmiintrin.h
 %{gcclibdir}/include/bmmintrin.h
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
 %{gcclibdir}/include/f16cintrin.h
-%{gcclibdir}/include/fmaintrin.h
 %{gcclibdir}/include/fma4intrin.h
+%{gcclibdir}/include/fmaintrin.h
+%{gcclibdir}/include/fxsrintrin.h
 %{gcclibdir}/include/ia32intrin.h
 %{gcclibdir}/include/immintrin.h
 %{gcclibdir}/include/lwpintrin.h
 %{gcclibdir}/include/lzcntintrin.h
 %{gcclibdir}/include/mm3dnow.h
-%{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/mmintrin.h
+%{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/nmmintrin.h
-%{gcclibdir}/include/popcntintrin.h
 %{gcclibdir}/include/pmmintrin.h
+%{gcclibdir}/include/popcntintrin.h
+%{gcclibdir}/include/prfchwintrin.h
+%{gcclibdir}/include/rdseedintrin.h
+%{gcclibdir}/include/rtmintrin.h
+%{gcclibdir}/include/shaintrin.h
 %{gcclibdir}/include/smmintrin.h
 %{gcclibdir}/include/tbmintrin.h
 %{gcclibdir}/include/tmmintrin.h
@@ -2279,11 +2377,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
 %{gcclibdir}/include/xopintrin.h
-%{gcclibdir}/include/adxintrin.h
-%{gcclibdir}/include/fxsrintrin.h
-%{gcclibdir}/include/prfchwintrin.h
-%{gcclibdir}/include/rdseedintrin.h
-%{gcclibdir}/include/rtmintrin.h
 %{gcclibdir}/include/xsaveintrin.h
 %{gcclibdir}/include/xsaveoptintrin.h
 %{gcclibdir}/include/xtestintrin.h
@@ -2390,51 +2483,41 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
-%if %{with mudflap}
-%files -n libmudflap
+%files -n libcilkrts
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmudflap.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmudflap.so.0
-%attr(755,root,root) %{_libdir}/libmudflapth.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmudflapth.so.0
+%attr(755,root,root) %{_libdir}/libcilkrts.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libcilkrts.so.5
 
 %if %{with multilib}
-%files -n libmudflap-multilib
+%files -n libcilkrts-multilib
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmudflap.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmudflap.so.0
-%attr(755,root,root) %{_libdir32}/libmudflapth.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmudflapth.so.0
+%attr(755,root,root) %{_libdir32}/libcilkrts.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libcilkrts.so.5
 %endif
 
-%files -n libmudflap-devel
+%files -n libcilkrts-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmudflap.so
-%attr(755,root,root) %{_libdir}/libmudflapth.so
-%{_libdir}/libmudflap.la
-%{_libdir}/libmudflapth.la
-%{gcclibdir}/include/mf-runtime.h
+%attr(755,root,root) %{_libdir}/libcilkrts.so
+%{_libdir}/libcilkrts.la
+%{_libdir}/libcilkrts.spec
+%{gcclibdir}/include/cilk
 
 %if %{with multilib}
-%files -n libmudflap-multilib-devel
+%files -n libcilkrts-multilib-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmudflap.so
-%attr(755,root,root) %{_libdir32}/libmudflapth.so
-%{_libdir32}/libmudflap.la
-%{_libdir32}/libmudflapth.la
+%attr(755,root,root) %{_libdir32}/libcilkrts.so
+%{_libdir32}/libcilkrts.la
+%{_libdir32}/libcilkrts.spec
 %endif
 
-%files -n libmudflap-static
+%files -n libcilkrts-static
 %defattr(644,root,root,755)
-%{_libdir}/libmudflap.a
-%{_libdir}/libmudflapth.a
+%{_libdir}/libcilkrts.a
 
 %if %{with multilib}
-%files -n libmudflap-multilib-static
+%files -n libcilkrts-multilib-static
 %defattr(644,root,root,755)
-%{_libdir32}/libmudflap.a
-%{_libdir32}/libmudflapth.a
-%endif
+%{_libdir32}/libcilkrts.a
 %endif
 
 %if %{with ada}
@@ -2933,13 +3016,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.4
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.5
 
 %if %{with multilib}
 %files -n libgo-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.4
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.5
 %endif
 
 %files -n libgo-devel
@@ -2972,13 +3055,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.0
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.1
 
 %if %{with multilib}
 %files -n libasan-multilib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.0
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.1
 %endif
 
 %files -n libasan-devel
@@ -2986,6 +3069,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libasan.so
 %{_libdir}/libasan_preinit.o
 %{_libdir}/libasan.la
+%{gcclibdir}/include/sanitizer/asan_interface.h
 
 %if %{with multilib}
 %files -n libasan-multilib-devel
@@ -3006,6 +3090,21 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+%files -n liblsan
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/liblsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblsan.so.0
+
+%files -n liblsan-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/liblsan.so
+%{_libdir}/liblsan.la
+%{gcclibdir}/include/sanitizer/lsan_interface.h
+
+%files -n liblsan-static
+%defattr(644,root,root,755)
+%{_libdir}/liblsan.a
+
 %if %{with tsan}
 %files -n libtsan
 %defattr(644,root,root,755)
@@ -3021,6 +3120,40 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libtsan-static
 %defattr(644,root,root,755)
 %{_libdir}/libtsan.a
+%endif
+
+%files -n libubsan
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libubsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libubsan.so.0
+
+%if %{with multilib}
+%files -n libubsan-multilib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libubsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libubsan.so.0
+%endif
+
+%files -n libubsan-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libubsan.so
+%{_libdir}/libubsan.la
+
+%if %{with multilib}
+%files -n libubsan-multilib-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libubsan.so
+%{_libdir32}/libubsan.la
+%endif
+
+%files -n libubsan-static
+%defattr(644,root,root,755)
+%{_libdir}/libubsan.a
+
+%if %{with multilib}
+%files -n libubsan-multilib-static
+%defattr(644,root,root,755)
+%{_libdir32}/libubsan.a
 %endif
 
 %if %{with atomic}
