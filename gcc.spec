@@ -23,7 +23,7 @@
 %bcond_without	asan		# build without Address Sanitizer library
 %bcond_without	tsan		# build without Thread Sanitizer library
 %bcond_without	atomic		# build without library for atomic operations not supported by hardware
-%bcond_without	gcc_libffi	# packaging gcc libffi for system usage
+%bcond_with	gcc_libffi	# packaging gcc libffi for system usage
 				# note: libgcj and libgo always have convenience gcc libffi linked in
 # - libgcj options:
 %bcond_without	alsa		# don't build libgcj ALSA MIDI interface
@@ -97,7 +97,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	0.1
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -110,12 +110,12 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	372b68ca84755a8182cf2aac6f93de13
+# Patch100-md5:	66e843617ce0bfe9764059752a9706d6
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
-Patch4:		%{name}-sparc64-ada_fix.patch
+
 Patch5:		%{name}-4.9-isl-0.13-hack.patch
 Patch6:		%{name}-pr61164.patch
 Patch7:		%{name}-libjava-multilib.patch
@@ -1775,7 +1775,7 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+
 %patch5 -p1
 %patch6 -p1
 %patch7 -p0
