@@ -21,6 +21,7 @@
 %bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
 %bcond_without	asan		# build without Address Sanitizer library
+%bcond_without	lsan		# build without Leak Sanitizer library
 %bcond_without	tsan		# build without Thread Sanitizer library
 %bcond_without	atomic		# build without library for atomic operations not supported by hardware
 %bcond_with	gcc_libffi	# packaging gcc libffi for system usage
@@ -78,6 +79,7 @@
 
 %ifnarch %{x8664}
 %undefine	with_tsan
+%undefine	with_lsan
 %endif
 
 %ifarch sparc64
@@ -2066,7 +2068,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_asan:libasan.la} \
-	liblsan.la \
+	%{?with_lsan:liblsan.la} \
 	%{?with_tsan:libtsan.la} \
 	libubsan.la \
 	%{?with_atomic:libatomic.la} \
@@ -3090,6 +3092,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+%if %{with lsan}
 %files -n liblsan
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblsan.so.*.*.*
@@ -3104,6 +3107,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n liblsan-static
 %defattr(644,root,root,755)
 %{_libdir}/liblsan.a
+%endif
 
 %if %{with tsan}
 %files -n libtsan
