@@ -118,7 +118,6 @@ Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 
-Patch5:		%{name}-4.9-isl-0.13-hack.patch
 Patch6:		%{name}-pr61164.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
@@ -1778,7 +1777,6 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %patch2 -p1
 %patch3 -p1
 
-%patch5 -p1
 %patch6 -p1
 %patch7 -p0
 %if %{with qt}
