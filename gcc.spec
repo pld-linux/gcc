@@ -141,7 +141,7 @@ BuildRequires:	flex
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 BuildRequires:	gcc(multilib)
