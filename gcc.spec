@@ -2721,7 +2721,7 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libssp $RPM_BUILD_ROOT%{_libdirm2}/libssp.so
@@ -2761,7 +2761,7 @@ ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-%{major_v
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib_other}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdirm2}
 # check if symlink to be made is valid
@@ -2797,7 +2797,7 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdirm2}/libffi.pc ] || exit 1
 install -d $RPM_BUILD_ROOT%{_pkgconfigdirm2}
 sed -e 's,@prefix@,%{_prefix},
@@ -2853,7 +2853,7 @@ do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
 done
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
@@ -2911,7 +2911,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 %{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.*-gdb.py
 %endif
 %endif
@@ -2932,7 +2932,7 @@ cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libvtv*
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*
-%ifarch %{x8664} x32
+%ifarch %{?with_multilibx32:%{x8664}} x32
 %{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libvtv*
 %endif
 %endif
