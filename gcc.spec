@@ -65,15 +65,15 @@
 %undefine	with_qt
 %endif
 
-%ifnarch %{x8664} ppc64 s390x sparc64
+%ifnarch %{x8664} x32 ppc64 s390x sparc64
 %undefine	with_multilib
 %endif
 
-%ifnarch %{ix86} %{x8664} alpha arm ppc ppc64 sh sparc sparcv9 sparc64
+%ifnarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
 %undefine	with_atomic
 %endif
 
-%ifnarch %{ix86} %{x8664} ppc ppc64 sparc sparcv9 sparc64
+%ifnarch %{ix86} %{x8664} x32 ppc ppc64 sparc sparcv9 sparc64
 %undefine	with_asan
 %endif
 
@@ -117,6 +117,7 @@ Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
+Patch4:		%{name}-ada-x32.patch
 
 Patch6:		%{name}-pr61164.patch
 Patch7:		%{name}-libjava-multilib.patch
@@ -146,7 +147,14 @@ BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 BuildRequires:	gcc(multilib-32)
 %ifarch %{x8664}
+BuildRequires:	gcc(multilib-x32)
 BuildRequires:	glibc-devel(ix86)
+BuildRequires:	glibc-devel(x32)
+%endif
+%ifarch x32
+BuildRequires:	gcc(multilib-64)
+BuildRequires:	glibc-devel(ix86)
+BuildRequires:	glibc-devel(x86_64)
 %endif
 %ifarch ppc64
 BuildRequires:	glibc-devel(ppc)
@@ -220,6 +228,20 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %define		_pkgconfigdir32	%{_libdir32}/pkgconfig
+# x32 environment on x86-64
+%ifarch %{x8664}
+%define		multilib2	x32
+%define		_slibdirm2	/libx32
+%define		_libdirm2	/usr/libx32
+%define		_pkgconfigdirm2	%{_libdirm2}/pkgconfig
+%endif
+# 64-bit environment on x32
+%ifarch x32
+%define		multilib2	64
+%define		_slibdirm2	/lib64
+%define		_libdirm2	/usr/lib64
+%define		_pkgconfigdirm2	%{_libdir64}/pkgconfig
+%endif
 %endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
 %define		gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
@@ -1817,6 +1839,7 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %patch6 -p1
 %patch7 -p0
@@ -1872,7 +1895,7 @@ TEXCONFIG=false \
 	--disable-build-poststage1-with-cxx \
 	--enable-c99 \
 	--enable-checking=release \
-%ifarch %{ix86} %{x8664}
+%ifarch %{ix86} %{x8664} x32
 	--disable-cld \
 %endif
 	%{?with_fortran:--enable-cmath} \
@@ -1886,6 +1909,12 @@ TEXCONFIG=false \
 	--enable-linker-build-id \
 	--enable-linux-futex \
 	--enable-long-long \
+%ifarch x32
+	--with-abi=x32 \
+%endif
+%ifarch %{x8664} x32
+	%{?with_multilib:--with-multilib-list=m32,m64,mx32} \
+%endif
 	%{!?with_multilib:--disable-multilib} \
 	--enable-nls \
 	--enable-lto \
@@ -1897,7 +1926,7 @@ TEXCONFIG=false \
 	--enable-threads=posix \
 	--disable-werror \
 	--with-cloog \
-%ifarch %{x8664}
+%ifarch %{x8664} x32
 	--with-arch-32=x86-64 \
 %endif
 %ifarch sparc64
@@ -2038,6 +2067,20 @@ ln -sf %{_slibdir32}/$libitm $RPM_BUILD_ROOT%{_libdir32}/libitm.so
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
+
+%ifarch %{x8664} x32
+libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+ln -sf %{_slibdirm2}/$libssp $RPM_BUILD_ROOT%{_libdirm2}/libssp.so
+
+libitm=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libitm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdirm2}/libitm.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+ln -sf %{_slibdirm2}/$libitm $RPM_BUILD_ROOT%{_libdirm2}/libitm.so
+
+libgomp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+ln -sf %{_slibdirm2}/$libgomp $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so
+%endif
 %endif
 
 %if %{with fortran}
@@ -2064,6 +2107,17 @@ ln -sf	libgnat-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnat-%{major_ver
 ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-%{major_ver}.so
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
+
+%ifarch %{x8664} x32
+mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib_other}/adalib/*.so.1 \
+	$RPM_BUILD_ROOT%{_libdirm2}
+# check if symlink to be made is valid
+test -f	$RPM_BUILD_ROOT%{_libdirm2}/libgnat-%{major_ver}.so.1
+ln -sf libgnat-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdirm2}/libgnat-%{major_ver}.so
+ln -sf libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdirm2}/libgnarl-%{major_ver}.so
+ln -sf libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdirm2}/libgnat.so
+ln -sf libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdirm2}/libgnarl.so
+%endif
 %endif
 %endif
 
@@ -2090,6 +2144,14 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
+%ifarch %{x8664} x32
+[ ! -f $RPM_BUILD_ROOT%{_pkgconfigdirm2}/libffi.pc ] || exit 1
+install -d $RPM_BUILD_ROOT%{_pkgconfigdirm2}
+sed -e 's,@prefix@,%{_prefix},
+	s,@exec_prefix@,%{_exec_prefix},
+	s,@libdir@,%{_libdirm2},
+	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdirm2}/libffi.pc
+%endif
 %endif
 %endif
 
@@ -2138,6 +2200,25 @@ do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
 done
+%ifarch %{x8664} x32
+for f in libitm.la libssp.la libssp_nonshared.la \
+	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_fortran:libgfortran.la libquadmath.la} \
+	%{?with_gomp:libgomp.la} \
+	%{?with_asan:libasan.la} \
+%ifarch %{x8664}
+	liblsan.la \
+	libtsan.la \
+%endif
+	libubsan.la \
+	%{?with_atomic:libatomic.la} \
+	%{?with_java:%{?with_gcc_libffi:libffi.la}} \
+	%{?with_objc:libobjc.la};
+do
+	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdirm2}/$f %{_libdirm2} > $RPM_BUILD_ROOT%{_libdirm2}/$f.fixed
+	mv $RPM_BUILD_ROOT%{_libdirm2}/$f{.fixed,}
+done
+%endif
 %endif
 
 cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcclibdir}/include
@@ -2149,7 +2230,7 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcc
 %{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la
 
 %if %{with python}
-for LIB in lib lib64; do
+for LIB in lib lib64 libx32; do
 	LIBPATH="$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_prefix}/$LIB"
 	install -d $LIBPATH
 	# basename is being run only for the native (non-biarch) file.
@@ -2177,6 +2258,9 @@ mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
+%ifarch %{x8664} x32
+%{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.*-gdb.py
+%endif
 %endif
 
 %find_lang gcc
@@ -2193,7 +2277,12 @@ cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 
 # is anything using this?
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libvtv*
-%{?with_multilib:%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*}
+%if %{with multilib}
+%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*
+%ifarch %{x8664} x32
+%{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libvtv*
+%endif
+%endif
 
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
