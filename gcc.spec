@@ -322,6 +322,35 @@ wyprodukowania szybkiego i stabilnego kodu wynikowego.
 Ten pakiet zawiera rozszerzenie kompilatora C o obsługę tworzenia
 programów 32-bitowych na maszynie 64-bitowej.
 
+%package multilib-%{multilib2}
+Summary:	GNU Compiler Collection: the C compiler %{multilib2}-bit support
+Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: obsługa binariów %{multilib2}-bit dla kompilatora C
+License:	GPL v3+
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+%{?with_multilib:Provides:	gcc(multilib-%{multilib2})}
+%ifarch %{x8664}
+Requires:	glibc-devel(x32)
+%endif
+%ifarch x32
+Requires:	glibc-devel(x86_64)
+%endif
+
+%description multilib-%{multilib2}
+A compiler aimed at integrating all the optimizations and features
+necessary for a high-performance and stable development environment.
+
+This package contains the C compiler support for producing %{multilib2}-bit
+programs.
+
+%description multilib-%{multilib2} -l pl.UTF-8
+Kompilator, posiadający duże możliwości optymalizacyjne niezbędne do
+wyprodukowania szybkiego i stabilnego kodu wynikowego.
+
+Ten pakiet zawiera rozszerzenie kompilatora C o obsługę tworzenia
+programów %{multilib2}-bitowych.
+
 %package -n libgcc
 Summary:	Shared gcc library
 Summary(es.UTF-8):	Biblioteca compartida de gcc
@@ -357,6 +386,18 @@ Shared gcc library - 32-bit version.
 %description -n libgcc-multilib-32 -l pl.UTF-8
 Biblioteka dynamiczna gcc - wersja 32-bitowa.
 
+%package -n libgcc-multilib-%{multilib2}
+Summary:	Shared gcc library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka gcc - wersja %{multilib2}-bitowa
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+
+%description -n libgcc-multilib-%{multilib2}
+Shared gcc library - %{multilib2}-bit version.
+
+%description -n libgcc-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka dynamiczna gcc - wersja %{multilib2}-bitowa.
+
 %package -n libgomp
 Summary:	GNU OpenMP library
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP
@@ -381,6 +422,18 @@ GNU OpenMP library - 32-bit version.
 
 %description -n libgomp-multilib-32 -l pl.UTF-8
 Biblioteka GNU OpenMP - wersja 32-bitowa.
+
+%package -n libgomp-multilib-%{multilib2}
+Summary:	GNU OpenMP library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka GNU OpenMP - wersja %{multilib2}-bitowa
+License:	LGPL v2.1+ with unlimited link permission
+Group:		Libraries
+
+%description -n libgomp-multilib-%{multilib2}
+GNU OpenMP library - %{multilib2}-bit version.
+
+%description -n libgomp-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka GNU OpenMP - wersja %{multilib2}-bitowa.
 
 %package -n libgomp-devel
 Summary:	Development files for GNU OpenMP library
@@ -410,6 +463,19 @@ Development files for 32-bit version of GNU OpenMP library.
 %description -n libgomp-multilib-32-devel -l pl.UTF-8
 Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP.
 
+%package -n libgomp-multilib-%{multilib2}-devel
+Summary:	Development files for %{multilib2}-bit version of GNU OpenMP library
+Summary(pl.UTF-8):	Pliki programistyczne wersji %{multilib2}-bitowej biblioteki GNU OpenMP
+License:	LGPL v2.1+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgomp-multilib-%{multilib2}-devel
+Development files for %{multilib2}-bit version of GNU OpenMP library.
+
+%description -n libgomp-multilib-%{multilib2}-devel -l pl.UTF-8
+Pliki programistyczne wersji %{multilib2}-bitowej biblioteki GNU OpenMP.
+
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
@@ -437,6 +503,19 @@ Static GNU OpenMP library - 32-bit version.
 %description -n libgomp-multilib-32-static -l pl.UTF-8
 Statyczna biblioteka GNU OpenMP - wersja 32-bitowa.
 
+%package -n libgomp-multilib-%{multilib2}-static
+Summary:	Static GNU OpenMP library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja %{multilib2}-bitowa
+License:	LGPL v2.1+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgomp-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgomp-multilib-%{multilib2}-static
+Static GNU OpenMP library - %{multilib2}-bit version.
+
+%description -n libgomp-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteka GNU OpenMP - wersja %{multilib2}-bitowa.
+
 %package -n libcilkrts
 Summary:	GCC cilk+ shared support libraries
 License:	GPL v2+ with unlimited link permission
@@ -454,6 +533,15 @@ Obsoletes:	libcilkrts-multilib
 %description -n libcilkrts-multilib-32
 This package contains the Cilk+ runtime library. This package contains
 32-bit version.
+
+%package -n libcilkrts-multilib-%{multilib2}
+Summary:	GCC cilk+ shared support libraries - %{multilib2}-bit version
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+
+%description -n libcilkrts-multilib-%{multilib2}
+This package contains the Cilk+ runtime library. This package contains
+%{multilib2}-bit version.
 
 %package -n libcilkrts-devel
 Summary:	Development files for GCC cilk+ libraries
@@ -475,6 +563,16 @@ Obsoletes:	libcilkrts-multilib-devel
 This package contains development files for 32-bit version of the
 cilk+ libraries.
 
+%package -n libcilkrts-multilib-%{multilib2}-devel
+Summary:	Development files for %{multilib2}-bit version of GCC cilk+ libraries
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
+
+%description -n libcilkrts-multilib-%{multilib2}-devel
+This package contains development files for %{multilib2}-bit version of the
+cilk+ libraries.
+
 %package -n libcilkrts-static
 Summary:	Static GCC cilk+ libraries
 License:	GPL v2+ with unlimited link permission
@@ -493,6 +591,15 @@ Obsoletes:	libcilkrts-multilib-static
 
 %description -n libcilkrts-multilib-32-static
 This package contains 32-bit static cilk+ libraries.
+
+%package -n libcilkrts-multilib-%{multilib2}-static
+Summary:	Static GCC cilk+ libraries - %{multilib2}-bit version
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libcilkrts-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libcilkrts-multilib-%{multilib2}-static
+This package contains %{multilib2}-bit static cilk+ libraries.
 
 %package ada
 Summary:	Ada support for gcc
@@ -531,6 +638,21 @@ programs on 64-bit host.
 Ten pakiet dodaje eksperymentalną obsługę kompilacji programów
 32-bitowych w Adzie na maszynie 64-bitowej.
 
+%package ada-multilib-%{multilib2}
+Summary:	Ada %{multilib2}-bit support for gcc
+Summary(pl.UTF-8):	Obsługa %{multilib2}-bitowych binariów Ady dla gcc
+Group:		Development/Languages
+Requires:	%{name}-ada = %{epoch}:%{version}-%{release}
+Requires:	libgnat-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description ada-multilib-%{multilib2}
+This package adds experimental support for compiling %{multilib2}-bit Ada
+programs.
+
+%description ada-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje eksperymentalną obsługę kompilacji programów
+%{multilib2}-bitowych w Adzie.
+
 %package -n libgnat
 Summary:	Ada standard libraries
 Summary(es.UTF-8):	Bibliotecas estándares de Ada
@@ -567,6 +689,20 @@ programs written in Ada.
 Ten pakiet zawiera wersje 32-bitowe bibliotek potrzebnych do
 uruchamiania programów napisanych w Adzie.
 
+%package -n libgnat-multilib-%{multilib2}
+Summary:	Ada standard libraries - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja %{multilib2}-bitowa
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libgnat-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of shared libraries needed to run
+programs written in Ada.
+
+%description -n libgnat-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera wersje %{multilib2}-bitowe bibliotek potrzebnych do
+uruchamiania programów napisanych w Adzie.
+
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
@@ -594,6 +730,20 @@ written in Ada.
 
 %description -n libgnat-multilib-32-static -l pl.UTF-8
 Ten pakiet zawiera 32-bitowe wersje bibliotek statycznych dla
+programów napisanych w Adzie.
+
+%package -n libgnat-multilib-%{multilib2}-static
+Summary:	Static Ada standard libraries - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady - wersje %{multilib2}-bitowe
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+
+%description -n libgnat-multilib-%{multilib2}-static
+This package contains %{multilib2}-bit version of static libraries for programs
+written in Ada.
+
+%description -n libgnat-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitowe wersje bibliotek statycznych dla
 programów napisanych w Adzie.
 
 %package c++
@@ -659,6 +809,19 @@ This package adds 32-bit C++ support to the GNU Compiler Collection.
 %description c++-multilib-32 -l pl.UTF-8
 Ten pakiet dodaje obsługę 32-bitowych binariów C++ do kompilatora gcc.
 
+%package c++-multilib-%{multilib2}
+Summary:	C++ %{multilib2}-bit support for gcc
+Summary(pl.UTF-8):	Obsługa %{multilib2}-bitowych binariów C++ dla gcc
+Group:		Development/Languages
+Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
+Requires:	%{name}-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description c++-multilib-%{multilib2}
+This package adds %{multilib2}-bit C++ support to the GNU Compiler Collection.
+
+%description c++-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę %{multilib2}-bitowych binariów C++ do kompilatora gcc.
+
 %package -n libstdc++
 Summary:	GNU C++ library
 Summary(es.UTF-8):	Biblioteca C++ de GNU
@@ -720,6 +883,22 @@ library.
 
 %description -n libstdc++-multilib-32 -l pl.UTF-8
 Ten pakiet ten zawiera 32-bitową wersję implementacji GNU biblioteki
+standardowej C++.
+
+%package -n libstdc++-multilib-%{multilib2}
+Summary:	GNU C++ library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka GNU C++ - wersja %{multilib2}-bitowa
+License:	GPL v2+ with free software exception
+Group:		Libraries
+# >= instead of = to allow keeping older libstdc++ (with different soname)
+Requires:	libgcc-multilib-%{multilib2} >= %{epoch}:%{version}-%{release}
+
+%description -n libstdc++-multilib-%{multilib2}
+This is %{multilib2}-bit version of the GNU implementation of the standard C++
+library.
+
+%description -n libstdc++-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet ten zawiera %{multilib2}-bitową wersję implementacji GNU biblioteki
 standardowej C++.
 
 %package -n libstdc++-gdb
@@ -789,6 +968,23 @@ GNU implementation of the standard C++ library.
 Ten pakiet zawiera pliki programistyczne 32-bitowej wersji
 implementacji GNU biblioteki standardowej C++.
 
+%package -n libstdc++-multilib-%{multilib2}-devel
+Summary:	Development files for C++ development - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki standardowej C++ - wersja %{multilib2}-bitowa
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	%{name}-c++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libstdc++-multilib-%{multilib2}-devel
+This package contains the development files for %{multilib2}-bit version of the
+GNU implementation of the standard C++ library.
+
+%description -n libstdc++-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji
+implementacji GNU biblioteki standardowej C++.
+
 %package -n libstdc++-static
 Summary:	Static C++ standard library
 Summary(es.UTF-8):	Biblioteca estándar estática de C++
@@ -820,6 +1016,19 @@ Static C++ standard library - 32-bit version.
 
 %description -n libstdc++-multilib-32-static -l pl.UTF-8
 Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
+
+%package -n libstdc++-multilib-%{multilib2}-static
+Summary:	Static C++ standard library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++ - wersja %{multilib2}-bitowa
+License:	GPL v2+ with free software exception
+Group:		Development/Libraries
+Requires:	libstdc++-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libstdc++-multilib-%{multilib2}-static
+Static C++ standard library - %{multilib2}-bit version.
+
+%description -n libstdc++-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteka standardowa C++ - wersja %{multilib2}-bitowa.
 
 %package -n libstdc++-apidocs
 Summary:	C++ standard library API documentation
@@ -880,6 +1089,22 @@ with the GNU compiler.
 Ten pakiet dodaje obsługę 32-bitowych programów w Fortranie 95 do
 kompilatora gcc.
 
+%package fortran-multilib-%{multilib2}
+Summary:	Fortran 95 %{multilib2}-bit support for gcc
+Summary(pl.UTF-8):	Obsługa binariów %{multilib2}-bitowych Fortranu 95 dla gcc
+Group:		Development/Languages/Fortran
+Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
+Requires:	libgfortran-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+Requires:	libquadmath-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description fortran-multilib-%{multilib2}
+This package adds support for compiling %{multilib2}-bit Fortran 95 programs
+with the GNU compiler.
+
+%description fortran-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę %{multilib2}-bitowych programów w Fortranie 95 do
+kompilatora gcc.
+
 %package -n libgfortran
 Summary:	Fortran 95 Library
 Summary(es.UTF-8):	Biblioteca de Fortran 95
@@ -911,6 +1136,19 @@ Fortran 95 Library - 32-bit version.
 
 %description -n libgfortran-multilib-32 -l pl.UTF-8
 Biblioteka Fortranu 95 - wersja 32-bitowa.
+
+%package -n libgfortran-multilib-%{multilib2}
+Summary:	Fortran 95 Library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja %{multilib2}-bitowa
+License:	GPL v2+ with unlimited link permission
+Group:		Libraries
+Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgfortran-multilib-%{multilib2}
+Fortran 95 Library - %{multilib2}-bit version.
+
+%description -n libgfortran-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka Fortranu 95 - wersja %{multilib2}-bitowa.
 
 %package -n libgfortran-static
 Summary:	Static Fortran 95 Library
@@ -944,6 +1182,19 @@ Static Fortran 95 Library - 32-bit version.
 %description -n libgfortran-multilib-32-static -l pl.UTF-8
 Statyczna biblioteka Fortranu 95 - wersja 32-bitowa.
 
+%package -n libgfortran-multilib-%{multilib2}-static
+Summary:	Static Fortran 95 Library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja %{multilib2}-bitowa
+License:	GPL v2+ with unlimited link permission
+Group:		Development/Libraries
+Requires:	libgfortran-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgfortran-multilib-%{multilib2}-static
+Static Fortran 95 Library - %{multilib2}-bit version.
+
+%description -n libgfortran-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteka Fortranu 95 - wersja %{multilib2}-bitowa.
+
 %package -n libquadmath
 Summary:	GCC __float128 shared support library
 Summary(pl.UTF-8):	Biblioteka współdzielona do obsługi typu __float128
@@ -973,6 +1224,22 @@ support.
 
 %description -n libquadmath-multilib-32 -l pl.UTF-8
 Ten pakiet zawiera 32-bitową bibliotekę współdzieloną GCC do obsługi
+operacji matematycznych na zmiennych typu __float128 oraz typu REAL*16
+w Fortranie.
+
+%package -n libquadmath-multilib-%{multilib2}
+Summary:	GCC __float128 shared support library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka współdzielona GCC do obsługi typu __float128 - wersja %{multilib2}-bitowa
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libquadmath-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of GCC shared support library
+which is needed for __float128 math support and for Fortran REAL*16
+support.
+
+%description -n libquadmath-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową bibliotekę współdzieloną GCC do obsługi
 operacji matematycznych na zmiennych typu __float128 oraz typu REAL*16
 w Fortranie.
 
@@ -1011,6 +1278,24 @@ Ten pakiet zawiera pliki programistyczne 32-bitowej biblioteki GCC do
 obsługi operacji matematycznych na zmiennych typu __float128 oraz typu
 REAL*16 w Fortranie.
 
+%package -n libquadmath-multilib-%{multilib2}-devel
+Summary:	Development files for %{multilib2}-bit GCC __float128 support library
+Summary(pl.UTF-8):	Pliki programistyczne %{multilib2}-bitowej biblioteki do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
+Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-multilib-%{multilib2}-devel
+This package contains development files for %{multilib2}-bit GCC support library
+which is needed for __float128 math support and for Fortran REAL*16
+support.
+
+%description -n libquadmath-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej biblioteki GCC do
+obsługi operacji matematycznych na zmiennych typu __float128 oraz typu
+REAL*16 w Fortranie.
+
 %package -n libquadmath-static
 Summary:	Static GCC __float128 support library
 Summary(pl.UTF-8):	Biblioteka statyczna GCC do obsługi typu __float128
@@ -1037,6 +1322,19 @@ Static GCC __float128 support library - 32-bit version.
 
 %description -n libquadmath-multilib-32-static -l pl.UTF-8
 32-bitowa biblioteka statyczna GCC do obsługi typu __float128.
+
+%package -n libquadmath-multilib-%{multilib2}-static
+Summary:	Static GCC __float128 support library - %{multilib2}-bit version
+Summary(pl.UTF-8):	%{multilib2}-bitowa biblioteka statyczna GCC do obsługi typu __float128
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libquadmath-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libquadmath-multilib-%{multilib2}-static
+Static GCC __float128 support library - %{multilib2}-bit version.
+
+%description -n libquadmath-multilib-%{multilib2}-static -l pl.UTF-8
+%{multilib2}-bitowa biblioteka statyczna GCC do obsługi typu __float128.
 
 %package java
 Summary:	Java support for gcc
@@ -1184,6 +1482,24 @@ międzymordzia do różnych konwencji wywołań funkcji. Pozwala to
 programiście wywoływać dowolne funkcje podając konwencję wywołania w
 czasie wykonania. Ten pakiet zawiera wersję 32-bitową biblioteki.
 
+%package -n libffi-multilib-%{multilib2}
+Summary:	Foreign Function Interface library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka zewnętrznych wywołań funkcji - wersja %{multilib2}-bitowa
+License:	BSD-like
+Group:		Libraries
+
+%description -n libffi-multilib-%{multilib2}
+The libffi library provides a portable, high level programming
+interface to various calling conventions. This allows a programmer to
+call any function specified by a call interface description at run
+time. This package contains %{multilib2}-bit version of the library.
+
+%description -n libffi-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka libffi dostarcza przenośnego, wysokopoziomowego
+międzymordzia do różnych konwencji wywołań funkcji. Pozwala to
+programiście wywoływać dowolne funkcje podając konwencję wywołania w
+czasie wykonania. Ten pakiet zawiera wersję %{multilib2}-bitową biblioteki.
+
 %package -n libffi-devel
 Summary:	Development files for Foreign Function Interface library
 Summary(es.UTF-8):	Ficheros de desarrollo para libffi
@@ -1218,6 +1534,21 @@ library.
 %description -n libffi-multilib-32-devel -l pl.UTF-8
 Pliki programistyczne 32-bitowej wersji biblioteki libffi.
 
+%package -n libffi-multilib-%{multilib2}-devel
+Summary:	Development files for %{multilib2}-bit version of Foreign Function Interface library
+Summary(pl.UTF-8):	Pliki programistyczne %{multilib2}-bitowej wersji biblioteki libffi
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi-devel = %{epoch}:%{version}-%{release}
+Requires:	libffi-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libffi-multilib-%{multilib2}-devel
+Development files for %{multilib2}-bit version of Foreign Function Interface
+library.
+
+%description -n libffi-multilib-%{multilib2}-devel -l pl.UTF-8
+Pliki programistyczne %{multilib2}-bitowej wersji biblioteki libffi.
+
 %package -n libffi-static
 Summary:	Static Foreign Function Interface library
 Summary(es.UTF-8):	Biblioteca libffi estática
@@ -1248,6 +1579,19 @@ Static Foreign Function Interface library - 32-bit version.
 
 %description -n libffi-multilib-32-static -l pl.UTF-8
 Statyczna biblioteka libffi - wersja 32-bitowa.
+
+%package -n libffi-multilib-%{multilib2}-static
+Summary:	Static Foreign Function Interface library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka libffi - wersja %{multilib2}-bitowa
+License:	BSD-like
+Group:		Development/Libraries
+Requires:	libffi-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libffi-multilib-%{multilib2}-static
+Static Foreign Function Interface library - %{multilib2}-bit version.
+
+%description -n libffi-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteka libffi - wersja %{multilib2}-bitowa.
 
 %package objc
 Summary:	Objective C support for gcc
@@ -1315,6 +1659,21 @@ Collection.
 Ten pakiet dodaje obsługę 32-bitowych binariów Objective C do
 kompilatora gcc.
 
+%package objc-multilib-%{multilib2}
+Summary:	%{multilib2}-bit Objective C support for gcc
+Summary(pl.UTF-8):	Obsługa %{multilib2}-bitowych binariów Objective C dla kompilatora gcc
+Group:		Development/Languages
+Requires:	%{name}-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+Requires:	libobjc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description objc-multilib-%{multilib2}
+This package adds %{multilib2}-bit Objective C support to the GNU Compiler
+Collection.
+
+%description objc-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę %{multilib2}-bitowych binariów Objective C do
+kompilatora gcc.
+
 %package objc++
 Summary:	Objective C++ support for gcc
 Summary(pl.UTF-8):	Obsługa języka Objective C++ dla gcc
@@ -1360,6 +1719,18 @@ Objective C Library - 32-bit version.
 %description -n libobjc-multilib-32 -l pl.UTF-8
 Biblioteka Obiektowego C - wersja 32-bitowa.
 
+%package -n libobjc-multilib-%{multilib2}
+Summary:	Objective C Library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Obiektowego C - wersja %{multilib2}-bitowa
+License:	GPL v2+ with linking exception
+Group:		Libraries
+
+%description -n libobjc-multilib-%{multilib2}
+Objective C Library - %{multilib2}-bit version.
+
+%description -n libobjc-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka Obiektowego C - wersja %{multilib2}-bitowa.
+
 %package -n libobjc-static
 Summary:	Static Objective C Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
@@ -1390,6 +1761,19 @@ Static Objective C Library - 32-bit version.
 
 %description -n libobjc-multilib-32-static -l pl.UTF-8
 Statyczna biblioteki Obiektowego C - wersja 32-bitowa.
+
+%package -n libobjc-multilib-%{multilib2}-static
+Summary:	Static Objective C Library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna Biblioteka Obiektowego C - wersja %{multilib2}-bitowa
+License:	GPL v2+ with linking exception
+Group:		Development/Libraries
+Requires:	libobjc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libobjc-multilib-%{multilib2}-static
+Static Objective C Library - %{multilib2}-bit version.
+
+%description -n libobjc-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteki Obiektowego C - wersja %{multilib2}-bitowa.
 
 %package go
 Summary:	Go language support for gcc
@@ -1422,6 +1806,22 @@ Collection.
 Ten pakiet dodaje obsługę 32-bitowych binariów języka Go do
 kompilatora gcc.
 
+%package go-multilib-%{multilib2}
+Summary:	%{multilib2}-bit Go language support for gcc
+Summary(pl.UTF-8):	Obsługa %{multilib2}-bitowych binariów języka Go dla kompilatora gcc
+License:	GPL v3+ (gcc), BSD (Go-specific part)
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgo-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description go-multilib-%{multilib2}
+This package adds %{multilib2}-bit Go language support to the GNU Compiler
+Collection.
+
+%description go-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę %{multilib2}-bitowych binariów języka Go do
+kompilatora gcc.
+
 %package -n libgo
 Summary:	Go language library
 Summary(pl.UTF-8):	Biblioteka języka Go
@@ -1448,6 +1848,19 @@ Go language library - 32-bit version.
 
 %description -n libgo-multilib-32 -l pl.UTF-8
 Biblioteka języka Go - wersja 32-bitowa.
+
+%package -n libgo-multilib-%{multilib2}
+Summary:	Go language library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka języka Go - wersja %{multilib2}-bitowa
+License:	BSD
+Group:		Libraries
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib-%{multilib2}
+Go language library - %{multilib2}-bit version.
+
+%description -n libgo-multilib-%{multilib2} -l pl.UTF-8
+Biblioteka języka Go - wersja %{multilib2}-bitowa.
 
 %package -n libgo-devel
 Summary:	Development files for Go language library
@@ -1478,6 +1891,20 @@ Development files for Go language library - 32-bit version.
 %description -n libgo-multilib-32-devel -l pl.UTF-8
 Pliki programistyczne biblioteki języka Go - wersja 32-bitowa.
 
+%package -n libgo-multilib-%{multilib2}-devel
+Summary:	Development files for Go language library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go - wersja %{multilib2}-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	glibc-devel
+Requires:	libgo-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib-%{multilib2}-devel
+Development files for Go language library - %{multilib2}-bit version.
+
+%description -n libgo-multilib-%{multilib2}-devel -l pl.UTF-8
+Pliki programistyczne biblioteki języka Go - wersja %{multilib2}-bitowa.
+
 %package -n libgo-static
 Summary:	Static Go language library
 Summary(pl.UTF-8):	Statyczna biblioteka języka Go
@@ -1505,6 +1932,19 @@ Static Go language library - 32-bit version.
 %description -n libgo-multilib-32-static -l pl.UTF-8
 Statyczna biblioteka języka Go - wersja 32-bitowa.
 
+%package -n libgo-multilib-%{multilib2}-static
+Summary:	Static Go language library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka języka Go - wersja %{multilib2}-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	libgo-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libgo-multilib-%{multilib2}-static
+Static Go language library - %{multilib2}-bit version.
+
+%description -n libgo-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczna biblioteka języka Go - wersja %{multilib2}-bitowa.
+
 %package -n libasan
 Summary:	The Address Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów
@@ -1530,6 +1970,20 @@ which is used for -fsanitize=address instrumented programs.
 
 %description -n libasan-multilib-32 -l pl.UTF-8
 Ten pakiet zawiera 32-bitową wersję biblioteki Address Sanitizer,
+służącej do kontroli adresów w programach kompilowanych z opcją
+-fsanitize=address.
+
+%package -n libasan-multilib-%{multilib2}
+Summary:	The Address Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja %{multilib2}-bitowa
+Group:		Libraries
+
+%description -n libasan-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of the Address Sanitizer library
+which is used for -fsanitize=address instrumented programs.
+
+%description -n libasan-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję biblioteki Address Sanitizer,
 służącej do kontroli adresów w programach kompilowanych z opcją
 -fsanitize=address.
 
@@ -1561,6 +2015,20 @@ Address Sanitizer library.
 Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
 Address Sanitizer.
 
+%package -n libasan-multilib-%{multilib2}-devel
+Summary:	Development files for the Address Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libasan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libasan-multilib-%{multilib2}-devel
+This package contains the development files for %{multilib2}-bit version of the
+Address Sanitizer library.
+
+%description -n libasan-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji biblioteki
+Address Sanitizer.
+
 %package -n libasan-static
 Summary:	The Address Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer
@@ -1588,6 +2056,20 @@ library.
 Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Address
 Sanitizer.
 
+%package -n libasan-multilib-%{multilib2}-static
+Summary:	The Address Sanitizer static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libasan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libasan-multilib-%{multilib2}-static
+This package contains %{multilib2}-bit version of the Address Sanitizer static
+library.
+
+%description -n libasan-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję statycznej biblioteki Address
+Sanitizer.
+
 %package -n liblsan
 Summary:	The Leak Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli adresów
@@ -1600,6 +2082,20 @@ This package contains the Leak Sanitizer library which is used for
 %description -n liblsan -l pl.UTF-8
 Ten pakiet zawiera bibliotekę Leak Sanitizer, służącą do
 kontroli adresów w programach kompilowanych z opcją
+-fsanitize=leak.
+
+%package -n liblsan-multilib-%{multilib2}
+Summary:	The Leak Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli adresów - wersja %{multilib2}-bitowa
+Group:		Libraries
+
+%description -n liblsan-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of the Leak Sanitizer library which is used for
+-fsanitize=leak instrumented programs.
+
+%description -n liblsan-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję biblioteki Leak Sanitizer,
+służącej do kontroli adresów w programach kompilowanych z opcją
 -fsanitize=leak.
 
 %package -n liblsan-devel
@@ -1615,6 +2111,20 @@ library.
 %description -n liblsan-devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne biblioteki Leak Sanitizer.
 
+%package -n liblsan-multilib-%{multilib2}-devel
+Summary:	Development files for the Leak Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	liblsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n liblsan-multilib-%{multilib2}-devel
+This package contains development files for %{multilib2}-bit version of the Leak Sanitizer
+library.
+
+%description -n liblsan-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji biblioteki
+Leak Sanitizer.
+
 %package -n liblsan-static
 Summary:	The Leak Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Leak Sanitizer
@@ -1626,6 +2136,18 @@ This package contains Leak Sanitizer static library.
 
 %description -n liblsan-static -l pl.UTF-8
 Ten pakiet zawiera statyczną bibliotekę Leak Sanitizer.
+
+%package -n liblsan-multilib-%{multilib2}-static
+Summary:	The Leak Sanitizer static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Leak Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	liblsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n liblsan-multilib-%{multilib2}-static
+This package contains Leak Sanitizer static library - %{multilib2}-bit version.
+
+%description -n liblsan-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Leak Sanitizer - wersja %{multilib2}-bitowa.
 
 %package -n libtsan
 Summary:	The Thread Sanitizer library
@@ -1640,6 +2162,20 @@ This package contains the Thread Sanitizer library which is used for
 Ten pakiet zawiera bibliotekę Thread Sanitizer, służącą do kontroli
 wielowątkowości w programach kompilowanych z opcją -fsanitize=thread.
 
+%package -n libtsan-multilib-%{multilib2}
+Summary:	The Thread Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości - wersja %{multilib2}-bitowa
+Group:		Libraries
+
+%description -n libtsan-multilib-%{multilib2}
+This package contains the Thread Sanitizer library which is used for
+-fsanitize=thread instrumented programs.
+
+%description -n libtsan-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję bibliotekę Thread Sanitizer,
+służącej do kontroli wielowątkowości w programach kompilowanych
+z opcją -fsanitize=thread.
+
 %package -n libtsan-devel
 Summary:	Development files for the Thread Sanitizer library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Thread Sanitizer
@@ -1652,6 +2188,19 @@ This package contains development files for Thread Sanitizer library.
 %description -n libtsan-devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne biblioteki Address Sanitizer.
 
+%package -n libtsan-multilib-%{multilib2}-devel
+Summary:	Development files for the Thread Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Thread Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libtsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libtsan-multilib-%{multilib2}-devel
+This package contains development files for %{multilib2}-bit version of Thread Sanitizer library.
+
+%description -n libtsan-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji biblioteki
+Thread Sanitizer.
+
 %package -n libtsan-static
 Summary:	The Thread Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Thread Sanitizer
@@ -1663,6 +2212,18 @@ This package contains Thread Sanitizer static library.
 
 %description -n libtsan-static -l pl.UTF-8
 Ten pakiet zawiera statyczną bibliotekę Thread Sanitizer.
+
+%package -n libtsan-multilib-%{multilib2}-static
+Summary:	The Thread Sanitizer static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Thread Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libtsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libtsan-multilib-%{multilib2}-static
+This package contains Thread Sanitizer static library - %{multilib2}-bit version.
+
+%description -n libtsan-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Thread Sanitizer - wersja %{multilib2}-bitowa.
 
 %package -n libubsan
 Summary:	The Undefined Behavior Sanitizer library
@@ -1691,6 +2252,21 @@ programs.
 
 %description -n libubsan-multilib-32 -l pl.UTF-8
 Ten pakiet zawiera 32-bitową wersję biblioteki Undefined Behavior
+Sanitizer, służącej do kontroli adresów w programach kompilowanych z
+opcją -fsanitize=undefined.
+
+%package -n libubsan-multilib-%{multilib2}
+Summary:	The Undefined Behavior Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli adresów - wersja %{multilib2}-bitowa
+Group:		Libraries
+
+%description -n libubsan-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of the Undefined Behavior
+Sanitizer library which is used for -fsanitize=undefined instrumented
+programs.
+
+%description -n libubsan-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję biblioteki Undefined Behavior
 Sanitizer, służącej do kontroli adresów w programach kompilowanych z
 opcją -fsanitize=undefined.
 
@@ -1723,6 +2299,20 @@ Undefined Behavior Sanitizer library.
 Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
 Undefined Behavior Sanitizer.
 
+%package -n libubsan-multilib-%{multilib2}-devel
+Summary:	Development files for the Undefined Behavior Sanitizer library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libubsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-multilib-%{multilib2}-devel
+This package contains the development files for %{multilib2}-bit version of the
+Undefined Behavior Sanitizer library.
+
+%description -n libubsan-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji biblioteki
+Undefined Behavior Sanitizer.
+
 %package -n libubsan-static
 Summary:	The Undefined Behavior Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer
@@ -1750,6 +2340,19 @@ Sanitizer static library.
 Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Undefined
 Behavior Sanitizer.
 
+%package -n libubsan-multilib-%{multilib2}-static
+Summary:	The Undefined Behavior Sanitizer static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libubsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libubsan-multilib-%{multilib2}-static
+This package contains %{multilib2}-bit version of the Undefined Behavior
+Sanitizer static library.
+
+%description -n libubsan-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję statycznej biblioteki Undefined
+Behavior Sanitizer.
 
 %package -n libatomic
 Summary:	The GNU Atomic library
@@ -1780,6 +2383,21 @@ Ten pakiet zawiera 32-bitową wersję biblioteki GNU Atomic, będącej
 biblioteką GCC wspierającą operacje atomowe na sprzęcie ich nie
 obsługującym.
 
+%package -n libatomic-multilib-%{multilib2}
+Summary:	The GNU Atomic library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka GNU Atomic - wersja %{multilib2}-bitowa
+Group:		Libraries
+
+%description -n libatomic-multilib-%{multilib2}
+This package contains %{multilib2}-bit version of the GNU Atomic library which
+is a GCC support library for atomic operations not supported by
+hardware.
+
+%description -n libatomic-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję biblioteki GNU Atomic, będącej
+biblioteką GCC wspierającą operacje atomowe na sprzęcie ich nie
+obsługującym.
+
 %package -n libatomic-devel
 Summary:	Development files for the GNU Atomic library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic
@@ -1807,6 +2425,20 @@ GNU Atomic library.
 Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
 GNU Atomic.
 
+%package -n libatomic-multilib-%{multilib2}-devel
+Summary:	Development files for the GNU Atomic static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libatomic-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-multilib-%{multilib2}-devel
+This package contains the development files for %{multilib2}-bit version of the
+GNU Atomic library.
+
+%description -n libatomic-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne %{multilib2}-bitowej wersji biblioteki
+GNU Atomic.
+
 %package -n libatomic-static
 Summary:	The GNU Atomic static library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic
@@ -1831,6 +2463,18 @@ This package contains 32-bit version of the GNU Atomic static library.
 
 %description -n libatomic-multilib-32-static -l pl.UTF-8
 Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
+
+%package -n libatomic-multilib-%{multilib2}-static
+Summary:	The GNU Atomic static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic - wersja %{multilib2}-bitowa
+Group:		Development/Libraries
+Requires:	libatomic-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libatomic-multilib-%{multilib2}-static
+This package contains %{multilib2}-bit version of the GNU Atomic static library.
+
+%description -n libatomic-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera %{multilib2}-bitową wersję statycznej biblioteki GNU Atomic.
 
 %prep
 %setup -q
@@ -2339,60 +2983,90 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig -n libcilkrts
 %post   -p /sbin/ldconfig -n libcilkrts-multilib-32
 %postun -p /sbin/ldconfig -n libcilkrts-multilib-32
+%post   -p /sbin/ldconfig -n libcilkrts-multilib-%{multilib2}
+%postun -p /sbin/ldconfig -n libcilkrts-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
 %post	-p /sbin/ldconfig -n libgcc-multilib-32
 %postun	-p /sbin/ldconfig -n libgcc-multilib-32
+%post	-p /sbin/ldconfig -n libgcc-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgcc-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgomp
 %postun	-p /sbin/ldconfig -n libgomp
 %post	-p /sbin/ldconfig -n libgomp-multilib-32
 %postun	-p /sbin/ldconfig -n libgomp-multilib-32
+%post	-p /sbin/ldconfig -n libgomp-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgomp-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgnat
 %postun	-p /sbin/ldconfig -n libgnat
 %post	-p /sbin/ldconfig -n libgnat-multilib-32
 %postun	-p /sbin/ldconfig -n libgnat-multilib-32
+%post	-p /sbin/ldconfig -n libgnat-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgnat-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libstdc++
 %postun	-p /sbin/ldconfig -n libstdc++
 %post	-p /sbin/ldconfig -n libstdc++-multilib-32
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-32
+%post	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgfortran
 %postun	-p /sbin/ldconfig -n libgfortran
 %post	-p /sbin/ldconfig -n libgfortran-multilib-32
 %postun	-p /sbin/ldconfig -n libgfortran-multilib-32
+%post	-p /sbin/ldconfig -n libgfortran-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgfortran-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgcj
 %postun	-p /sbin/ldconfig -n libgcj
 %post	-p /sbin/ldconfig -n libffi
 %postun	-p /sbin/ldconfig -n libffi
 %post	-p /sbin/ldconfig -n libffi-multilib-32
 %postun	-p /sbin/ldconfig -n libffi-multilib-32
+%post	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib-32
 %postun	-p /sbin/ldconfig -n libobjc-multilib-32
+%post	-p /sbin/ldconfig -n libobjc-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libobjc-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libquadmath
 %postun	-p /sbin/ldconfig -n libquadmath
 %post	-p /sbin/ldconfig -n libquadmath-multilib-32
 %postun	-p /sbin/ldconfig -n libquadmath-multilib-32
+%post	-p /sbin/ldconfig -n libquadmath-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libquadmath-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgo
 %postun	-p /sbin/ldconfig -n libgo
 %post	-p /sbin/ldconfig -n libgo-multilib-32
 %postun	-p /sbin/ldconfig -n libgo-multilib-32
+%post	-p /sbin/ldconfig -n libgo-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgo-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libasan
 %postun	-p /sbin/ldconfig -n libasan
 %post	-p /sbin/ldconfig -n libasan-multilib-32
 %postun	-p /sbin/ldconfig -n libasan-multilib-32
+%post	-p /sbin/ldconfig -n libasan-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libasan-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n liblsan
 %postun	-p /sbin/ldconfig -n liblsan
+%post	-p /sbin/ldconfig -n liblsan-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n liblsan-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libtsan
 %postun	-p /sbin/ldconfig -n libtsan
+%post	-p /sbin/ldconfig -n libtsan-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libtsan-multilib-%{multilib2}
 %post   -p /sbin/ldconfig -n libubsan
 %postun -p /sbin/ldconfig -n libubsan
 %post   -p /sbin/ldconfig -n libubsan-multilib-32
 %postun -p /sbin/ldconfig -n libubsan-multilib-32
+%post   -p /sbin/ldconfig -n libubsan-multilib-%{multilib2}
+%postun -p /sbin/ldconfig -n libubsan-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libatomic
 %postun	-p /sbin/ldconfig -n libatomic
 %post	-p /sbin/ldconfig -n libatomic-multilib-32
 %postun	-p /sbin/ldconfig -n libatomic-multilib-32
+%post	-p /sbin/ldconfig -n libatomic-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libatomic-multilib-%{multilib2}
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -2464,7 +3138,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/syslimits.h
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
-%ifarch %{ix86} %{x8664}
+%ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avx2intrin.h
@@ -2541,6 +3215,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/libgcc.a
 %{gcclibdir}/32/libgcc_eh.a
 %{gcclibdir}/32/libgcov.a
+%{_libdir32}/libitm.spec
+%{_libdir32}/libsanitizer.spec
 %attr(755,root,root) %{_libdir32}/libitm.so
 %attr(755,root,root) %{_libdir32}/libssp.so
 %{_libdir32}/libitm.la
@@ -2549,6 +3225,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libssp.a
 %{_libdir32}/libssp_nonshared.la
 %{_libdir32}/libssp_nonshared.a
+
+%ifarch %{x8664} x32
+%files multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdirm2}/libgcc_s.so
+%dir %{gcclibdir}/%{multilib2}
+%{gcclibdir}/%{multilib2}/crt*.o
+%{gcclibdir}/%{multilib2}/libgcc.a
+%{gcclibdir}/%{multilib2}/libgcc_eh.a
+%{gcclibdir}/%{multilib2}/libgcov.a
+%{_libdirm2}/libitm.spec
+%{_libdirm2}/libsanitizer.spec
+%attr(755,root,root) %{_libdirm2}/libitm.so
+%attr(755,root,root) %{_libdirm2}/libssp.so
+%{_libdirm2}/libitm.la
+%{_libdirm2}/libitm.a
+%{_libdirm2}/libssp.la
+%{_libdirm2}/libssp.a
+%{_libdirm2}/libssp_nonshared.la
+%{_libdirm2}/libssp_nonshared.a
+%endif
 %endif
 
 %files -n libgcc
@@ -2567,6 +3264,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/libssp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
 %attr(755,root,root) %ghost %{_slibdir32}/libitm.so.1
+
+%ifarch %{x8664} x32
+%files -n libgcc-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdirm2}/libgcc_s.so.1
+%attr(755,root,root) %{_slibdirm2}/libitm.so.*.*.*
+%attr(755,root,root) %{_slibdirm2}/libssp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdirm2}/libssp.so.0
+%attr(755,root,root) %ghost %{_slibdirm2}/libitm.so.1
+%endif
 %endif
 
 %if %{with gomp}
@@ -2580,6 +3287,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
+
+%ifarch %{x8664} x32
+%files -n libgomp-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_slibdirm2}/libgomp.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdirm2}/libgomp.so.1
+%endif
 %endif
 
 %files -n libgomp-devel
@@ -2597,6 +3311,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgomp.so
 %{_libdir32}/libgomp.la
 %{_libdir32}/libgomp.spec
+
+%ifarch %{x8664} x32
+%files -n libgomp-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgomp.so
+%{_libdirm2}/libgomp.la
+%{_libdirm2}/libgomp.spec
+%endif
 %endif
 
 %files -n libgomp-static
@@ -2607,6 +3329,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgomp-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libgomp.a
+
+%ifarch %{x8664} x32
+%files -n libgomp-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libgomp.a
+%endif
 %endif
 %endif
 
@@ -2620,6 +3348,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libcilkrts.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libcilkrts.so.5
+
+%ifarch %{x8664} x32
+%files -n libcilkrts-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libcilkrts.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libcilkrts.so.5
+%endif
 %endif
 
 %files -n libcilkrts-devel
@@ -2635,6 +3370,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libcilkrts.so
 %{_libdir32}/libcilkrts.la
 %{_libdir32}/libcilkrts.spec
+
+%ifarch %{x8664} x32
+%files -n libcilkrts-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libcilkrts.so
+%{_libdirm2}/libcilkrts.la
+%{_libdirm2}/libcilkrts.spec
+%endif
 %endif
 
 %files -n libcilkrts-static
@@ -2645,6 +3388,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libcilkrts-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libcilkrts.a
+
+%ifarch %{x8664} x32
+%files -n libcilkrts-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libcilkrts.a
+%endif
 %endif
 
 %if %{with ada}
@@ -2663,7 +3412,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/adainclude
 %dir %{gcclibdir}/adalib
 %{gcclibdir}/adalib/*.ali
-%ifarch %{ix86} %{x8664}
+%ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/adalib/libgmem.a
 %endif
 %{_infodir}/gnat-style.info*
@@ -2680,8 +3429,21 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/adainclude
 %dir %{gcclibdir}/32/adalib
 %{gcclibdir}/32/adalib/*.ali
-%ifarch %{ix86} %{x8664}
+%ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/32/adalib/libgmem.a
+%endif
+
+%ifarch %{x8664} x32
+%files ada-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgnarl-*.so
+%attr(755,root,root) %{_libdirm2}/libgnarl.so
+%attr(755,root,root) %{_libdirm2}/libgnat-*.so
+%attr(755,root,root) %{_libdirm2}/libgnat.so
+%{gcclibdir}/%{multilib2}/adainclude
+%dir %{gcclibdir}/%{multilib2}/adalib
+%{gcclibdir}/%{multilib2}/adalib/*.ali
+%{gcclibdir}/%{multilib2}/adalib/libgmem.a
 %endif
 %endif
 
@@ -2699,6 +3461,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgnarl.so.1
 %attr(755,root,root) %{_libdir32}/libgnat-*.so.1
 %attr(755,root,root) %{_libdir32}/libgnat.so.1
+
+%ifarch %{x8664} x32
+%files -n libgnat-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgnarl-*.so.1
+%attr(755,root,root) %{_libdirm2}/libgnarl.so.1
+%attr(755,root,root) %{_libdirm2}/libgnat-*.so.1
+%attr(755,root,root) %{_libdirm2}/libgnat.so.1
+%endif
 %endif
 
 %files -n libgnat-static
@@ -2711,6 +3482,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{gcclibdir}/32/adalib/libgnarl.a
 %{gcclibdir}/32/adalib/libgnat.a
+
+%ifarch %{x8664} x32
+%files -n libgnat-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{gcclibdir}/%{multilib2}/adalib/libgnarl.a
+%{gcclibdir}/%{multilib2}/adalib/libgnat.a
+%endif
 %endif
 %endif
 
@@ -2732,6 +3510,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libsupc++.la
 %{_libdir32}/libsupc++.a
+
+%ifarch %{x8664} x32
+%files c++-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%{_libdirm2}/libsupc++.la
+%{_libdirm2}/libsupc++.a
+%endif
 %endif
 
 %files -n libstdc++ -f libstdc++.lang
@@ -2745,6 +3530,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.%{cxx_sover}
+
+%ifarch %{x8664} x32
+%files -n libstdc++-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libstdc++.so.%{cxx_sover}
+%endif
 %endif
 
 %if %{with python}
@@ -2757,6 +3549,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gdb/auto-load/usr/%{_lib}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %if %{with multilib}
 %{_datadir}/gdb/auto-load/usr/lib/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%ifarch %{x8664}
+%{_datadir}/gdb/auto-load/usr/libx32/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%endif
+%ifarch x32
+%{_datadir}/gdb/auto-load/usr/lib64/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%endif
 %endif
 %endif
 
@@ -2789,6 +3587,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
+
+%ifarch %{x8664} x32
+%files -n libstdc++-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libstdc++.so
+%{_libdirm2}/libstdc++.la
+%endif
 %endif
 
 %files -n libstdc++-static
@@ -2799,6 +3604,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libstdc++.a
+
+%ifarch %{x8664} x32
+%files -n libstdc++-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libstdc++.a
+%endif
 %endif
 %endif
 
@@ -2831,6 +3642,18 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/libcaf_single.la
 %{gcclibdir}/32/libgfortranbegin.la
 %{gcclibdir}/32/libgfortranbegin.a
+
+%ifarch %{x8664} x32
+%files fortran-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgfortran.so
+%{_libdirm2}/libgfortran.spec
+%{_libdirm2}/libgfortran.la
+%{gcclibdir}/%{multilib2}/libcaf_single.a
+%{gcclibdir}/%{multilib2}/libcaf_single.la
+%{gcclibdir}/%{multilib2}/libgfortranbegin.la
+%{gcclibdir}/%{multilib2}/libgfortranbegin.a
+%endif
 %endif
 
 %files -n libgfortran
@@ -2844,6 +3667,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.3
+
+%ifarch %{x8664} x32
+%files -n libgfortran-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgfortran.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libgfortran.so.3
+%endif
 %endif
 
 %files -n libgfortran-static
@@ -2854,6 +3684,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libgfortran.a
+
+%ifarch %{x8664} x32
+%files -n libgfortran-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libgfortran.a
+%endif
 %endif
 
 %files -n libquadmath
@@ -2866,6 +3702,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
+
+%ifarch %{x8664} x32
+%files -n libquadmath-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libquadmath.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libquadmath.so.0
+%endif
 %endif
 
 %files -n libquadmath-devel
@@ -2881,6 +3724,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libquadmath.so
 %{_libdir32}/libquadmath.la
+
+%ifarch %{x8664} x32
+%files -n libquadmath-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libquadmath.so
+%{_libdirm2}/libquadmath.la
+%endif
 %endif
 
 %files -n libquadmath-static
@@ -2891,6 +3741,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libquadmath-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libquadmath.a
+
+%ifarch %{x8664} x32
+%files -n libquadmath-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libquadmath.a
+%endif
 %endif
 %endif
 
@@ -3043,6 +3899,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
+
+%ifarch %{x8664} x32
+%files -n libffi-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libffi.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libffi.so.4
+%endif
 %endif
 
 %files -n libffi-devel
@@ -3061,6 +3924,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libffi.so
 %{_libdir32}/libffi.la
 %{_pkgconfigdir32}/libffi.pc
+
+%ifarch %{x8664} x32
+%files -n libffi-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libffi.so
+%{_libdirm2}/libffi.la
+%{_pkgconfigdirm2}/libffi.pc
+%endif
 %endif
 
 %files -n libffi-static
@@ -3071,6 +3942,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libffi.a
+
+%ifarch %{x8664} x32
+%files -n libffi-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libffi.a
+%endif
 %endif
 %endif
 
@@ -3095,6 +3972,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so
 %{_libdir32}/libobjc.la
+
+%ifarch %{x8664} x32
+%files objc-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libobjc.so
+%{_libdirm2}/libobjc.la
+%endif
 %endif
 
 %files -n libobjc
@@ -3108,6 +3992,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libobjc.so.4
+
+%ifarch %{x8664} x32
+%files -n libobjc-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libobjc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libobjc.so.4
+%endif
 %endif
 
 %files -n libobjc-static
@@ -3118,6 +4009,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libobjc-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
+
+%ifarch %{x8664} x32
+%files -n libobjc-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libobjc.a
+%endif
 %endif
 %endif
 
@@ -3137,6 +4034,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %dir %{_libdir32}/go
 %{_libdir32}/go/%{version}
+
+%ifarch %{x8664} x32
+%files go-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%dir %{_libdirm2}/go
+%{_libdirm2}/go/%{version}
+%endif
 %endif
 
 %files -n libgo
@@ -3150,6 +4054,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libgo.so.5
+
+%ifarch %{x8664} x32
+%files -n libgo-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.5
+%endif
 %endif
 
 %files -n libgo-devel
@@ -3164,6 +4075,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgo.so
 %{_libdir32}/libgo.la
 %{_libdir32}/libgobegin.a
+
+%ifarch %{x8664} x32
+%files -n libgo-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgo.so
+%{_libdirm2}/libgo.la
+%{_libdirm2}/libgobegin.a
+%endif
 %endif
 
 %files -n libgo-static
@@ -3174,6 +4093,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libgo.a
+
+%ifarch %{x8664} x32
+%files -n libgo-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libgo.a
+%endif
 %endif
 %endif
 
@@ -3189,6 +4114,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libasan.so.1
+
+%ifarch %{x8664} x32
+%files -n libasan-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.1
+%endif
 %endif
 
 %files -n libasan-devel
@@ -3204,6 +4136,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libasan.so
 %{_libdir32}/libasan_preinit.o
 %{_libdir32}/libasan.la
+
+%ifarch %{x8664} x32
+%files -n libasan-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libasan.so
+%{_libdirm2}/libasan_preinit.o
+%{_libdirm2}/libasan.la
+%endif
 %endif
 
 %files -n libasan-static
@@ -3214,6 +4154,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libasan.a
+
+%ifarch %{x8664} x32
+%files -n libasan-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libasan.a
+%endif
 %endif
 %endif
 
@@ -3234,6 +4180,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/liblsan.a
 %endif
 
+%if %{with multilib}
+%ifarch x32
+%files -n liblsan-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/liblsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/liblsan.so.0
+
+%files -n liblsan-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/liblsan.so
+%{_libdirm2}/liblsan.la
+%{gcclibdir}/include/sanitizer/lsan_interface.h
+
+%files -n liblsan-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/liblsan.a
+%endif
+%endif
+
 %if %{with tsan}
 %files -n libtsan
 %defattr(644,root,root,755)
@@ -3251,6 +4216,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libtsan.a
 %endif
 
+%if %{with multilib}
+%ifarch x32
+%files -n libtsan-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
+%attr(755,root,root) %{_libdirm2}/libtsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libtsan.so.0
+
+%files -n libtsan-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libtsan.so
+%{_libdirm2}/libtsan.la
+
+%files -n libtsan-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libtsan.a
+%endif
+%endif
+
 %files -n libubsan
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libubsan.so.*.*.*
@@ -3261,6 +4245,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libubsan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libubsan.so.0
+
+%ifarch %{x8664} x32
+%files -n libubsan-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libubsan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libubsan.so.0
+%endif
 %endif
 
 %files -n libubsan-devel
@@ -3273,6 +4264,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libubsan.so
 %{_libdir32}/libubsan.la
+
+%ifarch %{x8664} x32
+%files -n libubsan-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libubsan.so
+%{_libdirm2}/libubsan.la
+%endif
 %endif
 
 %files -n libubsan-static
@@ -3283,6 +4281,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libubsan-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libubsan.a
+
+%ifarch %{x8664} x32
+%files -n libubsan-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libubsan.a
+%endif
 %endif
 
 %if %{with atomic}
@@ -3297,6 +4301,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libatomic.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libatomic.so.1
+
+%ifarch %{x8664} x32
+%files -n libatomic-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libatomic.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libatomic.so.1
+%endif
 %endif
 
 %files -n libatomic-devel
@@ -3309,6 +4320,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libatomic.so
 %{_libdir32}/libatomic.la
+
+%ifarch %{x8664} x32
+%files -n libatomic-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libatomic.so
+%{_libdirm2}/libatomic.la
+%endif
 %endif
 
 %files -n libatomic-static
@@ -3319,5 +4337,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libatomic-multilib-32-static
 %defattr(644,root,root,755)
 %{_libdir32}/libatomic.a
+
+%ifarch %{x8664} x32
+%files -n libatomic-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libatomic.a
+%endif
 %endif
 %endif
