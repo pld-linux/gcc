@@ -151,7 +151,7 @@ BuildRequires:	gettext-tools
 BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 # Formerly known as gcc(multilib)
-BuildRequires:	gcc(multilib-32)
+#BuildRequires:	gcc(multilib-32)
 %ifarch %{x8664}
 %{?with_multilibx32:BuildRequires:	gcc(multilib-x32)}
 BuildRequires:	glibc-devel(ix86)
