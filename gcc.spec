@@ -268,7 +268,7 @@ Summary:	GNU Compiler Collection: the C compiler 32-bit support
 Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: obsługa binariów 32-bitowych dla kompilatora C
 License:	GPL v3+
 Group:		Development/Languages
-Requires:	%{name}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgcc32
 %ifarch %{x8664}
@@ -406,7 +406,7 @@ Summary:	Static GNU OpenMP library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja 32-bitowa
 License:	LGPL v2.1+ with unlimited link permission
 Group:		Development/Libraries
-Requires:	libgomp-multilib-32-devel
+Requires:	libgomp-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libgomp-multilib-static
 
 %description -n libgomp-multilib-32-static
@@ -471,6 +471,7 @@ Obsoletes:	libcilkrts-multilib-static
 
 %description -n libcilkrts-multilib-32-static
 This package contains 32-bit static cilk+ libraries.
+
 %package ada
 Summary:	Ada support for gcc
 Summary(es.UTF-8):	Soporte de Ada para gcc
@@ -1404,7 +1405,7 @@ Summary:	Go language library
 Summary(pl.UTF-8):	Biblioteka języka Go
 License:	BSD
 Group:		Libraries
-Requires:	libgcc >= %{epoch}:%{version}-%{release}
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 
 %description -n libgo
 Go language library.
@@ -1417,7 +1418,7 @@ Summary:	Go language library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka języka Go - wersja 32-bitowa
 License:	BSD
 Group:		Libraries
-Requires:	libgcc-multilib-32 >= %{epoch}:%{version}-%{release}
+Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgo-multilib
 
 %description -n libgo-multilib-32
