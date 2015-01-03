@@ -1,5 +1,5 @@
 Based on patch from https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56030
-Blocking gug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54040 has been fixed
+Blocking bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54040 has been fixed
 
 --- gcc-4.9.2/gcc/ada/gcc-interface/Makefile.in~	2014-12-27 17:19:06.000000000 +0000
 +++ gcc-4.9.2/gcc/ada/gcc-interface/Makefile.in	2014-12-27 18:11:33.908691021 +0000
