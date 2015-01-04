@@ -2762,7 +2762,7 @@ ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 
 %ifarch %{?with_multilibx32:%{x8664}} x32
-mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib2r}/adalib/*.so.1 \
+mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib2}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdirm2}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdirm2}/libgnat-%{major_ver}.so.1
