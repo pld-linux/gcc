@@ -104,7 +104,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	5
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3559,7 +3559,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %{_datadir}/gdb/auto-load/usr/lib/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %ifarch %{x8664}
-%{_datadir}/gdb/auto-load/usr/libx32/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%{?with_multilibx32:%{_datadir}/gdb/auto-load/usr/libx32/libstdc++.so.%{cxx_sover}.*.*-gdb.py}
 %endif
 %ifarch x32
 %{_datadir}/gdb/auto-load/usr/lib64/libstdc++.so.%{cxx_sover}.*.*-gdb.py
