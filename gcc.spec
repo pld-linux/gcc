@@ -523,89 +523,141 @@ Static GNU OpenMP library - %{multilib2}-bit version.
 Statyczna biblioteka GNU OpenMP - wersja %{multilib2}-bitowa.
 
 %package -n libcilkrts
-Summary:	GCC cilk+ shared support libraries
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions runtime library
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC
+License:	BSD
 Group:		Libraries
 
 %description -n libcilkrts
-This package contains the Cilk+ runtime library.
+This package contains the Cilk Plus C/C++ language extensions runtime
+library.
+
+%description -n libcilkrts -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
+języków C/C++.
 
 %package -n libcilkrts-multilib-32
-Summary:	GCC cilk+ shared support libraries - 32-bit version
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions runtime library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja 32-bitowa
+License:	BSD
 Group:		Libraries
 Obsoletes:	libcilkrts-multilib
 
 %description -n libcilkrts-multilib-32
-This package contains the Cilk+ runtime library. This package contains
-32-bit version.
+This package contains the Cilk Plus C/C++ language extensions runtime
+library in 32-bit version.
+
+%description -n libcilkrts-multilib-32 -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
 
 %package -n libcilkrts-multilib-%{multilib2}
-Summary:	GCC cilk+ shared support libraries - %{multilib2}-bit version
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions runtime library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja %{multilib2}-bitowa
+License:	BSD
 Group:		Libraries
 
 %description -n libcilkrts-multilib-%{multilib2}
-This package contains the Cilk+ runtime library. This package contains
-%{multilib2}-bit version.
+This package contains the Cilk Plus C/C++ language extensions runtime
+library in %{multilib2}-bit version.
+
+%description -n libcilkrts-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja %{multilib2}-bitowa.
 
 %package -n libcilkrts-devel
-Summary:	Development files for GCC cilk+ libraries
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC development files for Cilk Plus language extensions
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts-devel
-This package contains development files for cilk+ library.
+This package contains development files for Cilk Plus C/C++ language
+extensions.
+
+%description -n libcilkrts-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
+języków C/C++.
 
 %package -n libcilkrts-multilib-32-devel
-Summary:	Development files for 32-bit version of GCC cilk+ libraries
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC development files for Cilk Plus language extensions - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus - wersja 32-bitowa
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libcilkrts-multilib-devel
 
 %description -n libcilkrts-multilib-32-devel
-This package contains development files for 32-bit version of the
-cilk+ libraries.
+This package contains development files for Cilk Plus C/C++ language
+extensions in 32-bit version.
+
+%description -n libcilkrts-multilib-32-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
 
 %package -n libcilkrts-multilib-%{multilib2}-devel
-Summary:	Development files for %{multilib2}-bit version of GCC cilk+ libraries
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC development files for Cilk Plus language extensions - %{multilib2}-bit version
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus - wersja %{multilib2}-bitowa
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
+Requires:	libcilkrts-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts-multilib-%{multilib2}-devel
-This package contains development files for %{multilib2}-bit version of the
-cilk+ libraries.
+This package contains development files for Cilk Plus C/C++ language
+extensions in %{multilib2}-bit version.
+
+%description -n libcilkrts-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja %{multilib2}-bitowa.
 
 %package -n libcilkrts-static
-Summary:	Static GCC cilk+ libraries
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions static library
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts-static
-This package contains static cilk+ libraries.
+This package contains Cilk Plus C/C++ language extensions static
+library.
+
+%description -n libcilkrts-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
+języków C/C++.
 
 %package -n libcilkrts-multilib-32-static
-Summary:	Static GCC cilk+ libraries - 32-bit version
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions static library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC - wersja 32-bitowa
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libcilkrts-multilib-static
 
 %description -n libcilkrts-multilib-32-static
-This package contains 32-bit static cilk+ libraries.
+This package contains the Cilk Plus C/C++ language extensions static
+library in 32-bit version.
+
+%description -n libcilkrts-multilib-32-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
 
 %package -n libcilkrts-multilib-%{multilib2}-static
-Summary:	Static GCC cilk+ libraries - %{multilib2}-bit version
-License:	GPL v2+ with unlimited link permission
+Summary:	GCC Cilk Plus language extensions static library - %{multilib2}-bit version
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC - wersja %{multilib2}-bitowa
+License:	BSD
 Group:		Development/Libraries
 Requires:	libcilkrts-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts-multilib-%{multilib2}-static
-This package contains %{multilib2}-bit static cilk+ libraries.
+This package contains the Cilk Plus C/C++ language extensions static
+library in %{multilib2}-bit version.
+
+%description -n libcilkrts-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
+języków C/C++. W tym pakiecie znajduje się wersja %{multilib2}-bitowa.
 
 %package ada
 Summary:	Ada support for gcc
