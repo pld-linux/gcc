@@ -17,14 +17,10 @@
 %bcond_without	objcxx		# build without Objective-C++ support
 # - features:
 %bcond_without	gomp		# build without OpenMP support
-%bcond_without	multilib	# build without multilib support (it needs glibc[32&64]-devel)
-%bcond_with	multilibx32	# build with x32 multilib on x86_64 support (it needs x32 glibc-devel)
+%bcond_without	multilib	# build without multilib support (which needs glibc[32&64]-devel)
+%bcond_with	multilibx32	# build with x32 multilib support on x86_64 (needs x32 glibc-devel)
 %bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
-%bcond_without	asan		# build without Address Sanitizer library
-%bcond_without	lsan		# build without Leak Sanitizer library
-%bcond_without	tsan		# build without Thread Sanitizer library
-%bcond_without	atomic		# build without library for atomic operations not supported by hardware
 %bcond_with	gcc_libffi	# packaging gcc libffi for system usage
 				# note: libgcj and libgo always have convenience gcc libffi linked in
 # - libgcj options:
@@ -66,29 +62,39 @@
 %undefine	with_qt
 %endif
 
-%ifnarch %{x8664} x32 ppc64 s390x sparc64
-%undefine	with_multilib
+%ifarch sparc64
+# used to be broken (to be verified if needed)
+%undefine	with_ada
 %endif
 
+%ifnarch %{x8664} x32 aarch64 ppc64 s390x sparc64
+%undefine	with_multilib
+%endif
 %ifnarch %{x8664}
 %undefine	with_multilibx32
 %endif
 
-%ifnarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
-%undefine	with_atomic
+# setup internal semi-bconds based on bconds and architecture
+%if %{with multilib} && %{with multilibx32}
+%define		with_multilib2	1
 %endif
-
-%ifnarch %{ix86} %{x8664} x32 ppc ppc64 sparc sparcv9 sparc64
-%undefine	with_asan
+%ifarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
+# library for atomic operations not supported by hardware
+%define		with_atomic	1
 %endif
-
-%ifnarch %{x8664}
-%undefine	with_tsan
-%undefine	with_lsan
+%ifarch %{ix86} %{x8664} x32 arm ppc ppc64 sparc sparcv9 sparc64
+# sanitizer feature (asan and ubsan are common for all supported archs)
+%define		with_Xsan	1
 %endif
-
-%ifarch sparc64
-%undefine	with_ada
+%ifarch %{x8664}
+# lsan and tsan exist only for primary x86_64 ABI
+%define		with_lsan_m0	1
+%define		with_tsan_m0	1
+%endif
+%ifarch x32
+# lsan and tsan exist only for x86_64 ABI (i.e. our multilib2)
+%define		with_lsan_m2	1
+%define		with_tsan_m2	1
 %endif
 
 %define		major_ver	4.9
@@ -153,14 +159,19 @@ BuildRequires:	glibc-devel >= 6:2.4-1
 # Formerly known as gcc(multilib)
 BuildRequires:	gcc(multilib-32)
 %ifarch %{x8664}
-%{?with_multilibx32:BuildRequires:	gcc(multilib-x32)}
+%if %{with multilibx32}
+BuildRequires:	gcc(multilib-x32)
+BuildRequires:	glibc-devel(x32)
+%endif
 BuildRequires:	glibc-devel(ix86)
-%{?with_multilibx32:BuildRequires:	glibc-devel(x32)}
 %endif
 %ifarch x32
 BuildRequires:	gcc(multilib-64)
 BuildRequires:	glibc-devel(ix86)
 BuildRequires:	glibc-devel(x86_64)
+%endif
+%ifarch aarch64
+BuildRequires:	glibc-devel(arm)
 %endif
 %ifarch ppc64
 BuildRequires:	glibc-devel(ppc)
@@ -230,10 +241,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_slibdir	/%{_lib}
 %if %{with multilib}
-# 32-bit environment on x86-64,ppc64,s390x,sparc64
+# 32-bit environment on x86-64,aarch64,ppc64,s390x,sparc64
 %define		_slibdir32	/lib
 %define		_libdir32	/usr/lib
 %define		_pkgconfigdir32	%{_libdir32}/pkgconfig
+%if %{with multilib2}
 # x32 environment on x86-64
 %ifarch %{x8664}
 %define		multilib2	x32
@@ -247,6 +259,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_slibdirm2	/lib64
 %define		_libdirm2	/usr/lib64
 %define		_pkgconfigdirm2	%{_libdir64}/pkgconfig
+%endif
 %endif
 %endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
@@ -2130,7 +2143,7 @@ Sanitizer.
 
 %package -n liblsan
 Summary:	The Leak Sanitizer library
-Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli adresów
+Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków
 Group:		Libraries
 
 %description -n liblsan
@@ -2138,13 +2151,12 @@ This package contains the Leak Sanitizer library which is used for
 -fsanitize=leak instrumented programs.
 
 %description -n liblsan -l pl.UTF-8
-Ten pakiet zawiera bibliotekę Leak Sanitizer, służącą do
-kontroli adresów w programach kompilowanych z opcją
--fsanitize=leak.
+Ten pakiet zawiera bibliotekę Leak Sanitizer, służącą do kontroli
+wycieków w programach kompilowanych z opcją -fsanitize=leak.
 
 %package -n liblsan-multilib-%{multilib2}
 Summary:	The Leak Sanitizer library - %{multilib2}-bit version
-Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli adresów - wersja %{multilib2}-bitowa
+Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków - wersja %{multilib2}-bitowa
 Group:		Libraries
 
 %description -n liblsan-multilib-%{multilib2}
@@ -2153,7 +2165,7 @@ This package contains %{multilib2}-bit version of the Leak Sanitizer library whi
 
 %description -n liblsan-multilib-%{multilib2} -l pl.UTF-8
 Ten pakiet zawiera %{multilib2}-bitową wersję biblioteki Leak Sanitizer,
-służącej do kontroli adresów w programach kompilowanych z opcją
+służącej do kontroli wycieków w programach kompilowanych z opcją
 -fsanitize=leak.
 
 %package -n liblsan-devel
@@ -2611,15 +2623,6 @@ TEXCONFIG=false \
 	--enable-linker-build-id \
 	--enable-linux-futex \
 	--enable-long-long \
-%ifarch x32
-	--with-abi=x32 \
-%endif
-%ifarch %{x8664}
-	%{?with_multilib:--with-multilib-list=m32,m64%{?with_multilibx32:,mx32}} \
-%endif
-%ifarch x32
-	%{?with_multilib:--with-multilib-list=m32,m64,mx32} \
-%endif
 	%{!?with_multilib:--disable-multilib} \
 	--enable-nls \
 	--enable-lto \
@@ -2630,10 +2633,13 @@ TEXCONFIG=false \
 	--enable-shared \
 	--enable-threads=posix \
 	--disable-werror \
-	--with-cloog \
+%ifarch x32
+	--with-abi=x32 \
+%endif
 %ifarch %{x8664} x32
 	--with-arch-32=x86-64 \
 %endif
+	--with-cloog \
 %ifarch sparc64
 	--with-cpu=ultrasparc \
 %endif
@@ -2642,6 +2648,14 @@ TEXCONFIG=false \
 	--with-gnu-ld \
 	--with-linker-hash-style=gnu \
 	--with-long-double-128 \
+%if %{with multilib}
+%ifarch %{x8664}
+	--with-multilib-list=m32,m64%{?with_multilibx32:,mx32} \
+%endif
+%ifarch x32
+	--with-multilib-list=m32,m64,mx32 \
+%endif
+%endif
 	--with-ppl \
 	--disable-ppl-version-check \
 	--with-slibdir=%{_slibdir} \
@@ -2773,7 +2787,7 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libssp $RPM_BUILD_ROOT%{_libdirm2}/libssp.so
@@ -2813,7 +2827,7 @@ ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir32}/libgnarl-%{major_v
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib2}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdirm2}
 # check if symlink to be made is valid
@@ -2849,7 +2863,7 @@ sed -e 's,@prefix@,%{_prefix},
 	s,@exec_prefix@,%{_exec_prefix},
 	s,@libdir@,%{_libdir32},
 	s,@gcclibdir@,%{gcclibdir},' %{SOURCE3} >$RPM_BUILD_ROOT%{_pkgconfigdir32}/libffi.pc
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 [ ! -f $RPM_BUILD_ROOT%{_pkgconfigdirm2}/libffi.pc ] || exit 1
 install -d $RPM_BUILD_ROOT%{_pkgconfigdirm2}
 sed -e 's,@prefix@,%{_prefix},
@@ -2870,10 +2884,9 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
-	%{?with_asan:libasan.la} \
-	%{?with_lsan:liblsan.la} \
-	%{?with_tsan:libtsan.la} \
-	libubsan.la \
+	%{?with_Xsan:libasan.la libubsan.la} \
+	%{?with_lsan_m0:liblsan.la} \
+	%{?with_tsan_m0:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
 %if %{with java}
 	%{?with_gcc_libffi:libffi.la} \
@@ -2896,8 +2909,9 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
-	%{?with_asan:libasan.la} \
-	libubsan.la \
+	%{?with_Xsan:libasan.la libubsan.la} \
+	%{?with_lsan_m1:liblsan.la} \
+	%{?with_tsan_m1:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
 	%{?with_java:%{?with_gcc_libffi:libffi.la}} \
 	%{?with_objc:libobjc.la};
@@ -2905,17 +2919,14 @@ do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
 	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
 done
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
-	%{?with_asan:libasan.la} \
-%ifarch %{x8664}
-	liblsan.la \
-	libtsan.la \
-%endif
-	libubsan.la \
+	%{?with_Xsan:libasan.la libubsan.la} \
+	%{?with_lsan_m2:liblsan.la} \
+	%{?with_tsan_m2:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
 	%{?with_java:%{?with_gcc_libffi:libffi.la}} \
 	%{?with_objc:libobjc.la};
@@ -2935,12 +2946,12 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcc
 %{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la
 
 %if %{with python}
-for LIB in lib lib64 libx32; do
-	LIBPATH="$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load%{_prefix}/$LIB"
+for LIBDIR in %{_libdir} %{?with_multilib:%{_libdir32}} %{?with_multilib2:%{_libdirm2}} ; do
+	LIBPATH="$RPM_BUILD_ROOT%{_datadir}/gdb/auto-load$LIBDIR"
 	install -d $LIBPATH
 	# basename is being run only for the native (non-biarch) file.
 	sed -e 's,@pythondir@,%{_datadir}/gdb,' \
-	  -e 's,@toolexeclibdir@,%{_prefix}/'"$LIB," \
+	  -e "s,@toolexeclibdir@,$LIBDIR," \
 	  < libstdc++-v3/python/hook.in	\
 	  > $LIBPATH/$(basename $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
 done
@@ -2963,7 +2974,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.*-gdb.py
 %endif
 %endif
@@ -2984,7 +2995,7 @@ cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libvtv*
 %if %{with multilib}
 %{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libvtv*
 %endif
 %endif
@@ -3287,7 +3298,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libssp_nonshared.la
 %{_libdir32}/libssp_nonshared.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdirm2}/libgcc_s.so
@@ -3326,7 +3337,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
 %attr(755,root,root) %ghost %{_slibdir32}/libitm.so.1
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgcc-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdirm2}/libgcc_s.so.1
@@ -3349,7 +3360,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgomp-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdirm2}/libgomp.so.*.*.*
@@ -3373,7 +3384,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libgomp.la
 %{_libdir32}/libgomp.spec
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgomp-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgomp.so
@@ -3391,7 +3402,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libgomp.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgomp-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libgomp.a
@@ -3401,6 +3412,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libcilkrts
 %defattr(644,root,root,755)
+%doc libcilkrts/{ChangeLog,README}
 %attr(755,root,root) %{_libdir}/libcilkrts.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcilkrts.so.5
 
@@ -3410,7 +3422,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libcilkrts.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libcilkrts.so.5
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libcilkrts-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libcilkrts.so.*.*.*
@@ -3432,7 +3444,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libcilkrts.la
 %{_libdir32}/libcilkrts.spec
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libcilkrts-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libcilkrts.so
@@ -3450,7 +3462,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libcilkrts.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libcilkrts-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libcilkrts.a
@@ -3494,7 +3506,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/adalib/libgmem.a
 %endif
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files ada-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgnarl-*.so
@@ -3523,7 +3535,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgnat-*.so.1
 %attr(755,root,root) %{_libdir32}/libgnat.so.1
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgnat-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgnarl-*.so.1
@@ -3544,7 +3556,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/adalib/libgnarl.a
 %{gcclibdir}/32/adalib/libgnat.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgnat-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{gcclibdir}/%{multilib2}/adalib/libgnarl.a
@@ -3572,7 +3584,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libsupc++.la
 %{_libdir32}/libsupc++.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files c++-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %{_libdirm2}/libsupc++.la
@@ -3592,7 +3604,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.%{cxx_sover}
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libstdc++-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libstdc++.so.*.*.*
@@ -3607,14 +3619,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py_sitescriptdir}/libstdcxx/*.py[co]
 %dir %{py_sitescriptdir}/libstdcxx/v6
 %{py_sitescriptdir}/libstdcxx/v6/*.py[co]
-%{_datadir}/gdb/auto-load/usr/%{_lib}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%{_datadir}/gdb/auto-load%{_libdir}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %if %{with multilib}
-%{_datadir}/gdb/auto-load/usr/lib/libstdc++.so.%{cxx_sover}.*.*-gdb.py
-%ifarch %{x8664}
-%{?with_multilibx32:%{_datadir}/gdb/auto-load/usr/libx32/libstdc++.so.%{cxx_sover}.*.*-gdb.py}
-%endif
-%ifarch x32
-%{_datadir}/gdb/auto-load/usr/lib64/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%{_datadir}/gdb/auto-load%{_libdir32}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
+%if %{with multilib2}
+%{_datadir}/gdb/auto-load%{_libdirm2}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %endif
 %endif
 %endif
@@ -3649,7 +3658,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libstdc++-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libstdc++.so
@@ -3666,7 +3675,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libstdc++.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libstdc++-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libstdc++.a
@@ -3704,7 +3713,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/32/libgfortranbegin.la
 %{gcclibdir}/32/libgfortranbegin.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files fortran-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgfortran.so
@@ -3729,7 +3738,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.3
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgfortran-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgfortran.so.*.*.*
@@ -3746,7 +3755,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libgfortran.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgfortran-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libgfortran.a
@@ -3764,7 +3773,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libquadmath-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libquadmath.so.*.*.*
@@ -3786,7 +3795,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libquadmath.so
 %{_libdir32}/libquadmath.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libquadmath-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libquadmath.so
@@ -3803,7 +3812,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libquadmath.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libquadmath-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libquadmath.a
@@ -3961,7 +3970,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libffi-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libffi.so.*.*.*
@@ -3986,7 +3995,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libffi.la
 %{_pkgconfigdir32}/libffi.pc
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libffi-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libffi.so
@@ -4004,7 +4013,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libffi.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libffi-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libffi.a
@@ -4034,7 +4043,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libobjc.so
 %{_libdir32}/libobjc.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files objc-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libobjc.so
@@ -4054,7 +4063,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libobjc.so.4
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libobjc-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libobjc.so.*.*.*
@@ -4071,7 +4080,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libobjc.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libobjc-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libobjc.a
@@ -4096,7 +4105,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir32}/go
 %{_libdir32}/go/%{version}
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files go-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %dir %{_libdirm2}/go
@@ -4116,7 +4125,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libgo.so.5
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
@@ -4137,7 +4146,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libgo.la
 %{_libdir32}/libgobegin.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so
@@ -4155,7 +4164,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libgo.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libgo-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libgo.a
@@ -4163,7 +4172,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
-%if %{with asan}
+%if %{with Xsan}
 %files -n libasan
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
@@ -4176,7 +4185,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libasan.so.1
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
@@ -4198,7 +4207,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libasan_preinit.o
 %{_libdir32}/libasan.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so
@@ -4216,7 +4225,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libasan.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libasan-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libasan.a
@@ -4224,7 +4233,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
-%if %{with lsan}
+%if %{with lsan_m0}
 %files -n liblsan
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblsan.so.*.*.*
@@ -4241,8 +4250,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/liblsan.a
 %endif
 
-%if %{with multilib}
-%ifarch x32
+%if %{with multilib2} && %{with lsan_m2}
 %files -n liblsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/liblsan.so.*.*.*
@@ -4258,9 +4266,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/liblsan.a
 %endif
-%endif
 
-%if %{with tsan}
+%if %{with tsan_m0}
 %files -n libtsan
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
@@ -4277,8 +4284,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libtsan.a
 %endif
 
-%if %{with multilib}
-%ifarch x32
+%if %{with multilib2} && %{with tsan_m2}
 %files -n libtsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
@@ -4294,8 +4300,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libtsan.a
 %endif
-%endif
 
+%if %{with Xsan}
 %files -n libubsan
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libubsan.so.*.*.*
@@ -4307,7 +4313,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libubsan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libubsan.so.0
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libubsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libubsan.so.*.*.*
@@ -4326,7 +4332,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libubsan.so
 %{_libdir32}/libubsan.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libubsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libubsan.so
@@ -4343,10 +4349,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libubsan.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libubsan-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libubsan.a
+%endif
 %endif
 %endif
 
@@ -4363,7 +4370,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libatomic.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir32}/libatomic.so.1
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libatomic-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libatomic.so.*.*.*
@@ -4382,7 +4389,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libatomic.so
 %{_libdir32}/libatomic.la
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libatomic-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libatomic.so
@@ -4399,7 +4406,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir32}/libatomic.a
 
-%ifarch %{?with_multilibx32:%{x8664}} x32
+%if %{with multilib2}
 %files -n libatomic-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libatomic.a
