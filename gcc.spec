@@ -389,7 +389,7 @@ Summary:	Shared gcc library
 Summary(es.UTF-8):	Biblioteca compartida de gcc
 Summary(pl.UTF-8):	Biblioteka gcc
 Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libgcc1
 Obsoletes:	libgcc4
@@ -409,7 +409,7 @@ Biblioteca runtime para o GCC.
 %package -n libgcc-multilib-32
 Summary:	Shared gcc library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka gcc - wersja 32-bitowa
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libgcc-multilib
 
@@ -422,7 +422,7 @@ Biblioteka dynamiczna gcc - wersja 32-bitowa.
 %package -n libgcc-multilib-%{multilib2}
 Summary:	Shared gcc library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka gcc - wersja %{m2_desc}
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libgcc-multilib-%{multilib2}
@@ -434,7 +434,7 @@ Biblioteka dynamiczna gcc - wersja %{m2_desc}.
 %package -n libgomp
 Summary:	GNU OpenMP library
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libgomp
@@ -446,7 +446,7 @@ Biblioteka GNU OpenMP.
 %package -n libgomp-devel
 Summary:	Development files for GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU OpenMP
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgomp = %{epoch}:%{version}-%{release}
@@ -460,7 +460,7 @@ Pliki programistyczne biblioteki GNU OpenMP.
 %package -n libgomp-static
 Summary:	Static GNU OpenMP library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 
@@ -473,7 +473,7 @@ Statyczna biblioteka GNU OpenMP.
 %package -n libgomp-multilib-32
 Summary:	GNU OpenMP library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP - wersja 32-bitowa
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libgomp-multilib
 
@@ -486,7 +486,7 @@ Biblioteka GNU OpenMP - wersja 32-bitowa.
 %package -n libgomp-multilib-32-devel
 Summary:	Development files for 32-bit version of GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libgomp-multilib-devel
@@ -500,7 +500,7 @@ Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP.
 %package -n libgomp-multilib-32-static
 Summary:	Static GNU OpenMP library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja 32-bitowa
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libgomp-multilib-static
@@ -514,7 +514,7 @@ Statyczna biblioteka GNU OpenMP - wersja 32-bitowa.
 %package -n libgomp-multilib-%{multilib2}
 Summary:	GNU OpenMP library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP - wersja %{m2_desc}
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libgomp-multilib-%{multilib2}
@@ -526,7 +526,7 @@ Biblioteka GNU OpenMP - wersja %{m2_desc}.
 %package -n libgomp-multilib-%{multilib2}-devel
 Summary:	Development files for %{m2_desc} version of GNU OpenMP library
 Summary(pl.UTF-8):	Pliki programistyczne wersji %{m2_desc} biblioteki GNU OpenMP
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
 
@@ -539,7 +539,7 @@ Pliki programistyczne wersji %{m2_desc}-bitowej biblioteki GNU OpenMP.
 %package -n libgomp-multilib-%{multilib2}-static
 Summary:	Static GNU OpenMP library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja %{m2_desc}
-License:	LGPL v2.1+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -742,7 +742,7 @@ języku Ada do binariów %{m2_desc}.
 Summary:	Ada standard libraries
 Summary(es.UTF-8):	Bibliotecas estándares de Ada
 Summary(pl.UTF-8):	Biblioteki standardowe Ady
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	gnat
 Obsoletes:	libgnat1
@@ -762,7 +762,7 @@ napisanych w Adzie.
 %package -n libgnat-static
 Summary:	Static Ada standard libraries
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Obsoletes:	gnat-static
 
@@ -776,7 +776,7 @@ Adzie.
 %package -n libgnat-multilib-32
 Summary:	Ada standard libraries - 32-bit version
 Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja 32-bitowa
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libgnat-multilib
 
@@ -791,7 +791,7 @@ uruchamiania programów napisanych w języku Ada.
 %package -n libgnat-multilib-32-static
 Summary:	Static Ada standard libraries - 32-bit version
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady - wersje 32-bitowe
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Obsoletes:	libgnat-multilib-static
 
@@ -806,7 +806,7 @@ programów napisanych w Adzie.
 %package -n libgnat-multilib-%{multilib2}
 Summary:	Ada standard libraries - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja %{m2_desc}
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libgnat-multilib-%{multilib2}
@@ -820,7 +820,7 @@ uruchamiania programów napisanych w Adzie.
 %package -n libgnat-multilib-%{multilib2}-static
 Summary:	Static Ada standard libraries - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady - wersje %{m2_desc}
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 
 %description -n libgnat-multilib-%{multilib2}-static
@@ -916,7 +916,7 @@ Summary:	GNU C++ library
 Summary(es.UTF-8):	Biblioteca C++ de GNU
 Summary(pl.UTF-8):	Biblioteka GNU C++
 Summary(pt_BR.UTF-8):	Biblioteca C++ GNU
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc >= %{epoch}:%{version}-%{release}
@@ -965,7 +965,7 @@ Summary(fr.UTF-8):	Fichiers d'en-tête et biblitothèques pour développer en C+
 Summary(pl.UTF-8):	Pliki nagłówkowe i dokumentacja do biblioteki standardowej C++
 Summary(pt_BR.UTF-8):	Arquivos de inclusão e bibliotecas para o desenvolvimento em C++
 Summary(tr.UTF-8):	C++ ile program geliştirmek için gerekli dosyalar
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
@@ -997,7 +997,7 @@ para desenvolvimento de programas C++.
 Summary:	Static C++ standard library
 Summary(es.UTF-8):	Biblioteca estándar estática de C++
 Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libstdc++4-static
@@ -1014,7 +1014,7 @@ Statyczna biblioteka standardowa C++.
 %package -n libstdc++-multilib-32
 Summary:	GNU C++ library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka GNU C++ - wersja 32-bitowa
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc-multilib-32 >= %{epoch}:%{version}-%{release}
@@ -1031,7 +1031,7 @@ standardowej C++.
 %package -n libstdc++-multilib-32-devel
 Summary:	Development files for C++ development - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki standardowej C++ - wersja 32-bitowa
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	%{name}-c++-multilib-32 = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
@@ -1049,7 +1049,7 @@ implementacji GNU biblioteki standardowej C++.
 %package -n libstdc++-multilib-32-static
 Summary:	Static C++ standard library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++ - wersja 32-bitowa
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libstdc++-multilib-static
@@ -1063,7 +1063,7 @@ Statyczna biblioteka standardowa C++ - wersja 32-bitowa.
 %package -n libstdc++-multilib-%{multilib2}
 Summary:	GNU C++ library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka GNU C++ - wersja %{m2_desc}
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc-multilib-%{multilib2} >= %{epoch}:%{version}-%{release}
@@ -1079,7 +1079,7 @@ standardowej C++.
 %package -n libstdc++-multilib-%{multilib2}-devel
 Summary:	Development files for C++ development - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki standardowej C++ - wersja %{m2_desc}
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	%{name}-c++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
@@ -1096,7 +1096,7 @@ implementacji GNU biblioteki standardowej C++.
 %package -n libstdc++-multilib-%{multilib2}-static
 Summary:	Static C++ standard library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++ - wersja %{m2_desc}
-License:	GPL v2+ with free software exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -1122,6 +1122,7 @@ wypisywania typów i kontenerów libstdc++.
 %package -n libstdc++-apidocs
 Summary:	C++ standard library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
+License:	FDL v1.3 (mainly), GPL v3+ (doxygen generated parts)
 Group:		Documentation
 %if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
@@ -1197,7 +1198,7 @@ kompilatora GCC.
 Summary:	Fortran 95 Library
 Summary(es.UTF-8):	Biblioteca de Fortran 95
 Summary(pl.UTF-8):	Biblioteka Fortranu 95
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libquadmath = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c
@@ -1215,7 +1216,7 @@ Biblioteka Fortranu 95.
 Summary:	Static Fortran 95 Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Fortran 95
 Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c-static
@@ -1232,7 +1233,7 @@ Statyczna biblioteka Fortranu 95.
 %package -n libgfortran-multilib-32
 Summary:	Fortran 95 Library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja 32-bitowa
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgfortran-multilib
@@ -1246,7 +1247,7 @@ Biblioteka Fortranu 95 - wersja 32-bitowa.
 %package -n libgfortran-multilib-32-static
 Summary:	Static Fortran 95 Library - 32-bit version
 Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja 32-bitowa
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgfortran-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgfortran-multilib-static
@@ -1260,7 +1261,7 @@ Statyczna biblioteka Fortranu 95 - wersja 32-bitowa.
 %package -n libgfortran-multilib-%{multilib2}
 Summary:	Fortran 95 Library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja %{m2_desc}
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -1273,7 +1274,7 @@ Biblioteka Fortranu 95 - wersja %{m2_desc}.
 %package -n libgfortran-multilib-%{multilib2}-static
 Summary:	Static Fortran 95 Library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja %{m2_desc}
-License:	GPL v2+ with unlimited link permission
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgfortran-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -1286,7 +1287,7 @@ Statyczna biblioteka Fortranu 95 - wersja %{m2_desc}.
 %package -n libquadmath
 Summary:	GCC __float128 shared support library
 Summary(pl.UTF-8):	Biblioteka współdzielona do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Libraries
 
 %description -n libquadmath
@@ -1301,7 +1302,7 @@ Fortranie.
 %package -n libquadmath-devel
 Summary:	Header files for GCC __float128 support library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteka GCC do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath = %{epoch}:%{version}-%{release}
 
@@ -1317,7 +1318,7 @@ Fortranie.
 %package -n libquadmath-static
 Summary:	Static GCC __float128 support library
 Summary(pl.UTF-8):	Biblioteka statyczna GCC do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 
@@ -1330,7 +1331,7 @@ Biblioteka statyczna GCC do obsługi typu __float128.
 %package -n libquadmath-multilib-32
 Summary:	GCC __float128 shared support library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka współdzielona GCC do obsługi typu __float128 - wersja 32-bitowa
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Libraries
 Obsoletes:	libquadmath-multilib
 
@@ -1347,7 +1348,7 @@ w Fortranie.
 %package -n libquadmath-multilib-32-devel
 Summary:	Development files for 32-bit GCC __float128 support library
 Summary(pl.UTF-8):	Pliki programistyczne 32-bitowej biblioteki do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}
@@ -1366,7 +1367,7 @@ REAL*16 w Fortranie.
 %package -n libquadmath-multilib-32-static
 Summary:	Static GCC __float128 support library - 32-bit version
 Summary(pl.UTF-8):	32-bitowa biblioteka statyczna GCC do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libquadmath-multilib-static
@@ -1380,7 +1381,7 @@ Static GCC __float128 support library - 32-bit version.
 %package -n libquadmath-multilib-%{multilib2}
 Summary:	GCC __float128 shared support library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka współdzielona GCC do obsługi typu __float128 - wersja %{m2_desc}
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Libraries
 
 %description -n libquadmath-multilib-%{multilib2}
@@ -1396,7 +1397,7 @@ REAL*16 w Fortranie.
 %package -n libquadmath-multilib-%{multilib2}-devel
 Summary:	Development files for %{m2_desc} version of GCC __float128 support library
 Summary(pl.UTF-8):	Pliki programistyczne wersji %{m2_desc} biblioteki do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
@@ -1414,7 +1415,7 @@ typu REAL*16 w Fortranie.
 %package -n libquadmath-multilib-%{multilib2}-static
 Summary:	Static GCC __float128 support library - %{m2_desc} version
 Summary(pl.UTF-8):	Wersja %{m2_desc} biblioteki statycznej GCC do obsługi typu __float128
-License:	GPL v2+ with linking exception
+License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -1781,7 +1782,7 @@ GNU Compiler Collection.
 Summary:	Objective C Library
 Summary(es.UTF-8):	Biblioteca de Objective C
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C)
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libobjc1
 
@@ -1798,7 +1799,7 @@ Biblioteka obiektowego C (Objective C).
 Summary:	Static Objective C Library
 Summary(es.UTF-8):	Bibliotecas estáticas de Objective C
 Summary(pl.UTF-8):	Statyczna biblioteka obiektowego C (Objective C)
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libobjc = %{epoch}:%{version}-%{release}
 
@@ -1814,7 +1815,7 @@ Statyczna biblioteka obiektowego C (Objective C).
 %package -n libobjc-multilib-32
 Summary:	Objective C Library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C) - wersja 32-bitowa
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libobjc-multilib
 
@@ -1827,7 +1828,7 @@ Biblioteka obiektowego C (Objective C) - wersja 32-bitowa.
 %package -n libobjc-multilib-32-static
 Summary:	Static Objective C Library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka obiektowego C (Objective C) - wersja 32-bitowa
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libobjc-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libobjc-multilib-static
@@ -1841,7 +1842,7 @@ Statyczna biblioteka obiektowego C (Objective C) - wersja 32-bitowa.
 %package -n libobjc-multilib-%{multilib2}
 Summary:	Objective C Library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C) - wersja %{m2_desc}
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libobjc-multilib-%{multilib2}
@@ -1853,7 +1854,7 @@ Biblioteka obiektowego C (Objective C) - wersja %{m2_desc}.
 %package -n libobjc-multilib-%{multilib2}-static
 Summary:	Static Objective C Library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka obiektowego C (Objective C) - wersja %{m2_desc}
-License:	GPL v2+ with linking exception
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libobjc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2036,6 +2037,7 @@ Statyczna biblioteka języka Go - wersja %{m2_desc}.
 %package -n libasan
 Summary:	The Address Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libasan
@@ -2049,6 +2051,7 @@ adresów w programach kompilowanych z opcją -fsanitize=address.
 %package -n libasan-devel
 Summary:	Development files for the Address Sanitizer library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan = %{epoch}:%{version}-%{release}
 
@@ -2062,6 +2065,7 @@ Ten pakiet zawiera pliki programistyczne biblioteki Address Sanitizer.
 %package -n libasan-static
 Summary:	The Address Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-devel = %{epoch}:%{version}-%{release}
 
@@ -2074,6 +2078,7 @@ Ten pakiet zawiera statyczną bibliotekę Address Sanitizer.
 %package -n libasan-multilib-32
 Summary:	The Address Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Libraries
 Obsoletes:	libasan-multilib
 
@@ -2089,6 +2094,7 @@ służącej do kontroli adresów w programach kompilowanych z opcją
 %package -n libasan-multilib-32-devel
 Summary:	Development files for the Address Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libasan-multilib-devel
@@ -2104,6 +2110,7 @@ Address Sanitizer.
 %package -n libasan-multilib-32-static
 Summary:	The Address Sanitizer static library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libasan-multilib-static
@@ -2119,6 +2126,7 @@ Sanitizer.
 %package -n libasan-multilib-%{multilib2}
 Summary:	The Address Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libasan-multilib-%{multilib2}
@@ -2133,6 +2141,7 @@ służącej do kontroli adresów w programach kompilowanych z opcją
 %package -n libasan-multilib-%{multilib2}-devel
 Summary:	Development files for the Address Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2147,6 +2156,7 @@ Address Sanitizer.
 %package -n libasan-multilib-%{multilib2}-static
 Summary:	The Address Sanitizer static library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -2161,6 +2171,7 @@ Sanitizer.
 %package -n liblsan
 Summary:	The Leak Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n liblsan
@@ -2174,6 +2185,7 @@ wycieków w programach kompilowanych z opcją -fsanitize=leak.
 %package -n liblsan-devel
 Summary:	Development files for the Leak Sanitizer library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	liblsan = %{epoch}:%{version}-%{release}
 
@@ -2187,6 +2199,7 @@ Ten pakiet zawiera pliki programistyczne biblioteki Leak Sanitizer.
 %package -n liblsan-static
 Summary:	The Leak Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Leak Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	liblsan-devel = %{epoch}:%{version}-%{release}
 
@@ -2199,6 +2212,7 @@ Ten pakiet zawiera statyczną bibliotekę Leak Sanitizer.
 %package -n liblsan-multilib-%{multilib2}
 Summary:	The Leak Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n liblsan-multilib-%{multilib2}
@@ -2213,6 +2227,7 @@ do kontroli wycieków w programach kompilowanych z opcją
 %package -n liblsan-multilib-%{multilib2}-devel
 Summary:	Development files for the Leak Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	liblsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2227,6 +2242,7 @@ Leak Sanitizer.
 %package -n liblsan-multilib-%{multilib2}-static
 Summary:	The Leak Sanitizer static library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka Leak Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	liblsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -2239,6 +2255,7 @@ Ten pakiet zawiera statyczną bibliotekę Leak Sanitizer - wersja %{m2_desc}.
 %package -n libtsan
 Summary:	The Thread Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libtsan
@@ -2252,6 +2269,7 @@ wielowątkowości w programach kompilowanych z opcją -fsanitize=thread.
 %package -n libtsan-devel
 Summary:	Development files for the Thread Sanitizer library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Thread Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libtsan = %{epoch}:%{version}-%{release}
 
@@ -2264,6 +2282,7 @@ Ten pakiet zawiera pliki programistyczne biblioteki Address Sanitizer.
 %package -n libtsan-static
 Summary:	The Thread Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Thread Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libtsan-devel = %{epoch}:%{version}-%{release}
 
@@ -2276,6 +2295,7 @@ Ten pakiet zawiera statyczną bibliotekę Thread Sanitizer.
 %package -n libtsan-multilib-%{multilib2}
 Summary:	The Thread Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libtsan-multilib-%{multilib2}
@@ -2290,6 +2310,7 @@ z opcją -fsanitize=thread.
 %package -n libtsan-multilib-%{multilib2}-devel
 Summary:	Development files for the Thread Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Thread Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libtsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2304,6 +2325,7 @@ Thread Sanitizer.
 %package -n libtsan-multilib-%{multilib2}-static
 Summary:	The Thread Sanitizer static library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka Thread Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libtsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -2318,6 +2340,7 @@ Sanitizer.
 %package -n libubsan
 Summary:	The Undefined Behavior Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libubsan
@@ -2332,6 +2355,7 @@ kontroli nieokreślonych zachowań w programach kompilowanych z opcją
 %package -n libubsan-devel
 Summary:	Development files for the Undefined Behavior Sanitizer library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan = %{epoch}:%{version}-%{release}
 
@@ -2346,6 +2370,7 @@ Sanitizer.
 %package -n libubsan-static
 Summary:	The Undefined Behavior Sanitizer static library
 Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-devel = %{epoch}:%{version}-%{release}
 
@@ -2358,6 +2383,7 @@ Ten pakiet zawiera statyczną bibliotekę Undefined Behavior Sanitizer.
 %package -n libubsan-multilib-32
 Summary:	The Undefined Behavior Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Libraries
 Obsoletes:	libubsan-multilib
 
@@ -2374,6 +2400,7 @@ kompilowanych z opcją -fsanitize=undefined.
 %package -n libubsan-multilib-32-devel
 Summary:	Development files for the Undefined Behavior Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libubsan-multilib-devel
@@ -2389,6 +2416,7 @@ Undefined Behavior Sanitizer.
 %package -n libubsan-multilib-32-static
 Summary:	The Undefined Behavior Sanitizer static library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer - wersja 32-bitowa
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libubsan-multilib-static
@@ -2404,6 +2432,7 @@ Behavior Sanitizer.
 %package -n libubsan-multilib-%{multilib2}
 Summary:	The Undefined Behavior Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Libraries
 
 %description -n libubsan-multilib-%{multilib2}
@@ -2419,6 +2448,7 @@ kompilowanych z opcją -fsanitize=undefined.
 %package -n libubsan-multilib-%{multilib2}-devel
 Summary:	Development files for the Undefined Behavior Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2433,6 +2463,7 @@ Undefined Behavior Sanitizer.
 %package -n libubsan-multilib-%{multilib2}-static
 Summary:	The Undefined Behavior Sanitizer static library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -2589,6 +2620,7 @@ Table Verification.
 %package -n libatomic
 Summary:	The GNU Atomic library
 Summary(pl.UTF-8):	Biblioteka GNU Atomic
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libatomic
@@ -2602,6 +2634,7 @@ wspierającą operacje atomowe na sprzęcie ich nie obsługującym.
 %package -n libatomic-devel
 Summary:	Development files for the GNU Atomic library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic = %{epoch}:%{version}-%{release}
 
@@ -2614,6 +2647,7 @@ Ten pakiet zawiera pliki programistyczne biblioteki GNU Atomic.
 %package -n libatomic-static
 Summary:	The GNU Atomic static library
 Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-devel = %{epoch}:%{version}-%{release}
 
@@ -2626,6 +2660,7 @@ Ten pakiet zawiera statyczną bibliotekę GNU Atomic.
 %package -n libatomic-multilib-32
 Summary:	The GNU Atomic library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka GNU Atomic - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libatomic-multilib
 
@@ -2642,6 +2677,7 @@ obsługującym.
 %package -n libatomic-multilib-32-devel
 Summary:	Development files for the GNU Atomic static library - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libatomic-multilib-devel
@@ -2657,6 +2693,7 @@ GNU Atomic.
 %package -n libatomic-multilib-32-static
 Summary:	The GNU Atomic static library - 32-bit version
 Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-32-devel = %{epoch}:%{version}-%{release}
 Obsoletes:	libatomic-multilib-static
@@ -2670,6 +2707,7 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %package -n libatomic-multilib-%{multilib2}
 Summary:	The GNU Atomic library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka GNU Atomic - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 
 %description -n libatomic-multilib-%{multilib2}
@@ -2685,6 +2723,7 @@ obsługującym.
 %package -n libatomic-multilib-%{multilib2}-devel
 Summary:	Development files for the GNU Atomic static library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
@@ -2699,6 +2738,7 @@ GNU Atomic.
 %package -n libatomic-multilib-%{multilib2}-static
 Summary:	The GNU Atomic static library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
 
@@ -3481,6 +3521,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
+%doc COPYING.RUNTIME ChangeLog
 %attr(755,root,root) %{_slibdir}/libgcc_s.so.1
 %attr(755,root,root) %{_slibdir}/libitm.so.*.*.*
 %attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
@@ -4447,6 +4488,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with vtv}
 %files -n libvtv
 %defattr(644,root,root,755)
+%doc libvtv/ChangeLog
 %attr(755,root,root) %{_libdir}/libvtv.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libvtv.so.0
 
