@@ -1,3 +1,4 @@
+# TODO: missing info patch parts
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # TODO:
@@ -103,6 +104,9 @@
 # lsan and tsan exist only for x86_64 ABI (i.e. our multilib2)
 %define		with_lsan_m2	1
 %define		with_tsan_m2	1
+%endif
+%ifarch %{ix86} %{x8664} x32
+%define		with_vtv	1
 %endif
 
 %define		major_ver	4.9
@@ -2440,6 +2444,148 @@ Sanitizer static library.
 Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki Undefined
 Behavior Sanitizer.
 
+%package -n libvtv
+Summary:	The Virtual Table Verification library
+Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy wirtualnej
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+
+%description -n libvtv
+This package contains the Virtual Table Verification library which
+is used for -fvtable-verify=... instrumented programs.
+
+%description -n libvtv -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Virtual Table Verification, służącą do
+weryfikacji tablicy wirtualnej w programach kompilowanych z opcją
+-fvtable-verify=....
+
+%package -n libvtv-devel
+Summary:	Development files for the Virtual Table Verification library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Virtual Table Verification
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-devel
+This package contains development files for the Virtual Table
+Verification library.
+
+%description -n libvtv-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Vitual Table
+Verification.
+
+%package -n libvtv-static
+Summary:	The Virtual Table Verification static library
+Summary(pl.UTF-8):	Statyczna biblioteka Virtual Table Verification
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv-devel = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-static
+This package contains Virtual Table Verification static library.
+
+%description -n libvtv-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Virtual Table Verification.
+
+%package -n libvtv-multilib-32
+Summary:	The Virtual Table Verification library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy wirtualnej - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+
+%description -n libvtv-multilib-32
+This package contains 32-bit version of the Virtual Table Verification
+library which is used for -fvtable-verify=... instrumented programs.
+
+%description -n libvtv-multilib-32 -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję biblioteki Virtual Table
+Verification, służącej do weryfikacji tablicy wirtualnej w programach
+kompilowanych z opcją -fvtable-verify=....
+
+%package -n libvtv-multilib-32-devel
+Summary:	Development files for the Virtual Table Verification library - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Virtual Table Verification - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv-multilib-32 = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-multilib-32-devel
+This package contains the development files for 32-bit version of the
+Virtual Table Verification library.
+
+%description -n libvtv-multilib-32-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne 32-bitowej wersji biblioteki
+Virtual Table Verification.
+
+%package -n libvtv-multilib-32-static
+Summary:	The Virtual Table Verification static library - 32-bit version
+Summary(pl.UTF-8):	Statyczna biblioteka Virtual Table Verification - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv-multilib-32-devel = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-multilib-32-static
+This package contains 32-bit version of the Virtual Table Verification
+library.
+
+%description -n libvtv-multilib-32-static -l pl.UTF-8
+Ten pakiet zawiera 32-bitową wersję statycznej biblioteki Virtual
+Table Verification.
+
+%package -n libvtv-multilib-%{multilib2}
+Summary:	The Virtual Table Verification library - %{m2_desc} version
+Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy wirtualnej - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+
+%description -n libvtv-multilib-%{multilib2}
+This package contains %{m2_desc} version of the Virtual Table Verification
+library which is used for -fvtable-verify=... instrumented programs.
+
+%description -n libvtv-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera wersję %{m2_desc} biblioteki Virtual Table
+Verification, służącej do weryfikacji tablicy wirtualnej w programach
+kompilowanych z opcją -fvtable-verify=....
+
+%package -n libvtv-multilib-%{multilib2}-devel
+Summary:	Development files for the Virtual Table Verification library - %{m2_desc} version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Virtual Table Verification - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-multilib-%{multilib2}-devel
+This package contains the development files for %{m2_desc} version of the
+Virtual Table Verification library.
+
+%description -n libvtv-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne wersji %{m2_desc} biblioteki
+Virtual Table Verification.
+
+%package -n libvtv-multilib-%{multilib2}-static
+Summary:	The Virtual Table Verification static library - %{m2_desc} version
+Summary(pl.UTF-8):	Statyczna biblioteka Virtual Table Verification - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libvtv-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libvtv-multilib-%{multilib2}-static
+This package contains %{m2_desc} version of the Virtual Table
+Verification library.
+
+%description -n libvtv-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki Virtual
+Table Verification.
+
 %package -n libatomic
 Summary:	The GNU Atomic library
 Summary(pl.UTF-8):	Biblioteka GNU Atomic
@@ -3007,15 +3153,6 @@ cp -p libstdc++-v3/include/precompiled/* $RPM_BUILD_ROOT%{_includedir}
 # always -f, as "dir" is created depending which texlive version is installed
 %{__rm} -f $RPM_BUILD_ROOT%{_infodir}/dir
 
-# is anything using this?
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libvtv*
-%if %{with multilib}
-%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libvtv*
-%if %{with multilib2}
-%{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libvtv*
-%endif
-%endif
-
 # svn snap doesn't contain (release does) below files,
 # so let's create dummy entries to satisfy %%files.
 [ ! -f NEWS ] && touch NEWS
@@ -3149,6 +3286,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig -n libubsan-multilib-32
 %post   -p /sbin/ldconfig -n libubsan-multilib-%{multilib2}
 %postun -p /sbin/ldconfig -n libubsan-multilib-%{multilib2}
+%post   -p /sbin/ldconfig -n libvtv
+%postun -p /sbin/ldconfig -n libvtv
+%post   -p /sbin/ldconfig -n libvtv-multilib-32
+%postun -p /sbin/ldconfig -n libvtv-multilib-32
+%post   -p /sbin/ldconfig -n libvtv-multilib-%{multilib2}
+%postun -p /sbin/ldconfig -n libvtv-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libatomic
 %postun	-p /sbin/ldconfig -n libatomic
 %post	-p /sbin/ldconfig -n libatomic-multilib-32
@@ -4298,6 +4441,54 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libubsan-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libubsan.a
+%endif
+%endif
+
+%if %{with vtv}
+%files -n libvtv
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libvtv.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libvtv.so.0
+
+%files -n libvtv-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libvtv.so
+%{_libdir}/libvtv.la
+
+%files -n libvtv-static
+%defattr(644,root,root,755)
+%{_libdir}/libvtv.a
+
+%if %{with multilib}
+%files -n libvtv-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libvtv.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libvtv.so.0
+
+%files -n libvtv-multilib-32-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libvtv.so
+%{_libdir32}/libvtv.la
+
+%files -n libvtv-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libvtv.a
+%endif
+
+%if %{with multilib2}
+%files -n libvtv-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libvtv.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libvtv.so.0
+
+%files -n libvtv-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libvtv.so
+%{_libdirm2}/libvtv.la
+
+%files -n libvtv-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libvtv.a
 %endif
 %endif
 
