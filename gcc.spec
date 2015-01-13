@@ -554,6 +554,7 @@ Summary:	GCC Cilk Plus language extensions runtime library
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC
 License:	BSD
 Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts
 This package contains the Cilk Plus C/C++ language extensions runtime
@@ -598,6 +599,7 @@ Summary:	GCC Cilk Plus language extensions runtime library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja 32-bitowa
 License:	BSD
 Group:		Libraries
+Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libcilkrts-multilib
 
 %description -n libcilkrts-multilib-32
@@ -646,6 +648,7 @@ Summary:	GCC Cilk Plus language extensions runtime library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja %{m2_desc}
 License:	BSD
 Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libcilkrts-multilib-%{multilib2}
 This package contains the Cilk Plus C/C++ language extensions runtime
@@ -744,6 +747,7 @@ Summary(es.UTF-8):	Bibliotecas estándares de Ada
 Summary(pl.UTF-8):	Biblioteki standardowe Ady
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 Obsoletes:	gnat
 Obsoletes:	libgnat1
 
@@ -778,6 +782,7 @@ Summary:	Ada standard libraries - 32-bit version
 Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgnat-multilib
 
 %description -n libgnat-multilib-32
@@ -808,6 +813,7 @@ Summary:	Ada standard libraries - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja %{m2_desc}
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libgnat-multilib-%{multilib2}
 This package contains %{m2_desc} version of shared libraries needed to run
@@ -1200,6 +1206,7 @@ Summary(es.UTF-8):	Biblioteca de Fortran 95
 Summary(pl.UTF-8):	Biblioteka Fortranu 95
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 Requires:	libquadmath = %{epoch}:%{version}-%{release}
 Obsoletes:	libg2c
 
@@ -1235,6 +1242,7 @@ Summary:	Fortran 95 Library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libgfortran-multilib
 
@@ -1276,6 +1284,7 @@ Summary:	Static Fortran 95 Library - %{m2_desc} version
 Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja %{m2_desc}
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libgfortran-multilib-%{multilib2}-static
@@ -1784,6 +1793,7 @@ Summary(es.UTF-8):	Biblioteca de Objective C
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C)
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 Obsoletes:	libobjc1
 
 %description -n libobjc
@@ -1817,6 +1827,7 @@ Summary:	Objective C Library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C) - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libobjc-multilib
 
 %description -n libobjc-multilib-32
@@ -1844,6 +1855,7 @@ Summary:	Objective C Library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C) - wersja %{m2_desc}
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libobjc-multilib-%{multilib2}
 Objective C Library - %{m2_desc} version.
@@ -2039,6 +2051,7 @@ Summary:	The Address Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n libasan
 This package contains the Address Sanitizer library which is used for
@@ -2080,6 +2093,7 @@ Summary:	The Address Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja 32-bitowa
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libasan-multilib
 
 %description -n libasan-multilib-32
@@ -2096,6 +2110,7 @@ Summary:	Development files for the Address Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja 32-bitowa
 License:	BSD-like or MIT
 Group:		Development/Libraries
+Requires:	libasan-devel = %{epoch}:%{version}-%{release}
 Requires:	libasan-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libasan-multilib-devel
 
@@ -2128,6 +2143,7 @@ Summary:	The Address Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libasan-multilib-%{multilib2}
 This package contains %{m2_desc} version of the Address Sanitizer library
@@ -2143,6 +2159,7 @@ Summary:	Development files for the Address Sanitizer library - %{m2_desc} versio
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Address Sanitizer - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Development/Libraries
+Requires:	libasan-devel = %{epoch}:%{version}-%{release}
 Requires:	libasan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libasan-multilib-%{multilib2}-devel
@@ -2173,6 +2190,7 @@ Summary:	The Leak Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n liblsan
 This package contains the Leak Sanitizer library which is used for
@@ -2214,6 +2232,7 @@ Summary:	The Leak Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n liblsan-multilib-%{multilib2}
 This package contains %{m2_desc} version of the Leak Sanitizer library
@@ -2229,6 +2248,7 @@ Summary:	Development files for the Leak Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Development/Libraries
+Requires:	liblsan-devel = %{epoch}:%{version}-%{release}
 Requires:	liblsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n liblsan-multilib-%{multilib2}-devel
@@ -2257,6 +2277,7 @@ Summary:	The Thread Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n libtsan
 This package contains the Thread Sanitizer library which is used for
@@ -2297,6 +2318,7 @@ Summary:	The Thread Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Thread Sanitizer do kontroli wielowątkowości - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libtsan-multilib-%{multilib2}
 This package contains %{m2_desc} version of the Thread Sanitizer
@@ -2342,6 +2364,7 @@ Summary:	The Undefined Behavior Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n libubsan
 This package contains the Undefined Behavior Sanitizer library which
@@ -2385,6 +2408,7 @@ Summary:	The Undefined Behavior Sanitizer library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań - wersja 32-bitowa
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
 Obsoletes:	libubsan-multilib
 
 %description -n libubsan-multilib-32
@@ -2434,6 +2458,7 @@ Summary:	The Undefined Behavior Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreślonych zachowań - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libubsan-multilib-%{multilib2}
 This package contains %{m2_desc} version of the Undefined Behavior
@@ -2481,6 +2506,7 @@ Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy 
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libgcc = %{epoch}:%{version}-%{release}
 
 %description -n libvtv
 This package contains the Virtual Table Verification library which
@@ -2527,6 +2553,7 @@ Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy 
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 
 %description -n libvtv-multilib-32
 This package contains 32-bit version of the Virtual Table Verification
@@ -2575,6 +2602,7 @@ Summary(pl.UTF-8):	Biblioteka Virtual Table Verification do weryfikacji tablicy 
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 URL:		https://gcc.gnu.org/wiki/vtv
+Requires:	libgcc-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libvtv-multilib-%{multilib2}
 This package contains %{m2_desc} version of the Virtual Table Verification
@@ -4396,7 +4424,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/liblsan.so
 %{_libdirm2}/liblsan.la
-%{gcclibdir}/include/sanitizer/lsan_interface.h
 
 %files -n liblsan-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
