@@ -1,4 +1,3 @@
-# TODO: missing info patch parts
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # TODO:
