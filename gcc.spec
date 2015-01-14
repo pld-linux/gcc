@@ -2247,7 +2247,6 @@ Summary:	Development files for the Leak Sanitizer library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki Leak Sanitizer - wersja %{m2_desc}
 License:	BSD-like or MIT
 Group:		Development/Libraries
-Requires:	liblsan-devel = %{epoch}:%{version}-%{release}
 Requires:	liblsan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n liblsan-multilib-%{multilib2}-devel
@@ -3548,7 +3547,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgcc
 %defattr(644,root,root,755)
-%doc COPYING.RUNTIME ChangeLog
+%doc COPYING.RUNTIME libgcc/ChangeLog
 %attr(755,root,root) %{_slibdir}/libgcc_s.so.1
 %attr(755,root,root) %{_slibdir}/libitm.so.*.*.*
 %attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
@@ -4423,6 +4422,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/liblsan.so
 %{_libdirm2}/liblsan.la
+# it looks like duplicate of file from liblsan-devel, but actually it isn't:
+# these packages are mutually exclusive
+# (either liblsan-devel.x86_64 or liblsan-multilib-64.x32)
+%{gcclibdir}/include/sanitizer/lsan_interface.h
 
 %files -n liblsan-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
