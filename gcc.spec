@@ -136,7 +136,6 @@ Source3:	libffi.pc.in
 Patch100:	%{name}-branch.diff
 # Patch100-md5:	1f1a11566ddf413cca96fbb04fd790d4
 Patch0:		%{name}-info.patch
-Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
@@ -2777,7 +2776,6 @@ Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 %setup -q
 %patch100 -p0
 %patch0 -p1
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
