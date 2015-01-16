@@ -199,7 +199,6 @@ BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	isl-devel >= 0.13
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
-BuildRequires:	ppl-devel >= 0.11
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -2884,8 +2883,6 @@ TEXCONFIG=false \
 	--with-multilib-list=m32,m64,mx32 \
 %endif
 %endif
-	--with-ppl \
-	--disable-ppl-version-check \
 	--with-slibdir=%{_slibdir} \
 %ifnarch ia64
 	--without-system-libunwind \
