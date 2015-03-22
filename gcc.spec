@@ -3265,6 +3265,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-n libffi-devel -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	-n libgomp-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	-n libgomp-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post   -p /sbin/ldconfig -n libcilkrts
 %postun -p /sbin/ldconfig -n libcilkrts
 %post   -p /sbin/ldconfig -n libcilkrts-multilib-32
