@@ -18,7 +18,7 @@
 # - features:
 %bcond_without	gomp		# build without OpenMP support
 %bcond_without	multilib	# build without multilib support (which needs glibc[32&64]-devel)
-%bcond_with	multilibx32	# build with x32 multilib support on x86_64 (needs x32 glibc-devel)
+%bcond_without	multilibx32	# build with x32 multilib support on x86_64 (needs x32 glibc-devel)
 %bcond_without	profiling	# build without profiling
 %bcond_without	python		# build without libstdc++ printers for gdb and aot-compile for java
 %bcond_with	gcc_libffi	# packaging gcc libffi for system usage
