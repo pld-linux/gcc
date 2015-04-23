@@ -108,12 +108,12 @@
 %define		with_vtv	1
 %endif
 
-%define		major_ver	4.9
-%define		minor_ver	2
+%define		major_ver	5
+%define		minor_ver	1.0
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	15
+%define		gcj_soname_ver	16
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -121,20 +121,20 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	8
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	4df8ee253b7f3863ad0b86359cd39c43
+# Source0-md5:	d5525b1127d07d215960e6051c5da35e
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_2_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_1_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	1f1a11566ddf413cca96fbb04fd790d4
+# Patch100-md5:	75985206413b6462ef119b6be9340d3a
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -283,7 +283,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libgo|libxmlj|lib-gnu-awt-xlib)\.so.*'
+%define		skip_post_check_so	'.*(libcc1plugin|libgo|libxmlj|lib-gnu-awt-xlib)\.so.*'
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -2997,6 +2997,10 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
 
+libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp-plugin-host_nonshm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf %{_slibdir}/$libgompplugin $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so
+
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
@@ -3440,14 +3444,25 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avx2intrin.h
+%{gcclibdir}/include/avx512bwintrin.h
 %{gcclibdir}/include/avx512cdintrin.h
+%{gcclibdir}/include/avx512dqintrin.h
 %{gcclibdir}/include/avx512erintrin.h
 %{gcclibdir}/include/avx512fintrin.h
+%{gcclibdir}/include/avx512ifmaintrin.h
+%{gcclibdir}/include/avx512ifmavlintrin.h
 %{gcclibdir}/include/avx512pfintrin.h
+%{gcclibdir}/include/avx512vbmiintrin.h
+%{gcclibdir}/include/avx512vbmivlintrin.h
+%{gcclibdir}/include/avx512vlbwintrin.h
+%{gcclibdir}/include/avx512vldqintrin.h
+%{gcclibdir}/include/avx512vlintrin.h
 %{gcclibdir}/include/avxintrin.h
 %{gcclibdir}/include/bmi2intrin.h
 %{gcclibdir}/include/bmiintrin.h
 %{gcclibdir}/include/bmmintrin.h
+%{gcclibdir}/include/clflushoptintrin.h
+%{gcclibdir}/include/clwbintrin.h
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
@@ -3463,6 +3478,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mmintrin.h
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/nmmintrin.h
+%{gcclibdir}/include/pcommitintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
 %{gcclibdir}/include/prfchwintrin.h
@@ -3476,8 +3492,10 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
 %{gcclibdir}/include/xopintrin.h
+%{gcclibdir}/include/xsavecintrin.h
 %{gcclibdir}/include/xsaveintrin.h
 %{gcclibdir}/include/xsaveoptintrin.h
+%{gcclibdir}/include/xsavesintrin.h
 %{gcclibdir}/include/xtestintrin.h
 %endif
 %ifarch arm
@@ -3580,14 +3598,19 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
+%attr(755,root,root) %{_slibdir}/libgomp-plugin-host_nonshm.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so
+%attr(755,root,root) %{_libdir}/libgomp-plugin-host_nonshm.so
 %{_libdir}/libgomp.la
+%{_libdir}/libgomp-plugin-host_nonshm.la
 %{_libdir}/libgomp.spec
 %{gcclibdir}/finclude
 %{gcclibdir}/include/omp.h
+%{gcclibdir}/include/openacc.h
 %{_infodir}/libgomp.info*
 
 %files -n libgomp-static
@@ -4272,9 +4295,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/go/gofrontend/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_bindir}/gccgo
+%attr(755,root,root) %{_bindir}/go
+%attr(755,root,root) %{_bindir}/gofmt
+%attr(755,root,root) %{gcclibdir}/cgo
 %attr(755,root,root) %{gcclibdir}/go1
 %dir %{_libdir}/go
 %{_libdir}/go/%{version}
+%{_mandir}/man1/go.1*
+%{_mandir}/man1/gofmt.1*
 %{_mandir}/man1/gccgo.1*
 %{_infodir}/gccgo.info*
 
@@ -4296,13 +4324,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.5
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.7
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgo.so
 %{_libdir}/libgo.la
 %{_libdir}/libgobegin.a
+%{_libdir}/libnetgo.a
 
 %files -n libgo-static
 %defattr(644,root,root,755)
@@ -4312,7 +4341,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.5
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.7
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4329,7 +4358,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.5
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.7
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4348,7 +4377,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.1
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.2
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
@@ -4365,7 +4394,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.1
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.2
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4382,7 +4411,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.1
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.2
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)

@@ -14,17 +14,6 @@
  unsigned char __gnat_objlist_file_supported = 1;
  const char *__gnat_object_library_extension = ".a";
  unsigned char __gnat_separate_run_path_options = 0;
---- a/gcc/ada/gcc-interface/Make-lang.in	2004-09-01 12:46:47.000000000 +0200
-+++ b/gcc/ada/gcc-interface/Make-lang.in	2004-09-26 12:21:15.135188144 +0200
-@@ -625,7 +625,7 @@ ada.tags: force
- ada/doctools/xgnatugn$(build_exeext): ada/xgnatugn.adb
- 	-$(MKDIR) ada/doctools
- 	$(CP) $^ ada/doctools
--	cd ada/doctools && gnatmake -q xgnatugn
-+	cd ada/doctools && gnatmake -q xgnatugn -aO../rts
- 
- # Note that doc/gnat_ugn.texi and doc/projects.texi do not depend on
- # xgnatugn being built so we can distribute a pregenerated doc/gnat_ugn.info
 --- a/gcc/ada/gcc-interface/Makefile.in	2005-05-26 10:48:40.000000000 +0000
 +++ b/gcc/ada/gcc-interface/Makefile.in	2005-05-26 10:59:25.000000000 +0000
 @@ -126,7 +126,7 @@
