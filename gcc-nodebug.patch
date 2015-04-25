@@ -9,12 +9,13 @@
  BOOT_CFLAGS = -O $(CFLAGS)
  # These exists to be overridden by the t-* files, respectively.
  T_CFLAGS =
-@@ -105,11 +105,11 @@
+@@ -105,12 +105,12 @@
  GNATBIND_FLAGS = -static -x
  ADA_CFLAGS =
  ADAFLAGS = -W -Wall -gnatpg -gnata
 -FORCE_DEBUG_ADAFLAGS = -g
 +FORCE_DEBUG_ADAFLAGS =
+ NO_INLINE_ADAFLAGS = -fno-inline
  NO_SIBLING_ADAFLAGS = -fno-optimize-sibling-calls
  NO_REORDER_ADAFLAGS = -fno-toplevel-reorder
  GNATLIBFLAGS = -W -Wall -gnatpg -nostdinc
@@ -23,24 +24,6 @@
  PICFLAG_FOR_TARGET = @PICFLAG_FOR_TARGET@
  
  # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
-@@ -2755,7 +2755,7 @@
- 	cd $(RTSDIR) && \
- 	../../gnatsym -s SYMVEC_$$$$.opt \
- 	$(LIBGNAT_OBJS) $(GNATRTL_NONTASKING_OBJS) && \
--	../../xgcc -g -B../../ -shared -shared-libgcc \
-+	../../xgcc -B../../ -shared -shared-libgcc \
- 	   -o libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) libgnat.a \
- 	   sys\$$library:trace.exe \
- 	   --for-linker=/noinform \
-@@ -2764,7 +2764,7 @@
- 	cd $(RTSDIR) && \
- 	../../gnatsym -s SYMVEC_$$$$.opt \
- 	$(GNATRTL_TASKING_OBJS) && \
--	../../xgcc -g -B../../ -shared -shared-libgcc \
-+	../../xgcc -B../../ -shared -shared-libgcc \
- 	   -o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
- 	   libgnarl.a libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
- 	   sys\$$library:trace.exe \
 --- gcc-4.7.1/libada/Makefile.in.orig	2012-06-12 17:12:37.000000000 +0200
 +++ gcc-4.7.1/libada/Makefile.in	2012-07-12 18:27:53.482408144 +0200
 @@ -59,7 +59,7 @@ LDFLAGS=
@@ -55,25 +38,25 @@
 --- gcc-4.7.1/libffi/Makefile.am.orig	2012-02-27 11:00:12.000000000 +0100
 +++ gcc-4.7.1/libffi/Makefile.am	2012-07-12 18:28:20.115740360 +0200
 @@ -168,7 +168,7 @@
- libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
- nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
- 
--AM_CFLAGS = -Wall -g -fexceptions
-+AM_CFLAGS = -Wall -fexceptions
  
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
  
+-AM_CFLAGS = -Wall -g -fexceptions
++AM_CFLAGS = -Wall -fexceptions
+ if FFI_DEBUG
+ # Build debug. Define FFI_DEBUG on the commandline so that, when building with
+ # MSVC, it can link against the debug CRT.
 --- gcc-4.7.1/libffi/Makefile.in.orig	2012-06-14 10:48:08.000000000 +0200
 +++ gcc-4.7.1/libffi/Makefile.in	2012-07-12 18:28:35.029073067 +0200
 @@ -475,7 +475,7 @@
- 	$(am__append_24) $(am__append_25)
- libffi_convenience_la_SOURCES = $(libffi_la_SOURCES)
+ libffi_convenience_la_DEPENDENCIES = $(libffi_la_DEPENDENCIES)
  nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
--AM_CFLAGS = -Wall -g -fexceptions
-+AM_CFLAGS = -Wall -fexceptions
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
- libffi_la_LDFLAGS = -version-info `grep -v '^\#' $(srcdir)/libtool-version` $(LTLDFLAGS) $(AM_LTLDFLAGS)
+-AM_CFLAGS = -Wall -g -fexceptions $(am__append_2)
++AM_CFLAGS = -Wall -fexceptions $(am__append_2)
+ libffi_la_LDFLAGS = -no-undefined -version-info `grep -v '^\#' $(srcdir)/libtool-version` $(LTLDFLAGS) $(AM_LTLDFLAGS)
  AM_CPPFLAGS = -I. -I$(top_srcdir)/include -Iinclude -I$(top_srcdir)/src
+ AM_CCASFLAGS = $(AM_CPPFLAGS)
 --- gcc-4.7.1/libgcc/Makefile.in.orig	2012-05-24 16:59:38.000000000 +0200
 +++ gcc-4.7.1/libgcc/Makefile.in	2012-07-12 18:28:59.042405393 +0200
 @@ -221,7 +221,7 @@
