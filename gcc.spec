@@ -86,7 +86,7 @@
 %endif
 
 %define		major_ver	4.8
-%define		minor_ver	3
+%define		minor_ver	5
 %define		major_ecj_ver	4.5
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -98,20 +98,20 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	ftp://gcc.gnu.org/pub/gcc/releases/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	7c60f24fab389f77af203d2516ee110f
+# Source0-md5:	80d2c2982a3392bb0b89673ff136e223
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	d7cd6a27c8801e66cbaa964a039ecfdb
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_8_5_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_8-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	36e22cc051adc6de015a3fd3073906c5
+# Patch100-md5:	5af444cd3a631df0c84b38ed07d40dc5
 Patch0:		%{name}-info.patch
 Patch1:		%{name}-cloog.patch
 Patch2:		%{name}-nodebug.patch
@@ -121,7 +121,6 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
-Patch12:	gcc-4.9-isl-0.13-hack.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -1707,8 +1706,6 @@ Ten pakiet zawiera 32-bitową wersję statycznej biblioteki GNU Atomic.
 %if %{with gcc_libffi}
 %patch11 -p0
 %endif
-
-%patch12 -p1
 
 mv ChangeLog ChangeLog.general
 
