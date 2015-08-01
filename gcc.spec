@@ -62,8 +62,9 @@
 %undefine	with_qt
 %endif
 
-%ifarch sparc64
-# used to be broken (to be verified if needed)
+%ifarch sparc64 x32
+# used to be broken on sparc64 (to be verified if needed)
+# broken since 5.x on x32 (to be verified if needed)
 %undefine	with_ada
 %endif
 
@@ -2777,7 +2778,7 @@ Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 %patch100 -p0
 %patch0 -p1
 %patch2 -p1
-%patch3 -p1
+#%patch3 -p1
 %patch4 -p1
 
 %patch6 -p1
