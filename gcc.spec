@@ -2778,7 +2778,7 @@ Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 %patch100 -p0
 %patch0 -p1
 %patch2 -p1
-#%patch3 -p1
+%patch3 -p1
 %patch4 -p1
 
 %patch6 -p1
