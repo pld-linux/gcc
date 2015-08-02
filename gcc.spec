@@ -164,6 +164,7 @@ BuildRequires:	flex
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
+BuildRequires:	gdb
 BuildRequires:	gettext-tools
 BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
@@ -2773,6 +2774,27 @@ This package contains %{m2_desc} version of the GNU Atomic static library.
 %description -n libatomic-multilib-%{multilib2}-static -l pl.UTF-8
 Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 
+%package gdb-plugin
+Summary: GCC plugin for GDB
+Group: Development/Debuggers
+Requires: gcc = %{epoch}:%{version}-%{release}
+
+%description gdb-plugin
+This package contains GCC plugin for GDB C expression evaluation.
+
+%package plugin-devel
+Summary: Support for compiling GCC plugins
+Group: Development/Languages
+Requires: gcc = %{epoch}:%{version}-%{release}
+Requires: gmp-devel >= 4.1.2-8
+Requires: libmpc-devel >= 0.8.1
+Requires: mpfr-devel >= 2.2.1
+
+%description plugin-devel
+This package contains header files and other support files
+for compiling GCC plugins.  The GCC plugin ABI is currently
+not stable, so plugins must be rebuilt any time GCC is updated.
+
 %prep
 %setup -q
 %patch100 -p0
@@ -3015,6 +3037,10 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
+libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp-plugin-host_nonshm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir32}
+ln -sf %{_slibdir32}/$libgompplugin $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so
+
 %if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
@@ -3027,6 +3053,10 @@ ln -sf %{_slibdirm2}/$libitm $RPM_BUILD_ROOT%{_libdirm2}/libitm.so
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libgomp $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so
+
+libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp-plugin-host_nonshm.so.*.*.*)
+mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+ln -sf %{_slibdirm2}/$libgompplugin $RPM_BUILD_ROOT%{_libdirm2}/libgomp-plugin-host_nonshm.so
 %endif
 %endif
 
@@ -3370,6 +3400,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libatomic-multilib-32
 %post	-p /sbin/ldconfig -n libatomic-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libatomic-multilib-%{multilib2}
+%post	-p /sbin/ldconfig gdb-plugin
+%postun	-p /sbin/ldconfig gdb-plugin
 
 %files -f gcc.lang
 %defattr(644,root,root,755)
@@ -3421,7 +3453,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{gcclibdir}/lto-wrapper
 %attr(755,root,root) %{gcclibdir}/lto1
 %attr(755,root,root) %{gcclibdir}/liblto_plugin.so*
-%{gcclibdir}/plugin
 %dir %{gcclibdir}/include
 %dir %{gcclibdir}/include/sanitizer
 %{gcclibdir}/include/sanitizer/common_interface_defs.h
@@ -4659,3 +4690,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdirm2}/libatomic.a
 %endif
 %endif
+
+%files gdb-plugin
+%defattr(644,root,root,755)
+%doc libcc1/ChangeLog*
+%attr(755,root,root) %{_libdir}/libcc1.so
+%attr(755,root,root) %{_libdir}/libcc1.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libcc1.so.0
+%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so.*
+
+%files plugin-devel
+%defattr(644,root,root,755)
+%dir %{gcclibdir}/plugin
+%{gcclibdir}/plugin/gengtype
+%{gcclibdir}/plugin/gtype.state
+%{gcclibdir}/plugin/include
+%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.la
+%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
