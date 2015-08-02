@@ -3385,6 +3385,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcc-ranlib
 #%attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
+%attr(755,root,root) %{_bindir}/gcov-tool
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
@@ -3479,6 +3480,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mmintrin.h
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/nmmintrin.h
+%{gcclibdir}/include/mwaitxintrin.h
 %{gcclibdir}/include/pcommitintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
@@ -3623,12 +3625,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
+%attr(755,root,root) %{_slibdir32}/libgomp-plugin-host_nonshm.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir32}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-multilib-32-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgomp.so
+%attr(755,root,root) %{_libdir32}/libgomp-plugin-host_nonshm.so
 %{_libdir32}/libgomp.la
+%{_libdir32}/libgomp-plugin-host_nonshm.la
 %{_libdir32}/libgomp.spec
+%{gcclibdir}/32/finclude
 
 %files -n libgomp-multilib-32-static
 %defattr(644,root,root,755)
@@ -3640,12 +3647,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdirm2}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdirm2}/libgomp.so.1
+%attr(755,root,root) %{_slibdirm2}/libgomp-plugin-host_nonshm.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdirm2}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgomp.so
+%attr(755,root,root) %{_libdirm2}/libgomp-plugin-host_nonshm.so
 %{_libdirm2}/libgomp.la
+%{_libdirm2}/libgomp-plugin-host_nonshm.la
 %{_libdirm2}/libgomp.spec
+%{gcclibdir}/%{multilib2}/finclude
 
 %files -n libgomp-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4332,6 +4344,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgo.so
 %{_libdir}/libgo.la
 %{_libdir}/libgobegin.a
+%{_libdir}/libgolibbegin.a
 %{_libdir}/libnetgo.a
 
 %files -n libgo-static
@@ -4349,6 +4362,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgo.so
 %{_libdir32}/libgo.la
 %{_libdir32}/libgobegin.a
+%{_libdir32}/libgolibbegin.a
+%{_libdir32}/libnetgo.a
 
 %files -n libgo-multilib-32-static
 %defattr(644,root,root,755)
@@ -4366,6 +4381,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdirm2}/libgo.so
 %{_libdirm2}/libgo.la
 %{_libdirm2}/libgobegin.a
+%{_libdirm2}/libgolibbegin.a
+%{_libdirm2}/libnetgo.a
 
 %files -n libgo-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
