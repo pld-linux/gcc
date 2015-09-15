@@ -110,7 +110,7 @@
 
 %define		major_ver	4.9
 %define		minor_ver	3
-%define		major_ecj_ver	4.9
+%define		ecj_ver		4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 %define		gcj_soname_ver	15
@@ -128,8 +128,6 @@ Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	6f831b4d251872736e8e9cc09746f327
 Source1:	%{name}-optimize-la.pl
-Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
-# Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_4_9_3_release svn://gcc.gnu.org/svn/gcc/branches/gcc-4_9-branch > gcc-branch.diff
@@ -145,6 +143,8 @@ Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
+Patch12:	%{name}-isl0.15-1.patch
+Patch13:	%{name}-isl0.15-2.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen}
@@ -196,6 +196,7 @@ BuildRequires:	glibc-devel(sparcv9)
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	isl-devel >= 0.13
+BuildRequires:	java-ecj >= %{ecj_ver}
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 %if %{with python}
@@ -1437,10 +1438,10 @@ Summary(es.UTF-8):	Soporte de Java para GCC
 Summary(pl.UTF-8):	Obsługa języka Java dla GCC
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	java-ecj >= %{ecj_ver}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
 Provides:	gcj = %{epoch}:%{version}-%{release}
-Obsoletes:	eclipse-ecj
 Obsoletes:	gcc-java-tools
 Obsoletes:	java-gnu-classpath-tools
 
@@ -2789,13 +2790,10 @@ Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 %if %{with gcc_libffi}
 %patch11 -p0
 %endif
+%patch12 -p1
+%patch13 -p1
 
 mv ChangeLog ChangeLog.general
-
-%if %{with java}
-# see contrib/download_ecj
-cp -p %{SOURCE2} ecj.jar
-%endif
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
@@ -2842,6 +2840,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-gnu-indirect-function \
 	--enable-initfini-array \
+	--disable-isl-version-check \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
 	--enable-libitm \
@@ -2869,6 +2868,7 @@ TEXCONFIG=false \
 	--with-cpu=ultrasparc \
 %endif
 	--with-demangler-in-ld \
+	--with-ecj-jar=%{_javadir}/ecj.jar \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-linker-hash-style=gnu \
@@ -4097,7 +4097,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
-%{_javadir}/ecj.jar
 %{_mandir}/man1/gij.1*
 
 %files -n libgcj-devel
