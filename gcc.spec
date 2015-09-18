@@ -135,7 +135,7 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_2_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	2c8fbfa431c9e9833f087624862d0114
+# Patch100-md5:	aaf0721537dce2f1592ff8c77d8fcb0c
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
