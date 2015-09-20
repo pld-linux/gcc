@@ -3124,8 +3124,9 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 %endif
 	%{?with_objc:libobjc.la};
 do
-	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/$f %{_libdir} > $RPM_BUILD_ROOT%{_libdir}/$f.fixed
-	mv $RPM_BUILD_ROOT%{_libdir}/$f{.fixed,}
+	file="$RPM_BUILD_ROOT%{_libdir}/$f"
+	%{__perl} %{SOURCE1} "$file" %{_libdir} >"${file}.fixed"
+	%{__mv} "${file}.fixed" "$file"
 done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \

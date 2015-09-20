@@ -16,11 +16,13 @@ close(F);
 
 foreach (@lines)
 {
-    if (/(^dependency_libs='(.*)')/)
+    if (/(^dependency_libs='(.*)')[\ \t]*$/)
     {
-	@libs = split(/[\ \t\n]+/, trim($2));
-	@L = grep(/^-L.*gcc\/.*\/\d\.\d\.\d(\/32)*$/, @libs);
-	@l = grep(/^-l.*/, @libs);
+	my $trimmed = trim($2);
+	$trimmed =~ y/'//d;
+	@libs = split(/[\ \t\n]+/, $trimmed);
+	@L = grep(/^-L.*gcc\/.*\/\d\.\d\.\d(\/(32|64|x32|nof))*$/, @libs);
+	@l = grep(/^(-l.*|\/.*\.la$)/, @libs);
 	$opt_L = join(' ', @L);
 	$opt_l = join(' ', @l);
 	print("dependency_libs='");
