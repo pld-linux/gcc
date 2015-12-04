@@ -3139,7 +3139,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/%{_target_platform}/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3165,7 +3165,7 @@ do
 done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3180,7 +3180,7 @@ do
 done
 %if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la libquadmath.la} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3911,6 +3911,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.la
+%{_libdir32}/libstdc++fs.a
+%{_libdir32}/libstdc++fs.la
 
 %files -n libstdc++-multilib-32-static
 %defattr(644,root,root,755)
@@ -3927,6 +3929,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libstdc++.so
 %{_libdirm2}/libstdc++.la
+%{_libdirm2}/libstdc++fs.a
+%{_libdirm2}/libstdc++fs.la
 
 %files -n libstdc++-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
