@@ -110,7 +110,7 @@
 %endif
 
 %define		major_ver	5
-%define		minor_ver	2.0
+%define		minor_ver	3.0
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -127,15 +127,15 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	a51bcfeb3da7dd4c623e27207ed43467
+# Source0-md5:	c9616fd448f980259c31de613e575719
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_2_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_3_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	aaf0721537dce2f1592ff8c77d8fcb0c
+# Patch100-md5:	62c886f1e86f7fb3950094ed32caaeaf
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -3881,6 +3881,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so
 %{_libdir}/libstdc++.la
+%{_libdir}/libstdc++fs.a
+%{_libdir}/libstdc++fs.la
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
 %{_includedir}/extc++.h
