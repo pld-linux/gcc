@@ -122,7 +122,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3162,6 +3162,9 @@ do
 	file="$RPM_BUILD_ROOT%{_libdir}/$f"
 	%{__perl} %{SOURCE1} "$file" %{_libdir} >"${file}.fixed"
 	%{__mv} "${file}.fixed" "$file"
+
+	# normalize /lib/../lib/ path (libjawt.la)
+	sed -i -e 's#/%{_lib}/\.\./%{_lib}/#/%{_lib}/#g' "$file"
 done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
