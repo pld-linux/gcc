@@ -1,5 +1,8 @@
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
+# NOTE
+# - when adding new subpackages, do not use epoch 6 there, reset them to 0!
+#
 # TODO:
 # - gconf peer? (but libgcj needs split anyway)
 # - package?
