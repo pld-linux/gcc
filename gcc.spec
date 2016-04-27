@@ -112,12 +112,12 @@
 %define		with_vtv	1
 %endif
 
-%define		major_ver	5
-%define		minor_ver	3.0
+%define		major_ver	6
+%define		minor_ver	1.0
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
-%define		gcj_soname_ver	16
+%define		gcj_soname_ver	17
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -125,18 +125,18 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	c9616fd448f980259c31de613e575719
+# Source0-md5:	8fb6cb98b8459f5863328380fbf06bd1
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_3_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_6_1_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-6-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
 # Patch100-md5:	62c886f1e86f7fb3950094ed32caaeaf
 Patch0:		%{name}-info.patch
@@ -144,7 +144,6 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
 
-Patch6:		%{name}-pr61164.patch
 Patch7:		%{name}-libjava-multilib.patch
 Patch8:		%{name}-enable-java-awt-qt.patch
 Patch10:	%{name}-moresparcs.patch
@@ -288,7 +287,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libcc1plugin|libgo|libxmlj|lib-gnu-awt-xlib)\.so.*'
+%define		skip_post_check_so	'.*(libcc1plugin|libgo|libxmlj|lib-gnu-awt-xlib|libmpxwrappers)\.so.*'
 
 %description
 A compiler aimed at integrating all the optimizations and features
@@ -690,6 +689,146 @@ library in %{m2_desc} version.
 %description -n libcilkrts-multilib-%{multilib2}-static -l pl.UTF-8
 Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
 języków C/C++. W tym pakiecie znajduje się wersja %{m2_desc}.
+
+%package -n libmpx
+Summary:	GCC Memory Protection Extensions language extensions runtime library
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
+License:	BSD
+Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+
+%description -n libmpx
+This package contains the Memory Protection Extensions C language extensions runtime
+library.
+
+%description -n libmpx -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
+języka C.
+
+%package -n libmpx-devel
+Summary:	GCC development files for Memory Protection Extensions language extensions
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx = %{epoch}:%{version}-%{release}
+
+%description -n libmpx-devel
+This package contains development files for Memory Protection Extensions C language
+extensions.
+
+%description -n libmpx-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
+języka C.
+
+%package -n libmpx-static
+Summary:	GCC Memory Protection Extensions language extensions static library
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
+
+%description -n libmpx-static
+This package contains Memory Protection Extensions C language extensions static
+library.
+
+%description -n libmpx-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
+języka C.
+
+%package -n libmpx-multilib-32
+Summary:	GCC Memory Protection Extensions language extensions runtime library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
+License:	BSD
+Group:		Libraries
+Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
+Obsoletes:	libmpx-multilib
+
+%description -n libmpx-multilib-32
+This package contains the Memory Protection Extensions C language extensions runtime
+library in 32-bit version.
+
+%description -n libmpx-multilib-32 -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
+języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+
+%package -n libmpx-multilib-32-devel
+Summary:	GCC development files for Memory Protection Extensions language extensions - 32-bit version
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions - wersja 32-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
+Requires:	libmpx-multilib-32 = %{epoch}:%{version}-%{release}
+Obsoletes:	libmpx-multilib-devel
+
+%description -n libmpx-multilib-32-devel
+This package contains development files for Memory Protection Extensions C language
+extensions in 32-bit version.
+
+%description -n libmpx-multilib-32-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
+języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+
+%package -n libmpx-multilib-32-static
+Summary:	GCC Memory Protection Extensions language extensions static library - 32-bit version
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx-multilib-32-devel = %{epoch}:%{version}-%{release}
+Obsoletes:	libmpx-multilib-static
+
+%description -n libmpx-multilib-32-static
+This package contains the Memory Protection Extensions C language extensions static
+library in 32-bit version.
+
+%description -n libmpx-multilib-32-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
+języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+
+%package -n libmpx-multilib-%{multilib2}
+Summary:	GCC Memory Protection Extensions language extensions runtime library
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
+License:	BSD
+Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libmpx-multilib-%{multilib2}
+This package contains the Memory Protection Extensions C language extensions runtime
+library.
+
+%description -n libmpx-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
+języka C.
+
+%package -n libmpx-multilib-%{multilib2}-devel
+Summary:	GCC development files for Memory Protection Extensions language extensions
+Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
+Requires:	libmpx-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libmpx-multilib-%{multilib2}-devel
+This package contains development files for Memory Protection Extensions C language
+extensions.
+
+%description -n libmpx-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
+języka C.
+
+%package -n libmpx-multilib-%{multilib2}-static
+Summary:	GCC Memory Protection Extensions language extensions static library
+Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
+License:	BSD
+Group:		Development/Libraries
+Requires:	libmpx-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libmpx-multilib-%{multilib2}-static
+This package contains the Memory Protection Extensions C language extensions static
+library.
+
+%description -n libmpx-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
+języka C.
 
 %package ada
 Summary:	Ada language support for GCC
@@ -2800,13 +2939,12 @@ not stable, so plugins must be rebuilt any time GCC is updated.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 
-%patch6 -p1
 %patch7 -p0
 %if %{with qt}
 %patch8 -p1
@@ -3023,9 +3161,9 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
 
-libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp-plugin-host_nonshm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir}
-ln -sf %{_slibdir}/$libgompplugin $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so
+#libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp-plugin-host_nonshm.so.*.*.*)
+#mv $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir}
+#ln -sf %{_slibdir}/$libgompplugin $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so
 
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
@@ -3040,9 +3178,9 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
-libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp-plugin-host_nonshm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir32}
-ln -sf %{_slibdir32}/$libgompplugin $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so
+#libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp-plugin-host_nonshm.so.*.*.*)
+#mv $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir32}
+#ln -sf %{_slibdir32}/$libgompplugin $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so
 
 %if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
@@ -3357,6 +3495,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libffi-multilib-32
 %post	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libmpx
+%postun	-p /sbin/ldconfig -n libmpx
+%post	-p /sbin/ldconfig -n libmpx-multilib-32
+%postun	-p /sbin/ldconfig -n libmpx-multilib-32
+%post	-p /sbin/ldconfig -n libmpx-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libmpx-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib-32
@@ -3503,6 +3647,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/bmmintrin.h
 %{gcclibdir}/include/clflushoptintrin.h
 %{gcclibdir}/include/clwbintrin.h
+%{gcclibdir}/include/clzerointrin.h
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
@@ -3520,6 +3665,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/mwaitxintrin.h
 %{gcclibdir}/include/pcommitintrin.h
+%{gcclibdir}/include/pkuintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
 %{gcclibdir}/include/prfchwintrin.h
@@ -3639,15 +3785,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
-%attr(755,root,root) %{_slibdir}/libgomp-plugin-host_nonshm.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir}/libgomp-plugin-host_nonshm.so.1
+#%attr(755,root,root) %{_slibdir}/libgomp-plugin-host_nonshm.so.*.*.*
+#%attr(755,root,root) %ghost %{_slibdir}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so
-%attr(755,root,root) %{_libdir}/libgomp-plugin-host_nonshm.so
+#%attr(755,root,root) %{_libdir}/libgomp-plugin-host_nonshm.so
 %{_libdir}/libgomp.la
-%{_libdir}/libgomp-plugin-host_nonshm.la
+#%{_libdir}/libgomp-plugin-host_nonshm.la
 %{_libdir}/libgomp.spec
 %{gcclibdir}/finclude
 %{gcclibdir}/include/omp.h
@@ -3754,6 +3900,66 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libcilkrts.a
 %endif
+%endif
+
+%files -n libmpx
+%defattr(644,root,root,755)
+%doc libmpx/ChangeLog
+%attr(755,root,root) %{_libdir}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpx.so.2
+%attr(755,root,root) %{_libdir}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpxwrappers.so.2
+
+%files -n libmpx-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libmpx.so
+%attr(755,root,root) %{_libdir}/libmpxwrappers.so
+%{_libdir}/libmpx.la
+%{_libdir}/libmpxwrappers.la
+%{_libdir}/libmpx.spec
+
+%files -n libmpx-static
+%defattr(644,root,root,755)
+%{_libdir}/libmpx.a
+%{_libdir}/libmpxwrappers.a
+
+%if %{with multilib}
+%files -n libmpx-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libmpx.so.2
+%attr(755,root,root) %{_libdir32}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libmpxwrappers.so.2
+
+%files -n libmpx-multilib-32-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libmpx.so
+%attr(755,root,root) %{_libdir32}/libmpxwrappers.so
+%{_libdir32}/libmpx.la
+%{_libdir32}/libmpxwrappers.la
+%{_libdir32}/libmpx.spec
+
+%files -n libmpx-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libmpx.a
+%{_libdir32}/libmpxwrappers.a
+%endif
+
+%if %{with multilib2}
+%files -n libmpx-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libmpx.so.2
+
+%files -n libmpx-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libmpx.so
+%{_libdirm2}/libmpx.la
+%{_libdirm2}/libmpx.spec
+
+%files -n libmpx-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libmpx.a
 %endif
 
 %if %{with ada}
@@ -3891,6 +4097,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libstdc++fs.la
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
+%{_includedir}/expc++.h
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
 %{_includedir}/stdtr1c++.h
@@ -3979,8 +4186,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgfortran.la
 %{gcclibdir}/libcaf_single.a
 %{gcclibdir}/libcaf_single.la
-%{gcclibdir}/libgfortranbegin.la
-%{gcclibdir}/libgfortranbegin.a
+#%{gcclibdir}/libgfortranbegin.la
+#%{gcclibdir}/libgfortranbegin.a
 %{_infodir}/gfortran.info*
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
@@ -3993,8 +4200,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libgfortran.la
 %{gcclibdir}/32/libcaf_single.a
 %{gcclibdir}/32/libcaf_single.la
-%{gcclibdir}/32/libgfortranbegin.la
-%{gcclibdir}/32/libgfortranbegin.a
+#%{gcclibdir}/32/libgfortranbegin.la
+#%{gcclibdir}/32/libgfortranbegin.a
 %endif
 
 %if %{with multilib2}
@@ -4005,8 +4212,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdirm2}/libgfortran.la
 %{gcclibdir}/%{multilib2}/libcaf_single.a
 %{gcclibdir}/%{multilib2}/libcaf_single.la
-%{gcclibdir}/%{multilib2}/libgfortranbegin.la
-%{gcclibdir}/%{multilib2}/libgfortranbegin.a
+#%{gcclibdir}/%{multilib2}/libgfortranbegin.la
+#%{gcclibdir}/%{multilib2}/libgfortranbegin.a
 %endif
 
 %files -n libgfortran
@@ -4381,7 +4588,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.7
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.9
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4399,7 +4606,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.7
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.9
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4418,7 +4625,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.7
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.9
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4439,7 +4646,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.2
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.3
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
@@ -4456,7 +4663,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.2
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.3
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4473,7 +4680,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.2
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.3
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
