@@ -8,6 +8,7 @@
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
+# - revise obsoletes for new libmpx packages!
 #
 # Conditional build:
 # - languages:
@@ -156,8 +157,8 @@ BuildRequires:	automake >= 1:1.9.3
 BuildRequires:	binutils >= 3:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
-BuildRequires:	cloog-isl-devel >= 0.17.0
 BuildRequires:	cloog-isl-devel < 0.19
+BuildRequires:	cloog-isl-devel >= 0.17.0
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
@@ -693,142 +694,152 @@ języków C/C++. W tym pakiecie znajduje się wersja %{m2_desc}.
 %package -n libmpx
 Summary:	GCC Memory Protection Extensions language extensions runtime library
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
+Epoch:		0
 License:	BSD
 Group:		Libraries
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 
 %description -n libmpx
-This package contains the Memory Protection Extensions C language extensions runtime
-library.
+This package contains the Memory Protection Extensions C language
+extensions runtime library.
 
 %description -n libmpx -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
+Protection Extensions dla języka C.
 
 %package -n libmpx-devel
 Summary:	GCC development files for Memory Protection Extensions language extensions
 Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx = %{epoch}:%{version}-%{release}
+Requires:	libmpx = %{version}-%{release}
 
 %description -n libmpx-devel
-This package contains development files for Memory Protection Extensions C language
-extensions.
+This package contains development files for Memory Protection
+Extensions C language extensions.
 
 %description -n libmpx-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
+Extensions dla języka C.
 
 %package -n libmpx-static
 Summary:	GCC Memory Protection Extensions language extensions static library
 Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
+Requires:	libmpx-devel = %{version}-%{release}
 
 %description -n libmpx-static
-This package contains Memory Protection Extensions C language extensions static
-library.
+This package contains Memory Protection Extensions C language
+extensions static library.
 
 %description -n libmpx-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
+Extensions dla języka C.
 
 %package -n libmpx-multilib-32
 Summary:	GCC Memory Protection Extensions language extensions runtime library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
+Epoch:		0
 License:	BSD
 Group:		Libraries
-Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
+Requires:	libstdc++-multilib-32 = %{version}-%{release}
 Obsoletes:	libmpx-multilib
 
 %description -n libmpx-multilib-32
-This package contains the Memory Protection Extensions C language extensions runtime
-library in 32-bit version.
+This package contains the Memory Protection Extensions C language
+extensions runtime library in 32-bit version.
 
 %description -n libmpx-multilib-32 -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
-języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
+Protection Extensions dla języka C. W tym pakiecie znajduje się wersja
+32-bitowa.
 
 %package -n libmpx-multilib-32-devel
 Summary:	GCC development files for Memory Protection Extensions language extensions - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions - wersja 32-bitowa
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
-Requires:	libmpx-multilib-32 = %{epoch}:%{version}-%{release}
+Requires:	libmpx-devel = %{version}-%{release}
+Requires:	libmpx-multilib-32 = %{version}-%{release}
 Obsoletes:	libmpx-multilib-devel
 
 %description -n libmpx-multilib-32-devel
-This package contains development files for Memory Protection Extensions C language
-extensions in 32-bit version.
+This package contains development files for Memory Protection
+Extensions C language extensions in 32-bit version.
 
 %description -n libmpx-multilib-32-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
-języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
+Extensions dla języka C. W tym pakiecie znajduje się wersja 32-bitowa.
 
 %package -n libmpx-multilib-32-static
 Summary:	GCC Memory Protection Extensions language extensions static library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx-multilib-32-devel = %{epoch}:%{version}-%{release}
+Requires:	libmpx-multilib-32-devel = %{version}-%{release}
 Obsoletes:	libmpx-multilib-static
 
 %description -n libmpx-multilib-32-static
-This package contains the Memory Protection Extensions C language extensions static
-library in 32-bit version.
+This package contains the Memory Protection Extensions C language
+extensions static library in 32-bit version.
 
 %description -n libmpx-multilib-32-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
-języka C. W tym pakiecie znajduje się wersja 32-bitowa.
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
+Extensions dla języka C. W tym pakiecie znajduje się wersja 32-bitowa.
 
 %package -n libmpx-multilib-%{multilib2}
 Summary:	GCC Memory Protection Extensions language extensions runtime library
 Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
+Epoch:		0
 License:	BSD
 Group:		Libraries
 Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
 
 %description -n libmpx-multilib-%{multilib2}
-This package contains the Memory Protection Extensions C language extensions runtime
-library.
+This package contains the Memory Protection Extensions C language
+extensions runtime library.
 
 %description -n libmpx-multilib-%{multilib2} -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
+Protection Extensions dla języka C.
 
 %package -n libmpx-multilib-%{multilib2}-devel
 Summary:	GCC development files for Memory Protection Extensions language extensions
 Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx-devel = %{epoch}:%{version}-%{release}
-Requires:	libmpx-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+Requires:	libmpx-devel = %{version}-%{release}
+Requires:	libmpx-multilib-%{multilib2} = %{version}-%{release}
 
 %description -n libmpx-multilib-%{multilib2}-devel
-This package contains development files for Memory Protection Extensions C language
-extensions.
+This package contains development files for Memory Protection
+Extensions C language extensions.
 
 %description -n libmpx-multilib-%{multilib2}-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
+Extensions dla języka C.
 
 %package -n libmpx-multilib-%{multilib2}-static
 Summary:	GCC Memory Protection Extensions language extensions static library
 Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
+Epoch:		0
 License:	BSD
 Group:		Development/Libraries
-Requires:	libmpx-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+Requires:	libmpx-multilib-%{multilib2}-devel = %{version}-%{release}
 
 %description -n libmpx-multilib-%{multilib2}-static
-This package contains the Memory Protection Extensions C language extensions static
-library.
+This package contains the Memory Protection Extensions C language
+extensions static library.
 
 %description -n libmpx-multilib-%{multilib2}-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection Extensions dla
-języka C.
+Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
+Extensions dla języka C.
 
 %package ada
 Summary:	Ada language support for GCC
