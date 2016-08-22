@@ -114,7 +114,7 @@
 %endif
 
 %define		major_ver	6
-%define		minor_ver	1.0
+%define		minor_ver	2.0
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -131,15 +131,15 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	8fb6cb98b8459f5863328380fbf06bd1
+# Source0-md5:	9768625159663b300ae4de2f4745fcc4
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_6_1_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-6-branch > gcc-branch.diff
+# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_6_2_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-6-branch > gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	62c886f1e86f7fb3950094ed32caaeaf
+# Patch100-md5:	8211f0f6f0a2179e51b4ac42f91bd44d
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -3076,6 +3076,7 @@ TEXCONFIG=false \
 	--enable-libstdcxx-visibility \
 	--enable-symvers=gnu%{?with_symvers:-versioned-namespace} \
 	--with-gxx-include-dir=%{_includedir}/c++/%{version} \
+	%{?with_vtv:--enable-vtable-verify} \
 %endif
 %if %{with java}
 	%{!?with_alsa:--disable-alsa} \
@@ -3613,6 +3614,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/libgcov.a
 %{gcclibdir}/specs
 %{gcclibdir}/crt*.o
+%{?with_vtv:%{gcclibdir}/vtv_*.o}
 %attr(755,root,root) %{gcclibdir}/cc1
 %attr(755,root,root) %{gcclibdir}/collect2
 %attr(755,root,root) %{gcclibdir}/lto-wrapper
@@ -3721,6 +3723,9 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/spe.h
 %{gcclibdir}/include/spu2vmx.h
 %{gcclibdir}/include/vec_types.h
+%endif
+%if %{with_vtv}
+%{gcclibdir}/include/vtv_*.h
 %endif
 
 %if %{with multilib}
