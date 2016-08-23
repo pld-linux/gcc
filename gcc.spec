@@ -137,9 +137,10 @@ Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
-# svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_6_2_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-6-branch > gcc-branch.diff
+Source4:	branch.sh
+# use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	8211f0f6f0a2179e51b4ac42f91bd44d
+# Patch100-md5:	07f029f587c1c07a9cddf7d84ed5b21e
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
