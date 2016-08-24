@@ -3177,10 +3177,6 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
 
-#libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp-plugin-host_nonshm.so.*.*.*)
-#mv $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir}
-#ln -sf %{_slibdir}/$libgompplugin $RPM_BUILD_ROOT%{_libdir}/libgomp-plugin-host_nonshm.so
-
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
@@ -3194,10 +3190,6 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
-#libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp-plugin-host_nonshm.so.*.*.*)
-#mv $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdir32}
-#ln -sf %{_slibdir32}/$libgompplugin $RPM_BUILD_ROOT%{_libdir32}/libgomp-plugin-host_nonshm.so
-
 %if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
@@ -3210,10 +3202,6 @@ ln -sf %{_slibdirm2}/$libitm $RPM_BUILD_ROOT%{_libdirm2}/libitm.so
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp.so.*.*.*)
 mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libgomp $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so
-
-libgompplugin=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp-plugin-host_nonshm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp-plugin-host_nonshm.so.* $RPM_BUILD_ROOT%{_slibdirm2}
-ln -sf %{_slibdirm2}/$libgompplugin $RPM_BUILD_ROOT%{_libdirm2}/libgomp-plugin-host_nonshm.so
 %endif
 %endif
 
@@ -3725,9 +3713,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/spu2vmx.h
 %{gcclibdir}/include/vec_types.h
 %endif
-%if %{with_vtv}
-%{gcclibdir}/include/vtv_*.h
-%endif
+%{?with_vtv:%{gcclibdir}/include/vtv_*.h}
 
 %if %{with multilib}
 %files multilib-32
@@ -3735,6 +3721,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdir32}/libgcc_s.so
 %dir %{gcclibdir}/32
 %{gcclibdir}/32/crt*.o
+%{?with_vtv:%{gcclibdir}/32/vtv_*.o}
 %{gcclibdir}/32/libgcc.a
 %{gcclibdir}/32/libgcc_eh.a
 %{gcclibdir}/32/libgcov.a
@@ -3756,6 +3743,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_slibdirm2}/libgcc_s.so
 %dir %{gcclibdir}/%{multilib2}
 %{gcclibdir}/%{multilib2}/crt*.o
+%{?with_vtv:%{gcclibdir}/%{multilib2}/vtv_*.o}
 %{gcclibdir}/%{multilib2}/libgcc.a
 %{gcclibdir}/%{multilib2}/libgcc_eh.a
 %{gcclibdir}/%{multilib2}/libgcov.a
@@ -3805,15 +3793,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
-#%attr(755,root,root) %{_slibdir}/libgomp-plugin-host_nonshm.so.*.*.*
-#%attr(755,root,root) %ghost %{_slibdir}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgomp.so
-#%attr(755,root,root) %{_libdir}/libgomp-plugin-host_nonshm.so
 %{_libdir}/libgomp.la
-#%{_libdir}/libgomp-plugin-host_nonshm.la
 %{_libdir}/libgomp.spec
 %{gcclibdir}/finclude
 %{gcclibdir}/include/omp.h
@@ -3829,15 +3813,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
-%attr(755,root,root) %{_slibdir32}/libgomp-plugin-host_nonshm.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir32}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-multilib-32-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgomp.so
-%attr(755,root,root) %{_libdir32}/libgomp-plugin-host_nonshm.so
 %{_libdir32}/libgomp.la
-%{_libdir32}/libgomp-plugin-host_nonshm.la
 %{_libdir32}/libgomp.spec
 %{gcclibdir}/32/finclude
 
@@ -3851,15 +3831,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_slibdirm2}/libgomp.so.*.*.*
 %attr(755,root,root) %ghost %{_slibdirm2}/libgomp.so.1
-%attr(755,root,root) %{_slibdirm2}/libgomp-plugin-host_nonshm.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdirm2}/libgomp-plugin-host_nonshm.so.1
 
 %files -n libgomp-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgomp.so
-%attr(755,root,root) %{_libdirm2}/libgomp-plugin-host_nonshm.so
 %{_libdirm2}/libgomp.la
-%{_libdirm2}/libgomp-plugin-host_nonshm.la
 %{_libdirm2}/libgomp.spec
 %{gcclibdir}/%{multilib2}/finclude
 
@@ -3970,16 +3946,21 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
 %attr(755,root,root) %ghost %{_libdirm2}/libmpx.so.2
+%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libmpxwrappers.so.2
 
 %files -n libmpx-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libmpx.so
+%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so
 %{_libdirm2}/libmpx.la
+%{_libdirm2}/libmpxwrappers.la
 %{_libdirm2}/libmpx.spec
 
 %files -n libmpx-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libmpx.a
+%{_libdirm2}/libmpxwrappers.a
 %endif
 
 %if %{with ada}
