@@ -3595,7 +3595,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp.a
 %{_libdir}/libssp_nonshared.la
 %{_libdir}/libssp_nonshared.a
-%dir %{_libdir}/gcc
 %dir %{_libdir}/gcc/%{_target_platform}
 %dir %{gcclibdir}
 %{gcclibdir}/libgcc.a
