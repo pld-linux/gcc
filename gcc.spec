@@ -2779,25 +2779,35 @@ This package contains %{m2_desc} version of the GNU Atomic static library.
 Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki GNU Atomic.
 
 %package gdb-plugin
-Summary: GCC plugin for GDB
-Group: Development/Debuggers
-Requires: gcc = %{epoch}:%{version}-%{release}
+Summary:	GCC plugin for GDB
+Summary(pl.UTF-8):	Wtyczka GCC dla GDB
+Group:		Development/Debuggers
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description gdb-plugin
 This package contains GCC plugin for GDB C expression evaluation.
 
+%description gdb-plugin -l pl.UTF-8
+Ten pakiet zawiera wtyczkę GCC do obliczania wyrażeń języka C w GDB.
+
 %package plugin-devel
-Summary: Support for compiling GCC plugins
-Group: Development/Languages
-Requires: gcc = %{epoch}:%{version}-%{release}
-Requires: gmp-devel >= 4.1.2-8
-Requires: libmpc-devel >= 0.8.1
-Requires: mpfr-devel >= 2.2.1
+Summary:	Support for compiling GCC plugins
+Summary(pl.UTF-8):	Obsługa kompilowania wtyczek GCC
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	gmp-devel >= 4.1.2-8
+Requires:	libmpc-devel >= 0.8.1
+Requires:	mpfr-devel >= 2.2.1
 
 %description plugin-devel
-This package contains header files and other support files
-for compiling GCC plugins.  The GCC plugin ABI is currently
-not stable, so plugins must be rebuilt any time GCC is updated.
+This package contains header files and other support files for
+compiling GCC plugins. The GCC plugin ABI is currently not stable, so
+plugins must be rebuilt any time GCC is updated.
+
+%description plugin-devel -l pl.UTF-8
+Ten pakiet zawiera pliki nagłówkowe oraz inne pozwalające na
+kompilowanie wtyczek GCC. ABI wtyczek GCC nie jest obecnie stabilne,
+więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 
 # Packages with epoch 0
 # DO NOT MOVE THESE PACKAGES AROUND
