@@ -157,8 +157,6 @@ BuildRequires:	automake >= 1:1.9.3
 BuildRequires:	binutils >= 3:2.17.50.0.9-1
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
-BuildRequires:	cloog-isl-devel >= 0.17.0
-BuildRequires:	cloog-isl-devel < 0.19
 %{?with_tests:BuildRequires:	dejagnu}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
@@ -2900,7 +2898,6 @@ TEXCONFIG=false \
 %ifarch %{x8664} x32
 	--with-arch-32=x86-64 \
 %endif
-	--with-cloog \
 %ifarch sparc64
 	--with-cpu=ultrasparc \
 %endif
