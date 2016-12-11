@@ -115,7 +115,7 @@
 
 %define		major_ver	6
 %define		minor_ver	3.0
-%define		major_ecj_ver	4.9
+%define		ecj_ver		4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
 %define		gcj_soname_ver	17
@@ -133,8 +133,6 @@ Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
 # Source0-md5:	677a7623c7ef6ab99881bc4e048debb6
 Source1:	%{name}-optimize-la.pl
-Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
-# Source2-md5:	7339f199ba11c941890031fd9981d7be
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
@@ -200,6 +198,7 @@ BuildRequires:	glibc-devel(sparcv9)
 BuildRequires:	gmp-c++-devel >= 4.1
 BuildRequires:	gmp-devel >= 4.1
 BuildRequires:	isl-devel >= 0.13
+BuildRequires:	java-ecj >= %{ecj_ver}
 BuildRequires:	libmpc-devel
 BuildRequires:	mpfr-devel >= 2.3.0
 %if %{with python}
@@ -1441,10 +1440,10 @@ Summary(es.UTF-8):	Soporte de Java para GCC
 Summary(pl.UTF-8):	Obsługa języka Java dla GCC
 Group:		Development/Languages/Java
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	java-ecj >= %{ecj_ver}
 Requires:	libgcj-devel = %{epoch}:%{version}-%{release}
 Provides:	gcc-java-tools
 Provides:	gcj = %{epoch}:%{version}-%{release}
-Obsoletes:	eclipse-ecj
 Obsoletes:	gcc-java-tools
 Obsoletes:	java-gnu-classpath-tools
 
@@ -2977,12 +2976,7 @@ Extensions dla języka C.
 %patch11 -p0
 %endif
 
-mv ChangeLog ChangeLog.general
-
-%if %{with java}
-# see contrib/download_ecj
-cp -p %{SOURCE2} ecj.jar
-%endif
+%{__mv} ChangeLog ChangeLog.general
 
 # override snapshot version.
 echo %{version} > gcc/BASE-VER
@@ -3029,6 +3023,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-gnu-indirect-function \
 	--enable-initfini-array \
+	--disable-isl-version-check \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
 	--enable-libitm \
@@ -3055,6 +3050,7 @@ TEXCONFIG=false \
 	--with-cpu=ultrasparc \
 %endif
 	--with-demangler-in-ld \
+	--with-ecj-jar=%{_javadir}/ecj.jar \
 	--with-gnu-as \
 	--with-gnu-ld \
 	--with-linker-hash-style=gnu \
@@ -3173,41 +3169,41 @@ ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so man1/gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libssp $RPM_BUILD_ROOT%{_libdir}/libssp.so
 
 libitm=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libitm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libitm $RPM_BUILD_ROOT%{_libdir}/libitm.so
 
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
 
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
+%{__mv} $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libssp $RPM_BUILD_ROOT%{_libdir32}/libssp.so
 
 libitm=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libitm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir32}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir32}
+%{__mv} $RPM_BUILD_ROOT%{_libdir32}/libitm.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libitm $RPM_BUILD_ROOT%{_libdir32}/libitm.so
 
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
+%{__mv} $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
 %if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+%{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libssp $RPM_BUILD_ROOT%{_libdirm2}/libssp.so
 
 libitm=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libitm.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdirm2}/libitm.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+%{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libitm.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libitm $RPM_BUILD_ROOT%{_libdirm2}/libitm.so
 
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp.so.*.*.*)
-mv $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+%{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libgomp $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so
 %endif
 %endif
@@ -3219,7 +3215,7 @@ echo ".so man1/gfortran.1" > $RPM_BUILD_ROOT%{_mandir}/man1/g95.1
 
 %if %{with ada}
 # move ada shared libraries to proper place...
-mv -f	$RPM_BUILD_ROOT%{gcclibdir}/adalib/*.so.1 \
+%{__mv}	$RPM_BUILD_ROOT%{gcclibdir}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdir}/libgnat-%{major_ver}.so.1
@@ -3228,7 +3224,7 @@ ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-%{major_ver
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
 %if %{with multilib}
-mv -f	$RPM_BUILD_ROOT%{gcclibdir}/32/adalib/*.so.1 \
+%{__mv}	$RPM_BUILD_ROOT%{gcclibdir}/32/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir32}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdir32}/libgnat-%{major_ver}.so.1
@@ -3238,7 +3234,7 @@ ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir32}/libgnarl.so
 
 %if %{with multilib2}
-mv -f	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib2}/adalib/*.so.1 \
+%{__mv}	$RPM_BUILD_ROOT%{gcclibdir}/%{multilib2}/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdirm2}
 # check if symlink to be made is valid
 test -f	$RPM_BUILD_ROOT%{_libdirm2}/libgnat-%{major_ver}.so.1
@@ -3331,7 +3327,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_objc:libobjc.la};
 do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
-	mv $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
+	%{__mv} $RPM_BUILD_ROOT%{_libdir32}/$f{.fixed,}
 done
 %if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
@@ -3346,7 +3342,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_objc:libobjc.la};
 do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdirm2}/$f %{_libdirm2} > $RPM_BUILD_ROOT%{_libdirm2}/$f.fixed
-	mv $RPM_BUILD_ROOT%{_libdirm2}/$f{.fixed,}
+	%{__mv} $RPM_BUILD_ROOT%{_libdirm2}/$f{.fixed,}
 done
 %endif
 %endif
@@ -3356,8 +3352,13 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcc
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/install-tools
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/include-fixed
 
-# plugin, .la not needed
-%{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la
+# plugins, .la not needed
+%{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la \
+	$RPM_BUILD_ROOT%{_libdir}/libcc1.la
+
+%if %{without lsan_m0} && (%{without multilib2} || %{without lsan_m2})
+%{__rm} $RPM_BUILD_ROOT%{gcclibdir}/include/sanitizer/lsan_interface.h
+%endif
 
 %if %{with python}
 for LIBDIR in %{_libdir} %{?with_multilib:%{_libdir32}} %{?with_multilib2:%{_libdirm2}} ; do
@@ -3370,9 +3371,9 @@ for LIBDIR in %{_libdir} %{?with_multilib:%{_libdir32}} %{?with_multilib2:%{_lib
 	  > $LIBPATH/$(basename $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
 done
 install -d $RPM_BUILD_ROOT%{py_sitescriptdir}
-mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
 %if %{with java}
-mv $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_sitescriptdir}
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libjava $RPM_BUILD_ROOT%{py_sitescriptdir}
 %{__sed} -i -e '1s,#!/usr/bin/env python,#!/usr/bin/python,' $RPM_BUILD_ROOT%{_bindir}/aot-compile
 %endif
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
@@ -4390,7 +4391,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/%{gcjdbexecdir}/libxmlj.so*
 %{_libdir}/logging.properties
 %{_javadir}/libgcj*.jar
-%{_javadir}/ecj.jar
 %{_mandir}/man1/gij.1*
 
 %files -n libgcj-devel
