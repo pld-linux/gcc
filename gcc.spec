@@ -2890,8 +2890,8 @@ TEXCONFIG=false \
 %endif
 	%{?with_fortran:--enable-cmath} \
 	--enable-decimal-float \
-	--enable-gnu-unique-object \
 	--enable-gnu-indirect-function \
+	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
