@@ -114,7 +114,7 @@
 %endif
 
 %define		major_ver	6
-%define		minor_ver	2.0
+%define		minor_ver	3.0
 %define		major_ecj_ver	4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -131,7 +131,7 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	9768625159663b300ae4de2f4745fcc4
+# Source0-md5:	677a7623c7ef6ab99881bc4e048debb6
 Source1:	%{name}-optimize-la.pl
 Source2:	ftp://sourceware.org/pub/java/ecj-%{major_ecj_ver}.jar
 # Source2-md5:	7339f199ba11c941890031fd9981d7be
@@ -140,7 +140,7 @@ Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	07f029f587c1c07a9cddf7d84ed5b21e
+# Patch100-md5:	15e56f8d7ba9be17cd5d1595c5b3dde5
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -3668,7 +3668,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/mwaitxintrin.h
-%{gcclibdir}/include/pcommitintrin.h
 %{gcclibdir}/include/pkuintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
