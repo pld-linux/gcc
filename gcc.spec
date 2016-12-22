@@ -1,10 +1,13 @@
 # NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # NOTE
-# - when adding new subpackages, do not use epoch 6 there, reset them to 0!
+# - when adding new subpackages with external libraries (like libffi)
+#   or having own Version, do not use epoch 6 there, reset them to 0!
 #
 # TODO:
-# - gconf peer? (but libgcj needs split anyway)
+# - gconf peer? (BR: GConf2-devel >= 2.6.0) (but libgcj needs split anyway)
+# - gstreamer peer? (BR: gstreamer-devel, gstreamer-plugins-base-devel >= 0.10.10)
+# - restore qt peer?
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
@@ -150,22 +153,21 @@ Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
-%{?with_tests:BuildRequires:	autogen}
-BuildRequires:	automake >= 1:1.9.3
-# binutils 2.17.50.0.9 or newer are required for fixing PR middle-end/20218.
-BuildRequires:	binutils >= 3:2.17.50.0.9-1
+%{?with_tests:BuildRequires:	autogen >= 5.5.4}
+BuildRequires:	automake >= 1:1.11.1
+BuildRequires:	binutils >= 3:2.23
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
-%{?with_tests:BuildRequires:	dejagnu}
+%{?with_tests:BuildRequires:	dejagnu >= 1.4.4}
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
-BuildRequires:	flex
+BuildRequires:	flex >= 2.5.4
 %if %{with ada}
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 %endif
 BuildRequires:	gdb
-BuildRequires:	gettext-tools
+BuildRequires:	gettext-tools >= 0.14.5
 BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 # Formerly known as gcc(multilib)
@@ -195,18 +197,18 @@ BuildRequires:	glibc-devel(s390)
 BuildRequires:	glibc-devel(sparcv9)
 %endif
 %endif
-BuildRequires:	gmp-c++-devel >= 4.1
-BuildRequires:	gmp-devel >= 4.1
-BuildRequires:	isl-devel >= 0.13
+BuildRequires:	gmp-c++-devel >= 4.3.2
+BuildRequires:	gmp-devel >= 4.3.2
+BuildRequires:	isl-devel >= 0.15
 BuildRequires:	java-ecj >= %{ecj_ver}
-BuildRequires:	libmpc-devel
-BuildRequires:	mpfr-devel >= 2.3.0
+BuildRequires:	libmpc-devel >= 0.8.1
+BuildRequires:	mpfr-devel >= 2.4.2
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.211
-BuildRequires:	texinfo >= 4.1
+BuildRequires:	texinfo >= 4.7
 BuildRequires:	zlib-devel
 %if %{with java}
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -214,6 +216,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	dssi-devel
 BuildRequires:	jack-audio-connection-kit-devel
 %endif
+BuildRequires:	libtool >= 2:2
 BuildRequires:	libxml2-devel >= 1:2.6.8
 BuildRequires:	libxslt-devel >= 1.1.11
 BuildRequires:	perl-base
@@ -223,22 +226,31 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	unzip
 BuildRequires:	zip
 %if %{with gtk}
-BuildRequires:	cairo-devel >= 0.5.0
-BuildRequires:	gtk+2-devel >= 2:2.4.0
-BuildRequires:	libart_lgpl-devel
+BuildRequires:	cairo-devel >= 1.1.8
+BuildRequires:	freetype-devel >= 2
+BuildRequires:	gdk-pixbuf2-devel >= 2.0
+BuildRequires:	gtk+2-devel >= 2:2.8
+BuildRequires:	libart_lgpl-devel >= 2.1
 BuildRequires:	pango-devel
+BuildRequires:	xorg-lib-libXrandr-devel
+BuildRequires:	xorg-lib-libXrender-devel
 BuildRequires:	xorg-lib-libXt-devel
 BuildRequires:	xorg-lib-libXtst-devel
 %endif
 %if %{with qt}
-BuildRequires:	QtGui-devel >= 4.0.1
-BuildRequires:	qt4-build >= 4.0.1
+BuildRequires:	QtCore-devel >= 4.1.0
+BuildRequires:	QtGui-devel >= 4.1.0
+BuildRequires:	qt4-build >= 4.1.0
 %endif
 %{?with_mozilla:BuildRequires:	xulrunner-devel >= 1.8.1.3-1.20070321.5}
 %endif
 BuildConflicts:	pdksh < 5.2.14-50
 Requires:	binutils >= 3:2.23
+Requires:	gmp >= 4.3.2
+Requires:	isl >= 0.15
 Requires:	libgcc = %{epoch}:%{version}-%{release}
+Requires:	libmpc >= 0.8.1
+Requires:	mpfr >= 2.4.2
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 Obsoletes:	cpp
@@ -1487,6 +1499,17 @@ License:	GPL v2+ with limited linking exception
 Group:		Libraries
 Requires:	jpackage-utils
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+Requires:	libxml2 >= 1:2.6.8
+Requires:	libxslt >= 1.1.11
+%if %{with gtk}
+Requires:	cairo >= 1.1.8
+Requires:	gtk+2 >= 2:2.8
+Requires:	libart_lgpl >= 2.1
+%endif
+%if %{with qt}
+Requires:	QtCore >= 4.1.0
+Requires:	QtGui >= 4.1.0
+%endif
 Provides:	java(ClassDataVersion) = %{_classdataversion}
 Obsoletes:	libgcj3
 
@@ -2792,9 +2815,9 @@ Summary:	Support for compiling GCC plugins
 Summary(pl.UTF-8):	Obsługa kompilowania wtyczek GCC
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Requires:	gmp-devel >= 4.1.2-8
+Requires:	gmp-devel >= 4.3.2
 Requires:	libmpc-devel >= 0.8.1
-Requires:	mpfr-devel >= 2.2.1
+Requires:	mpfr-devel >= 2.4.2
 
 %description plugin-devel
 This package contains header files and other support files for
@@ -3020,8 +3043,8 @@ TEXCONFIG=false \
 %endif
 	%{?with_fortran:--enable-cmath} \
 	--enable-decimal-float \
-	--enable-gnu-unique-object \
 	--enable-gnu-indirect-function \
+	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_java:,java}%{?with_go:,go}" \
