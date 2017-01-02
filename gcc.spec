@@ -3927,6 +3927,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
+# see libmpx/configure.tgt for supported architectures
+%ifarch %{x8664} %{ix86}
 %files -n libmpx
 %defattr(644,root,root,755)
 %doc libmpx/ChangeLog
@@ -3947,6 +3949,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libmpx.a
 %{_libdir}/libmpxwrappers.a
+%endif
 
 %if %{with multilib}
 %files -n libmpx-multilib-32
@@ -3971,6 +3974,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{with multilib2}
+# see libmpx/configure.tgt for supported architectures;
+# no x32 there as of gcc 6.x
+%if "%{multilib2}" != "x32"
 %files -n libmpx-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
@@ -3990,6 +3996,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libmpx.a
 %{_libdirm2}/libmpxwrappers.a
+%endif
 %endif
 
 %if %{with ada}
