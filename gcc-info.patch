@@ -28,7 +28,7 @@
  
 --- a/gcc/doc/gcc.texi	2004-07-22 22:12:20.000000000 +0200
 +++ b/gcc/doc/gcc.texi	2004-09-26 10:58:58.218713528 +0200
-@@ -62,12 +62,12 @@
+@@ -61,13 +61,13 @@ Texts being (a) (see below), and with th
       funds for GNU development.
  @end copying
  @ifnottex
@@ -39,10 +39,12 @@
 -* g++: (gcc).                  The GNU C++ compiler.
 -* gcov: (gcc) Gcov.            @command{gcov}---a test coverage program.
 -* gcov-tool: (gcc) Gcov-tool.  @command{gcov-tool}---an offline gcda profile processing program.
-+* gcc: (gcc).				The GNU Compiler Collection
-+* g++: (gcc).				The GNU C++ compiler
-+* gcov: (gcc) Gcov.			@command{gcov}---a test coverage program
-+* gcov-tool: (gcc) Gcov-tool.		@command{gcov-tool}---an offline gcda profile processing program
+-* gcov-dump: (gcc) Gcov-dump.  @command{gcov-dump}---an offline gcda and gcno profile dump tool.
++* gcc: (gcc).				The GNU Compiler Collection.
++* g++: (gcc).				The GNU C++ compiler.
++* gcov: (gcc) Gcov.			@command{gcov}---a test coverage program.
++* gcov-tool: (gcc) Gcov-tool.		@command{gcov-tool}---an offline gcda profile processing program.
++* gcov-dump: (gcc) Gcov-dump.		@command{gcov-dump}---an offline gcda and gcno profile dump tool.
  @end direntry
  This file documents the use of the GNU compilers.
  @sp 1

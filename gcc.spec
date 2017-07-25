@@ -117,7 +117,7 @@
 %endif
 
 %define		major_ver	6
-%define		minor_ver	3.0
+%define		minor_ver	4.0
 %define		ecj_ver		4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -129,12 +129,12 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	677a7623c7ef6ab99881bc4e048debb6
+Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	11ba51a0cfb8471927f387c8895fe232
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
