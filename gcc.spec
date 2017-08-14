@@ -1082,21 +1082,6 @@ libstdc++ types/containers.
 Ten pakiet zawiera skrypty Pythona dla GDB służące do ładnego
 wypisywania typów i kontenerów libstdc++.
 
-%package -n libstdc++-apidocs
-Summary:	C++ standard library API documentation
-Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
-License:	FDL v1.3 (mainly), GPL v3+ (doxygen generated parts)
-Group:		Documentation
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
-
-%description -n libstdc++-apidocs
-API and internal documentation for C++ standard library.
-
-%description -n libstdc++-apidocs -l pl.UTF-8
-Dokumentacja API i wewnętrzna biblioteki standardowej C++.
-
 %package fortran
 Summary:	Fortran 95 language support for GCC
 Summary(es.UTF-8):	Soporte de Fortran 95 para GCC
@@ -3966,11 +3951,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %endif
 
-%if %{with apidocs}
-%files -n libstdc++-apidocs
-%defattr(644,root,root,755)
-%doc libstdc++-v3/doc/html/*
-%endif
 %endif
 
 %if %{with fortran}
