@@ -9,13 +9,14 @@
  BOOT_CFLAGS = -O $(CFLAGS)
  # These exists to be overridden by the t-* files, respectively.
  T_CFLAGS =
-@@ -105,12 +105,12 @@ TEXI2PDF = texi2pdf
+@@ -105,13 +105,13 @@ TEXI2PDF = texi2pdf
  GNATBIND_FLAGS = -static -x
  ADA_CFLAGS =
  ADAFLAGS = -W -Wall -gnatpg -gnata
 -FORCE_DEBUG_ADAFLAGS = -g
 +FORCE_DEBUG_ADAFLAGS =
  NO_INLINE_ADAFLAGS = -fno-inline
+ NO_OMIT_ADAFLAGS = -fno-omit-frame-pointer
  NO_SIBLING_ADAFLAGS = -fno-optimize-sibling-calls
  NO_REORDER_ADAFLAGS = -fno-toplevel-reorder
  GNATLIBFLAGS = -W -Wall -gnatpg -nostdinc
@@ -68,86 +69,6 @@
  LIBGCC2_CFLAGS = -O2 $(LIBGCC2_INCLUDES) $(GCC_CFLAGS) $(HOST_LIBGCC2_CFLAGS) \
  		 $(LIBGCC2_DEBUG_CFLAGS) -DIN_LIBGCC2 \
  		 -fbuilding-libgcc -fno-stack-protector \
---- gcc-4.7.1/libjava/classpath/tools/Makefile.am.orig	2011-09-29 13:37:47.000000000 +0200
-+++ gcc-4.7.1/libjava/classpath/tools/Makefile.am	2012-07-12 18:29:33.452403949 +0200
-@@ -355,8 +355,8 @@
- if JAVA_MAINTAINER_MODE
- ## Compile ASM separately as it is latin-1 encoded.
- 	AC=`echo $(JCOMPILER) | sed -e 's/UTF-8/ISO-8859-1/g'`; \
--	  $$AC -g -w -d $(srcdir)/asm @asm.lst
--	$(JCOMPILER) $(USE_JAVAC_FLAGS) -g -d $(srcdir)/classes @classes.lst @vm-tools.lst
-+	  $$AC -w -d $(srcdir)/asm @asm.lst
-+	$(JCOMPILER) $(USE_JAVAC_FLAGS) -d $(srcdir)/classes @classes.lst @vm-tools.lst
- endif
- ## END GCJ LOCAL
- ## Copy over tools resource files.
---- gcc-4.7.1/libjava/classpath/tools/Makefile.in.orig	2011-09-29 13:37:47.000000000 +0200
-+++ gcc-4.7.1/libjava/classpath/tools/Makefile.in	2012-07-12 18:29:52.035736502 +0200
-@@ -1413,8 +1413,8 @@
- 	fi
- 	cat classes.lst asm.lst vm-tools.lst > all-classes.lst
- @JAVA_MAINTAINER_MODE_TRUE@	AC=`echo $(JCOMPILER) | sed -e 's/UTF-8/ISO-8859-1/g'`; \
--@JAVA_MAINTAINER_MODE_TRUE@	  $$AC -g -w -d $(srcdir)/asm @asm.lst
--@JAVA_MAINTAINER_MODE_TRUE@	$(JCOMPILER) $(USE_JAVAC_FLAGS) -g -d $(srcdir)/classes @classes.lst @vm-tools.lst
-+@JAVA_MAINTAINER_MODE_TRUE@	  $$AC -w -d $(srcdir)/asm @asm.lst
-+@JAVA_MAINTAINER_MODE_TRUE@	$(JCOMPILER) $(USE_JAVAC_FLAGS) -d $(srcdir)/classes @classes.lst @vm-tools.lst
- 	@list=`cd $(srcdir)/resource && find gnu/classpath/tools com/sun/tools/javac \
- 	       sun/rmi/rmic $(GJDOC_EX) -name \*.properties -print -o -name \*.jav -print`; \
- 	for p in $$list; do \
---- gcc-4.7.1/libjava/Makefile.am.orig	2011-08-05 16:37:48.000000000 +0200
-+++ gcc-4.7.1/libjava/Makefile.am	2012-07-12 18:30:07.649069180 +0200
-@@ -399,7 +399,7 @@
- ## Extra CFLAGS used for JNI C sources shared with GNU Classpath.
- PEDANTIC_CFLAGS = -ansi -pedantic -Wall -Wno-long-long
- 
--JCFLAGS = -g
-+JCFLAGS =
- JC1FLAGS = @LIBGCJ_JAVAFLAGS@ $(GCJFLAGS)
- 
- LIBFFIINCS = @LIBFFIINCS@
---- gcc-4.7.1/libjava/Makefile.in.orig	2012-06-14 10:48:08.000000000 +0200
-+++ gcc-4.7.1/libjava/Makefile.in	2012-07-12 18:30:20.642401968 +0200
-@@ -1032,7 +1032,7 @@
- @BUILD_LIBGCJ_REDUCED_REFLECTION_FALSE@LIBGCJ_REDUCED_REFLECTION_FLAGS = 
- @BUILD_LIBGCJ_REDUCED_REFLECTION_TRUE@LIBGCJ_REDUCED_REFLECTION_FLAGS = -freduced-reflection
- PEDANTIC_CFLAGS = -ansi -pedantic -Wall -Wno-long-long
--JCFLAGS = -g
-+JCFLAGS =
- JC1FLAGS = @LIBGCJ_JAVAFLAGS@ $(GCJFLAGS)
- AM_CPPFLAGS = -I$(top_srcdir) \
- 	-Iinclude -I$(top_srcdir)/include \
---- gcc-4.7.1/libjava/testsuite/Makefile.am.orig	2010-05-04 00:37:50.000000000 +0200
-+++ gcc-4.7.1/libjava/testsuite/Makefile.am	2012-07-12 18:30:54.965733863 +0200
-@@ -83,11 +83,11 @@
- 	  testtmpdir=`echo $$test | sed -e 's,/,_,g'`T; \
- 	  rm -rf $$testtmpdir; $(mkdir_p) $$testtmpdir; \
- 	  if test -n "$$testdep"; then \
--	    $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
-+	    $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
- 	      $(top_builddir)/libgcj-$(gcc_version).jar::$$testtmpdir \
- 	      -d $$testtmpdir $(srcdir)/$$testdep || exit; \
- 	  fi; \
--	  $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
-+	  $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
- 	    $(top_builddir)/libgcj-$(gcc_version).jar:$$testtmpdir \
- 	    -d $$testtmpdir $(srcdir)/$$test || exit; \
- 	  case "$$test" in \
---- gcc-4.7.1/libjava/testsuite/Makefile.in.orig	2012-05-21 20:14:01.000000000 +0200
-+++ gcc-4.7.1/libjava/testsuite/Makefile.in	2012-07-12 18:31:09.359066590 +0200
-@@ -569,11 +569,11 @@
- @JAVA_MAINTAINER_MODE_TRUE@	  testtmpdir=`echo $$test | sed -e 's,/,_,g'`T; \
- @JAVA_MAINTAINER_MODE_TRUE@	  rm -rf $$testtmpdir; $(mkdir_p) $$testtmpdir; \
- @JAVA_MAINTAINER_MODE_TRUE@	  if test -n "$$testdep"; then \
--@JAVA_MAINTAINER_MODE_TRUE@	    $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
-+@JAVA_MAINTAINER_MODE_TRUE@	    $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
- @JAVA_MAINTAINER_MODE_TRUE@	      $(top_builddir)/libgcj-$(gcc_version).jar::$$testtmpdir \
- @JAVA_MAINTAINER_MODE_TRUE@	      -d $$testtmpdir $(srcdir)/$$testdep || exit; \
- @JAVA_MAINTAINER_MODE_TRUE@	  fi; \
--@JAVA_MAINTAINER_MODE_TRUE@	  $(GCJ) -C -g -w --encoding=UTF-8 -bootclasspath \
-+@JAVA_MAINTAINER_MODE_TRUE@	  $(GCJ) -C -w --encoding=UTF-8 -bootclasspath \
- @JAVA_MAINTAINER_MODE_TRUE@	    $(top_builddir)/libgcj-$(gcc_version).jar:$$testtmpdir \
- @JAVA_MAINTAINER_MODE_TRUE@	    -d $$testtmpdir $(srcdir)/$$test || exit; \
- @JAVA_MAINTAINER_MODE_TRUE@	  case "$$test" in \
 --- gcc-4.7.1/libstdc++-v3/include/Makefile.am.orig	2012-03-23 12:00:54.000000000 +0100
 +++ gcc-4.7.1/libstdc++-v3/include/Makefile.am	2012-07-12 18:31:29.102399096 +0200
 @@ -1154,22 +1154,22 @@
