@@ -241,7 +241,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libcc1plugin|libcp1plugin|libgo|libxmlj|lib-gnu-awt-xlib|libmpxwrappers)\.so.*'
+%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgo|libxmlj|libubsan|lib-gnu-awt-xlib|libmpxwrappers)\.so.*'
 # private symbols
 %define		_noautoreq		.*\(GLIBC_PRIVATE\)
 
