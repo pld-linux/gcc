@@ -99,9 +99,6 @@
 %define		major_ver	7
 %define		minor_ver	2.0
 %define		ecj_ver		4.9
-# class data version seen with file(1) that this jvm is able to load
-%define		_classdataversion 50.0
-%define		gcj_soname_ver	17
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -232,7 +229,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 %endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
-%define		gcjdbexecdir	gcj-%{version}-%{gcj_soname_ver}
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
 %define		filterout_ld	-Wl,--as-needed
@@ -2922,7 +2918,6 @@ all := $(filter-out all Makefile,$(MAKECMDGOALS))
 all $(all):
 	$(MAKE) -C builddir $(MAKE_OPTS) $(all) \
 		%{?with_bootstrap:%{?with_profiling:profiledbootstrap}} \
-		GCJFLAGS="%{rpmcflags}" \
 		BOOT_CFLAGS="%{rpmcflags}" \
 		STAGE1_CFLAGS="%{rpmcflags} -O1 -g0" \
 		GNATLIBCFLAGS="%{rpmcflags}" \
@@ -3099,9 +3094,6 @@ do
 	file="$RPM_BUILD_ROOT%{_libdir}/$f"
 	%{__perl} %{SOURCE1} "$file" %{_libdir} >"${file}.fixed"
 	%{__mv} "${file}.fixed" "$file"
-
-	# normalize /lib/../lib/ path (libjawt.la)
-	sed -i -e 's#/%{_lib}/\.\./%{_lib}/#/%{_lib}/#g' "$file"
 done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
