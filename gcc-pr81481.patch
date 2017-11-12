@@ -1,0 +1,39 @@
+Index: gcc/testsuite/gcc.target/i386/pr81481.c
+===================================================================
+--- gcc/testsuite/gcc.target/i386/pr81481.c	(nonexistent)
++++ gcc/testsuite/gcc.target/i386/pr81481.c	(revision 253300)
+@@ -0,0 +1,18 @@
++/* { dg-do compile } */
++/* { dg-require-effective-target ssse3 } */
++/* { dg-options "-O2 -fpic -mssse3" } */
++/* { dg-final { scan-assembler-not "pshufb\[ \t\]\\(%esp\\)" } } */
++#include <immintrin.h>
++
++extern const signed char c[31] __attribute__((visibility("hidden")));
++
++__m128i f(__m128i *x, void *v)
++{
++  int i;
++  asm("# %0" : "=r"(i));
++  __m128i t = _mm_loadu_si128((void*)&c[i]);
++  __m128i xx = *x;
++  xx =  _mm_shuffle_epi8(xx, t);
++  asm("# %0 %1 %2" : "+x"(xx) : "r"(c), "r"(i));
++  return xx;
++}
+Index: gcc/ira-costs.c
+===================================================================
+--- gcc/ira-costs.c	(revision 253299)
++++ gcc/ira-costs.c	(revision 253300)
+@@ -1471,7 +1471,10 @@
+ 	      && targetm.legitimate_constant_p (GET_MODE (SET_DEST (set)),
+ 						XEXP (note, 0))
+ 	      && REG_N_SETS (REGNO (SET_DEST (set))) == 1))
+-      && general_operand (SET_SRC (set), GET_MODE (SET_SRC (set))))
++      && general_operand (SET_SRC (set), GET_MODE (SET_SRC (set)))
++      /* LRA does not use equiv with a symbol for PIC code.  */
++      && (! ira_use_lra_p || ! pic_offset_table_rtx
++	  || ! contains_symbol_ref_p (XEXP (note, 0))))
+     {
+       enum reg_class cl = GENERAL_REGS;
+       rtx reg = SET_DEST (set);

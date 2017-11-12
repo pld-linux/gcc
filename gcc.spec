@@ -105,7 +105,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -123,6 +123,7 @@ Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
 Patch5:		Revert-eeb6872bf.patch
+Patch6:		%{name}-pr81481.patch
 
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
@@ -2803,6 +2804,7 @@ Extensions dla języka C.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p0
 
 %patch10 -p1
 %if %{with gcc_libffi}
