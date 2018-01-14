@@ -105,7 +105,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	5
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -117,12 +117,15 @@ Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	29b75338857af540acf861b49e306285
+# Patch100-md5:	4a58511a43a1387d3f2e004ff67d6fb6
+# https://github.com/hjl-tools/gcc.git
+# git log -p --reverse origin/gcc-7-branch..hjl/indirect/gcc-7-branch/master > ~/rpm/packages/gcc/gcc-retpoline.patch
+Patch101:	%{name}-retpoline.patch
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
-Patch5:		Revert-eeb6872bf.patch
+
 Patch6:		%{name}-pr81481.patch
 
 Patch10:	%{name}-moresparcs.patch
@@ -2798,12 +2801,13 @@ Extensions dla języka C.
 
 %prep
 %setup -q
-#%patch100 -p0
+%patch100 -p0
+%patch101 -p1
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+
 %patch6 -p0
 
 %patch10 -p1
