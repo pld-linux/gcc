@@ -9,7 +9,9 @@ out=$package-branch.diff
 # use filterdiff, etc to exclude bad chunks from diff
 filter() {
 	# remove revno's for smaller diffs
-	sed -e 's,^\([-+]\{3\} .*\)\t(revision [0-9]\+)$,\1,'
+	# replace svn nonexistend with '0' date, so patch will know that file needs to be removed from disk
+	sed -e 's,^\([-+]\{3\} .*\)\t(revision [0-9]\+)$,\1,' | \
+	sed -e 's,^\([-+]\{3\} .*\t\)(nonexistent)$,\11970-01-01 01:00:00.000000000 +0100,'
 }
 
 old=$svn/$tag

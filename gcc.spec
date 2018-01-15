@@ -105,7 +105,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	5
+Release:	6
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -117,7 +117,7 @@ Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	4a58511a43a1387d3f2e004ff67d6fb6
+# Patch100-md5:	5e61603c46bcf0986d005cf6b7b53bf3
 # https://github.com/hjl-tools/gcc.git
 # git log -p --reverse origin/gcc-7-branch..hjl/indirect/gcc-7-branch/master > ~/rpm/packages/gcc/gcc-retpoline.patch
 Patch101:	%{name}-retpoline.patch
