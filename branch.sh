@@ -3,7 +3,7 @@ set -e
 package=gcc
 svn=svn://gcc.gnu.org/svn/$package
 branch=branches/$package-7-branch
-tag=tags/${package}_7_2_0_release
+tag=tags/${package}_7_3_0_release
 out=$package-branch.diff
 
 # use filterdiff, etc to exclude bad chunks from diff
