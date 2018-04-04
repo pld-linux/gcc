@@ -90,14 +90,14 @@
 %define		with_multilib2	1
 %endif
 %endif
-%ifarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
 %endif
 %ifarch %{ix86} %{x8664} x32
 %define		with_cilkrts	1
 %endif
-%ifarch %{ix86} %{x8664} x32 arm ppc ppc64 sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 %{arm} ppc ppc64 sparc sparcv9 sparc64
 # sanitizer feature (asan and ubsan are common for all supported archs)
 %define		with_Xsan	1
 %endif
@@ -116,7 +116,7 @@
 %endif
 
 %define		major_ver	5
-%define		minor_ver	4.0
+%define		minor_ver	5.0
 %define		ecj_ver		4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -128,18 +128,17 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	3
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.bz2
-# Source0-md5:	4c626ac2a83ef30dfb9260e6f59c2b30
+Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	0f70424213b4a1113c04ba66ddda0c1f
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 # svn diff -x --ignore-eol-style --force svn://gcc.gnu.org/svn/gcc/tags/gcc_5_4_0_release svn://gcc.gnu.org/svn/gcc/branches/gcc-5-branch > gcc-branch.diff
-Patch100:	%{name}-branch.diff
-# Patch100-md5:	8211f0f6f0a2179e51b4ac42f91bd44d
+#Patch100:	%{name}-branch.diff
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -199,6 +198,8 @@ BuildRequires:	glibc-devel(sparcv9)
 BuildRequires:	gmp-c++-devel >= 4.3.2
 BuildRequires:	gmp-devel >= 4.3.2
 BuildRequires:	isl-devel >= 0.14
+# still uses isl_band deprecated since 0.15, removed in 0.19
+BuildRequires:	isl-devel < 0.19
 BuildRequires:	java-ecj >= %{ecj_ver}
 BuildRequires:	libmpc-devel >= 0.8.1
 BuildRequires:	mpfr-devel >= 2.4.2
@@ -222,7 +223,9 @@ BuildRequires:	perl-base
 BuildRequires:	perl-tools-pod
 BuildRequires:	pkgconfig
 BuildRequires:	sed >= 4.0
+BuildRequires:	tar >= 1:1.22
 BuildRequires:	unzip
+BuildRequires:	xz
 BuildRequires:	zip
 %if %{with gtk}
 BuildRequires:	cairo-devel >= 1.1.8
@@ -2830,7 +2833,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 
 %prep
 %setup -q
-%patch100 -p0
+#patch100 -p0
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
@@ -3453,13 +3456,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcc-ar
 %attr(755,root,root) %{_bindir}/gcc-nm
 %attr(755,root,root) %{_bindir}/gcc-ranlib
-#%attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
+%attr(755,root,root) %{_bindir}/gcov-dump
 %attr(755,root,root) %{_bindir}/gcov-tool
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
+%{_mandir}/man1/gcov-dump.1*
+%{_mandir}/man1/gcov-tool.1*
 %{_infodir}/cpp.info*
 %{_infodir}/cppinternals.info*
 %{_infodir}/gcc.info*
@@ -3549,7 +3554,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/mwaitxintrin.h
-%{gcclibdir}/include/pcommitintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
 %{gcclibdir}/include/prfchwintrin.h
@@ -3569,7 +3573,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/xsavesintrin.h
 %{gcclibdir}/include/xtestintrin.h
 %endif
-%ifarch arm
+%ifarch %{arm}
 %{gcclibdir}/include/arm_neon.h
 %{gcclibdir}/include/mmintrin.h
 %endif
