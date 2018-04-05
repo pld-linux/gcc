@@ -40,11 +40,11 @@
 -* gcov: (gcc) Gcov.            @command{gcov}---a test coverage program.
 -* gcov-tool: (gcc) Gcov-tool.  @command{gcov-tool}---an offline gcda profile processing program.
 -* gcov-dump: (gcc) Gcov-dump.  @command{gcov-dump}---an offline gcda and gcno profile dump tool.
-+* gcc: (gcc).				The GNU Compiler Collection.
-+* g++: (gcc).				The GNU C++ compiler.
-+* gcov: (gcc) Gcov.			@command{gcov}---a test coverage program.
-+* gcov-tool: (gcc) Gcov-tool.		@command{gcov-tool}---an offline gcda profile processing program.
-+* gcov-dump: (gcc) Gcov-dump.		@command{gcov-dump}---an offline gcda and gcno profile dump tool.
++* gcc: (gcc).				The GNU Compiler Collection
++* g++: (gcc).				The GNU C++ compiler
++* gcov: (gcc) Gcov.			@command{gcov}---a test coverage program
++* gcov-tool: (gcc) Gcov-tool.		@command{gcov-tool}---an offline gcda profile processing program
++* gcov-dump: (gcc) Gcov-dump.		@command{gcov-dump}---an offline gcda and gcno profile dump tool
  @end direntry
  This file documents the use of the GNU compilers.
  @sp 1
@@ -76,17 +76,34 @@
  @end direntry
  
  @macro syntax{element}
---- a/gcc/ada/gnat_ugn.texi	2005-12-06 23:45:52.983574000 +0100
-+++ b/gcc/ada/gnat_ugn.texi	2005-12-11 02:35:45.580878360 +0100
-@@ -10,7 +10,7 @@
+--- gcc-6.4.0/gcc/ada/gnat_rm.texi.orig	2016-01-04 14:03:35.362396000 +0100
++++ gcc-6.4.0/gcc/ada/gnat_rm.texi	2018-04-04 20:06:55.773027894 +0200
+@@ -10,9 +10,9 @@
  @paragraphindent 0
  @exampleindent 4
  @finalout
 -@dircategory GNU Ada Tools 
 +@dircategory Programming Languages:
  @direntry
- * gnat_ugn: (gnat_ugn.info). gnat_ugn
+-* gnat_rm: (gnat_rm.info). gnat_rm
++* gnat_rm: (gnat_rm.info).		gnat_rm
  @end direntry
+ 
+ @definfoenclose strong,`,'
+--- gcc-6.4.0/gcc/ada/gnat_ugn.texi.orig	2018-04-04 16:44:59.699832904 +0200
++++ gcc-6.4.0/gcc/ada/gnat_ugn.texi	2018-04-04 20:07:10.206361061 +0200
+@@ -10,9 +10,9 @@
+ @paragraphindent 0
+ @exampleindent 4
+ @finalout
+-@dircategory GNU Ada Tools 
++@dircategory Programming Languages:
+ @direntry
+-* gnat_ugn: (gnat_ugn.info). gnat_ugn
++* gnat_ugn: (gnat_ugn.info).		gnat_ugn
+ @end direntry
+ 
+ @definfoenclose strong,`,'
 --- a/gcc/fortran/gfortran.texi	2004-09-16 15:13:39.000000000 +0200
 +++ b/gcc/fortran/gfortran.texi	2004-09-26 11:05:50.258074024 +0200
 @@ -62,9 +62,9 @@
@@ -278,17 +295,6 @@
  @chapter Invoking rebuild-gcj-db
  
  @c man title rebuild-gcj-db Merge the per-solib databases made by aot-compile into one system-wide database.
---- a/gcc/ada/gnat_rm.texi	2005-11-30 12:12:06.000000000 +0100
-+++ b/gcc/ada/gnat_rm.texi	2005-12-11 02:36:14.863426736 +0100
-@@ -26,7 +26,7 @@
- @paragraphindent 0
- @exampleindent 4
- @finalout
--@dircategory GNU Ada Tools 
-+@dircategory Programming Languages:
- @direntry
- * gnat_rm: (gnat_rm.info). gnat_rm
- @end direntry
 --- a/gcc/doc/install.texi	2005-11-30 12:02:42.000000000 +0100
 +++ b/gcc/doc/install.texi	2005-12-11 02:44:22.598279768 +0100
 @@ -87,9 +87,9 @@

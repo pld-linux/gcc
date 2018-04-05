@@ -139,9 +139,9 @@ Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
-# use branch.sh to update glibc-branch.diff
+# use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	15e56f8d7ba9be17cd5d1595c5b3dde5
+# Patch100-md5:	1d4bc26154e47de7d727d6767215e776
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -2986,7 +2986,7 @@ Extensions dla języka C.
 
 %prep
 %setup -q
-#%patch100 -p0
+%patch100 -p0
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
@@ -3603,13 +3603,15 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcc-ar
 %attr(755,root,root) %{_bindir}/gcc-nm
 %attr(755,root,root) %{_bindir}/gcc-ranlib
-#%attr(755,root,root) %{_bindir}/gccbug
 %attr(755,root,root) %{_bindir}/gcov
+%attr(755,root,root) %{_bindir}/gcov-dump
 %attr(755,root,root) %{_bindir}/gcov-tool
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
+%{_mandir}/man1/gcov-dump.1*
+%{_mandir}/man1/gcov-tool.1*
 %{_infodir}/cpp.info*
 %{_infodir}/cppinternals.info*
 %{_infodir}/gcc.info*
@@ -3926,78 +3928,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libcilkrts-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libcilkrts.a
-%endif
-%endif
-
-# see libmpx/configure.tgt for supported architectures
-%ifarch %{x8664} %{ix86}
-%files -n libmpx
-%defattr(644,root,root,755)
-%doc libmpx/ChangeLog
-%attr(755,root,root) %{_libdir}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmpx.so.2
-%attr(755,root,root) %{_libdir}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmpxwrappers.so.2
-
-%files -n libmpx-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmpx.so
-%attr(755,root,root) %{_libdir}/libmpxwrappers.so
-%{_libdir}/libmpx.la
-%{_libdir}/libmpxwrappers.la
-%{_libdir}/libmpx.spec
-
-%files -n libmpx-static
-%defattr(644,root,root,755)
-%{_libdir}/libmpx.a
-%{_libdir}/libmpxwrappers.a
-%endif
-
-%if %{with multilib}
-%files -n libmpx-multilib-32
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmpx.so.2
-%attr(755,root,root) %{_libdir32}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmpxwrappers.so.2
-
-%files -n libmpx-multilib-32-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmpx.so
-%attr(755,root,root) %{_libdir32}/libmpxwrappers.so
-%{_libdir32}/libmpx.la
-%{_libdir32}/libmpxwrappers.la
-%{_libdir32}/libmpx.spec
-
-%files -n libmpx-multilib-32-static
-%defattr(644,root,root,755)
-%{_libdir32}/libmpx.a
-%{_libdir32}/libmpxwrappers.a
-%endif
-
-%if %{with multilib2}
-# see libmpx/configure.tgt for supported architectures;
-# no x32 there as of gcc 6.x
-%if "%{multilib2}" != "x32"
-%files -n libmpx-multilib-%{multilib2}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libmpx.so.2
-%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libmpxwrappers.so.2
-
-%files -n libmpx-multilib-%{multilib2}-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libmpx.so
-%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so
-%{_libdirm2}/libmpx.la
-%{_libdirm2}/libmpxwrappers.la
-%{_libdirm2}/libmpx.spec
-
-%files -n libmpx-multilib-%{multilib2}-static
-%defattr(644,root,root,755)
-%{_libdirm2}/libmpx.a
-%{_libdirm2}/libmpxwrappers.a
 %endif
 %endif
 
@@ -4965,3 +4895,75 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/plugin/include
 %attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
+
+# see libmpx/configure.tgt for supported architectures
+%ifarch %{x8664} %{ix86}
+%files -n libmpx
+%defattr(644,root,root,755)
+%doc libmpx/ChangeLog
+%attr(755,root,root) %{_libdir}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpx.so.2
+%attr(755,root,root) %{_libdir}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libmpxwrappers.so.2
+
+%files -n libmpx-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libmpx.so
+%attr(755,root,root) %{_libdir}/libmpxwrappers.so
+%{_libdir}/libmpx.la
+%{_libdir}/libmpxwrappers.la
+%{_libdir}/libmpx.spec
+
+%files -n libmpx-static
+%defattr(644,root,root,755)
+%{_libdir}/libmpx.a
+%{_libdir}/libmpxwrappers.a
+%endif
+
+%if %{with multilib}
+%files -n libmpx-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libmpx.so.2
+%attr(755,root,root) %{_libdir32}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libmpxwrappers.so.2
+
+%files -n libmpx-multilib-32-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libmpx.so
+%attr(755,root,root) %{_libdir32}/libmpxwrappers.so
+%{_libdir32}/libmpx.la
+%{_libdir32}/libmpxwrappers.la
+%{_libdir32}/libmpx.spec
+
+%files -n libmpx-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libmpx.a
+%{_libdir32}/libmpxwrappers.a
+%endif
+
+%if %{with multilib2}
+# see libmpx/configure.tgt for supported architectures;
+# no x32 there as of gcc 6.x
+%if "%{multilib2}" != "x32"
+%files -n libmpx-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libmpx.so.2
+%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libmpxwrappers.so.2
+
+%files -n libmpx-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libmpx.so
+%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so
+%{_libdirm2}/libmpx.la
+%{_libdirm2}/libmpxwrappers.la
+%{_libdirm2}/libmpx.spec
+
+%files -n libmpx-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libmpx.a
+%{_libdirm2}/libmpxwrappers.a
+%endif
+%endif
