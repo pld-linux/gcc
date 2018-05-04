@@ -73,9 +73,6 @@
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
 %endif
-%ifarch %{ix86} %{x8664} x32
-%define		with_cilkrts	1
-%endif
 %ifarch %{ix86} %{x8664} x32 arm ppc ppc64 sparc sparcv9 sparc64
 # sanitizer feature (asan and ubsan are common for all supported archs)
 %define		with_Xsan	1
@@ -96,8 +93,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	7
-%define		minor_ver	3.0
+%define		major_ver	8
+%define		minor_ver	1.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -110,14 +107,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	be2da21680f27624f3a87055c4ba5af2
+# Source0-md5:	65f7c65818dc540b3437605026d329fc
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	389fef34774afd4faa62f5e51d95c122
+# Patch100-md5:	69918659e3d572bcf798354137569409
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -500,146 +497,6 @@ Static GNU OpenMP library - %{m2_desc} version.
 
 %description -n libgomp-multilib-%{multilib2}-static -l pl.UTF-8
 Statyczna biblioteka GNU OpenMP - wersja %{m2_desc}.
-
-%package -n libcilkrts
-Summary:	GCC Cilk Plus language extensions runtime library
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++ = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts
-This package contains the Cilk Plus C/C++ language extensions runtime
-library.
-
-%description -n libcilkrts -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
-języków C/C++.
-
-%package -n libcilkrts-devel
-Summary:	GCC development files for Cilk Plus language extensions
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts-devel
-This package contains development files for Cilk Plus C/C++ language
-extensions.
-
-%description -n libcilkrts-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
-języków C/C++.
-
-%package -n libcilkrts-static
-Summary:	GCC Cilk Plus language extensions static library
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts-static
-This package contains Cilk Plus C/C++ language extensions static
-library.
-
-%description -n libcilkrts-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
-języków C/C++.
-
-%package -n libcilkrts-multilib-32
-Summary:	GCC Cilk Plus language extensions runtime library - 32-bit version
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja 32-bitowa
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libcilkrts-multilib
-
-%description -n libcilkrts-multilib-32
-This package contains the Cilk Plus C/C++ language extensions runtime
-library in 32-bit version.
-
-%description -n libcilkrts-multilib-32 -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
-
-%package -n libcilkrts-multilib-32-devel
-Summary:	GCC development files for Cilk Plus language extensions - 32-bit version
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus - wersja 32-bitowa
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
-Requires:	libcilkrts-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libcilkrts-multilib-devel
-
-%description -n libcilkrts-multilib-32-devel
-This package contains development files for Cilk Plus C/C++ language
-extensions in 32-bit version.
-
-%description -n libcilkrts-multilib-32-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
-
-%package -n libcilkrts-multilib-32-static
-Summary:	GCC Cilk Plus language extensions static library - 32-bit version
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC - wersja 32-bitowa
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libcilkrts-multilib-static
-
-%description -n libcilkrts-multilib-32-static
-This package contains the Cilk Plus C/C++ language extensions static
-library in 32-bit version.
-
-%description -n libcilkrts-multilib-32-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja 32-bitowa.
-
-%package -n libcilkrts-multilib-%{multilib2}
-Summary:	GCC Cilk Plus language extensions runtime library - %{m2_desc} version
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Cilk Plus dla GCC - wersja %{m2_desc}
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts-multilib-%{multilib2}
-This package contains the Cilk Plus C/C++ language extensions runtime
-library in %{m2_desc} version.
-
-%description -n libcilkrts-multilib-%{multilib2} -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja %{m2_desc}.
-
-%package -n libcilkrts-multilib-%{multilib2}-devel
-Summary:	GCC development files for Cilk Plus language extensions - %{m2_desc} version
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Cilk Plus - wersja %{m2_desc}
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts-devel = %{epoch}:%{version}-%{release}
-Requires:	libcilkrts-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts-multilib-%{multilib2}-devel
-This package contains development files for Cilk Plus C/C++ language
-extensions in %{m2_desc} version.
-
-%description -n libcilkrts-multilib-%{multilib2}-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja %{m2_desc}.
-
-%package -n libcilkrts-multilib-%{multilib2}-static
-Summary:	GCC Cilk Plus language extensions static library - %{m2_desc} version
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Cilk Plus dla GCC - wersja %{m2_desc}
-License:	BSD
-Group:		Development/Libraries
-Requires:	libcilkrts-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
-
-%description -n libcilkrts-multilib-%{multilib2}-static
-This package contains the Cilk Plus C/C++ language extensions static
-library in %{m2_desc} version.
-
-%description -n libcilkrts-multilib-%{multilib2}-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Cilk Plus dla
-języków C/C++. W tym pakiecie znajduje się wersja %{m2_desc}.
 
 %package ada
 Summary:	Ada language support for GCC
@@ -3228,12 +3085,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-n libgomp-devel -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
-%post   -p /sbin/ldconfig -n libcilkrts
-%postun -p /sbin/ldconfig -n libcilkrts
-%post   -p /sbin/ldconfig -n libcilkrts-multilib-32
-%postun -p /sbin/ldconfig -n libcilkrts-multilib-32
-%post   -p /sbin/ldconfig -n libcilkrts-multilib-%{multilib2}
-%postun -p /sbin/ldconfig -n libcilkrts-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgcc
 %postun	-p /sbin/ldconfig -n libgcc
 %post	-p /sbin/ldconfig -n libgcc-multilib-32
@@ -3371,6 +3222,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp_nonshared.a
 %dir %{_libdir}/gcc/%{_target_platform}
 %dir %{gcclibdir}
+%attr(755,root,root) %{gcclibdir}/buildid
 %{gcclibdir}/libgcc.a
 %{gcclibdir}/libgcc_eh.a
 %{gcclibdir}/libgcov.a
@@ -3387,10 +3239,15 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/sanitizer/common_interface_defs.h
 %dir %{gcclibdir}/include/ssp
 %{gcclibdir}/include/ssp/*.h
+%{gcclibdir}/include/cet.h
+%{gcclibdir}/include/cetintrin.h
 %{gcclibdir}/include/float.h
 %{gcclibdir}/include/gcov.h
+%{gcclibdir}/include/gfniintrin.h
 %{gcclibdir}/include/iso646.h
 %{gcclibdir}/include/limits.h
+%{gcclibdir}/include/movdirintrin.h
+%{gcclibdir}/include/pconfigintrin.h
 %{gcclibdir}/include/stdalign.h
 %{gcclibdir}/include/stdarg.h
 %{gcclibdir}/include/stdatomic.h
@@ -3403,13 +3260,16 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/syslimits.h
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
+%{gcclibdir}/include/vaesintrin.h
+%{gcclibdir}/include/vpclmulqdqintrin.h
+%{gcclibdir}/include/wbnoinvdintrin.h
 %ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avx2intrin.h
 %{gcclibdir}/include/avx5124fmapsintrin.h
 %{gcclibdir}/include/avx5124vnniwintrin.h
-%{gcclibdir}/include/avx512vpopcntdqintrin.h
+%{gcclibdir}/include/avx512bitalgintrin.h
 %{gcclibdir}/include/avx512bwintrin.h
 %{gcclibdir}/include/avx512cdintrin.h
 %{gcclibdir}/include/avx512dqintrin.h
@@ -3418,11 +3278,17 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512ifmaintrin.h
 %{gcclibdir}/include/avx512ifmavlintrin.h
 %{gcclibdir}/include/avx512pfintrin.h
+%{gcclibdir}/include/avx512vbmi2intrin.h
+%{gcclibdir}/include/avx512vbmi2vlintrin.h
 %{gcclibdir}/include/avx512vbmiintrin.h
 %{gcclibdir}/include/avx512vbmivlintrin.h
 %{gcclibdir}/include/avx512vlbwintrin.h
 %{gcclibdir}/include/avx512vldqintrin.h
 %{gcclibdir}/include/avx512vlintrin.h
+%{gcclibdir}/include/avx512vnniintrin.h
+%{gcclibdir}/include/avx512vnnivlintrin.h
+%{gcclibdir}/include/avx512vpopcntdqintrin.h
+%{gcclibdir}/include/avx512vpopcntdqvlintrin.h
 %{gcclibdir}/include/avxintrin.h
 %{gcclibdir}/include/bmi2intrin.h
 %{gcclibdir}/include/bmiintrin.h
@@ -3619,59 +3485,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgomp-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libgomp.a
-%endif
-%endif
-
-%if %{with cilkrts}
-%files -n libcilkrts
-%defattr(644,root,root,755)
-%doc libcilkrts/{ChangeLog,README}
-%attr(755,root,root) %{_libdir}/libcilkrts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcilkrts.so.5
-
-%files -n libcilkrts-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libcilkrts.so
-%{_libdir}/libcilkrts.la
-%{_libdir}/libcilkrts.spec
-%{gcclibdir}/include/cilk
-
-%files -n libcilkrts-static
-%defattr(644,root,root,755)
-%{_libdir}/libcilkrts.a
-
-%if %{with multilib}
-%files -n libcilkrts-multilib-32
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libcilkrts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libcilkrts.so.5
-
-%files -n libcilkrts-multilib-32-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libcilkrts.so
-%{_libdir32}/libcilkrts.la
-%{_libdir32}/libcilkrts.spec
-
-%files -n libcilkrts-multilib-32-static
-%defattr(644,root,root,755)
-%{_libdir32}/libcilkrts.a
-%endif
-
-%if %{with multilib2}
-%files -n libcilkrts-multilib-%{multilib2}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libcilkrts.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libcilkrts.so.5
-
-%files -n libcilkrts-multilib-%{multilib2}-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libcilkrts.so
-%{_libdirm2}/libcilkrts.la
-%{_libdirm2}/libcilkrts.spec
-
-%files -n libcilkrts-multilib-%{multilib2}-static
-%defattr(644,root,root,755)
-%{_libdirm2}/libcilkrts.a
 %endif
 %endif
 
@@ -3991,7 +3804,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
 %attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.4
+%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.5
 
 %files -n libgfortran-static
 %defattr(644,root,root,755)
@@ -4001,7 +3814,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.4
+%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.5
 
 %files -n libgfortran-multilib-32-static
 %defattr(644,root,root,755)
@@ -4012,7 +3825,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgfortran.so.4
+%attr(755,root,root) %ghost %{_libdirm2}/libgfortran.so.5
 
 %files -n libgfortran-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4222,7 +4035,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.11
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.13
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4239,7 +4052,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.11
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.13
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4257,7 +4070,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.11
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.13
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4277,7 +4090,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.4
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.5
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
@@ -4294,7 +4107,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.4
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.5
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4311,7 +4124,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.4
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.5
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4334,6 +4147,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n liblsan-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/liblsan.so
+%{_libdir}/liblsan_preinit.o
 %{_libdir}/liblsan.la
 %{gcclibdir}/include/sanitizer/lsan_interface.h
 
@@ -4374,6 +4188,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libtsan.so
 %{_libdir}/libtsan_preinit.o
 %{_libdir}/libtsan.la
+%{gcclibdir}/include/sanitizer/tsan_interface.h
 
 %files -n libtsan-static
 %defattr(644,root,root,755)
@@ -4401,7 +4216,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libubsan
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libubsan.so.0
+%attr(755,root,root) %ghost %{_libdir}/libubsan.so.1
 
 %files -n libubsan-devel
 %defattr(644,root,root,755)
@@ -4416,7 +4231,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libubsan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libubsan.so.0
+%attr(755,root,root) %ghost %{_libdir32}/libubsan.so.1
 
 %files -n libubsan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4432,7 +4247,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libubsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libubsan.so.0
+%attr(755,root,root) %ghost %{_libdirm2}/libubsan.so.1
 
 %files -n libubsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
