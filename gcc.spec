@@ -11,7 +11,6 @@
 # - package?
 #   /usr/bin/gjdoc [BR: antlr.jar] (but see gjdoc package, there are some additional jars?)
 #   /usr/share/man/man1/gjdoc.1.gz
-# - revise obsoletes for new libmpx packages!
 #
 # Conditional build:
 # - languages:
@@ -208,7 +207,9 @@ BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.211
+BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo >= 4.7
+BuildRequires:	xz
 BuildRequires:	zlib-devel
 %if %{with java}
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -2889,7 +2890,6 @@ Epoch:		0
 License:	BSD
 Group:		Libraries
 Requires:	libstdc++-multilib-32 = %{version}-%{release}
-Obsoletes:	libmpx-multilib
 
 %description -n libmpx-multilib-32
 This package contains the Memory Protection Extensions C language
@@ -2908,7 +2908,6 @@ License:	BSD
 Group:		Development/Libraries
 Requires:	libmpx-devel = %{version}-%{release}
 Requires:	libmpx-multilib-32 = %{version}-%{release}
-Obsoletes:	libmpx-multilib-devel
 
 %description -n libmpx-multilib-32-devel
 This package contains development files for Memory Protection
@@ -2925,7 +2924,6 @@ Epoch:		0
 License:	BSD
 Group:		Development/Libraries
 Requires:	libmpx-multilib-32-devel = %{version}-%{release}
-Obsoletes:	libmpx-multilib-static
 
 %description -n libmpx-multilib-32-static
 This package contains the Memory Protection Extensions C language
