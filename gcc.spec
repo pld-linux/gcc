@@ -94,7 +94,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	8
-%define		minor_ver	1.0
+%define		minor_ver	2.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -107,14 +107,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	65f7c65818dc540b3437605026d329fc
+# Source0-md5:	4ab282f414676496483b3e1793d07862
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update glibc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	69918659e3d572bcf798354137569409
+# Patch100-md5:	d9a6ef7cbfd2b7e6800d77560824d59f
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -4010,6 +4010,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gofmt
 %attr(755,root,root) %{gcclibdir}/cgo
 %attr(755,root,root) %{gcclibdir}/go1
+%attr(755,root,root) %{gcclibdir}/test2json
+%attr(755,root,root) %{gcclibdir}/vet
 %dir %{_libdir}/go
 %{_libdir}/go/%{version}
 %{_mandir}/man1/go.1*
