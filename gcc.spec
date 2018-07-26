@@ -3234,7 +3234,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libssp_nonshared.a
 %dir %{_libdir}/gcc/%{_target_platform}
 %dir %{gcclibdir}
-%attr(755,root,root) %{gcclibdir}/buildid
 %{gcclibdir}/libgcc.a
 %{gcclibdir}/libgcc_eh.a
 %{gcclibdir}/libgcov.a
@@ -3991,6 +3990,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gccgo
 %attr(755,root,root) %{_bindir}/go
 %attr(755,root,root) %{_bindir}/gofmt
+%attr(755,root,root) %{gcclibdir}/buildid
 %attr(755,root,root) %{gcclibdir}/cgo
 %attr(755,root,root) %{gcclibdir}/go1
 %attr(755,root,root) %{gcclibdir}/test2json
