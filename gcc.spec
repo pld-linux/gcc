@@ -4364,9 +4364,9 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/plugin/gengtype
 %{gcclibdir}/plugin/gtype.state
 %{gcclibdir}/plugin/include
-%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.la
+%{gcclibdir}/plugin/libcc1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
-%attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.la
+%{gcclibdir}/plugin/libcp1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.so
 
 # see libmpx/configure.tgt for supported architectures
