@@ -68,14 +68,14 @@
 %define		with_multilib2	1
 %endif
 %endif
-%ifarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
 %endif
 %ifarch %{ix86} %{x8664} x32
 %define		with_cilkrts	1
 %endif
-%ifarch %{ix86} %{x8664} x32 arm ppc ppc64 sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 %{arm} ppc ppc64 sparc sparcv9 sparc64
 # sanitizer feature (asan and ubsan are common for all supported archs)
 %define		with_Xsan	1
 %endif
@@ -3479,9 +3479,17 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/xsavesintrin.h
 %{gcclibdir}/include/xtestintrin.h
 %endif
-%ifarch arm
+%ifarch %{arm}
+%{gcclibdir}/include/arm_acle.h
+%{gcclibdir}/include/arm_cmse.h
+%{gcclibdir}/include/arm_fp16.h
 %{gcclibdir}/include/arm_neon.h
 %{gcclibdir}/include/mmintrin.h
+%endif
+%ifarch aarch64
+%{gcclibdir}/include/arm_acle.h
+%{gcclibdir}/include/arm_fp16.h
+%{gcclibdir}/include/arm_neon.h
 %endif
 %ifarch ia64
 %{gcclibdir}/include/ia64intrin.h
@@ -3491,9 +3499,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %ifarch mips
 %{gcclibdir}/include/loongson.h
+%{gcclibdir}/include/msa.h
 %endif
 %ifarch powerpc ppc ppc64
 %{gcclibdir}/include/altivec.h
+%{gcclibdir}/include/htmintrin.h
+%{gcclibdir}/include/htmxlintrin.h
 %{gcclibdir}/include/paired.h
 %{gcclibdir}/include/ppc-asm.h
 %{gcclibdir}/include/ppu_intrinsics.h
@@ -3501,6 +3512,15 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/spe.h
 %{gcclibdir}/include/spu2vmx.h
 %{gcclibdir}/include/vec_types.h
+%endif
+%ifarch s390 s390x
+%{gcclibdir}/include/htmintrin.h
+%{gcclibdir}/include/htmxlintrin.h
+%{gcclibdir}/include/s390intrin.h
+%{gcclibdir}/include/vecintrin.h
+%endif
+%ifarch sparc sparcv9 sparc64
+%{gcclibdir}/include/visintrin.h
 %endif
 %{?with_vtv:%{gcclibdir}/include/vtv_*.h}
 
@@ -4503,10 +4523,11 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/plugin/gengtype
 %{gcclibdir}/plugin/gtype.state
 %{gcclibdir}/plugin/include
-%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.la
+%{gcclibdir}/plugin/libcc1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
-%attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.la
+%{gcclibdir}/plugin/libcp1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.so
+
 # see libmpx/configure.tgt for supported architectures
 %ifarch %{x8664} %{ix86}
 %files -n libmpx
