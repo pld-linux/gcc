@@ -1,4 +1,3 @@
-# NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # NOTE
 # - when adding new subpackages with external libraries (like libffi)
@@ -90,14 +89,14 @@
 %define		with_multilib2	1
 %endif
 %endif
-%ifarch %{ix86} %{x8664} x32 alpha arm ppc ppc64 sh sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
 %endif
 %ifarch %{ix86} %{x8664} x32
 %define		with_cilkrts	1
 %endif
-%ifarch %{ix86} %{x8664} x32 arm ppc ppc64 sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 %{arm} ppc ppc64 sparc sparcv9 sparc64
 # sanitizer feature (asan and ubsan are common for all supported archs)
 %define		with_Xsan	1
 %endif
@@ -116,7 +115,7 @@
 %endif
 
 %define		major_ver	6
-%define		minor_ver	4.0
+%define		minor_ver	5.0
 %define		ecj_ver		4.9
 # class data version seen with file(1) that this jvm is able to load
 %define		_classdataversion 50.0
@@ -133,14 +132,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	11ba51a0cfb8471927f387c8895fe232
+# Source0-md5:	edaeff1cc020b16a0c19a6d5e80dc2fd
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	1d4bc26154e47de7d727d6767215e776
+# Patch100-md5:	5ad5a566cbaf57f985192534e5ef1c32
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -3721,7 +3720,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/xsavesintrin.h
 %{gcclibdir}/include/xtestintrin.h
 %endif
-%ifarch arm
+%ifarch %{arm}
 %{gcclibdir}/include/arm_neon.h
 %{gcclibdir}/include/mmintrin.h
 %endif
