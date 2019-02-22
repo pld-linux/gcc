@@ -93,7 +93,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	8
-%define		minor_ver	2.0
+%define		minor_ver	3.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -101,19 +101,19 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	4
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	4ab282f414676496483b3e1793d07862
+# Source0-md5:	65b210b4bfe7e060051f799e0f994896
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	7e2c983c3d9ed44bca4ccee3d4c9a6b6
+# Patch100-md5:	984c895d5efef6f0423894b22e0f89ee
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
