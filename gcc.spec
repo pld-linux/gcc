@@ -92,8 +92,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	8
-%define		minor_ver	3.0
+%define		major_ver	9
+%define		minor_ver	1.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -106,14 +106,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	65b210b4bfe7e060051f799e0f994896
+# Source0-md5:	6069ae3737cf02bf2cb44a391ef0e937
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	984c895d5efef6f0423894b22e0f89ee
+# Patch100-md5:	bb4dcfd98a845e049f3fadd36f84ded3
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -234,7 +234,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgo|libxmlj|libubsan|lib-gnu-awt-xlib|libmpxwrappers)\.so.*'
+%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgo|libxmlj|libubsan|lib-gnu-awt-xlib)\.so.*'
 # private symbols
 %define		_noautoreq		.*\(GLIBC_PRIVATE\)
 
@@ -2517,152 +2517,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 # Packages with epoch 0
 # DO NOT MOVE THESE PACKAGES AROUND
 
-%package -n libmpx
-Summary:	GCC Memory Protection Extensions language extensions runtime library
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
-Epoch:		0
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++ = 6:%{version}-%{release}
-
-%description -n libmpx
-This package contains the Memory Protection Extensions C language
-extensions runtime library.
-
-%description -n libmpx -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
-Protection Extensions dla języka C.
-
-%package -n libmpx-devel
-Summary:	GCC development files for Memory Protection Extensions language extensions
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx = %{version}-%{release}
-
-%description -n libmpx-devel
-This package contains development files for Memory Protection
-Extensions C language extensions.
-
-%description -n libmpx-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
-Extensions dla języka C.
-
-%package -n libmpx-static
-Summary:	GCC Memory Protection Extensions language extensions static library
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx-devel = %{version}-%{release}
-
-%description -n libmpx-static
-This package contains Memory Protection Extensions C language
-extensions static library.
-
-%description -n libmpx-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
-Extensions dla języka C.
-
-%package -n libmpx-multilib-32
-Summary:	GCC Memory Protection Extensions language extensions runtime library - 32-bit version
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
-Epoch:		0
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++-multilib-32 = %{version}-%{release}
-
-%description -n libmpx-multilib-32
-This package contains the Memory Protection Extensions C language
-extensions runtime library in 32-bit version.
-
-%description -n libmpx-multilib-32 -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
-Protection Extensions dla języka C. W tym pakiecie znajduje się wersja
-32-bitowa.
-
-%package -n libmpx-multilib-32-devel
-Summary:	GCC development files for Memory Protection Extensions language extensions - 32-bit version
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions - wersja 32-bitowa
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx-devel = %{version}-%{release}
-Requires:	libmpx-multilib-32 = %{version}-%{release}
-
-%description -n libmpx-multilib-32-devel
-This package contains development files for Memory Protection
-Extensions C language extensions in 32-bit version.
-
-%description -n libmpx-multilib-32-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
-Extensions dla języka C. W tym pakiecie znajduje się wersja 32-bitowa.
-
-%package -n libmpx-multilib-32-static
-Summary:	GCC Memory Protection Extensions language extensions static library - 32-bit version
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC - wersja 32-bitowa
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx-multilib-32-devel = %{version}-%{release}
-
-%description -n libmpx-multilib-32-static
-This package contains the Memory Protection Extensions C language
-extensions static library in 32-bit version.
-
-%description -n libmpx-multilib-32-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
-Extensions dla języka C. W tym pakiecie znajduje się wersja 32-bitowa.
-
-%package -n libmpx-multilib-%{multilib2}
-Summary:	GCC Memory Protection Extensions language extensions runtime library
-Summary(pl.UTF-8):	Biblioteka uruchomieniowa rozszerzeń Memory Protection Extensions dla GCC
-Epoch:		0
-License:	BSD
-Group:		Libraries
-Requires:	libstdc++-multilib-%{multilib2} = 6:%{version}-%{release}
-
-%description -n libmpx-multilib-%{multilib2}
-This package contains the Memory Protection Extensions C language
-extensions runtime library.
-
-%description -n libmpx-multilib-%{multilib2} -l pl.UTF-8
-Ten pakiet zawiera bibliotekę uruchomieniową rozszerzeń Memory
-Protection Extensions dla języka C.
-
-%package -n libmpx-multilib-%{multilib2}-devel
-Summary:	GCC development files for Memory Protection Extensions language extensions
-Summary(pl.UTF-8):	Pliki programistyczne GCC dla rozszerzeń Memory Protection Extensions
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx-devel = %{version}-%{release}
-Requires:	libmpx-multilib-%{multilib2} = %{version}-%{release}
-
-%description -n libmpx-multilib-%{multilib2}-devel
-This package contains development files for Memory Protection
-Extensions C language extensions.
-
-%description -n libmpx-multilib-%{multilib2}-devel -l pl.UTF-8
-Ten pakiet zawiera pliki programistyczne rozszerzeń Memory Protection
-Extensions dla języka C.
-
-%package -n libmpx-multilib-%{multilib2}-static
-Summary:	GCC Memory Protection Extensions language extensions static library
-Summary(pl.UTF-8):	Biblioteka statyczna rozszerzeń Memory Protection Extensions dla GCC
-Epoch:		0
-License:	BSD
-Group:		Development/Libraries
-Requires:	libmpx-multilib-%{multilib2}-devel = %{version}-%{release}
-
-%description -n libmpx-multilib-%{multilib2}-static
-This package contains the Memory Protection Extensions C language
-extensions static library.
-
-%description -n libmpx-multilib-%{multilib2}-static -l pl.UTF-8
-Ten pakiet zawiera bibliotekę statyczną rozszerzeń Memory Protection
-Extensions dla języka C.
+# PUT SUCH PACKAGES HERE
 
 %prep
 %setup -q
@@ -3134,12 +2989,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libffi-multilib-32
 %post	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
-%post	-p /sbin/ldconfig -n libmpx
-%postun	-p /sbin/ldconfig -n libmpx
-%post	-p /sbin/ldconfig -n libmpx-multilib-32
-%postun	-p /sbin/ldconfig -n libmpx-multilib-32
-%post	-p /sbin/ldconfig -n libmpx-multilib-%{multilib2}
-%postun	-p /sbin/ldconfig -n libmpx-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib-32
@@ -3298,6 +3147,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/bmmintrin.h
 %{gcclibdir}/include/cet.h
 %{gcclibdir}/include/cetintrin.h
+%{gcclibdir}/include/cldemoteintrin.h
 %{gcclibdir}/include/clflushoptintrin.h
 %{gcclibdir}/include/clwbintrin.h
 %{gcclibdir}/include/clzerointrin.h
@@ -3334,6 +3184,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/vaesintrin.h
 %{gcclibdir}/include/vpclmulqdqintrin.h
 %{gcclibdir}/include/wbnoinvdintrin.h
+%{gcclibdir}/include/waitpkgintrin.h
 %{gcclibdir}/include/wmmintrin.h
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
@@ -4020,7 +3871,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.13
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.14
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4037,7 +3888,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.13
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.14
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4055,7 +3906,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.13
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.14
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4368,75 +4219,3 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
 %{gcclibdir}/plugin/libcp1plugin.la
 %attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.so
-
-# see libmpx/configure.tgt for supported architectures
-%ifarch %{x8664} %{ix86}
-%files -n libmpx
-%defattr(644,root,root,755)
-%doc libmpx/ChangeLog
-%attr(755,root,root) %{_libdir}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmpx.so.2
-%attr(755,root,root) %{_libdir}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmpxwrappers.so.2
-
-%files -n libmpx-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libmpx.so
-%attr(755,root,root) %{_libdir}/libmpxwrappers.so
-%{_libdir}/libmpx.la
-%{_libdir}/libmpxwrappers.la
-%{_libdir}/libmpx.spec
-
-%files -n libmpx-static
-%defattr(644,root,root,755)
-%{_libdir}/libmpx.a
-%{_libdir}/libmpxwrappers.a
-%endif
-
-%if %{with multilib}
-%files -n libmpx-multilib-32
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmpx.so.2
-%attr(755,root,root) %{_libdir32}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libmpxwrappers.so.2
-
-%files -n libmpx-multilib-32-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libmpx.so
-%attr(755,root,root) %{_libdir32}/libmpxwrappers.so
-%{_libdir32}/libmpx.la
-%{_libdir32}/libmpxwrappers.la
-%{_libdir32}/libmpx.spec
-
-%files -n libmpx-multilib-32-static
-%defattr(644,root,root,755)
-%{_libdir32}/libmpx.a
-%{_libdir32}/libmpxwrappers.a
-%endif
-
-%if %{with multilib2}
-# see libmpx/configure.tgt for supported architectures;
-# no x32 there as of gcc 6.x
-%if "%{multilib2}" != "x32"
-%files -n libmpx-multilib-%{multilib2}
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libmpx.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libmpx.so.2
-%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libmpxwrappers.so.2
-
-%files -n libmpx-multilib-%{multilib2}-devel
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libmpx.so
-%attr(755,root,root) %{_libdirm2}/libmpxwrappers.so
-%{_libdirm2}/libmpx.la
-%{_libdirm2}/libmpxwrappers.la
-%{_libdirm2}/libmpx.spec
-
-%files -n libmpx-multilib-%{multilib2}-static
-%defattr(644,root,root,755)
-%{_libdirm2}/libmpx.a
-%{_libdirm2}/libmpxwrappers.a
-%endif
-%endif
