@@ -3601,6 +3601,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgfortran.so
 %{_libdir}/libgfortran.spec
 %{_libdir}/libgfortran.la
+%{gcclibdir}/include/ISO_Fortran_binding.h
 %{gcclibdir}/libcaf_single.a
 %{gcclibdir}/libcaf_single.la
 #%{gcclibdir}/libgfortranbegin.la
