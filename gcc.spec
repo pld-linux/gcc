@@ -113,7 +113,7 @@ Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	148b328424d483a06050a4624bad1d2e
+# Patch100-md5:	0f41c1f7245b318399c8dcd7b8fa0bfc
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
