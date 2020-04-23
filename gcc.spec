@@ -3332,7 +3332,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgomp.so
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
-%{gcclibdir}/finclude
+%{?with_fortran:%{gcclibdir}/finclude}
 %{gcclibdir}/include/omp.h
 %{gcclibdir}/include/openacc.h
 %{_infodir}/libgomp.info*
@@ -3352,7 +3352,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgomp.so
 %{_libdir32}/libgomp.la
 %{_libdir32}/libgomp.spec
-%{gcclibdir}/32/finclude
+%{?with_fortran:%{gcclibdir}/32/finclude}
 
 %files -n libgomp-multilib-32-static
 %defattr(644,root,root,755)
@@ -3370,7 +3370,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdirm2}/libgomp.so
 %{_libdirm2}/libgomp.la
 %{_libdirm2}/libgomp.spec
-%{gcclibdir}/%{multilib2}/finclude
+%{?with_fortran:%{gcclibdir}/%{multilib2}/finclude}
 
 %files -n libgomp-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
