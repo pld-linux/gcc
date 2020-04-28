@@ -68,15 +68,15 @@
 %define		with_multilib2	1
 %endif
 %endif
-%ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64 aarch64
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
 %endif
-%ifarch %{ix86} %{x8664} x32 %{arm} ppc ppc64 sparc sparcv9 sparc64
+%ifarch %{ix86} %{x8664} x32 %{arm} ppc ppc64 sparc sparcv9 sparc64 aarch64
 # sanitizer feature (asan and ubsan are common for all supported archs)
 %define		with_Xsan	1
 %endif
-%ifarch %{x8664}
+%ifarch %{x8664} aarch64
 # lsan and tsan exist only for primary x86_64 ABI
 %define		with_lsan_m0	1
 %define		with_tsan_m0	1
