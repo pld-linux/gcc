@@ -89,6 +89,9 @@
 %ifarch %{ix86} %{x8664} x32
 %define		with_vtv	1
 %endif
+%ifarch %{ix86} %{x8664} x32 ia64
+%define		with_quadmath	1
+%endif
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
@@ -958,7 +961,7 @@ Summary(pt_BR.UTF-8):	Suporte Fortran 95 para o GCC
 Group:		Development/Languages/Fortran
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
-Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77
 Obsoletes:	gcc-g77
@@ -983,7 +986,7 @@ Summary(pl.UTF-8):	Obsługa binariów 32-bitowych w języku Fortran 95 dla GCC
 Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib-32 = %{epoch}:%{version}-%{release}
-Requires:	libquadmath-multilib-32-devel = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath-multilib-32-devel = %{epoch}:%{version}-%{release}}
 Obsoletes:	gcc-fortran-multilib
 
 %description fortran-multilib-32
@@ -1000,7 +1003,7 @@ Summary(pl.UTF-8):	Obsługa binariów %{m2_desc} w języku Fortran 95 dla GCC
 Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
-Requires:	libquadmath-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}}
 
 %description fortran-multilib-%{multilib2}
 This package adds support for compiling Fortran 95 programs to %{m2_desc}
@@ -1017,7 +1020,7 @@ Summary(pl.UTF-8):	Biblioteka Fortranu 95
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc = %{epoch}:%{version}-%{release}
-Requires:	libquadmath = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath = %{epoch}:%{version}-%{release}}
 Obsoletes:	libg2c
 
 %description -n libgfortran
@@ -1053,7 +1056,7 @@ Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
-Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}}
 Obsoletes:	libgfortran-multilib
 
 %description -n libgfortran-multilib-32
@@ -1081,7 +1084,7 @@ Summary:	Fortran 95 Library - %{m2_desc} version
 Summary(pl.UTF-8):	Biblioteka Fortranu 95 - wersja %{m2_desc}
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
-Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+%{?with_quadmath:Requires:	libquadmath-multilib-%{multilib2} = %{epoch}:%{version}-%{release}}
 
 %description -n libgfortran-multilib-%{multilib2}
 Fortran 95 Library - %{m2_desc} version.
@@ -2807,7 +2810,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la libquadmath.la} \
+	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
 	%{?with_lsan_m0:liblsan.la} \
@@ -2822,7 +2825,7 @@ done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la libquadmath.la} \
+	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
 	%{?with_lsan_m1:liblsan.la} \
@@ -2836,7 +2839,7 @@ done
 %if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
-	%{?with_fortran:libgfortran.la libquadmath.la} \
+	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
 	%{?with_lsan_m2:liblsan.la} \
@@ -3666,6 +3669,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdirm2}/libgfortran.a
 %endif
 
+%if %{with quadmath}
 %files -n libquadmath
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libquadmath.so.*.*.*
@@ -3713,6 +3717,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libquadmath-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
 %{_libdirm2}/libquadmath.a
+%endif
 %endif
 %endif
 
