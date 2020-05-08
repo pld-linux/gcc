@@ -174,7 +174,7 @@ BuildRequires:	gmp-c++-devel >= 4.3.2
 BuildRequires:	gmp-devel >= 4.3.2
 BuildRequires:	isl-devel >= 0.15
 BuildRequires:	libmpc-devel >= 0.8.1
-BuildRequires:	mpfr-devel >= 2.4.2
+BuildRequires:	mpfr-devel >= 3.1.0
 %if %{with python}
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -190,7 +190,7 @@ Requires:	gmp >= 4.3.2
 Requires:	isl >= 0.15
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 Requires:	libmpc >= 0.8.1
-Requires:	mpfr >= 2.4.2
+Requires:	mpfr >= 3.1.0
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
 Obsoletes:	cpp
@@ -2505,7 +2505,7 @@ Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	gmp-devel >= 4.3.2
 Requires:	libmpc-devel >= 0.8.1
-Requires:	mpfr-devel >= 2.4.2
+Requires:	mpfr-devel >= 3.1.0
 
 %description plugin-devel
 This package contains header files and other support files for
