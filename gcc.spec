@@ -3419,6 +3419,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir32}/libgnarl.so
 %attr(755,root,root) %{_libdir32}/libgnat-*.so
 %attr(755,root,root) %{_libdir32}/libgnat.so
+%{gcclibdir}/32/ada_target_properties
 %{gcclibdir}/32/adainclude
 %dir %{gcclibdir}/32/adalib
 %{gcclibdir}/32/adalib/*.ali
@@ -3434,6 +3435,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdirm2}/libgnarl.so
 %attr(755,root,root) %{_libdirm2}/libgnat-*.so
 %attr(755,root,root) %{_libdirm2}/libgnat.so
+%{gcclibdir}/%{multilib2}/ada_target_properties
 %{gcclibdir}/%{multilib2}/adainclude
 %dir %{gcclibdir}/%{multilib2}/adalib
 %{gcclibdir}/%{multilib2}/adalib/*.ali
