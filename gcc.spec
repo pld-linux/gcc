@@ -95,8 +95,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	9
-%define		minor_ver	3.0
+%define		major_ver	10
+%define		minor_ver	1.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -108,15 +108,15 @@ Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	d00a144b771ddeb021b61aa205b7e345
+Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	7d48e00245330c48b670ec9a2c518291
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	0f41c1f7245b318399c8dcd7b8fa0bfc
+# Patch100-md5:	a5de6418eae59cb6369cafbcb723bbf1
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -3060,12 +3060,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gcov
 %attr(755,root,root) %{_bindir}/gcov-dump
 %attr(755,root,root) %{_bindir}/gcov-tool
+%attr(755,root,root) %{_bindir}/lto-dump
 %{_mandir}/man1/cc.1*
 %{_mandir}/man1/cpp.1*
 %{_mandir}/man1/gcc.1*
 %{_mandir}/man1/gcov.1*
 %{_mandir}/man1/gcov-dump.1*
 %{_mandir}/man1/gcov-tool.1*
+%{_mandir}/man1/lto-dump.1*
 %{_infodir}/cpp.info*
 %{_infodir}/cppinternals.info*
 %{_infodir}/gcc.info*
@@ -3119,11 +3121,14 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
 %ifarch %{ix86} %{x8664} x32
+%{gcclibdir}/include/acc_prof.h
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avx2intrin.h
 %{gcclibdir}/include/avx5124fmapsintrin.h
 %{gcclibdir}/include/avx5124vnniwintrin.h
+%{gcclibdir}/include/avx512bf16intrin.h
+%{gcclibdir}/include/avx512bf16vlintrin.h
 %{gcclibdir}/include/avx512bitalgintrin.h
 %{gcclibdir}/include/avx512bwintrin.h
 %{gcclibdir}/include/avx512cdintrin.h
@@ -3142,6 +3147,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512vlintrin.h
 %{gcclibdir}/include/avx512vnniintrin.h
 %{gcclibdir}/include/avx512vnnivlintrin.h
+%{gcclibdir}/include/avx512vp2intersectintrin.h
+%{gcclibdir}/include/avx512vp2intersectvlintrin.h
 %{gcclibdir}/include/avx512vpopcntdqintrin.h
 %{gcclibdir}/include/avx512vpopcntdqvlintrin.h
 %{gcclibdir}/include/avxintrin.h
@@ -3157,6 +3164,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
+%{gcclibdir}/include/enqcmdintrin.h
 %{gcclibdir}/include/f16cintrin.h
 %{gcclibdir}/include/fma4intrin.h
 %{gcclibdir}/include/fmaintrin.h
@@ -3170,8 +3178,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mmintrin.h
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/movdirintrin.h
-%{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/mwaitxintrin.h
+%{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/pconfigintrin.h
 %{gcclibdir}/include/pkuintrin.h
 %{gcclibdir}/include/pmmintrin.h
@@ -3186,8 +3194,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/tmmintrin.h
 %{gcclibdir}/include/vaesintrin.h
 %{gcclibdir}/include/vpclmulqdqintrin.h
-%{gcclibdir}/include/wbnoinvdintrin.h
 %{gcclibdir}/include/waitpkgintrin.h
+%{gcclibdir}/include/wbnoinvdintrin.h
 %{gcclibdir}/include/wmmintrin.h
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
@@ -3391,6 +3399,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libgnat-*.so
 %attr(755,root,root) %{_libdir}/libgnat.so
 %attr(755,root,root) %{gcclibdir}/gnat1
+%{gcclibdir}/ada_target_properties
 %{gcclibdir}/adainclude
 %dir %{gcclibdir}/adalib
 %{gcclibdir}/adalib/*.ali
@@ -3877,7 +3886,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.14
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.16
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -3894,7 +3903,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.14
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.16
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -3912,7 +3921,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.14
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.16
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -3932,7 +3941,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.5
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.6
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
@@ -3949,7 +3958,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.5
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.6
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -3966,7 +3975,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.5
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.6
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
