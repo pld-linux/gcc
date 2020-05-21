@@ -3121,7 +3121,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/unwind.h
 %{gcclibdir}/include/varargs.h
 %ifarch %{ix86} %{x8664} x32
-%{gcclibdir}/include/acc_prof.h
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/avx2intrin.h
@@ -3208,6 +3207,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %ifarch %{arm}
 %{gcclibdir}/include/arm_acle.h
+%{gcclibdir}/include/arm_bf16.h
 %{gcclibdir}/include/arm_cmse.h
 %{gcclibdir}/include/arm_fp16.h
 %{gcclibdir}/include/arm_neon.h
@@ -3215,8 +3215,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %ifarch aarch64
 %{gcclibdir}/include/arm_acle.h
+%{gcclibdir}/include/arm_bf16.h
 %{gcclibdir}/include/arm_fp16.h
 %{gcclibdir}/include/arm_neon.h
+%{gcclibdir}/include/arm_sve.h
 %endif
 %ifarch ia64
 %{gcclibdir}/include/ia64intrin.h
@@ -3344,6 +3346,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
 %{?with_fortran:%{gcclibdir}/finclude}
+%{gcclibdir}/include/acc_prof.h
 %{gcclibdir}/include/omp.h
 %{gcclibdir}/include/openacc.h
 %{_infodir}/libgomp.info*
