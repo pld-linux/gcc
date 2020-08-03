@@ -121,6 +121,7 @@ Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
+Patch5:		pr96377.patch
 
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
@@ -2529,6 +2530,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %patch10 -p1
 %if %{with gcc_libffi}
