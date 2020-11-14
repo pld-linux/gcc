@@ -3208,10 +3208,14 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{arm}
 %{gcclibdir}/include/arm_acle.h
 %{gcclibdir}/include/arm_bf16.h
+%{gcclibdir}/include/arm_cde.h
 %{gcclibdir}/include/arm_cmse.h
 %{gcclibdir}/include/arm_fp16.h
+%{gcclibdir}/include/arm_mve.h
+%{gcclibdir}/include/arm_mve_types.h
 %{gcclibdir}/include/arm_neon.h
 %{gcclibdir}/include/mmintrin.h
+%{gcclibdir}/include/unwind-arm-common.h
 %endif
 %ifarch aarch64
 %{gcclibdir}/include/arm_acle.h
