@@ -2545,7 +2545,6 @@ echo "release" > gcc/DEV-PHASE
 cd gcc
 #{__autoconf}
 cd ..
-cp -f /usr/share/automake/config.sub .
 
 rm -rf builddir && install -d builddir && cd builddir
 
