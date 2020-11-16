@@ -2620,6 +2620,11 @@ TEXCONFIG=false \
 %endif
 	--with-system-zlib \
 	--without-x \
+%ifarch armv6hl
+	--with-arch=armv6 \
+	--with-float=hard \
+	--with-fpu=vfp \
+%endif
 %if %{with cxx}
 	--enable-__cxa_atexit \
 	--enable-libstdcxx-allocator=new \
