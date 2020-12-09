@@ -1,25 +1,25 @@
 #!/bin/sh
 set -e
+url=git://gcc.gnu.org/git/gcc.git
 package=gcc
-svn=svn://gcc.gnu.org/svn/$package
-branch=branches/$package-8-branch
-tag=tags/${package}_8_3_0_release
+tag=releases/gcc-8.4.0
+branch=releases/gcc-8
 out=$package-branch.diff
+repo=$package.git
 
 # use filterdiff, etc to exclude bad chunks from diff
 filter() {
-	# remove revno's for smaller diffs
-	# replace svn nonexistend with '0' date, so patch will know that file needs to be removed from disk
-	sed -e 's,^\([-+]\{3\} .*\)\t(revision [0-9]\+)$,\1,' | \
-	sed -e 's,^\([-+]\{3\} .*\t\)(nonexistent)$,\11970-01-01 01:00:00.000000000 +0100,'
+	cat
 }
 
-old=$svn/$tag
-new=$svn/$branch
-echo >&2 "Running diff: $old -> $new"
-LC_ALL=C svn diff -x --ignore-eol-style --force --old=$old --new=$new > $out.svn.tmp
-filter < $out.svn.tmp > $out.tmp
-rm -f $out.svn.tmp
+if [ ! -d $repo ]; then
+	git clone --bare $url -b $branch $repo
+fi
+
+cd $repo
+	git fetch origin +$branch:$branch +refs/tags/$tag:refs/tags/$tag
+	git log -p --reverse $tag..$branch ":(exclude)doc/doc-*" ":(exclude)test" ":(exclude).*" | filter > ../$out.tmp
+cd ..
 
 if cmp -s $out{,.tmp}; then
 	echo >&2 "No new diffs..."

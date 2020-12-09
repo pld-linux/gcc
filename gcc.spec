@@ -93,7 +93,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	8
-%define		minor_ver	3.0
+%define		minor_ver	4.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -105,15 +105,15 @@ Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
-Source0:	https://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	65b210b4bfe7e060051f799e0f994896
+Source0:	https://ftp.gnu.org/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	bb815a8e3b7be43c4a26fa89dbbd9795
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	984c895d5efef6f0423894b22e0f89ee
+# Patch100-md5:	f13ade4c91d6a65bcccb315d67054d91
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -176,7 +176,7 @@ BuildRequires:	mpfr-devel >= 2.4.2
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 %endif
-BuildRequires:	rpmbuild(macros) >= 1.211
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo >= 4.7
 BuildRequires:	xz
@@ -940,9 +940,7 @@ Summary:	C++ standard library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
 License:	FDL v1.3 (mainly), GPL v3+ (doxygen generated parts)
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
@@ -2666,7 +2664,7 @@ Extensions dla języka C.
 
 %prep
 %setup -q
-%patch100 -p0
+%patch100 -p1
 %patch0 -p1
 %patch2 -p1
 %patch3 -p1
