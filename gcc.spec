@@ -943,9 +943,7 @@ Summary:	C++ standard library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
 License:	FDL v1.3 (mainly), GPL v3+ (doxygen generated parts)
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
