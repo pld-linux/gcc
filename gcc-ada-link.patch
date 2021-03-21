@@ -1,22 +1,7 @@
---- a/gcc/ada/link.c	2004-09-13 12:18:40.000000000 +0200
-+++ b/gcc/ada/link.c	2004-09-26 12:24:29.079704096 +0200
-@@ -157,10 +157,10 @@
- 
- #elif defined (linux) || defined(__GLIBC__)
- const char *__gnat_object_file_option = "-Wl,@";
--const char *__gnat_run_path_option = "-Wl,-rpath,";
-+const char *__gnat_run_path_option = "";
- char __gnat_shared_libgnat_default = STATIC;
--char __gnat_shared_libgcc_default = STATIC;
--int __gnat_link_max = 8192;
-+char __gnat_shared_libgcc_default = SHARED;
-+int __gnat_link_max = 131072;
- unsigned char __gnat_objlist_file_supported = 1;
- const char *__gnat_object_library_extension = ".a";
- unsigned char __gnat_separate_run_path_options = 0;
---- a/gcc/ada/gcc-interface/Makefile.in	2005-05-26 10:48:40.000000000 +0000
-+++ b/gcc/ada/gcc-interface/Makefile.in	2005-05-26 10:59:25.000000000 +0000
-@@ -126,7 +126,7 @@
+diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gcc-interface/Makefile.in gcc-10.2.0/gcc/ada/gcc-interface/Makefile.in
+--- gcc-10.2.0.org/gcc/ada/gcc-interface/Makefile.in	2021-03-21 01:36:19.711335808 +0100
++++ gcc-10.2.0/gcc/ada/gcc-interface/Makefile.in	2021-03-21 01:36:41.726335808 +0100
+@@ -128,7 +128,7 @@ OUTPUT_OPTION = -o $@
  objext = .o
  exeext =
  arext  = .a
@@ -25,7 +10,7 @@
  shext  =
  hyphen = -
  
-@@ -210,7 +210,7 @@
+@@ -198,7 +198,7 @@ RTSDIR = rts$(subst /,_,$(MULTISUBDIR))
  # Link flags used to build gnat tools.  By default we prefer to statically
  # link with libgcc to avoid a dependency on shared libgcc (which is tricky
  # to deal with as it may conflict with the libgcc provided by the system).
@@ -34,19 +19,7 @@
  
  # End of variables for you to override.
  
-@@ -2489,7 +2489,8 @@
- 		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
- 		$(GNATRTL_TASKING_OBJS) \
- 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
--		$(THREADSLIB)
-+		$(THREADSLIB) \
-+		./libgnat-$(LIBRARY_VERSION)$(soext)
- 	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
- 		libgnat$(soext)
- 	cd $(RTSDIR); $(LN_S) libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
---- a/gcc/ada/gcc-interface/Makefile.in~	2014-07-16 18:43:51.000000000 +0200
-+++ b/gcc/ada/gcc-interface/Makefile.in	2014-07-16 18:46:09.555516586 +0200
-@@ -2811,14 +2811,14 @@
+@@ -657,19 +657,20 @@ gnatlib-shared-default:
               gnatlib
  	$(RM) $(RTSDIR)/libgna*$(soext)
  	cd $(RTSDIR); `echo "$(GCC_FOR_TARGET)" \
@@ -63,3 +36,27 @@
  		$(PICFLAG_FOR_TARGET) \
  		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		$(GNATRTL_TASKING_OBJS) \
+ 		$(SO_OPTS)libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+-		$(THREADSLIB)
++		$(THREADSLIB) \
++		./libgnat-$(LIBRARY_VERSION)$(soext)
+ 	cd $(RTSDIR); $(LN_S) libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
+ 		libgnat$(soext)
+ 	cd $(RTSDIR); $(LN_S) libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
+diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/link.c gcc-10.2.0/gcc/ada/link.c
+--- gcc-10.2.0.org/gcc/ada/link.c	2020-07-23 08:35:17.200382966 +0200
++++ gcc-10.2.0/gcc/ada/link.c	2021-03-21 01:36:41.725335808 +0100
+@@ -129,10 +129,10 @@ const char *__gnat_default_libgcc_subdir
+ 
+ #elif defined (__linux__) || defined (__GLIBC__)
+ const char *__gnat_object_file_option = "-Wl,@";
+-const char *__gnat_run_path_option = "-Wl,-rpath,";
++const char *__gnat_run_path_option = "";
+ char __gnat_shared_libgnat_default = STATIC;
+-char __gnat_shared_libgcc_default = STATIC;
+-int __gnat_link_max = 8192;
++char __gnat_shared_libgcc_default = SHARED;
++int __gnat_link_max = 131072;
+ unsigned char __gnat_objlist_file_supported = 1;
+ const char *__gnat_object_library_extension = ".a";
+ unsigned char __gnat_separate_run_path_options = 0;

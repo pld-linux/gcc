@@ -1,15 +1,16 @@
---- gcc-4.7.1/gcc/config.gcc.orig	2012-07-10 17:33:40.596463050 +0200
-+++ gcc-4.7.1/gcc/config.gcc	2012-07-12 18:39:03.475713361 +0200
-@@ -2401,7 +2401,7 @@
+diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/config.gcc gcc-10.2.0/gcc/config.gcc
+--- gcc-10.2.0.org/gcc/config.gcc	2021-03-21 11:32:24.611515690 +0100
++++ gcc-10.2.0/gcc/config.gcc	2021-03-21 11:32:46.784515690 +0100
+@@ -3289,7 +3289,7 @@ sparc-*-rtems*)
  	tm_file="${tm_file} dbxelf.h elfos.h sparc/sysv4.h sparc/sp-elf.h sparc/rtemself.h rtems.h newlib-stdint.h"
- 	tmake_file="sparc/t-sparc sparc/t-elf t-rtems"
+ 	tmake_file="${tmake_file} sparc/t-sparc sparc/t-rtems"
  	;;
 -sparc-*-linux*)
 +sparc-*-linux* | sparcv[789]*-*-linux*)
  	tm_file="${tm_file} dbxelf.h elfos.h sparc/sysv4.h gnu-user.h linux.h glibc-stdint.h sparc/tso.h"
  	extra_options="${extra_options} sparc/long-double-switch.opt"
  	case ${target} in
-@@ -2878,7 +2878,7 @@ sparc64-*-rtems*)
+@@ -3343,7 +3343,7 @@ sparc64-*-rtems*)
  	extra_options="${extra_options}"
  	tmake_file="${tmake_file} sparc/t-sparc sparc/t-rtems-64"
  	;;
@@ -18,9 +19,10 @@
  	tm_file="sparc/biarch64.h ${tm_file} dbxelf.h elfos.h sparc/sysv4.h gnu-user.h linux.h glibc-stdint.h sparc/default64.h sparc/linux64.h sparc/tso.h"
  	extra_options="${extra_options} sparc/long-double-switch.opt"
  	tmake_file="${tmake_file} sparc/t-sparc sparc/t-linux64"
---- gcc-4.7.1/libgcc/config.host.orig	2012-04-30 19:39:57.000000000 +0200
-+++ gcc-4.7.1/libgcc/config.host	2012-07-12 18:39:51.112378028 +0200
-@@ -1012,7 +1012,7 @@
+diff -urNp -x '*.orig' gcc-10.2.0.org/libgcc/config.host gcc-10.2.0/libgcc/config.host
+--- gcc-10.2.0.org/libgcc/config.host	2020-07-23 08:35:18.752400064 +0200
++++ gcc-10.2.0/libgcc/config.host	2021-03-21 11:32:46.785515690 +0100
+@@ -1363,7 +1363,7 @@ sparc-*-elf*)
  	tmake_file="${tmake_file} t-fdpbit t-crtfm"
  	extra_parts="$extra_parts crti.o crtn.o crtfastmath.o"
  	;;
@@ -29,7 +31,7 @@
  	tmake_file="${tmake_file} t-crtfm"
  	if test "${host_address}" = 64; then
  		tmake_file="$tmake_file sparc/t-linux64"
-@@ -1060,7 +1060,7 @@
+@@ -1411,7 +1411,7 @@ sparc64-*-freebsd*|ultrasparc-*-freebsd*
  	tmake_file="$tmake_file t-crtfm"
  	extra_parts="$extra_parts crtfastmath.o"
  	;;
