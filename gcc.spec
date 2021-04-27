@@ -176,7 +176,7 @@ BuildRequires:	isl-devel >= 0.15
 BuildRequires:	libmpc-devel >= 0.8.1
 BuildRequires:	mpfr-devel >= 3.1.0
 %if %{with python}
-BuildRequires:	python-devel
+BuildRequires:	python3-devel
 BuildRequires:	rpm-pythonprov
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.211
@@ -2878,11 +2878,10 @@ for LIBDIR in %{_libdir} %{?with_multilib:%{_libdir32}} %{?with_multilib2:%{_lib
 	  < libstdc++-v3/python/hook.in	\
 	  > $LIBPATH/$(basename $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
 done
-install -d $RPM_BUILD_ROOT%{py_sitescriptdir}
-%{__mv} $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_comp $RPM_BUILD_ROOT%{py_sitescriptdir}
-%py_postclean
+install -d $RPM_BUILD_ROOT%{py3_sitescriptdir}
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py3_sitescriptdir}
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}
+%py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %else
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx
 %endif
@@ -3593,10 +3592,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python}
 %files -n libstdc++-gdb
 %defattr(644,root,root,755)
-%dir %{py_sitescriptdir}/libstdcxx
-%{py_sitescriptdir}/libstdcxx/*.py[co]
-%dir %{py_sitescriptdir}/libstdcxx/v6
-%{py_sitescriptdir}/libstdcxx/v6/*.py[co]
+%dir %{py3_sitescriptdir}/libstdcxx
+%{py3_sitescriptdir}/libstdcxx/*.py
+%{py3_sitescriptdir}/libstdcxx/__pycache__
+%dir %{py3_sitescriptdir}/libstdcxx/v6
+%{py3_sitescriptdir}/libstdcxx/v6/*.py
+%{py3_sitescriptdir}/libstdcxx/v6/__pycache__
 %{_datadir}/gdb/auto-load%{_libdir}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
 %if %{with multilib}
 %{_datadir}/gdb/auto-load%{_libdir32}/libstdc++.so.%{cxx_sover}.*.*-gdb.py
