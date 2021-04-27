@@ -86,6 +86,9 @@
 %define		with_lsan_m2	1
 %define		with_tsan_m2	1
 %endif
+%ifarch aarch64
+%define		with_hwasan	1
+%endif
 %ifarch %{ix86} %{x8664} x32
 %define		with_vtv	1
 %endif
@@ -95,8 +98,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	10
-%define		minor_ver	3.0
+%define		major_ver	11
+%define		minor_ver	1.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -109,14 +112,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	443c15b92614a3ce8f22e3b24ca2226a
+# Source0-md5:	77f6252be0861ab918042acf42bc10ff
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	5094586c3d042b46d2493181324da198
+# Patch100-md5:	9e6d33449b31b2dcc0283844dbd683be
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -184,6 +187,7 @@ BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo >= 4.7
 BuildRequires:	xz
 BuildRequires:	zlib-devel
+BuildRequires:	zstd-devel
 BuildConflicts:	pdksh < 5.2.14-50
 Requires:	binutils >= 3:2.30
 Requires:	gmp >= 4.3.2
@@ -1894,6 +1898,52 @@ library.
 Ten pakiet zawiera wersję %{m2_desc} statycznej biblioteki Address
 Sanitizer.
 
+%package -n libhwasan
+Summary:	The Hardware-Assisted Address Sanitizer library
+Summary(pl.UTF-8):	Biblioteka Hardware-Assisted Address Sanitizer do kontroli adresów
+License:	BSD-like or MIT
+Group:		Libraries
+Requires:	libstdc++ = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan
+This package contains the Hardware-Assisted Address Sanitizer library
+which is used for -fsanitize=hwaddress instrumented programs.
+
+%description -n libhwasan -l pl.UTF-8
+Ten pakiet zawiera bibliotekę Hardware-Assisted Address Sanitizer,
+służącą do kontroli adresów w programach kompilowanych z opcją
+-fsanitize=hwaddress.
+
+%package -n libhwasan-devel
+Summary:	Development files for the Hardware-Assisted Address Sanitizer library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Hardware-Assisted Address Sanitizer
+License:	BSD-like or MIT
+Group:		Development/Libraries
+Requires:	libhwasan = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan-devel
+This package contains development files for the Hardware-Assisted
+Address Sanitizer library.
+
+%description -n libhwasan-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne biblioteki Hardware-Assisted
+Address Sanitizer.
+
+%package -n libhwasan-static
+Summary:	The Hardware-Assisted Address Sanitizer static library
+Summary(pl.UTF-8):	Statyczna biblioteka Hardware-Assisted Address Sanitizer
+License:	BSD-like or MIT
+Group:		Development/Libraries
+Requires:	libhwasan-devel = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan-static
+This package contains Hardware-Assisted Address Sanitizer static
+library.
+
+%description -n libhwasan-static -l pl.UTF-8
+Ten pakiet zawiera statyczną bibliotekę Hardware-Assisted Address
+Sanitizer.
+
 %package -n liblsan
 Summary:	The Leak Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków
@@ -2815,6 +2865,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
+	%{?with_hwasan:libhwasan.la} \
 	%{?with_lsan_m0:liblsan.la} \
 	%{?with_tsan_m0:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
@@ -3017,6 +3068,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libasan-multilib-32
 %post	-p /sbin/ldconfig -n libasan-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libasan-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libhwasan
+%postun	-p /sbin/ldconfig -n libhwasan
 %post	-p /sbin/ldconfig -n liblsan
 %postun	-p /sbin/ldconfig -n liblsan
 %post	-p /sbin/ldconfig -n liblsan-multilib-%{multilib2}
@@ -3506,12 +3559,13 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with cxx}
 %files c++
 %defattr(644,root,root,755)
-%doc gcc/cp/{ChangeLog,NEWS}
+%doc gcc/cp/ChangeLog
 %attr(755,root,root) %{_bindir}/g++
 %attr(755,root,root) %{_bindir}/*-g++
 %attr(755,root,root) %{_bindir}/c++
 %attr(755,root,root) %{_bindir}/*-c++
 %attr(755,root,root) %{gcclibdir}/cc1plus
+%attr(755,root,root) %{gcclibdir}/g++-mapper-server
 %{_libdir}/libsupc++.la
 %{_libdir}/libsupc++.a
 %{_mandir}/man1/g++.1*
@@ -3544,7 +3598,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libstdc++fs.la
 %dir %{_includedir}/c++
 %{_includedir}/c++/%{version}
-%{_includedir}/expc++.h
 %{_includedir}/extc++.h
 %{_includedir}/stdc++.h
 %{_includedir}/stdtr1c++.h
@@ -3898,7 +3951,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.16
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.19
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -3999,6 +4052,23 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libasan.a
 %endif
+%endif
+
+%if %{with hwasan}
+%files -n libhwasan
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libhwasan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libhwasan.so.0
+
+%files -n libhwasan-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libhwasan.so
+%{_libdir}/libhwasan.la
+%{gcclibdir}/include/sanitizer/hwasan_interface.h
+
+%files -n libhwasan-static
+%defattr(644,root,root,755)
+%{_libdir}/libhwasan.a
 %endif
 
 %if %{with lsan_m0}
