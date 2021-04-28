@@ -3177,6 +3177,9 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
+%{gcclibdir}/include/amxbf16intrin.h
+%{gcclibdir}/include/amxint8intrin.h
+%{gcclibdir}/include/amxtileintrin.h 
 %{gcclibdir}/include/avx2intrin.h
 %{gcclibdir}/include/avx5124fmapsintrin.h
 %{gcclibdir}/include/avx5124vnniwintrin.h
@@ -3205,6 +3208,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512vpopcntdqintrin.h
 %{gcclibdir}/include/avx512vpopcntdqvlintrin.h
 %{gcclibdir}/include/avxintrin.h
+%{gcclibdir}/include/avxvnniintrin.h
 %{gcclibdir}/include/bmi2intrin.h
 %{gcclibdir}/include/bmiintrin.h
 %{gcclibdir}/include/bmmintrin.h
@@ -3223,8 +3227,10 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/fmaintrin.h
 %{gcclibdir}/include/fxsrintrin.h
 %{gcclibdir}/include/gfniintrin.h
+%{gcclibdir}/include/hresetintrin.h
 %{gcclibdir}/include/ia32intrin.h
 %{gcclibdir}/include/immintrin.h
+%{gcclibdir}/include/keylockerintrin.h
 %{gcclibdir}/include/lwpintrin.h
 %{gcclibdir}/include/lzcntintrin.h
 %{gcclibdir}/include/mm3dnow.h
@@ -3240,16 +3246,20 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/prfchwintrin.h
 %{gcclibdir}/include/rdseedintrin.h
 %{gcclibdir}/include/rtmintrin.h
+%{gcclibdir}/include/serializeintrin.h
 %{gcclibdir}/include/sgxintrin.h
 %{gcclibdir}/include/shaintrin.h
 %{gcclibdir}/include/smmintrin.h
 %{gcclibdir}/include/tbmintrin.h
 %{gcclibdir}/include/tmmintrin.h
+%{gcclibdir}/include/tsxldtrkintrin.h
+%{gcclibdir}/include/uintrintrin.h
 %{gcclibdir}/include/vaesintrin.h
 %{gcclibdir}/include/vpclmulqdqintrin.h
 %{gcclibdir}/include/waitpkgintrin.h
 %{gcclibdir}/include/wbnoinvdintrin.h
 %{gcclibdir}/include/wmmintrin.h
+%{gcclibdir}/include/x86gprintrin.h
 %{gcclibdir}/include/x86intrin.h
 %{gcclibdir}/include/xmmintrin.h
 %{gcclibdir}/include/xopintrin.h
