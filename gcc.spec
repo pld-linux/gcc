@@ -2668,10 +2668,26 @@ TEXCONFIG=false \
 %endif
 	--with-system-zlib \
 	--without-x \
+%ifarch armv6l
+	--with-arch=armv6 \
+%endif
 %ifarch armv6hl
 	--with-arch=armv6 \
 	--with-float=hard \
 	--with-fpu=vfp \
+%endif
+%ifarch armv7l
+	--with-arch=armv7 \
+%endif
+%ifarch armv7hl
+	--with-arch=armv7-a \
+	--with-float=hard \
+	--with-fpu=vfpv3-d16 \
+%endif
+%ifarch armv7hnl
+	--with-arch=armv7-a \
+	--with-float=hard \
+	--with-fpu=neon-vfpv4 \
 %endif
 %if %{with cxx}
 	--enable-__cxa_atexit \
