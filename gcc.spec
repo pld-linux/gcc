@@ -2687,7 +2687,7 @@ TEXCONFIG=false \
 %ifarch armv7hnl
 	--with-arch=armv7-a \
 	--with-float=hard \
-	--with-fpu=neon-vfpv4 \
+	--with-fpu=neon-vfpv3 \
 %endif
 %if %{with cxx}
 	--enable-__cxa_atexit \
