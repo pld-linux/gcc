@@ -2628,16 +2628,19 @@ TEXCONFIG=false \
 %endif
 %ifarch armv7l
 	--with-arch=armv7 \
+	--with-mode=thumb \
 %endif
 %ifarch armv7hl
 	--with-arch=armv7-a \
 	--with-float=hard \
 	--with-fpu=vfpv3-d16 \
+	--with-mode=thumb \
 %endif
 %ifarch armv7hnl
 	--with-arch=armv7-a \
 	--with-float=hard \
 	--with-fpu=neon-vfpv3 \
+	--with-mode=thumb \
 %endif
 %if %{with cxx}
 	--enable-__cxa_atexit \
