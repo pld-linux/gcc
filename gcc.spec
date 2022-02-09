@@ -107,7 +107,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3256,6 +3256,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/mmintrin.h
 %{gcclibdir}/include/mm_malloc.h
 %{gcclibdir}/include/movdirintrin.h
+%{gcclibdir}/include/mwaitintrin.h
 %{gcclibdir}/include/mwaitxintrin.h
 %{gcclibdir}/include/nmmintrin.h
 %{gcclibdir}/include/pconfigintrin.h
