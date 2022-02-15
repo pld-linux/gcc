@@ -93,7 +93,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	8
-%define		minor_ver	4.0
+%define		minor_ver	5.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -106,19 +106,20 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://ftp.gnu.org/gnu/gcc/gcc-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	bb815a8e3b7be43c4a26fa89dbbd9795
+# Source0-md5:	0c1f625768840187ef3b10adebe8e3b0
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
-Patch100:	%{name}-branch.diff
-# Patch100-md5:	f13ade4c91d6a65bcccb315d67054d91
+#Patch100:	%{name}-branch.diff
+## Patch100-md5:	d41d8cd98f00b204e9800998ecf8427e
 Patch0:		%{name}-info.patch
+Patch1:		%{name}-ada-99264.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
-
+Patch5:		%{name}-sanitizer-100379.patch
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
 URL:		http://gcc.gnu.org/
@@ -176,6 +177,7 @@ BuildRequires:	mpfr-devel >= 2.4.2
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 %endif
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo >= 4.7
@@ -940,7 +942,7 @@ Summary:	C++ standard library API documentation
 Summary(pl.UTF-8):	Dokumentacja API biblioteki standardowej C++
 License:	FDL v1.3 (mainly), GPL v3+ (doxygen generated parts)
 Group:		Documentation
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description -n libstdc++-apidocs
 API and internal documentation for C++ standard library.
@@ -2664,11 +2666,13 @@ Extensions dla języka C.
 
 %prep
 %setup -q
-%patch100 -p1
+#patch100 -p1
 %patch0 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %patch10 -p1
 %if %{with gcc_libffi}
