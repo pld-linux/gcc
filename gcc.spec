@@ -132,7 +132,7 @@ URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen >= 5.5.4}
 BuildRequires:	automake >= 1:1.11.1
-BuildRequires:	binutils >= 3:2.30
+BuildRequires:	binutils >= 4:2.30
 BuildRequires:	bison
 BuildRequires:	chrpath >= 0.13-2
 %{?with_tests:BuildRequires:	dejagnu >= 1.4.4}
@@ -190,7 +190,7 @@ BuildRequires:	xz
 BuildRequires:	zlib-devel
 BuildRequires:	zstd-devel
 BuildConflicts:	pdksh < 5.2.14-50
-Requires:	binutils >= 3:2.30
+Requires:	binutils >= 4:2.30
 Requires:	gmp >= 4.3.2
 Requires:	isl >= 0.15
 Requires:	libgcc = %{epoch}:%{version}-%{release}
