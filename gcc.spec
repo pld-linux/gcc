@@ -107,7 +107,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	5
+Release:	6
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -121,6 +121,7 @@ Source4:	branch.sh
 Patch100:	%{name}-branch.diff
 # Patch100-md5:	e4e0ccce73627de0bf6564d11c54b603
 Patch0:		%{name}-info.patch
+Patch1:		all-library-paths.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
@@ -2574,6 +2575,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 %setup -q
 %patch100 -p1
 %patch0 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1

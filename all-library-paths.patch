@@ -1,0 +1,20 @@
+--- gcc-11.2.0/gcc/gcc.c.orig	2022-04-18 15:40:02.650553155 +0200
++++ gcc-11.2.0/gcc/gcc.c	2022-04-19 09:31:21.340818868 +0200
+@@ -7817,17 +7817,6 @@
+   *cp++ = '.';
+   *cp = '\0';
+ 
+-  /* Exclude directories that the linker is known to search.  */
+-  if (linker
+-      && IS_DIR_SEPARATOR (path[0])
+-      && ((cp - path == 6
+-	   && filename_ncmp (path + 1, "lib", 3) == 0)
+-	  || (cp - path == 10
+-	      && filename_ncmp (path + 1, "usr", 3) == 0
+-	      && IS_DIR_SEPARATOR (path[4])
+-	      && filename_ncmp (path + 5, "lib", 3) == 0)))
+-    return 0;
+-
+   return (stat (path, &st) >= 0 && S_ISDIR (st.st_mode));
+ }
+ 
