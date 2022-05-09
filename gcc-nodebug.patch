@@ -36,7 +36,7 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gcc-interface/Makefile.in gcc-10.2
 @@ -105,13 +105,13 @@ TEXI2PDF = texi2pdf
  GNATBIND_FLAGS = -static -x
  ADA_CFLAGS =
- ADAFLAGS = -W -Wall -gnatpg -gnata
+ ADAFLAGS = -W -Wall -gnatpg -gnata -gnatU
 -FORCE_DEBUG_ADAFLAGS = -g
 +FORCE_DEBUG_ADAFLAGS =
  NO_INLINE_ADAFLAGS = -fno-inline
@@ -64,27 +64,27 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libada/Makefile.in gcc-10.2.0/libada/Makef
 diff -urNp -x '*.orig' gcc-10.2.0.org/libffi/Makefile.am gcc-10.2.0/libffi/Makefile.am
 --- gcc-10.2.0.org/libffi/Makefile.am	2020-07-23 08:35:18.736399887 +0200
 +++ gcc-10.2.0/libffi/Makefile.am	2021-03-21 01:23:21.859335808 +0100
-@@ -202,7 +202,7 @@ nodist_libffi_convenience_la_SOURCES = $
+@@ -182,7 +182,7 @@ nodist_libffi_convenience_la_SOURCES = $
  
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
  
--AM_CFLAGS = -Wall -g -fexceptions
-+AM_CFLAGS = -Wall -fexceptions
+-AM_CFLAGS = -Wall -g -fexceptions $(CET_FLAGS)
++AM_CFLAGS = -Wall -fexceptions $(CET_FLAGS)
  if FFI_DEBUG
  # Build debug. Define FFI_DEBUG on the commandline so that, when building with
  # MSVC, it can link against the debug CRT.
 diff -urNp -x '*.orig' gcc-10.2.0.org/libffi/Makefile.in gcc-10.2.0/libffi/Makefile.in
 --- gcc-10.2.0.org/libffi/Makefile.in	2020-07-23 08:35:54.708796179 +0200
 +++ gcc-10.2.0/libffi/Makefile.in	2021-03-21 01:23:21.860335808 +0100
-@@ -604,7 +604,7 @@ libffi_convenience_la_LIBADD = $(libffi_
+@@ -589,7 +589,7 @@ libffi_convenience_la_LIBADD = $(libffi_
  libffi_convenience_la_DEPENDENCIES = $(libffi_la_DEPENDENCIES)
  nodist_libffi_convenience_la_SOURCES = $(nodist_libffi_la_SOURCES)
  LTLDFLAGS = $(shell $(SHELL) $(top_srcdir)/../libtool-ldflags $(LDFLAGS))
--AM_CFLAGS = -Wall -g -fexceptions $(am__append_2)
-+AM_CFLAGS = -Wall -fexceptions $(am__append_2)
- @LIBAT_BUILD_VERSIONED_SHLIB_FALSE@libffi_version_script = 
- @LIBAT_BUILD_VERSIONED_SHLIB_GNU_TRUE@@LIBAT_BUILD_VERSIONED_SHLIB_TRUE@libffi_version_script = -Wl,--version-script,libffi.map
- @LIBAT_BUILD_VERSIONED_SHLIB_SUN_TRUE@@LIBAT_BUILD_VERSIONED_SHLIB_TRUE@libffi_version_script = -Wl,-M,libffi.map-sun
+-AM_CFLAGS = -Wall -g -fexceptions $(CET_FLAGS) $(am__append_2)
++AM_CFLAGS = -Wall -fexceptions $(CET_FLAGS) $(am__append_2)
+ @LIBFFI_BUILD_VERSIONED_SHLIB_FALSE@libffi_version_script = 
+ @LIBFFI_BUILD_VERSIONED_SHLIB_GNU_TRUE@@LIBFFI_BUILD_VERSIONED_SHLIB_TRUE@libffi_version_script = -Wl,--version-script,libffi.map
+ @LIBFFI_BUILD_VERSIONED_SHLIB_SUN_TRUE@@LIBFFI_BUILD_VERSIONED_SHLIB_TRUE@libffi_version_script = -Wl,-M,libffi.map-sun
 diff -urNp -x '*.orig' gcc-10.2.0.org/libgcc/Makefile.in gcc-10.2.0/libgcc/Makefile.in
 --- gcc-10.2.0.org/libgcc/Makefile.in	2020-07-23 08:35:18.748400018 +0200
 +++ gcc-10.2.0/libgcc/Makefile.in	2021-03-21 01:23:21.860335808 +0100
