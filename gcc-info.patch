@@ -1,18 +1,3 @@
-diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gnat-style.texi gcc-10.2.0/gcc/ada/gnat-style.texi
---- gcc-10.2.0.org/gcc/ada/gnat-style.texi	2020-07-23 08:35:17.120382083 +0200
-+++ gcc-10.2.0/gcc/ada/gnat-style.texi	2021-03-21 01:21:39.481335808 +0100
-@@ -29,9 +29,9 @@ Texts.  A copy of the license is include
- 
- @include gcc-common.texi
- 
--@dircategory Software development
-+@dircategory Programming Languages:
- @direntry
--* gnat-style: (gnat-style).      GNAT Coding Style
-+* gnat-style: (gnat-style).		GNAT Coding Style
- @end direntry
- 
- @macro syntax{element}
 diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gnat_rm.texi gcc-10.2.0/gcc/ada/gnat_rm.texi
 --- gcc-10.2.0.org/gcc/ada/gnat_rm.texi	2020-07-23 08:35:17.128382173 +0200
 +++ gcc-10.2.0/gcc/ada/gnat_rm.texi	2021-03-21 01:21:39.485335808 +0100
@@ -178,13 +163,13 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libffi/doc/libffi.texi gcc-10.2.0/libffi/d
 --- gcc-10.2.0.org/libffi/doc/libffi.texi	2020-07-23 08:35:18.740399932 +0200
 +++ gcc-10.2.0/libffi/doc/libffi.texi	2021-03-21 01:21:39.493335808 +0100
 @@ -31,9 +31,9 @@ section entitled ``GNU General Public Li
- @end quotation
+ 
  @end copying
  
 -@dircategory Development
 +@dircategory Libraries:
  @direntry
--* libffi: (libffi).             Portable foreign-function interface library.
+-* libffi: (libffi).             Portable foreign function interface library.
 +* libffi: (libffi).			Portable foreign-function interface library
  @end direntry
  

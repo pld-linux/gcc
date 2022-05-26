@@ -3983,7 +3983,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.19
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.21
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4038,7 +4038,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.6
+%attr(755,root,root) %ghost %{_libdir}/libasan.so.8
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
@@ -4055,7 +4055,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.6
+%attr(755,root,root) %ghost %{_libdir32}/libasan.so.8
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4072,7 +4072,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.6
+%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.8
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
@@ -4147,7 +4147,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdir}/libtsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libtsan.so.0
+%attr(755,root,root) %ghost %{_libdir}/libtsan.so.2
 
 %files -n libtsan-devel
 %defattr(644,root,root,755)
@@ -4166,7 +4166,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
 %attr(755,root,root) %{_libdirm2}/libtsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libtsan.so.0
+%attr(755,root,root) %ghost %{_libdirm2}/libtsan.so.2
 
 %files -n libtsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
