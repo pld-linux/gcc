@@ -4001,7 +4001,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.21
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
