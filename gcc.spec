@@ -3213,6 +3213,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512dqintrin.h
 %{gcclibdir}/include/avx512erintrin.h
 %{gcclibdir}/include/avx512fintrin.h
+%{gcclibdir}/include/avx512fp16intrin.h.h
+%{gcclibdir}/include/avx512fp16vlintrin.h
 %{gcclibdir}/include/avx512ifmaintrin.h
 %{gcclibdir}/include/avx512ifmavlintrin.h
 %{gcclibdir}/include/avx512pfintrin.h
