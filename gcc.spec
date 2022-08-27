@@ -142,6 +142,7 @@ BuildRequires:	flex >= 2.5.4
 %if %{with ada}
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
+BuildRequires:	libgnat-static
 %endif
 BuildRequires:	gdb
 BuildRequires:	gettext-tools >= 0.14.5
