@@ -25,8 +25,8 @@
  # Pretend that _Unwind_GetIPInfo is available for the target by default.  This
  # should be autodetected during the configuration of libada and passed down to
  # here, but we need something for --disable-libada and hope for the best.
---- gcc-4.7.1/libada/Makefile.in.orig	2012-06-12 17:12:37.000000000 +0200
-+++ gcc-4.7.1/libada/Makefile.in	2012-07-12 18:27:53.482408144 +0200
+--- gcc-9.5.0/libada/Makefile.in.orig	2022-09-23 21:58:10.762684472 +0200
++++ gcc-9.5.0/libada/Makefile.in	2022-09-24 15:32:44.406568386 +0200
 @@ -59,7 +59,7 @@ LDFLAGS=
  CFLAGS=-g
  PICFLAG = @PICFLAG@
@@ -34,7 +34,7 @@
 -GNATLIBCFLAGS= -g -O2
 +GNATLIBCFLAGS= -O2
  GNATLIBCFLAGS_FOR_C = -W -Wall $(GNATLIBCFLAGS) $(CFLAGS_FOR_TARGET) \
- 	-fexceptions -DIN_RTS @have_getipinfo@
+ 	-fexceptions -DIN_RTS @have_getipinfo@ @have_capability@
  
 --- gcc-4.7.1/libffi/Makefile.am.orig	2012-02-27 11:00:12.000000000 +0100
 +++ gcc-4.7.1/libffi/Makefile.am	2012-07-12 18:28:20.115740360 +0200
@@ -127,16 +127,16 @@
  
  # For robustness sake (in light of junk files or in-source
  # configuration), copy from the build or source tree to the install
---- gcc-4.7.1/Makefile.in.orig	2012-05-16 17:54:24.000000000 +0200
-+++ gcc-4.7.1/Makefile.in	2012-07-12 18:32:07.075730835 +0200
-@@ -364,7 +364,7 @@
+--- gcc-9.5.0/Makefile.in.orig	2022-05-27 09:21:10.431376979 +0200
++++ gcc-9.5.0/Makefile.in	2022-09-24 15:33:00.146483116 +0200
+@@ -372,7 +372,7 @@ BUILD_PREFIX_1 = @BUILD_PREFIX_1@
  
  # Flags to pass to stage2 and later makes.  They are defined
  # here so that they can be overridden by Makefile fragments.
 -BOOT_CFLAGS= -g -O2
 +BOOT_CFLAGS= -O2
  BOOT_LDFLAGS=
- BOOT_ADAFLAGS=-gnatpg -gnata
+ BOOT_ADAFLAGS= -gnatpg
  
 @@ -618,8 +618,8 @@ CXXFLAGS_FOR_TARGET = @CXXFLAGS_FOR_TARG
  LIBCFLAGS_FOR_TARGET = $(CFLAGS_FOR_TARGET)

@@ -12,10 +12,10 @@
  @end direntry
  @end ifinfo
  
---- a/gcc/doc/cppinternals.texi	2004-07-03 01:57:11.000000000 +0200
-+++ b/gcc/doc/cppinternals.texi	2004-09-26 10:58:58.208715048 +0200
-@@ -3,9 +3,9 @@
- @settitle The GNU C Preprocessor Internals
+--- gcc-9.5.0/gcc/doc/cppinternals.texi.orig	2022-09-23 21:34:02.237198474 +0200
++++ gcc-9.5.0/gcc/doc/cppinternals.texi	2022-09-23 21:54:16.340621111 +0200
+@@ -5,9 +5,9 @@
+ @include gcc-common.texi
  
  @ifinfo
 -@dircategory Software development
@@ -62,11 +62,11 @@
  @end direntry
  This file documents the internals of the GNU compilers.
  @sp 1
---- a/gcc/ada/gnat-style.texi	2004-09-01 13:51:52.000000000 +0200
-+++ b/gcc/ada/gnat-style.texi	2004-09-26 10:58:58.342694680 +0200
-@@ -28,9 +28,9 @@
- @setchapternewpage odd
+--- gcc-9.5.0/gcc/ada/gnat-style.texi.orig	2022-09-23 21:34:02.250531735 +0200
++++ gcc-9.5.0/gcc/ada/gnat-style.texi	2022-09-23 21:54:43.833805501 +0200
+@@ -29,9 +29,9 @@ Texts.  A copy of the license is include
  
+ @include gcc-common.texi
  
 -@dircategory Software development
 +@dircategory Programming Languages:
@@ -146,9 +146,9 @@
  @end direntry
  @end format
  
---- gcc-4.8.2/libgomp/libgomp.texi.orig	2013-01-14 19:18:49.000000000 +0100
-+++ gcc-4.8.2/libgomp/libgomp.texi	2014-04-21 08:06:10.259411139 +0200
-@@ -29,9 +29,9 @@
+--- gcc-9.5.0/libgomp/libgomp.texi.orig	2022-09-23 21:34:03.680523988 +0200
++++ gcc-9.5.0/libgomp/libgomp.texi	2022-09-23 21:55:09.700332037 +0200
+@@ -29,9 +29,9 @@ texts being (a) (see below), and with th
  @end copying
  
  @ifinfo
@@ -159,7 +159,7 @@
 +* libgomp: (libgomp).			GNU Offloading and Multi Processing Runtime Library
  @end direntry
  
- This manual documents the GNU implementation of the OpenMP API for 
+ This manual documents libgomp, the GNU Offloading and Multi Processing
 --- gcc-4.8.2/libitm/libitm.texi.orig	2013-02-03 18:46:11.000000000 +0100
 +++ gcc-4.8.2/libitm/libitm.texi	2014-04-21 08:06:38.919410542 +0200
 @@ -18,9 +18,9 @@
