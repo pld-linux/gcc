@@ -4099,6 +4099,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libhwasan-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libhwasan.so
+%{_libdir}/libhwasan_preinit.o
 %{_libdir}/libhwasan.la
 %{gcclibdir}/include/sanitizer/hwasan_interface.h
 
