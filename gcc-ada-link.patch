@@ -19,20 +19,19 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gcc-interface/Makefile.in gcc-10.2
  
  # End of variables for you to override.
  
-@@ -657,19 +657,20 @@ gnatlib-shared-default:
+@@ -670,18 +670,19 @@
+ 	     LN_S="$(LN_S)" \
               gnatlib
  	$(RM) $(RTSDIR)/libgna*$(soext)
- 	cd $(RTSDIR); `echo "$(GCC_FOR_TARGET)" \
--                | sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'` -shared $(GNATLIBCFLAGS) \
-+                | sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'` -shared -shared-libgcc $(GNATLIBCFLAGS) \
+-	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
++	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared -shared-libgcc $(GNATLIBCFLAGS) \
  		$(PICFLAG_FOR_TARGET) \
  		-o libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		$(GNATRTL_NONTASKING_OBJS) $(LIBGNAT_OBJS) \
  		$(SO_OPTS)libgnat$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		$(MISCLIB) -lm
- 	cd $(RTSDIR); `echo "$(GCC_FOR_TARGET)" \
--                | sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'` -shared $(GNATLIBCFLAGS) \
-+                | sed -e 's,\./xgcc,../../xgcc,' -e 's,-B\./,-B../../,'` -shared -shared-libgcc $(GNATLIBCFLAGS) \
+-	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared $(GNATLIBCFLAGS) \
++	cd $(RTSDIR); $(GCC_FOR_ADA_RTS) -shared -shared-libgcc $(GNATLIBCFLAGS) \
  		$(PICFLAG_FOR_TARGET) \
  		-o libgnarl$(hyphen)$(LIBRARY_VERSION)$(soext) \
  		$(GNATRTL_TASKING_OBJS) \

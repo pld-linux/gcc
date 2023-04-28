@@ -12,7 +12,7 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gnat_rm.texi gcc-10.2.0/gcc/ada/gn
 +* gnat_rm: (gnat_rm.info).		gnat_rm
  @end direntry
  
- @definfoenclose strong,`,'
+ @c %**end of header
 diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gnat_ugn.texi gcc-10.2.0/gcc/ada/gnat_ugn.texi
 --- gcc-10.2.0.org/gcc/ada/gnat_ugn.texi	2020-07-23 08:35:17.136382261 +0200
 +++ gcc-10.2.0/gcc/ada/gnat_ugn.texi	2021-03-21 01:21:39.489335808 +0100
@@ -27,7 +27,7 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gnat_ugn.texi gcc-10.2.0/gcc/ada/g
 +* gnat_ugn: (gnat_ugn.info).		gnat_ugn
  @end direntry
  
- @definfoenclose strong,`,'
+ @c %**end of header
 diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/doc/cpp.texi gcc-10.2.0/gcc/doc/cpp.texi
 --- gcc-10.2.0.org/gcc/doc/cpp.texi	2021-03-21 01:21:06.752335808 +0100
 +++ gcc-10.2.0/gcc/doc/cpp.texi	2021-03-21 01:21:39.480335808 +0100
@@ -62,7 +62,7 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/doc/gcc.texi gcc-10.2.0/gcc/doc/gcc.te
 --- gcc-10.2.0.org/gcc/doc/gcc.texi	2020-07-23 08:35:17.564386975 +0200
 +++ gcc-10.2.0/gcc/doc/gcc.texi	2021-03-21 01:21:39.481335808 +0100
 @@ -61,15 +61,14 @@ Texts being (a) (see below), and with th
-      funds for GNU development.
+ @end quotation
  @end copying
  @ifnottex
 -@dircategory Software development
@@ -82,8 +82,8 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/doc/gcc.texi gcc-10.2.0/gcc/doc/gcc.te
 +* gcov-dump: (gcc) Gcov-dump.		@command{gcov-dump}---an offline gcda and gcno profile dump tool
 +* lto-dump: (gcc) lto-dump.            @command{lto-dump}---Tool for dumping LTO object files.
  @end direntry
- This file documents the use of the GNU compilers.
  @sp 1
+ @insertcopying
 diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/doc/gccint.texi gcc-10.2.0/gcc/doc/gccint.texi
 --- gcc-10.2.0.org/gcc/doc/gccint.texi	2020-07-23 08:35:17.564386975 +0200
 +++ gcc-10.2.0/gcc/doc/gccint.texi	2021-03-21 01:21:39.481335808 +0100

@@ -4,6 +4,8 @@
 # - when adding new subpackages with external libraries (like libffi)
 #   or having own Version, do not use epoch 6 there, reset them to 0!
 #
+# TODO:
+# - package Modula-2 frontend
 #
 # Conditional build:
 # - languages:
@@ -98,8 +100,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	12
-%define		minor_ver	2.0
+%define		major_ver	13
+%define		minor_ver	1.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -107,19 +109,19 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	0.1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	73bafd0af874439dcdb9fc063b6fb069
+# Source0-md5:	43e4de77f2218c83ca675257ea1af9ef
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	ce6d7b53545d1186658e22854c729d1b
+# Patch100-md5:	40315733777031b2fc4351230ccba55b
 Patch0:		%{name}-info.patch
 Patch1:		all-library-paths.patch
 Patch2:		%{name}-nodebug.patch
@@ -2929,7 +2931,6 @@ done
 %endif
 
 cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcclibdir}/include
-cp -p $RPM_BUILD_ROOT%{gcclibdir}/include-fixed/syslimits.h $RPM_BUILD_ROOT%{gcclibdir}/include
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/install-tools
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/include-fixed
 
@@ -3986,7 +3987,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.21
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.22
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4003,7 +4004,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.21
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.22
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4021,7 +4022,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.21
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.22
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
