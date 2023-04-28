@@ -3630,6 +3630,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so
 %{_libdir}/libstdc++.la
+%{_libdir}/libstdc++exp.a
+%{_libdir}/libstdc++exp.la
 %{_libdir}/libstdc++fs.a
 %{_libdir}/libstdc++fs.la
 %dir %{_includedir}/c++
