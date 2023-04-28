@@ -182,16 +182,17 @@ BuildRequires:	gmp-devel >= 4.3.2
 BuildRequires:	isl-devel >= 0.15
 BuildRequires:	libmpc-devel >= 0.8.1
 BuildRequires:	mpfr-devel >= 3.1.0
-%if %{with python}
-BuildRequires:	python3-devel
-BuildRequires:	rpm-pythonprov
-%endif
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.211
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	texinfo >= 4.7
 BuildRequires:	xz
 BuildRequires:	zlib-devel
 BuildRequires:	zstd-devel
+%if %{with python}
+BuildRequires:	python3-devel
+BuildRequires:	rpm-pythonprov
+%endif
 BuildConflicts:	pdksh < 5.2.14-50
 Requires:	binutils >= 4:2.30
 Requires:	gmp >= 4.3.2
