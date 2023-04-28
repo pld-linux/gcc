@@ -191,6 +191,7 @@ BuildRequires:	zlib-devel
 BuildRequires:	zstd-devel
 %if %{with python}
 BuildRequires:	python3-devel
+BuildRequires:	python3-modules
 BuildRequires:	rpm-pythonprov
 %endif
 BuildConflicts:	pdksh < 5.2.14-50
