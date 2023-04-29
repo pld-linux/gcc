@@ -88,7 +88,7 @@
 %define		with_lsan_m2	1
 %define		with_tsan_m2	1
 %endif
-%ifarch aarch64
+%ifarch %{x8664} x32 aarch64
 %define		with_hwasan	1
 %endif
 %ifarch %{ix86} %{x8664} x32
