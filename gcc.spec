@@ -3203,6 +3203,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
 %{gcclibdir}/include/amxbf16intrin.h
+%{gcclibdir}/include/amxcomplexintrin.h
+%{gcclibdir}/include/amxfp16intrin.h
 %{gcclibdir}/include/amxint8intrin.h
 %{gcclibdir}/include/amxtileintrin.h 
 %{gcclibdir}/include/avx2intrin.h
@@ -3234,7 +3236,10 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512vp2intersectvlintrin.h
 %{gcclibdir}/include/avx512vpopcntdqintrin.h
 %{gcclibdir}/include/avx512vpopcntdqvlintrin.h
+%{gcclibdir}/include/avxifmaintrin.h
 %{gcclibdir}/include/avxintrin.h
+%{gcclibdir}/include/avxneconvertintrin.h
+%{gcclibdir}/include/avxvnniint8intrin.h
 %{gcclibdir}/include/avxvnniintrin.h
 %{gcclibdir}/include/bmi2intrin.h
 %{gcclibdir}/include/bmiintrin.h
@@ -3245,6 +3250,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/clflushoptintrin.h
 %{gcclibdir}/include/clwbintrin.h
 %{gcclibdir}/include/clzerointrin.h
+%{gcclibdir}/include/cmpccxaddintrin.h
 %{gcclibdir}/include/cpuid.h
 %{gcclibdir}/include/cross-stdarg.h
 %{gcclibdir}/include/emmintrin.h
@@ -3271,7 +3277,9 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/pkuintrin.h
 %{gcclibdir}/include/pmmintrin.h
 %{gcclibdir}/include/popcntintrin.h
+%{gcclibdir}/include/prfchiintrin.h
 %{gcclibdir}/include/prfchwintrin.h
+%{gcclibdir}/include/raointintrin.h
 %{gcclibdir}/include/rdseedintrin.h
 %{gcclibdir}/include/rtmintrin.h
 %{gcclibdir}/include/serializeintrin.h
