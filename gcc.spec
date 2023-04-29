@@ -2887,7 +2887,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # avoid -L poisoning in *.la - there should be only -L%{_libdir}/gcc/%{_target_platform}/%{version}
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -2903,7 +2903,7 @@ do
 done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -2917,7 +2917,7 @@ do
 done
 %if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
-	%{?with_cxx:libstdc++.la libstdc++fs.la libsupc++.la} \
+	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
