@@ -84,11 +84,12 @@
 %define		with_tsan_m0	1
 %endif
 %ifarch x32
-# lsan and tsan exist only for x86_64 ABI (i.e. our multilib2)
+# hwasan, lsan and tsan exist only for x86_64 ABI (i.e. our multilib2)
+%define		with_hwasan_m2	1
 %define		with_lsan_m2	1
 %define		with_tsan_m2	1
 %endif
-%ifarch %{x8664} x32 aarch64
+%ifarch %{x8664} aarch64
 %define		with_hwasan	1
 %endif
 %ifarch %{ix86} %{x8664} x32
@@ -1950,6 +1951,53 @@ library.
 Ten pakiet zawiera statyczną bibliotekę Hardware-Assisted Address
 Sanitizer.
 
+%package -n libhwasan-multilib-%{multilib2}
+Summary:	The Hardware-Assisted Address Sanitizer library - %{m2_desc} version
+Summary(pl.UTF-8):	Biblioteka Hardware-Assisted Address Sanitizer do kontroli adresów - wersja %{m2_desc}
+License:	BSD-like or MIT
+Group:		Libraries
+Requires:	libstdc++-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan-multilib-%{multilib2}
+This package contains %{m2_desc} version of the Hardware-Assisted
+Address Sanitizer library which is used for -fsanitize=hwaddress
+instrumented programs.
+
+%description -n libhwasan-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera wersję %{m2_desc} biblioteki Hardware-Assisted
+Address Sanitizer, służącej do kontroli adresów w programach
+kompilowanych z opcją -fsanitize=hwaddress.
+
+%package -n libhwasan-multilib-%{multilib2}-devel
+Summary:	Development files for the Hardware-Assisted Address Sanitizer library - %{m2_desc} version
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki Hardware-Assisted Address Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
+Group:		Development/Libraries
+Requires:	libhwasan-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan-multilib-%{multilib2}-devel
+This package contains development files for %{m2_desc} version of the
+Hardware-Assisted Address Sanitizer library.
+
+%description -n libhwasan-multilib-%{multilib2}-devel -l pl.UTF-8
+Ten pakiet zawiera pliki programistyczne wersji %{m2_desc} biblioteki
+Hardware-Assisted Address Sanitizer.
+
+%package -n libhwasan-multilib-%{multilib2}-static
+Summary:	The Hardware-Assisted Address Sanitizer static library - %{m2_desc} version
+Summary(pl.UTF-8):	Statyczna biblioteka Hardware-Assisted Address Sanitizer - wersja %{m2_desc}
+License:	BSD-like or MIT
+Group:		Development/Libraries
+Requires:	libhwasan-multilib-%{multilib2}-devel = %{epoch}:%{version}-%{release}
+
+%description -n libhwasan-multilib-%{multilib2}-static
+This package contains %{m2_desc} version of Hardware-Assisted Address
+Sanitizer static library.
+
+%description -n libhwasan-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera wersję %{m2_desc} biblioteki statycznej
+Hardware-Assisted Address Sanitizer.
+
 %package -n liblsan
 Summary:	The Leak Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Leak Sanitizer do kontroli wycieków
@@ -2921,6 +2969,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
+	%{?with_hwasan_m2:libhwasan.la} \
 	%{?with_lsan_m2:liblsan.la} \
 	%{?with_tsan_m2:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
@@ -4122,6 +4171,24 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libhwasan-static
 %defattr(644,root,root,755)
 %{_libdir}/libhwasan.a
+%endif
+
+%if %{with multilib2} && %{with hwasan_m2}
+%files -n libhwasan-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libhwasan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libhwasan.so.0
+
+%files -n libhwasan-multilib-%{multilib2}-devel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libhwasan.so
+%{_libdirm2}/libhwasan_preinit.o
+%{_libdirm2}/libhwasan.la
+%{gcclibdir}/include/sanitizer/hwasan_interface.h
+
+%files -n libhwasan-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libhwasan.a
 %endif
 
 %if %{with lsan_m0}
