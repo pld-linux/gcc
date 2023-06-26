@@ -7,24 +7,24 @@
 #
 # Conditional build:
 # - languages:
-%bcond_without	ada		# build without ADA support
-%bcond_without	cxx		# build without C++ support
-%bcond_without	fortran		# build without Fortran support
-%bcond_without	go		# build without Go support
-%bcond_without	objc		# build without Objective-C support
-%bcond_without	objcxx		# build without Objective-C++ support
+%bcond_without	ada		# ADA language support
+%bcond_without	cxx		# C++ language support
+%bcond_without	fortran		# Fortran language support
+%bcond_without	go		# Go support
+%bcond_without	objc		# Objective-C language support
+%bcond_without	objcxx		# Objective-C++ language support
 # - features:
-%bcond_without	gomp		# build without OpenMP support
-%bcond_without	multilib	# build without multilib support (which needs glibc[32&64]-devel)
-%bcond_without	multilibx32	# build with x32 multilib support on x86_64 (needs x32 glibc-devel)
-%bcond_without	profiling	# build without profiling
-%bcond_without	python		# build without libstdc++ printers for gdb
+%bcond_without	gomp		# OpenMP support
+%bcond_without	multilib	# 32-bit/64-bit multilib support (which needs glibc[32&64]-devel)
+%bcond_without	multilibx32	# x32 multilib support on x86_64 (needs x32 glibc-devel)
+%bcond_without	profiling	# profiling support
+%bcond_without	python		# libstdc++ printers for gdb
 %bcond_with	gcc_libffi	# packaging gcc libffi for system usage
 # - other:
-%bcond_without	apidocs		# do not package API docs
+%bcond_without	apidocs		# API documentation
 %bcond_without	bootstrap	# omit 3-stage bootstrap
 %bcond_with	tests		# torture gcc
-%bcond_with	symvers		# enable versioned symbols in libstdc++ (WARNING: changes soname from .so.6 to so.7)
+%bcond_with	symvers		# versioned symbols in libstdc++ (WARNING: changes soname from .so.6 to so.7)
 
 %if %{with symvers}
 %define		cxx_sover	7
