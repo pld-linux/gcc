@@ -668,7 +668,7 @@ Summary(pl.UTF-8):	Obsługa języka C++ dla GCC
 Summary(pt_BR.UTF-8):	Suporte C++ para o GCC
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Obsoletes:	egcc-c++
+Obsoletes:	egcc-c++ < 1.2
 Obsoletes:	egcs-c++ < 1.2
 Obsoletes:	gcc4-c++ < 5:4.2
 
@@ -751,8 +751,8 @@ Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc >= %{epoch}:%{version}-%{release}
 Obsoletes:	libg++
-Obsoletes:	libstdc++3
-Obsoletes:	libstdc++4
+Obsoletes:	libstdc++3 < 5:3.1
+Obsoletes:	libstdc++4 < 5:3.2
 
 %description -n libstdc++
 This is the GNU implementation of the standard C++ library, along with
@@ -801,8 +801,8 @@ Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
-Obsoletes:	libstdc++3-devel
-Obsoletes:	libstdc++4-devel
+Obsoletes:	libstdc++3-devel < 5:3.1
+Obsoletes:	libstdc++4-devel < 5:3.2
 
 %description -n libstdc++-devel
 This is the GNU implementation of the standard C++ libraries. This
@@ -830,7 +830,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libstdc++4-static
+Obsoletes:	libstdc++4-static < 5:3.2
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -973,7 +973,7 @@ Requires:	libgfortran = %{epoch}:%{version}-%{release}
 %{?with_quadmath:Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
 Obsoletes:	egcs-g77 < 1.2
-Obsoletes:	gcc-g77
+Obsoletes:	gcc-g77 < 5:4
 
 %description fortran
 This package adds support for compiling Fortran 95 programs with the
@@ -1421,7 +1421,7 @@ Summary(tr.UTF-8):	GCC için Objective C desteği
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
-Obsoletes:	egcc-objc
+Obsoletes:	egcc-objc < 1.2
 Obsoletes:	egcs-objc < 1.2
 
 %description objc
@@ -1514,7 +1514,7 @@ Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C)
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc = %{epoch}:%{version}-%{release}
-Obsoletes:	libobjc1
+Obsoletes:	libobjc1 < 5:4
 
 %description -n libobjc
 Objective C Library.
