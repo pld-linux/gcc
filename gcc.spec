@@ -2494,7 +2494,7 @@ Requires:	libatomic-devel = %{epoch}:%{version}-%{release}
 %description -n libatomic-static
 This package contains GNU Atomic static library.
 
-%description -n libatomic-static
+%description -n libatomic-static -l pl.UTF-8
 Ten pakiet zawiera statyczną bibliotekę GNU Atomic.
 
 %package -n libatomic-multilib-32
