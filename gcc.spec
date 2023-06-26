@@ -1,4 +1,3 @@
-# NOTE: despite lower soname, libffi is newer than standalone 3.0.10
 #
 # NOTE
 # - when adding new subpackages with external libraries (like libffi)
