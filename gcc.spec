@@ -96,7 +96,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	10
-%define		minor_ver	3.0
+%define		minor_ver	4.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -109,14 +109,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	443c15b92614a3ce8f22e3b24ca2226a
+# Source0-md5:	d307b8748a74939359a5843f859a4dec
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	5094586c3d042b46d2493181324da198
+# Patch100-md5:	cc825426dbd5601997cc66dd39283065
 Patch0:		%{name}-info.patch
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
@@ -2390,7 +2390,7 @@ Requires:	libatomic-devel = %{epoch}:%{version}-%{release}
 %description -n libatomic-static
 This package contains GNU Atomic static library.
 
-%description -n libatomic-static
+%description -n libatomic-static -l pl.UTF-8
 Ten pakiet zawiera statyczną bibliotekę GNU Atomic.
 
 %package -n libatomic-multilib-32
