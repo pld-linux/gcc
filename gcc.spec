@@ -241,6 +241,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 %endif
 %endif
+%if %{without multilib} || %{without multilib2}
+# avoid "Possible unexpanded macro" warning
+%define		multilib2	none
+%endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
 
 %define		filterout	-fwrapv -fno-strict-aliasing -fsigned-char
