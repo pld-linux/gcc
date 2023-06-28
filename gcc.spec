@@ -1,17 +1,17 @@
+# TODO: finish D (needs bootstrap from non-PLD gdc binaries)
 #
 # NOTE
 # - when adding new subpackages with external libraries (like libffi)
 #   or having own Version, do not use epoch 6 there, reset them to 0!
 #
-# TODO:
-# - package Modula-2 frontend
-#
 # Conditional build:
 # - languages:
 %bcond_without	ada		# ADA language support
 %bcond_without	cxx		# C++ language support
+%bcond_with	d		# D language support [NFY, buildrequires gdc]
 %bcond_without	fortran		# Fortran language support
-%bcond_without	go		# Go support
+%bcond_without	go		# Go language support
+%bcond_without	modula2		# Modula2 language support
 %bcond_without	objc		# Objective-C language support
 %bcond_without	objcxx		# Objective-C++ language support
 # - features:
@@ -146,6 +146,9 @@ BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 BuildRequires:	libgnat-static
 %endif
+%if %{with d}
+BuildRequires:	gcc-d
+%endif
 BuildRequires:	gdb
 BuildRequires:	gettext-tools >= 0.14.5
 BuildRequires:	glibc-devel >= 6:2.4-1
@@ -247,7 +250,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgnat-%{major_ver}|libgo|libitm|libxmlj|libubsan|lib-gnu-awt-xlib)\.so.*'
+%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgnat-%{major_ver}|libgo|libitm|libxmlj|libubsan|lib-gnu-awt-xlib|libm2cor|libm2iso|libm2log|libm2pim)\.so.*'
 # private symbols
 %define		_noautoreq		.*\(GLIBC_PRIVATE\)
 
@@ -1409,6 +1412,45 @@ Static Foreign Function Interface library - %{m2_desc} version.
 
 %description -n libffi-multilib-%{multilib2}-static -l pl.UTF-8
 Statyczna biblioteka libffi - wersja %{m2_desc}.
+
+%package m2
+Summary:	Modula-2 language support for GCC
+Summary(pl.UTF-8):	Obsługa języka Module-2 dla kompilatora GCC
+License:	GPL v3+
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgm2 = %{epoch}:%{version}-%{release}
+
+%description m2
+Modula-2 language support for GCC.
+
+%description m2 -l pl.UTF-8
+Obsługa języka Module-2 dla kompilatora GCC.
+
+%package -n libgm2
+Summary:	GNU Modula-2 shared libraries
+Summary(pl.UTF-8):	Biblioteki współdzielone GNU Modula-2
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+
+%description -n libgm2
+GNU Modula-2 shared libraries.
+
+%description -n libgm2 -l pl.UTF-8
+Biblioteki współdzielone GNU Modula-2.
+
+%package -n libgm2-static
+Summary:	GNU Modula-2 static libraries
+Summary(pl.UTF-8):	Biblioteki statyczne GNU Modula-2
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+Requires:	%{name}-m2 = %{epoch}:%{version}-%{release}
+
+%description -n libgm2-static
+GNU Modula-2 static libraries.
+
+%description -n libgm2-static -l pl.UTF-8
+Biblioteki statyczne GNU Modula-2.
 
 %package objc
 Summary:	Objective C language support for GCC
@@ -2662,7 +2704,7 @@ TEXCONFIG=false \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--x-libraries=%{_libdir} \
-	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
+	--enable-bootstrap%{!?with_bootstrap:=no} \
 	--disable-build-with-cxx \
 	--disable-build-poststage1-with-cxx \
 	--enable-c99 \
@@ -2676,8 +2718,8 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
-	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
+	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
 	--enable-linux-futex \
@@ -2942,6 +2984,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_lsan_m0:liblsan.la} \
 	%{?with_tsan_m0:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
+	%{?with_modula2:libm2cor.la libm2iso.la libm2log.la libm2min.la libm2pim.la} \
 	%{?with_objc:libobjc.la};
 do
 	file="$RPM_BUILD_ROOT%{_libdir}/$f"
@@ -3117,6 +3160,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libffi-multilib-32
 %post	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libgm2
+%postun	-p /sbin/ldconfig -n libgm2
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib-32
@@ -3781,8 +3826,6 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/ISO_Fortran_binding.h
 %{gcclibdir}/libcaf_single.a
 %{gcclibdir}/libcaf_single.la
-#%{gcclibdir}/libgfortranbegin.la
-#%{gcclibdir}/libgfortranbegin.a
 %{_infodir}/gfortran.info*
 %{_mandir}/man1/g95.1*
 %{_mandir}/man1/gfortran.1*
@@ -3795,8 +3838,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir32}/libgfortran.la
 %{gcclibdir}/32/libcaf_single.a
 %{gcclibdir}/32/libcaf_single.la
-#%{gcclibdir}/32/libgfortranbegin.la
-#%{gcclibdir}/32/libgfortranbegin.a
 %endif
 
 %if %{with multilib2}
@@ -3807,8 +3848,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdirm2}/libgfortran.la
 %{gcclibdir}/%{multilib2}/libcaf_single.a
 %{gcclibdir}/%{multilib2}/libcaf_single.la
-#%{gcclibdir}/%{multilib2}/libgfortranbegin.la
-#%{gcclibdir}/%{multilib2}/libgfortranbegin.a
 %endif
 
 %files -n libgfortran
@@ -3949,6 +3988,49 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libffi.a
 %endif
+%endif
+
+%if %{with modula2}
+%files m2
+%defattr(644,root,root,755)
+%doc gcc/m2/{COPYING.RUNTIME,ChangeLog,NEWS,README}
+%attr(755,root,root) %{_bindir}/gm2
+%attr(755,root,root) %{_bindir}/*-gm2
+%attr(755,root,root) %{gcclibdir}/cc1gm2
+%attr(755,root,root) %{gcclibdir}/plugin/m2rte.so
+%attr(755,root,root) %{_libdir}/libm2cor.so
+%attr(755,root,root) %{_libdir}/libm2iso.so
+%attr(755,root,root) %{_libdir}/libm2log.so
+%attr(755,root,root) %{_libdir}/libm2min.so
+%attr(755,root,root) %{_libdir}/libm2pim.so
+%{_libdir}/libm2cor.la
+%{_libdir}/libm2iso.la
+%{_libdir}/libm2log.la
+%{_libdir}/libm2min.la
+%{_libdir}/libm2pim.la
+%{gcclibdir}/m2
+%{_mandir}/man1/gm2.1*
+
+%files -n libgm2
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libm2cor.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libm2cor.so.18
+%attr(755,root,root) %{_libdir}/libm2iso.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libm2iso.so.18
+%attr(755,root,root) %{_libdir}/libm2log.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libm2log.so.18
+%attr(755,root,root) %{_libdir}/libm2min.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libm2min.so.18
+%attr(755,root,root) %{_libdir}/libm2pim.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libm2pim.so.18
+
+%files -n libgm2-static
+%defattr(644,root,root,755)
+%{_libdir}/libm2cor.a
+%{_libdir}/libm2iso.a
+%{_libdir}/libm2log.a
+%{_libdir}/libm2min.a
+%{_libdir}/libm2pim.a
 %endif
 
 %if %{with objc}
