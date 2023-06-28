@@ -1419,7 +1419,7 @@ Statyczna biblioteka libffi - wersja %{m2_desc}.
 
 %package m2
 Summary:	Modula-2 language support for GCC
-Summary(pl.UTF-8):	Obsługa języka Module-2 dla kompilatora GCC
+Summary(pl.UTF-8):	Obsługa języka Modula-2 dla kompilatora GCC
 License:	GPL v3+
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
@@ -1429,7 +1429,39 @@ Requires:	libgm2 = %{epoch}:%{version}-%{release}
 Modula-2 language support for GCC.
 
 %description m2 -l pl.UTF-8
-Obsługa języka Module-2 dla kompilatora GCC.
+Obsługa języka Modula-2 dla kompilatora GCC.
+
+%package m2-multilib-32
+Summary:	Modula-2 language 32-bit binaries support for GCC
+Summary(pl.UTF-8):	Obsługa 32-bitowych binariów w języku Modula-2 dla kompilatora GCC
+License:	GPL v3+
+Group:		Development/Languages
+Requires:	%{name}-multilib-32 = %{epoch}:%{version}-%{release}
+Requires:	libgm2-multilib-32 = %{epoch}:%{version}-%{release}
+
+%description m2-multilib-32
+This package adds support for compiling Modula-2 language to 32-bit
+binaries.
+
+%description m2-multilib-32 -l pl.UTF-8
+Ten pakiet dodaje obsługę kompilacji programów w języku Modula-2 do
+binarów 32-bitowych.
+
+%package m2-multilib-%{multilib2}
+Summary:	Modula-2 language %{m2_desc} binaries support for GCC
+Summary(pl.UTF-8):	Obsługa binariów %{m2_desc} w języku Modula-2 dla kompilatora GCC
+License:	GPL v3+
+Group:		Development/Languages
+Requires:	%{name}-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+Requires:	libgm2-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description m2-multilib-%{multilib2}
+This package adds support for compiling Modula-2 language to
+%{m2_desc} binaries.
+
+%description m2-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę kompilacji programów w języku Modula-2 do
+binarów %{m2_desc}.
 
 %package -n libgm2
 Summary:	GNU Modula-2 shared libraries
@@ -1455,6 +1487,64 @@ GNU Modula-2 static libraries.
 
 %description -n libgm2-static -l pl.UTF-8
 Biblioteki statyczne GNU Modula-2.
+
+%package -n libgm2-multilib-32
+Summary:	GNU Modula-2 shared libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki współdzielone GNU Modula-2 - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+
+%description -n libgm2-multilib-32
+This package contains 32-bit version of shared libraries needed to run
+programs written in Modula-2.
+
+%description -n libgm2-multilib-32 -l pl.UTF-8
+Ten pakiet zawiera wersje 32-bitowe bibliotek potrzebnych do
+uruchamiania programów napisanych w języku Modula-2.
+
+%package -n libgm2-multilib-32-static
+Summary:	GNU Modula-2 static libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki statyczne GNU Modula-2 - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+Requires:	%{name}-m2-multilib-32 = %{epoch}:%{version}-%{release}
+
+%description -n libgm2-multilib-32-static
+This package contains 32-bit version of static libraries for programs
+written in Modula-2.
+
+%description -n libgm2-multilib-32-static -l pl.UTF-8
+Ten pakiet zawiera 32-bitowe wersje bibliotek statycznych dla
+programów napisanych w języku Modula-2.
+
+%package -n libgm2-multilib-%{multilib2}
+Summary:	GNU Modula-2 shared libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki współdzielone GNU Modula-2 - wersja 32-bitowa
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Libraries
+
+%description -n libgm2-multilib-%{multilib2}
+This package contains 32-bit version of shared libraries needed to run
+programs written in Modula-2.
+
+%description -n libgm2-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet zawiera wersje 32-bitowe bibliotek potrzebnych do
+uruchamiania programów napisanych w języku Modula-2.
+
+%package -n libgm2-multilib-%{multilib2}-static
+Summary:	GNU Modula-2 static libraries - %{m2_desc} version
+Summary(pl.UTF-8):	Biblioteki statyczne GNU Modula-2 - wersja %{m2_desc}
+License:	GPL v3+ with GCC Runtime Library Exception v3.1
+Group:		Development/Libraries
+Requires:	%{name}-m2-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgm2-multilib-%{multilib2}-static
+This package contains %{m2_desc} version of static libraries for
+programs written in Modula-2.
+
+%description -n libgm2-multilib-%{multilib2}-static -l pl.UTF-8
+Ten pakiet zawiera wersje %{m2_desc} bibliotek statycznych dla
+programów napisanych w języku Modula-2.
 
 %package objc
 Summary:	Objective C language support for GCC
@@ -3004,6 +3094,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_lsan_m1:liblsan.la} \
 	%{?with_tsan_m1:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
+	%{?with_modula2:libm2cor.la libm2iso.la libm2log.la libm2min.la libm2pim.la} \
 	%{?with_objc:libobjc.la};
 do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdir32}/$f %{_libdir32} > $RPM_BUILD_ROOT%{_libdir32}/$f.fixed
@@ -3019,6 +3110,7 @@ for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_lsan_m2:liblsan.la} \
 	%{?with_tsan_m2:libtsan.la} \
 	%{?with_atomic:libatomic.la} \
+	%{?with_modula2:libm2cor.la libm2iso.la libm2log.la libm2min.la libm2pim.la} \
 	%{?with_objc:libobjc.la};
 do
 	%{__perl} %{SOURCE1} $RPM_BUILD_ROOT%{_libdirm2}/$f %{_libdirm2} > $RPM_BUILD_ROOT%{_libdirm2}/$f.fixed
@@ -3166,6 +3258,10 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libffi-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgm2
 %postun	-p /sbin/ldconfig -n libgm2
+%post	-p /sbin/ldconfig -n libgm2-multilib-32
+%postun	-p /sbin/ldconfig -n libgm2-multilib-32
+%post	-p /sbin/ldconfig -n libgm2-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libgm2-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libobjc
 %postun	-p /sbin/ldconfig -n libobjc
 %post	-p /sbin/ldconfig -n libobjc-multilib-32
@@ -4015,6 +4111,38 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/m2
 %{_mandir}/man1/gm2.1*
 
+%if %{with multilib}
+%files m2-multilib-32
+%defattr(644,root,root,755)
+%{gcclibdir}/32/m2
+%attr(755,root,root) %{_libdir32}/libm2cor.so
+%attr(755,root,root) %{_libdir32}/libm2iso.so
+%attr(755,root,root) %{_libdir32}/libm2log.so
+%attr(755,root,root) %{_libdir32}/libm2min.so
+%attr(755,root,root) %{_libdir32}/libm2pim.so
+%{_libdir32}/libm2cor.la
+%{_libdir32}/libm2iso.la
+%{_libdir32}/libm2log.la
+%{_libdir32}/libm2min.la
+%{_libdir32}/libm2pim.la
+%endif
+
+%if %{with multilib2}
+%files m2-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%{gcclibdir}/%{multilib2}/m2
+%attr(755,root,root) %{_libdirm2}/libm2cor.so
+%attr(755,root,root) %{_libdirm2}/libm2iso.so
+%attr(755,root,root) %{_libdirm2}/libm2log.so
+%attr(755,root,root) %{_libdirm2}/libm2min.so
+%attr(755,root,root) %{_libdirm2}/libm2pim.so
+%{_libdirm2}/libm2cor.la
+%{_libdirm2}/libm2iso.la
+%{_libdirm2}/libm2log.la
+%{_libdirm2}/libm2min.la
+%{_libdirm2}/libm2pim.la
+%endif
+
 %files -n libgm2
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libm2cor.so.*.*.*
@@ -4035,6 +4163,52 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libm2log.a
 %{_libdir}/libm2min.a
 %{_libdir}/libm2pim.a
+
+%if %{with multilib}
+%files -n libgm2-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libm2cor.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libm2cor.so.18
+%attr(755,root,root) %{_libdir32}/libm2iso.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libm2iso.so.18
+%attr(755,root,root) %{_libdir32}/libm2log.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libm2log.so.18
+%attr(755,root,root) %{_libdir32}/libm2min.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libm2min.so.18
+%attr(755,root,root) %{_libdir32}/libm2pim.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libm2pim.so.18
+
+%files -n libgm2-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libm2cor.a
+%{_libdir32}/libm2iso.a
+%{_libdir32}/libm2log.a
+%{_libdir32}/libm2min.a
+%{_libdir32}/libm2pim.a
+%endif
+
+%if %{with multilib2}
+%files -n libgm2-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libm2cor.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libm2cor.so.18
+%attr(755,root,root) %{_libdirm2}/libm2iso.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libm2iso.so.18
+%attr(755,root,root) %{_libdirm2}/libm2log.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libm2log.so.18
+%attr(755,root,root) %{_libdirm2}/libm2min.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libm2min.so.18
+%attr(755,root,root) %{_libdirm2}/libm2pim.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libm2pim.so.18
+
+%files -n libgm2-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libm2cor.a
+%{_libdirm2}/libm2iso.a
+%{_libdirm2}/libm2log.a
+%{_libdirm2}/libm2min.a
+%{_libdirm2}/libm2pim.a
+%endif
 %endif
 
 %if %{with objc}
