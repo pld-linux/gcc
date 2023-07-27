@@ -184,6 +184,7 @@ BuildRequires:	gmp-c++-devel >= 4.3.2
 BuildRequires:	gmp-devel >= 4.3.2
 BuildRequires:	isl-devel >= 0.15
 BuildRequires:	libmpc-devel >= 0.8.1
+BuildRequires:	libstdc++-devel
 BuildRequires:	mpfr-devel >= 3.1.0
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.211
