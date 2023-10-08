@@ -193,13 +193,13 @@ Requires:	libmpc >= 0.8.1
 Requires:	mpfr >= 3.1.0
 Provides:	cpp = %{epoch}:%{version}-%{release}
 %{?with_ada:Provides:	gcc(ada)}
-Obsoletes:	cpp
-Obsoletes:	egcs-cpp
-Obsoletes:	gcc-chill
-Obsoletes:	gcc-cpp
-Obsoletes:	gcc-ksi
-Obsoletes:	gcc4
-Obsoletes:	gont
+Obsoletes:	cpp < 5:3.4
+Obsoletes:	egcs-cpp < 1.2
+Obsoletes:	gcc-chill < 3.2
+Obsoletes:	gcc-cpp < 3
+Obsoletes:	gcc-ksi < 5:3.4
+Obsoletes:	gcc4 < 5:4.2
+Obsoletes:	gont < 0.1
 Conflicts:	glibc-devel < 2.2.5-20
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -278,7 +278,7 @@ License:	GPL v3+
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libgcc32
+Obsoletes:	libgcc32 < 6:4.4
 %ifarch %{x8664}
 Requires:	glibc-devel(ix86)
 %endif
@@ -292,7 +292,7 @@ Requires:	glibc-devel(s390)
 Requires:	glibc-devel(sparcv9)
 %endif
 Provides:	gcc(multilib-32)
-Obsoletes:	gcc-multilib
+Obsoletes:	gcc-multilib < 6:4.9.2-4
 
 %description multilib-32
 A compiler aimed at integrating all the optimizations and features
@@ -345,7 +345,7 @@ Summary(pt_BR.UTF-8):	Biblioteca runtime para o GCC
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Obsoletes:	libgcc1
-Obsoletes:	libgcc4
+Obsoletes:	libgcc4 < 5:4.2
 
 %description -n libgcc
 Shared gcc library.
@@ -364,7 +364,7 @@ Summary:	Shared gcc library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka gcc - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
-Obsoletes:	libgcc-multilib
+Obsoletes:	libgcc-multilib < 6:4.9.2-4
 
 %description -n libgcc-multilib-32
 Shared gcc library - 32-bit version.
@@ -428,7 +428,7 @@ Summary:	GNU OpenMP library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka GNU OpenMP - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
-Obsoletes:	libgomp-multilib
+Obsoletes:	libgomp-multilib < 6:4.9.2-4
 
 %description -n libgomp-multilib-32
 GNU OpenMP library - 32-bit version.
@@ -442,7 +442,7 @@ Summary(pl.UTF-8):	Pliki programistyczne wersji 32-bitowej biblioteki GNU OpenMP
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libgomp-multilib-devel
+Obsoletes:	libgomp-multilib-devel < 6:4.9.2-4
 
 %description -n libgomp-multilib-32-devel
 Development files for 32-bit version of GNU OpenMP library.
@@ -456,7 +456,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka GNU OpenMP - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgomp-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libgomp-multilib-static
+Obsoletes:	libgomp-multilib-static < 6:4.9.2-4
 
 %description -n libgomp-multilib-32-static
 Static GNU OpenMP library - 32-bit version.
@@ -510,7 +510,7 @@ Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgnat = %{epoch}:%{version}-%{release}
 Obsoletes:	gcc-gnat
-Obsoletes:	gnat-devel
+Obsoletes:	gnat-devel < 4
 
 %description ada
 This package adds experimental support for compiling Ada programs.
@@ -529,7 +529,7 @@ Summary(pl.UTF-8):	Obsługa 32-bitowych binariów w języku Ada dla GCC
 Group:		Development/Languages
 Requires:	%{name}-ada = %{epoch}:%{version}-%{release}
 Requires:	libgnat-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	gcc-ada-multilib
+Obsoletes:	gcc-ada-multilib < 6:4.9.2-4
 
 %description ada-multilib-32
 This package adds experimental support for compiling 32-bit Ada
@@ -561,7 +561,7 @@ Summary(pl.UTF-8):	Biblioteki standardowe Ady
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc = %{epoch}:%{version}-%{release}
-Obsoletes:	gnat
+Obsoletes:	gnat < 4
 Obsoletes:	libgnat1
 
 %description -n libgnat
@@ -581,7 +581,7 @@ Summary:	Static Ada standard libraries
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
-Obsoletes:	gnat-static
+Obsoletes:	gnat-static < 4
 
 %description -n libgnat-static
 This package contains static libraries for programs written in Ada.
@@ -596,7 +596,7 @@ Summary(pl.UTF-8):	Biblioteki standardowe dla Ady - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libgnat-multilib
+Obsoletes:	libgnat-multilib < 6:4.9.2-4
 
 %description -n libgnat-multilib-32
 This package contains 32-bit version of shared libraries needed to run
@@ -611,7 +611,7 @@ Summary:	Static Ada standard libraries - 32-bit version
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady - wersje 32-bitowe
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
-Obsoletes:	libgnat-multilib-static
+Obsoletes:	libgnat-multilib-static < 6:4.9.2-4
 
 %description -n libgnat-multilib-32-static
 This package contains 32-bit version of static libraries for programs
@@ -657,9 +657,9 @@ Summary(pl.UTF-8):	Obsługa języka C++ dla GCC
 Summary(pt_BR.UTF-8):	Suporte C++ para o GCC
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
-Obsoletes:	egcc-c++
-Obsoletes:	egcs-c++
-Obsoletes:	gcc4-c++
+Obsoletes:	egcc-c++ < 1.2
+Obsoletes:	egcs-c++ < 1.2
+Obsoletes:	gcc4-c++ < 5:4.2
 
 %description c++
 This package adds C++ support to the GNU Compiler Collection. It
@@ -705,7 +705,7 @@ Summary(pl.UTF-8):	Obsługa 32-bitowych binariów w języku C++ dla GCC
 Group:		Development/Languages
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	%{name}-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	gcc-c++-multilib
+Obsoletes:	gcc-c++-multilib < 6:4.9.2-4
 
 %description c++-multilib-32
 This package adds 32-bit binaries in C++ language support to the GNU
@@ -740,8 +740,8 @@ Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc >= %{epoch}:%{version}-%{release}
 Obsoletes:	libg++
-Obsoletes:	libstdc++3
-Obsoletes:	libstdc++4
+Obsoletes:	libstdc++3 < 5:3.1
+Obsoletes:	libstdc++4 < 5:3.2
 
 %description -n libstdc++
 This is the GNU implementation of the standard C++ library, along with
@@ -790,8 +790,8 @@ Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
 Obsoletes:	libg++-devel
-Obsoletes:	libstdc++3-devel
-Obsoletes:	libstdc++4-devel
+Obsoletes:	libstdc++3-devel < 5:3.1
+Obsoletes:	libstdc++4-devel < 5:3.2
 
 %description -n libstdc++-devel
 This is the GNU implementation of the standard C++ libraries. This
@@ -819,7 +819,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libstdc++4-static
+Obsoletes:	libstdc++4-static < 5:3.2
 
 %description -n libstdc++-static
 Static C++ standard library.
@@ -837,7 +837,7 @@ License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc-multilib-32 >= %{epoch}:%{version}-%{release}
-Obsoletes:	libstdc++-multilib
+Obsoletes:	libstdc++-multilib < 6:4.9.2-4
 
 %description -n libstdc++-multilib-32
 This is 32-bit version of the GNU implementation of the standard C++
@@ -855,7 +855,7 @@ Group:		Development/Libraries
 Requires:	%{name}-c++-multilib-32 = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-devel = %{epoch}:%{version}-%{release}
 Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libstdc++-multilib-devel
+Obsoletes:	libstdc++-multilib-devel < 6:4.9.2-4
 
 %description -n libstdc++-multilib-32-devel
 This package contains the development files for 32-bit version of the
@@ -871,7 +871,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka standardowa C++ - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libstdc++-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libstdc++-multilib-static
+Obsoletes:	libstdc++-multilib-static < 6:4.9.2-4
 
 %description -n libstdc++-multilib-32-static
 Static C++ standard library - 32-bit version.
@@ -961,8 +961,8 @@ Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
 %{?with_quadmath:Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}}
 Provides:	gcc-g77 = %{epoch}:%{version}-%{release}
-Obsoletes:	egcs-g77
-Obsoletes:	gcc-g77
+Obsoletes:	egcs-g77 < 1.2
+Obsoletes:	gcc-g77 < 5:4
 
 %description fortran
 This package adds support for compiling Fortran 95 programs with the
@@ -985,7 +985,7 @@ Group:		Development/Languages/Fortran
 Requires:	%{name}-fortran = %{epoch}:%{version}-%{release}
 Requires:	libgfortran-multilib-32 = %{epoch}:%{version}-%{release}
 %{?with_quadmath:Requires:	libquadmath-multilib-32-devel = %{epoch}:%{version}-%{release}}
-Obsoletes:	gcc-fortran-multilib
+Obsoletes:	gcc-fortran-multilib < 6:4.9.2-4
 
 %description fortran-multilib-32
 This package adds support for compiling 32-bit Fortran 95 programs
@@ -1019,7 +1019,7 @@ License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc = %{epoch}:%{version}-%{release}
 %{?with_quadmath:Requires:	libquadmath = %{epoch}:%{version}-%{release}}
-Obsoletes:	libg2c
+Obsoletes:	libg2c < 5:4
 
 %description -n libgfortran
 Fortran 95 Library.
@@ -1037,7 +1037,7 @@ Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgfortran = %{epoch}:%{version}-%{release}
-Obsoletes:	libg2c-static
+Obsoletes:	libg2c-static < 5:4
 
 %description -n libgfortran-static
 Static Fortran 95 Library.
@@ -1055,7 +1055,7 @@ License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
 %{?with_quadmath:Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}}
-Obsoletes:	libgfortran-multilib
+Obsoletes:	libgfortran-multilib < 6:4.9.2-4
 
 %description -n libgfortran-multilib-32
 Fortran 95 Library - 32-bit version.
@@ -1069,7 +1069,7 @@ Summary(pl.UTF-8):	Statyczna Biblioteka Fortranu 95 - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libgfortran-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libgfortran-multilib-static
+Obsoletes:	libgfortran-multilib-static < 6:4.9.2-4
 
 %description -n libgfortran-multilib-32-static
 Static Fortran 95 Library - 32-bit version.
@@ -1153,7 +1153,7 @@ Summary:	GCC __float128 shared support library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka współdzielona GCC do obsługi typu __float128 - wersja 32-bitowa
 License:	LGPL v2.1+
 Group:		Libraries
-Obsoletes:	libquadmath-multilib
+Obsoletes:	libquadmath-multilib < 6:4.9.2-4
 
 %description -n libquadmath-multilib-32
 This package contains 32-bit version of GCC shared support library
@@ -1172,7 +1172,7 @@ License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-devel = %{epoch}:%{version}-%{release}
 Requires:	libquadmath-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libquadmath-multilib-devel
+Obsoletes:	libquadmath-multilib-devel < 6:4.9.2-4
 
 %description -n libquadmath-multilib-32-devel
 This package contains development files for 32-bit GCC support library
@@ -1190,7 +1190,7 @@ Summary(pl.UTF-8):	32-bitowa biblioteka statyczna GCC do obsługi typu __float12
 License:	LGPL v2.1+
 Group:		Development/Libraries
 Requires:	libquadmath-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libquadmath-multilib-static
+Obsoletes:	libquadmath-multilib-static < 6:4.9.2-4
 
 %description -n libquadmath-multilib-32-static
 Static GCC __float128 support library - 32-bit version.
@@ -1310,7 +1310,7 @@ Summary:	Foreign Function Interface library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka wywołań funkcji obcych - wersja 32-bitowa
 License:	BSD-like
 Group:		Libraries
-Obsoletes:	libffi-multilib
+Obsoletes:	libffi-multilib < 6:4.9.2-4
 
 %description -n libffi-multilib-32
 The libffi library provides a portable, high level programming
@@ -1331,7 +1331,7 @@ License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-devel = %{epoch}:%{version}-%{release}
 Requires:	libffi-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libffi-multilib-devel
+Obsoletes:	libffi-multilib-devel < 6:4.9.2-4
 
 %description -n libffi-multilib-32-devel
 Development files for 32-bit version of Foreign Function Interface
@@ -1346,7 +1346,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka libffi - wersja 32-bitowa
 License:	BSD-like
 Group:		Development/Libraries
 Requires:	libffi-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libffi-multilib-static
+Obsoletes:	libffi-multilib-static < 6:4.9.2-4
 
 %description -n libffi-multilib-32-static
 Static Foreign Function Interface library - 32-bit version.
@@ -1410,8 +1410,8 @@ Summary(tr.UTF-8):	GCC için Objective C desteği
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libobjc = %{epoch}:%{version}-%{release}
-Obsoletes:	egcc-objc
-Obsoletes:	egcs-objc
+Obsoletes:	egcc-objc < 1.2
+Obsoletes:	egcs-objc < 1.2
 
 %description objc
 This package adds Objective C support to the GNU Compiler Collection.
@@ -1456,7 +1456,7 @@ Summary(pl.UTF-8):	Obsługa 32-bitowych binariów w języku Objective C dla komp
 Group:		Development/Languages
 Requires:	%{name}-multilib-32 = %{epoch}:%{version}-%{release}
 Requires:	libobjc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	gcc-objc-multilib
+Obsoletes:	gcc-objc-multilib < 6:4.9.2-4
 
 %description objc-multilib-32
 This package adds 32-bit Objective C support to the GNU Compiler
@@ -1503,7 +1503,7 @@ Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C)
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc = %{epoch}:%{version}-%{release}
-Obsoletes:	libobjc1
+Obsoletes:	libobjc1 < 5:4
 
 %description -n libobjc
 Objective C Library.
@@ -1537,7 +1537,7 @@ Summary(pl.UTF-8):	Biblioteka obiektowego C (Objective C) - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libobjc-multilib
+Obsoletes:	libobjc-multilib < 6:4.9.2-4
 
 %description -n libobjc-multilib-32
 Objective C Library - 32-bit version.
@@ -1551,7 +1551,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka obiektowego C (Objective C) - wersja 32-
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libobjc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libobjc-multilib-static
+Obsoletes:	libobjc-multilib-static < 6:4.9.2-4
 
 %description -n libobjc-multilib-32-static
 Static Objective C Library - 32-bit version.
@@ -1606,7 +1606,7 @@ License:	GPL v3+ (gcc), BSD (Go-specific part)
 Group:		Development/Languages
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	libgo-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	gcc-go-multilib
+Obsoletes:	gcc-go-multilib < 6:4.9.2-4
 
 %description go-multilib-32
 This package adds 32-bit Go language support to the GNU Compiler
@@ -1678,7 +1678,7 @@ Summary(pl.UTF-8):	Biblioteka języka Go - wersja 32-bitowa
 License:	BSD
 Group:		Libraries
 Requires:	libgcc-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libgo-multilib
+Obsoletes:	libgo-multilib < 6:4.9.2-4
 
 %description -n libgo-multilib-32
 Go language library - 32-bit version.
@@ -1693,7 +1693,7 @@ License:	BSD
 Group:		Development/Libraries
 Requires:	glibc-devel
 Requires:	libgo-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libgo-multilib-devel
+Obsoletes:	libgo-multilib-devel < 6:4.9.2-4
 
 %description -n libgo-multilib-32-devel
 Development files for Go language library - 32-bit version.
@@ -1707,7 +1707,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka języka Go - wersja 32-bitowa
 License:	BSD
 Group:		Development/Libraries
 Requires:	libgo-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libgo-multilib-static
+Obsoletes:	libgo-multilib-static < 6:4.9.2-4
 
 %description -n libgo-multilib-32-static
 Static Go language library - 32-bit version.
@@ -1803,7 +1803,7 @@ Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów - wersja 32
 License:	BSD-like or MIT
 Group:		Libraries
 Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libasan-multilib
+Obsoletes:	libasan-multilib < 6:4.9.2-4
 
 %description -n libasan-multilib-32
 This package contains 32-bit version of the Address Sanitizer library
@@ -1821,7 +1821,7 @@ License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-devel = %{epoch}:%{version}-%{release}
 Requires:	libasan-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libasan-multilib-devel
+Obsoletes:	libasan-multilib-devel < 6:4.9.2-4
 
 %description -n libasan-multilib-32-devel
 This package contains the development files for 32-bit version of the
@@ -1837,7 +1837,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka Address Sanitizer - wersja 32-bitowa
 License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libasan-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libasan-multilib-static
+Obsoletes:	libasan-multilib-static < 6:4.9.2-4
 
 %description -n libasan-multilib-32-static
 This package contains 32-bit version of the Address Sanitizer static
@@ -2117,7 +2117,7 @@ Summary(pl.UTF-8):	Biblioteka Undefined Behavior Sanitizer do kontroli nieokreś
 License:	BSD-like or MIT
 Group:		Libraries
 Requires:	libstdc++-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libubsan-multilib
+Obsoletes:	libubsan-multilib < 6:4.9.2-4
 
 %description -n libubsan-multilib-32
 This package contains 32-bit version of the Undefined Behavior
@@ -2135,7 +2135,7 @@ Summary(pl.UTF-8):	Pliki programistyczne biblioteki Undefined Behavior Sanitizer
 License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libubsan-multilib-devel
+Obsoletes:	libubsan-multilib-devel < 6:4.9.2-4
 
 %description -n libubsan-multilib-32-devel
 This package contains the development files for 32-bit version of the
@@ -2151,7 +2151,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka Undefined Behavior Sanitizer - wersja 32
 License:	BSD-like or MIT
 Group:		Development/Libraries
 Requires:	libubsan-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libubsan-multilib-static
+Obsoletes:	libubsan-multilib-static < 6:4.9.2-4
 
 %description -n libubsan-multilib-32-static
 This package contains 32-bit version of the Undefined Behavior
@@ -2398,7 +2398,7 @@ Summary:	The GNU Atomic library - 32-bit version
 Summary(pl.UTF-8):	Biblioteka GNU Atomic - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
-Obsoletes:	libatomic-multilib
+Obsoletes:	libatomic-multilib < 6:4.9.2-4
 
 %description -n libatomic-multilib-32
 This package contains 32-bit version of the GNU Atomic library which
@@ -2416,7 +2416,7 @@ Summary(pl.UTF-8):	Pliki programistyczne biblioteki GNU Atomic - wersja 32-bitow
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-32 = %{epoch}:%{version}-%{release}
-Obsoletes:	libatomic-multilib-devel
+Obsoletes:	libatomic-multilib-devel < 6:4.9.2-4
 
 %description -n libatomic-multilib-32-devel
 This package contains the development files for 32-bit version of the
@@ -2432,7 +2432,7 @@ Summary(pl.UTF-8):	Statyczna biblioteka GNU Atomic - wersja 32-bitowa
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
 Requires:	libatomic-multilib-32-devel = %{epoch}:%{version}-%{release}
-Obsoletes:	libatomic-multilib-static
+Obsoletes:	libatomic-multilib-static < 6:4.9.2-4
 
 %description -n libatomic-multilib-32-static
 This package contains 32-bit version of the GNU Atomic static library.
