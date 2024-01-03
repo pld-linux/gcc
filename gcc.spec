@@ -109,7 +109,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -130,6 +130,7 @@ Patch4:		%{name}-ada-x32.patch
 
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
+Patch12:	%{name}-bug-111413.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen >= 5.5.4}
@@ -2773,6 +2774,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 %if %{with gcc_libffi}
 %patch11 -p0
 %endif
+%patch12 -p1
 
 %{__mv} ChangeLog ChangeLog.general
 
