@@ -127,8 +127,8 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libstdc++-v3/include/Makefile.am gcc-10.2.
 -	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch3_source} -o $@
 +	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch3_source} -o $@
  
- # The real deal.
- install-data-local: install-headers
+ # AutoGen <bits/version.h>.
+ .PHONY: update-version
 diff -urNp -x '*.orig' gcc-10.2.0.org/libstdc++-v3/include/Makefile.in gcc-10.2.0/libstdc++-v3/include/Makefile.in
 --- gcc-10.2.0.org/libstdc++-v3/include/Makefile.in	2021-03-21 01:22:56.854335808 +0100
 +++ gcc-10.2.0/libstdc++-v3/include/Makefile.in	2021-03-21 01:23:21.861335808 +0100
@@ -157,5 +157,5 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libstdc++-v3/include/Makefile.in gcc-10.2.
 -	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 -g ${pch3_source} -o $@
 +	$(CXX) $(PCHFLAGS) $(AM_CPPFLAGS) -O2 ${pch3_source} -o $@
  
- # The real deal.
- install-data-local: install-headers
+ # AutoGen <bits/version.h>.
+ .PHONY: update-version
