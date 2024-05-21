@@ -101,7 +101,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	13
-%define		minor_ver	2.0
+%define		minor_ver	3.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -109,12 +109,12 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	e0e48554cc6e4f261d55ddee9ab69075
+# Source0-md5:	726726a73eaaacad4259fe5d7e978020
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
@@ -130,7 +130,6 @@ Patch4:		%{name}-ada-x32.patch
 
 Patch10:	%{name}-moresparcs.patch
 Patch11:	%{name}-install-libffi.patch
-Patch12:	%{name}-bug-111413.patch
 URL:		http://gcc.gnu.org/
 BuildRequires:	autoconf >= 2.64
 %{?with_tests:BuildRequires:	autogen >= 5.5.4}
@@ -2763,7 +2762,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 
 %prep
 %setup -q
-%patch100 -p1
+#%patch100 -p1
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -2774,7 +2773,6 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 %if %{with gcc_libffi}
 %patch11 -p0
 %endif
-%patch12 -p1
 
 %{__mv} ChangeLog ChangeLog.general
 
