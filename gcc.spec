@@ -8,6 +8,7 @@
 # - languages:
 %bcond_without	ada		# ADA language support
 %bcond_without	cxx		# C++ language support
+%bcond_without	d		# D language support
 %bcond_without	fortran		# Fortran language support
 %bcond_without	go		# Go support
 %bcond_without	objc		# Objective-C language support
@@ -142,6 +143,10 @@ BuildRequires:	flex >= 2.5.4
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
 BuildRequires:	libgnat-static
+%endif
+%if %{with d}
+BuildRequires:	gcc-d >= 6:11
+BuildRequires:	libgphobos-static
 %endif
 BuildRequires:	gdb
 BuildRequires:	gettext-tools >= 0.14.5
@@ -959,6 +964,125 @@ API and internal documentation for C++ standard library.
 
 %description -n libstdc++-apidocs -l pl.UTF-8
 Dokumentacja API i wewnętrzna biblioteki standardowej C++.
+
+%package d
+Summary:	D language support for GCC
+Summary(pl.UTF-8):	Obsługa języka D dla GCC
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgphobos = %{epoch}:%{version}-%{release}
+
+%description d
+This package adds support for compiling D programs with the GNU
+compiler.
+
+%description d -l pl.UTF-8
+Ten pakiet dodaje obsługę języka D do kompilatora GCC.
+
+%package d-multilib-32
+Summary:	D language 32-bit binaries support for GCC
+Summary(pl.UTF-8):	Obsługa binariów 32-bitowych w języku D dla GCC
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgphobos-multilib-32 = %{epoch}:%{version}-%{release}
+
+%description d-multilib-32
+This package adds support for compiling 32-bit D programs with the GNU
+compiler.
+
+%description d-multilib-32 -l pl.UTF-8
+Ten pakiet dodaje obsługę 32-bitowych programów w języku D do
+kompilatora GCC.
+
+%package d-multilib-%{multilib2}
+Summary:	D language %{m2_desc} binaries support for GCC
+Summary(pl.UTF-8):	Obsługa binariów %{m2_desc} w języku D dla GCC
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgphobos-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description d-multilib-%{multilib2}
+This package adds support for compiling D programs to %{m2_desc}
+binaries with the GNU compiler.
+
+%description d-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę binariów %{m2_desc} w języku D do
+kompilatora GCC.
+
+%package -n libgphobos
+Summary:	D language runtime libraries
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka D
+License:	Boost v1.0
+Group:		Libraries
+
+%description -n libgphobos
+D language runtime libraries.
+
+%description -n libgphobos -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka D.
+
+%package -n libgphobos-static
+Summary:	Static D language runtime libraries
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka D
+License:	Boost v1.0
+Group:		Development/Libraries
+Requires:	%{name}-d = %{epoch}:%{version}-%{release}
+
+%description -n libgphobos-static
+Static D language runtime libraries.
+
+%description -n libgphobos-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka D.
+
+%package -n libgphobos-multilib-32
+Summary:	D language runtime libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka D - wersja 32-bitowa
+License:	Boost v1.0
+Group:		Libraries
+
+%description -n libgphobos-multilib-32
+D language runtime libraries - 32-bit version.
+
+%description -n libgphobos-multilib-32 -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka D - wersja 32-bitowa.
+
+%package -n libgphobos-multilib-32-static
+Summary:	Static D language runtime libraries - 32-bit version
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka D - wersja 32-bitowa
+Group:		Development/Libraries
+License:	Boost v1.0
+Requires:	%{name}-d-multilib-32 = %{epoch}:%{version}-%{release}
+
+%description -n libgphobos-multilib-32-static
+Static D language runtime libraries - 32-bit version.
+
+%description -n libgphobos-multilib-32-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka D - wersja 32-bitowa.
+
+%package -n libgphobos-multilib-%{multilib2}
+Summary:	D language runtime libraries - %{m2_desc} version
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka D - wersja %{m2_desc}
+License:	Boost v1.0
+Group:		Libraries
+
+%description -n libgphobos-multilib-%{multilib2}
+D language runtime libraries - %{m2_desc} version.
+
+%description -n libgphobos-multilib-%{multilib2} -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka D - wersja 32-bitowa.
+
+%package -n libgphobos-multilib-%{multilib2}-static
+Summary:	Static D language runtime libraries - %{m2_desc} version
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka D - wersja %{m2_desc}
+Group:		Development/Libraries
+License:	Boost v1.0
+Requires:	%{name}-d-multilib-%{multilib2} = %{epoch}:%{version}-%{release}
+
+%description -n libgphobos-multilib-%{multilib2}-static
+Static D language runtime libraries - %{m2_desc} version.
+
+%description -n libgphobos-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka D - wersja %{m2_desc}.
 
 %package fortran
 Summary:	Fortran 95 language support for GCC
@@ -2628,7 +2752,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
 	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
@@ -3003,6 +3127,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	ada -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	d -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	d -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	fortran -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
@@ -3057,6 +3187,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-32
 %post	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libgphobos
+%postun	-p /sbin/ldconfig -n libgphobos
 %post	-p /sbin/ldconfig -n libgfortran
 %postun	-p /sbin/ldconfig -n libgfortran
 %post	-p /sbin/ldconfig -n libgfortran-multilib-32
@@ -3702,6 +3834,83 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-apidocs
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html/*
+%endif
+%endif
+
+%if %{with d}
+%files d
+%defattr(644,root,root,755)
+%doc gcc/d/{ChangeLog,README.gcc}
+%attr(755,root,root) %{_bindir}/gdc
+%attr(755,root,root) %{_bindir}/*-gdc
+%attr(755,root,root) %{gcclibdir}/d21
+%attr(755,root,root) %{_libdir}/libgdruntime.so
+%attr(755,root,root) %{_libdir}/libgphobos.so
+%{_libdir}/libgdruntime.la
+%{_libdir}/libgphobos.la
+%{_libdir}/libgphobos.spec
+%{gcclibdir}/include/d
+%{_mandir}/man1/gdc.1*
+%{_infodir}/gdc.info*
+
+%if %{with multilib}
+%files d-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgdruntime.so
+%attr(755,root,root) %{_libdir32}/libgphobos.so
+%{_libdir32}/libgdruntime.la
+%{_libdir32}/libgphobos.la
+%{_libdir32}/libgphobos.spec
+%endif
+
+%if %{with multilib2}
+%files d-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgdruntime.so
+%attr(755,root,root) %{_libdirm2}/libgphobos.so
+%{_libdirm2}/libgdruntime.la
+%{_libdirm2}/libgphobos.la
+%{_libdirm2}/libgphobos.spec
+%endif
+
+%files -n libgphobos
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgdruntime.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgdruntime.so.3
+%attr(755,root,root) %{_libdir}/libgphobos.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgphobos.so.3
+
+%files -n libgphobos-static
+%defattr(644,root,root,755)
+%{_libdir}/libgdruntime.a
+%{_libdir}/libgphobos.a
+
+%if %{with multilib}
+%files -n libgphobos-multilib-32
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir32}/libgdruntime.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libgdruntime.so.3
+%attr(755,root,root) %{_libdir32}/libgphobos.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir32}/libgphobos.so.3
+
+%files -n libgphobos-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libgdruntime.a
+%{_libdir32}/libgphobos.a
+%endif
+
+%if %{with multilib2}
+%files -n libgphobos-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdirm2}/libgdruntime.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libgdruntime.so.3
+%attr(755,root,root) %{_libdirm2}/libgphobos.so.*.*.*
+%attr(755,root,root) %ghost %{_libdirm2}/libgphobos.so.3
+
+%files -n libgphobos-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libgdruntime.a
+%{_libdirm2}/libgphobos.a
 %endif
 %endif
 
