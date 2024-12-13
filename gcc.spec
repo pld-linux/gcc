@@ -8,6 +8,7 @@
 # - languages:
 %bcond_without	ada		# ADA language support
 %bcond_without	cxx		# C++ language support
+%bcond_without	d		# D language support
 %bcond_without	fortran		# Fortran language support
 %bcond_without	go		# Go support
 %bcond_without	objc		# Objective-C language support
@@ -106,7 +107,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -958,6 +959,43 @@ API and internal documentation for C++ standard library.
 
 %description -n libstdc++-apidocs -l pl.UTF-8
 Dokumentacja API i wewnętrzna biblioteki standardowej C++.
+
+%package d
+Summary:	D language support for GCC
+Summary(pl.UTF-8):	Obsługa języka D dla GCC
+Group:		Development/Languages
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	libgphobos = %{epoch}:%{version}-%{release}
+
+%description d
+This package adds support for compiling D programs with the GNU
+compiler.
+
+%description d -l pl.UTF-8
+Ten pakiet dodaje obsługę języka D do kompilatora GCC.
+
+%package -n libgphobos
+Summary:	D language runtime libraries
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka D
+Group:		Libraries
+
+%description -n libgphobos
+D language runtime libraries.
+
+%description -n libgphobos -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka D.
+
+%package -n libgphobos-static
+Summary:	Static D language runtime libraries
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka D
+Group:		Development/Libraries
+Requires:	%{name}-d = %{epoch}:%{version}-%{release}
+
+%description -n libgphobos-static
+Static D language runtime libraries.
+
+%description -n libgphobos-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka D.
 
 %package fortran
 Summary:	Fortran 95 language support for GCC
@@ -2627,7 +2665,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
 	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
 	--enable-libitm \
 	--enable-linker-build-id \
@@ -3002,6 +3040,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	ada -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	d -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	d -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	fortran -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
@@ -3056,6 +3100,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-32
 %post	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libgphobos
+%postun	-p /sbin/ldconfig -n libgphobos
 %post	-p /sbin/ldconfig -n libgfortran
 %postun	-p /sbin/ldconfig -n libgfortran
 %post	-p /sbin/ldconfig -n libgfortran-multilib-32
@@ -3700,6 +3746,35 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html/*
 %endif
+%endif
+
+%if %{with d}
+%files d
+%defattr(644,root,root,755)
+%doc gcc/d/{ChangeLog,README.gcc}
+%attr(755,root,root) %{_bindir}/gdc
+%attr(755,root,root) %{_bindir}/*-gdc
+%attr(755,root,root) %{gcclibdir}/d21
+%attr(755,root,root) %{_libdir}/libgdruntime.so
+%attr(755,root,root) %{_libdir}/libgphobos.so
+%{_libdir}/libgdruntime.la
+%{_libdir}/libgphobos.la
+%{_libdir}/libgphobos.spec
+%{gcclibdir}/include/d
+%{_mandir}/man1/gdc.1*
+%{_infodir}/gdc.info*
+
+%files -n libgphobos
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libgdruntime.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgdruntime.so.2
+%attr(755,root,root) %{_libdir}/libgphobos.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgphobos.so.2
+
+%files -n libgphobos-static
+%defattr(644,root,root,755)
+%{_libdir}/libgdruntime.a
+%{_libdir}/libgphobos.a
 %endif
 
 %if %{with fortran}
