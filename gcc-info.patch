@@ -235,3 +235,17 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libquadmath/libquadmath.texi gcc-10.2.0/li
  @end direntry
  
  This manual documents the GCC Quad-Precision Math Library API.
+--- gcc-11.5.0/gcc/d/gdc.texi.orig	2024-07-19 07:52:43.845493268 +0200
++++ gcc-11.5.0/gcc/d/gdc.texi	2024-12-12 22:08:23.782172397 +0100
+@@ -34,9 +34,9 @@ man page gfdl(7).
+ 
+ @ifinfo
+ @format
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* gdc: (gdc).               A GCC-based compiler for the D language
++* gdc: (gdc).				A GCC-based compiler for the D language
+ @end direntry
+ @end format
+ 
