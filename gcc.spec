@@ -2762,16 +2762,16 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 
 %prep
 %setup -q
-%patch100 -p1
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%patch -P100 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
 
-%patch10 -p1
+%patch -P10 -p1
 %if %{with gcc_libffi}
-%patch11 -p0
+%patch -P11 -p0
 %endif
 
 %{__mv} ChangeLog ChangeLog.general
