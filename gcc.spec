@@ -2611,7 +2611,7 @@ TEXCONFIG=false \
 	--infodir=%{_infodir} \
 	--mandir=%{_mandir} \
 	--x-libraries=%{_libdir} \
-	--%{?with_bootstrap:en}%{!?with_bootstrap:dis}able-bootstrap \
+	--enable-bootstrap%{!?with_bootstrap:=no} \
 	--disable-build-with-cxx \
 	--disable-build-poststage1-with-cxx \
 	--enable-c99 \
@@ -2626,7 +2626,7 @@ TEXCONFIG=false \
 	--enable-initfini-array \
 	--disable-isl-version-check \
 	--enable-languages="c%{?with_cxx:,c++}%{?with_fortran:,fortran}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
-	--%{?with_gomp:en}%{!?with_gomp:dis}able-libgomp \
+	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
 	--enable-linux-futex \
