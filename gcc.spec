@@ -757,7 +757,7 @@ License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Libraries
 # >= instead of = to allow keeping older libstdc++ (with different soname)
 Requires:	libgcc >= %{epoch}:%{version}-%{release}
-Obsoletes:	libg++
+Obsoletes:	libg++ < 2.95
 Obsoletes:	libstdc++3 < 5:3.1
 Obsoletes:	libstdc++4 < 5:3.2
 
@@ -807,7 +807,7 @@ Group:		Development/Libraries
 Requires:	%{name}-c++ = %{epoch}:%{version}-%{release}
 Requires:	glibc-devel
 Requires:	libstdc++ = %{epoch}:%{version}-%{release}
-Obsoletes:	libg++-devel
+Obsoletes:	libg++-devel < 2.95
 Obsoletes:	libstdc++3-devel < 5:3.1
 Obsoletes:	libstdc++4-devel < 5:3.2
 
