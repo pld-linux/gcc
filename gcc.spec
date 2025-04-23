@@ -107,7 +107,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -119,7 +119,7 @@ Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	29eb0839c3636f15155a6847e7fe984c
+# Patch100-md5:	eeb8aab0b89e52de3c6bca8b0fb30356
 Patch0:		%{name}-info.patch
 Patch1:		all-library-paths.patch
 Patch2:		%{name}-nodebug.patch
