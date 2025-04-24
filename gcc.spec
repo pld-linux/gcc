@@ -6,7 +6,7 @@
 # - languages:
 %bcond_without	ada		# ADA language support
 %bcond_without	cxx		# C++ language support
-%bcond_without	d		# D language support
+%bcond_with	d		# D language support
 %bcond_without	fortran		# Fortran language support
 %bcond_without	go		# Go language support
 %bcond_without	modula2		# Modula2 language support
