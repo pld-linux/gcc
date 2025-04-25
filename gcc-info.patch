@@ -249,3 +249,17 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libquadmath/libquadmath.texi gcc-10.2.0/li
  @end direntry
  @end format
  
+--- gcc-14.2.0/gcc/doc/gm2.texi.orig	2025-04-23 21:49:33.543601226 +0200
++++ gcc-14.2.0/gcc/doc/gm2.texi	2025-04-25 17:09:35.278720741 +0200
+@@ -37,9 +37,9 @@ man page gfdl(7).
+ 
+ @ifinfo
+ @format
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* gm2: (gm2).               A GCC-based compiler for the Modula-2 language
++* gm2: (gm2).				A GCC-based compiler for the Modula-2 language
+ @end direntry
+ @end format
+ 

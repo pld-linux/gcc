@@ -3327,6 +3327,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	go -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	m2 -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	m2 -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	-n libquadmath-devel -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
@@ -4323,6 +4329,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libm2pim.la
 %{gcclibdir}/m2
 %{_mandir}/man1/gm2.1*
+%{_infodir}/m2.info*
 
 %if %{with multilib}
 %files m2-multilib-32
