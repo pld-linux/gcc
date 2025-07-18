@@ -99,7 +99,7 @@
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
 %define		major_ver	12
-%define		minor_ver	4.0
+%define		minor_ver	5.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -112,14 +112,14 @@ Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	fd7779aee878db67456575922281fa71
+# Source0-md5:	605d4923d9daabcd8c8c22d844af57e5
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
-Patch100:	%{name}-branch.diff
-# Patch100-md5:	57034537c40d4d70828540f9c0bc2cf3
+#Patch100:	%{name}-branch.diff
+## Patch100-md5:	57034537c40d4d70828540f9c0bc2cf3
 Patch0:		%{name}-info.patch
 Patch1:		all-library-paths.patch
 Patch2:		%{name}-nodebug.patch
@@ -2702,7 +2702,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 
 %prep
 %setup -q
-%patch -P100 -p1
+#patch -P100 -p1
 %patch -P0 -p1
 %patch -P1 -p1
 %patch -P2 -p1
