@@ -98,8 +98,8 @@
 
 # Stable is: any major_ver and minor_ver >= 1.0
 # For PLD we usually use gcc when minor_ver >= 2.0 (first bugfix release or later)
-%define		major_ver	14
-%define		minor_ver	3.0
+%define		major_ver	15
+%define		minor_ver	2.0
 
 Summary:	GNU Compiler Collection: the C compiler and shared files
 Summary(es.UTF-8):	Colección de compiladores GNU: el compilador C y ficheros compartidos
@@ -107,21 +107,21 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	1
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
 Source0:	https://gcc.gnu.org/pub/gcc/releases/%{name}-%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	2e2f25966bbb5321bf6a3beafcd241b5
+# Source0-md5:	b861b092bf1af683c46a8aa2e689a6fd
 Source1:	%{name}-optimize-la.pl
 # check libffi version with libffi/configure.ac
 Source3:	libffi.pc.in
 Source4:	branch.sh
 # use branch.sh to update gcc-branch.diff
 Patch100:	%{name}-branch.diff
-# Patch100-md5:	a7fcda7d4f061df745b86c0948bb849b
+# Patch100-md5:	b163f7c38d26c7a0c904b712b08d202d
 Patch0:		%{name}-info.patch
-Patch1:		all-library-paths.patch
+
 Patch2:		%{name}-nodebug.patch
 Patch3:		%{name}-ada-link.patch
 Patch4:		%{name}-ada-x32.patch
@@ -2882,7 +2882,7 @@ więc wtyczki muszą być przebudowywane przy każdej aktualizacji GCC.
 %setup -q
 %patch -P100 -p1
 %patch -P0 -p1
-%patch -P1 -p1
+
 %patch -P2 -p1
 %patch -P3 -p1
 %patch -P4 -p1
@@ -3529,14 +3529,28 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/include/adxintrin.h
 %{gcclibdir}/include/ammintrin.h
+%{gcclibdir}/include/amxavx512intrin.h
 %{gcclibdir}/include/amxbf16intrin.h
 %{gcclibdir}/include/amxcomplexintrin.h
 %{gcclibdir}/include/amxfp16intrin.h
+%{gcclibdir}/include/amxfp8intrin.h
 %{gcclibdir}/include/amxint8intrin.h
+%{gcclibdir}/include/amxmovrsintrin.h
+%{gcclibdir}/include/amxtf32intrin.h
 %{gcclibdir}/include/amxtileintrin.h
+%{gcclibdir}/include/amxtransposeintrin.h
+%{gcclibdir}/include/avx10_2-512bf16intrin.h
+%{gcclibdir}/include/avx10_2-512convertintrin.h
+%{gcclibdir}/include/avx10_2-512mediaintrin.h
+%{gcclibdir}/include/avx10_2-512minmaxintrin.h
+%{gcclibdir}/include/avx10_2-512satcvtintrin.h
+%{gcclibdir}/include/avx10_2bf16intrin.h
+%{gcclibdir}/include/avx10_2convertintrin.h
+%{gcclibdir}/include/avx10_2copyintrin.h
+%{gcclibdir}/include/avx10_2mediaintrin.h
+%{gcclibdir}/include/avx10_2minmaxintrin.h
+%{gcclibdir}/include/avx10_2satcvtintrin.h
 %{gcclibdir}/include/avx2intrin.h
-%{gcclibdir}/include/avx5124fmapsintrin.h
-%{gcclibdir}/include/avx5124vnniwintrin.h
 %{gcclibdir}/include/avx512bf16intrin.h
 %{gcclibdir}/include/avx512bf16vlintrin.h
 %{gcclibdir}/include/avx512bitalgintrin.h
@@ -3544,13 +3558,11 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/avx512bwintrin.h
 %{gcclibdir}/include/avx512cdintrin.h
 %{gcclibdir}/include/avx512dqintrin.h
-%{gcclibdir}/include/avx512erintrin.h
 %{gcclibdir}/include/avx512fintrin.h
 %{gcclibdir}/include/avx512fp16intrin.h
 %{gcclibdir}/include/avx512fp16vlintrin.h
 %{gcclibdir}/include/avx512ifmaintrin.h
 %{gcclibdir}/include/avx512ifmavlintrin.h
-%{gcclibdir}/include/avx512pfintrin.h
 %{gcclibdir}/include/avx512vbmi2intrin.h
 %{gcclibdir}/include/avx512vbmi2vlintrin.h
 %{gcclibdir}/include/avx512vbmiintrin.h
@@ -3578,6 +3590,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/cldemoteintrin.h
 %{gcclibdir}/include/clflushoptintrin.h
 %{gcclibdir}/include/clwbintrin.h
+%{gcclibdir}/include/movrsintrin.h
 %{gcclibdir}/include/clzerointrin.h
 %{gcclibdir}/include/cmpccxaddintrin.h
 %{gcclibdir}/include/cpuid.h
@@ -3974,6 +3987,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libstdc++.so
+%{_libdir}/libstdc++.modules.json
 %{_libdir}/libstdc++.la
 %{_libdir}/libstdc++exp.a
 %{_libdir}/libstdc++exp.la
@@ -4093,9 +4107,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgphobos
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgdruntime.so.5
+%attr(755,root,root) %ghost %{_libdir}/libgdruntime.so.6
 %attr(755,root,root) %{_libdir}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgphobos.so.5
+%attr(755,root,root) %ghost %{_libdir}/libgphobos.so.6
 
 %files -n libgphobos-static
 %defattr(644,root,root,755)
@@ -4106,9 +4120,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgphobos-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgdruntime.so.5
+%attr(755,root,root) %ghost %{_libdir32}/libgdruntime.so.6
 %attr(755,root,root) %{_libdir32}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgphobos.so.5
+%attr(755,root,root) %ghost %{_libdir32}/libgphobos.so.6
 
 %files -n libgphobos-multilib-32-static
 %defattr(644,root,root,755)
@@ -4120,9 +4134,9 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgphobos-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgdruntime.so.5
+%attr(755,root,root) %ghost %{_libdirm2}/libgdruntime.so.6
 %attr(755,root,root) %{_libdirm2}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgphobos.so.5
+%attr(755,root,root) %ghost %{_libdirm2}/libgphobos.so.6
 
 %files -n libgphobos-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4366,15 +4380,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgm2
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2cor.so.19
+%attr(755,root,root) %ghost %{_libdir}/libm2cor.so.20
 %attr(755,root,root) %{_libdir}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2iso.so.19
+%attr(755,root,root) %ghost %{_libdir}/libm2iso.so.20
 %attr(755,root,root) %{_libdir}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2log.so.19
+%attr(755,root,root) %ghost %{_libdir}/libm2log.so.20
 %attr(755,root,root) %{_libdir}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2min.so.19
+%attr(755,root,root) %ghost %{_libdir}/libm2min.so.20
 %attr(755,root,root) %{_libdir}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2pim.so.19
+%attr(755,root,root) %ghost %{_libdir}/libm2pim.so.20
 
 %files -n libgm2-static
 %defattr(644,root,root,755)
@@ -4388,15 +4402,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgm2-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2cor.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libm2cor.so.20
 %attr(755,root,root) %{_libdir32}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2iso.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libm2iso.so.20
 %attr(755,root,root) %{_libdir32}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2log.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libm2log.so.20
 %attr(755,root,root) %{_libdir32}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2min.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libm2min.so.20
 %attr(755,root,root) %{_libdir32}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2pim.so.19
+%attr(755,root,root) %ghost %{_libdir32}/libm2pim.so.20
 
 %files -n libgm2-multilib-32-static
 %defattr(644,root,root,755)
@@ -4411,15 +4425,15 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgm2-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2cor.so.19
+%attr(755,root,root) %ghost %{_libdirm2}/libm2cor.so.20
 %attr(755,root,root) %{_libdirm2}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2iso.so.19
+%attr(755,root,root) %ghost %{_libdirm2}/libm2iso.so.20
 %attr(755,root,root) %{_libdirm2}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2log.so.19
+%attr(755,root,root) %ghost %{_libdirm2}/libm2log.so.20
 %attr(755,root,root) %{_libdirm2}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2min.so.19
+%attr(755,root,root) %ghost %{_libdirm2}/libm2min.so.20
 %attr(755,root,root) %{_libdirm2}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2pim.so.19
+%attr(755,root,root) %ghost %{_libdirm2}/libm2pim.so.20
 
 %files -n libgm2-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4531,7 +4545,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
 %attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.23
+%attr(755,root,root) %ghost %{_libdir}/libgo.so.24
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
@@ -4548,7 +4562,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.23
+%attr(755,root,root) %ghost %{_libdir32}/libgo.so.24
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4566,7 +4580,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.23
+%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.24
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
