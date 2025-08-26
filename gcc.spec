@@ -3669,6 +3669,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/include/arm_fp16.h
 %{gcclibdir}/include/arm_neon.h
 %{gcclibdir}/include/arm_neon_sve_bridge.h
+%{gcclibdir}/include/arm_private_fp8.h
+%{gcclibdir}/include/arm_private_neon_types.h
 %{gcclibdir}/include/arm_sme.h
 %{gcclibdir}/include/arm_sve.h
 %endif
