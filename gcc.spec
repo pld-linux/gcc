@@ -107,7 +107,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3072,6 +3072,15 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-g++ \
 %endif
 %endif
 
+# script(s) always installed; see below for builds with python; if no python, just don't package
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
+%if %{with multilib}
+%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
+%if %{with multilib2}
+%{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.*-gdb.py
+%endif
+%endif
+
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
 echo ".so man1/gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
@@ -3088,6 +3097,10 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libgomp.so.*.*.*)
 %{__mv} $RPM_BUILD_ROOT%{_libdir}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir}
 ln -sf %{_slibdir}/$libgomp $RPM_BUILD_ROOT%{_libdir}/libgomp.so
 
+libstdcxx=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libstdc++.so.*.*.*)
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.* $RPM_BUILD_ROOT%{_slibdir}
+ln -sf %{_slibdir}/$libstdcxx $RPM_BUILD_ROOT%{_libdir}/libstdc++.so
+
 %if %{with multilib}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libssp.so.*.*.*)
 %{__mv} $RPM_BUILD_ROOT%{_libdir32}/libssp.so.* $RPM_BUILD_ROOT%{_slibdir32}
@@ -3101,6 +3114,10 @@ libgomp=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libgomp.so.*.*.*)
 %{__mv} $RPM_BUILD_ROOT%{_libdir32}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdir32}
 ln -sf %{_slibdir32}/$libgomp $RPM_BUILD_ROOT%{_libdir32}/libgomp.so
 
+libstdcxx=$(cd $RPM_BUILD_ROOT%{_libdir32}; echo libstdc++.so.*.*.*)
+%{__mv} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.* $RPM_BUILD_ROOT%{_slibdir32}
+ln -sf %{_slibdir32}/$libstdcxx $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so
+
 %if %{with multilib2}
 libssp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libssp.so.*.*.*)
 %{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libssp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
@@ -3113,6 +3130,10 @@ ln -sf %{_slibdirm2}/$libitm $RPM_BUILD_ROOT%{_libdirm2}/libitm.so
 libgomp=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libgomp.so.*.*.*)
 %{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so.* $RPM_BUILD_ROOT%{_slibdirm2}
 ln -sf %{_slibdirm2}/$libgomp $RPM_BUILD_ROOT%{_libdirm2}/libgomp.so
+
+libstdcxx=$(cd $RPM_BUILD_ROOT%{_libdirm2}; echo libstdc++.so.*.*.*)
+%{__mv} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.* $RPM_BUILD_ROOT%{_slibdirm2}
+ln -sf %{_slibdirm2}/$libstdcxx $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so
 %endif
 %endif
 
@@ -3258,7 +3279,7 @@ for LIBDIR in %{_libdir} %{?with_multilib:%{_libdir32}} %{?with_multilib2:%{_lib
 	sed -e 's,@pythondir@,%{_datadir}/gdb,' \
 	  -e "s,@toolexeclibdir@,$LIBDIR," \
 	  < libstdc++-v3/python/hook.in	\
-	  > $LIBPATH/$(basename $RPM_BUILD_ROOT%{_prefix}/%{_lib}/libstdc++.so.*.*.*)-gdb.py
+	  > $LIBPATH/$(basename $RPM_BUILD_ROOT/%{_lib}/libstdc++.so.*.*.*)-gdb.py
 done
 install -d $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx $RPM_BUILD_ROOT%{py3_sitescriptdir}
@@ -3266,14 +3287,6 @@ install -d $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}
 %else
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/gcc-%{version}/python/libstdcxx
-%endif
-# script(s) always installed; see above for builds with python; if no python, just don't package
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libstdc++.so.*-gdb.py
-%if %{with multilib}
-%{__rm} $RPM_BUILD_ROOT%{_libdir32}/libstdc++.so.*-gdb.py
-%if %{with multilib2}
-%{__rm} $RPM_BUILD_ROOT%{_libdirm2}/libstdc++.so.*-gdb.py
-%endif
 %endif
 
 %find_lang gcc
@@ -3983,8 +3996,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
-%attr(755,root,root) %{_libdir}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libstdc++.so.%{cxx_sover}
+%attr(755,root,root) %{_slibdir}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
@@ -4008,8 +4021,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libstdc++-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libstdc++.so.%{cxx_sover}
+%attr(755,root,root) %{_slibdir32}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdir32}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-multilib-32-devel
 %defattr(644,root,root,755)
@@ -4028,8 +4041,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libstdc++-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libstdc++.so.%{cxx_sover}
+%attr(755,root,root) %{_slibdirm2}/libstdc++.so.*.*.*
+%attr(755,root,root) %ghost %{_slibdirm2}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
