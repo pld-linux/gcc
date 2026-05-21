@@ -3511,7 +3511,9 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/libgcov.a
 %{gcclibdir}/specs
 %{gcclibdir}/crt*.o
-%{?with_vtv:%{gcclibdir}/vtv_*.o}
+%if %{with vtv}
+%{gcclibdir}/vtv_*.o
+%endif
 %attr(755,root,root) %{gcclibdir}/cc1
 %attr(755,root,root) %{gcclibdir}/collect2
 %attr(755,root,root) %{gcclibdir}/lto-wrapper
@@ -3726,22 +3728,26 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch sparc sparcv9 sparc64
 %{gcclibdir}/include/visintrin.h
 %endif
-%{?with_vtv:%{gcclibdir}/include/vtv_*.h}
+%if %{with vtv}
+%{gcclibdir}/include/vtv_*.h
+%endif
 
 %if %{with multilib}
 %files multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/libgcc_s.so
+%{_slibdir32}/libgcc_s.so
 %dir %{gcclibdir}/32
 %{gcclibdir}/32/crt*.o
-%{?with_vtv:%{gcclibdir}/32/vtv_*.o}
+%if %{with vtv}
+%{gcclibdir}/32/vtv_*.o
+%endif
 %{gcclibdir}/32/libgcc.a
 %{gcclibdir}/32/libgcc_eh.a
 %{gcclibdir}/32/libgcov.a
 %{_libdir32}/libitm.spec
 %{_libdir32}/libsanitizer.spec
-%attr(755,root,root) %{_libdir32}/libitm.so
-%attr(755,root,root) %{_libdir32}/libssp.so
+%{_libdir32}/libitm.so
+%{_libdir32}/libssp.so
 %{_libdir32}/libitm.la
 %{_libdir32}/libitm.a
 %{_libdir32}/libssp.la
@@ -3753,17 +3759,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdirm2}/libgcc_s.so
+%{_slibdirm2}/libgcc_s.so
 %dir %{gcclibdir}/%{multilib2}
 %{gcclibdir}/%{multilib2}/crt*.o
-%{?with_vtv:%{gcclibdir}/%{multilib2}/vtv_*.o}
+%if %{with vtv}
+%{gcclibdir}/%{multilib2}/vtv_*.o
+%endif
 %{gcclibdir}/%{multilib2}/libgcc.a
 %{gcclibdir}/%{multilib2}/libgcc_eh.a
 %{gcclibdir}/%{multilib2}/libgcov.a
 %{_libdirm2}/libitm.spec
 %{_libdirm2}/libsanitizer.spec
-%attr(755,root,root) %{_libdirm2}/libitm.so
-%attr(755,root,root) %{_libdirm2}/libssp.so
+%{_libdirm2}/libitm.so
+%{_libdirm2}/libssp.so
 %{_libdirm2}/libitm.la
 %{_libdirm2}/libitm.a
 %{_libdirm2}/libssp.la
@@ -3775,44 +3783,46 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgcc
 %defattr(644,root,root,755)
 %doc COPYING.RUNTIME libgcc/ChangeLog
-%attr(755,root,root) %{_slibdir}/libgcc_s.so.1
-%attr(755,root,root) %{_slibdir}/libitm.so.*.*.*
-%attr(755,root,root) %{_slibdir}/libssp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir}/libitm.so.1
-%attr(755,root,root) %ghost %{_slibdir}/libssp.so.0
+%{_slibdir}/libgcc_s.so.1
+%{_slibdir}/libitm.so.*.*.*
+%{_slibdir}/libssp.so.*.*.*
+%ghost %{_slibdir}/libitm.so.1
+%ghost %{_slibdir}/libssp.so.0
 
 %if %{with multilib}
 %files -n libgcc-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/libgcc_s.so.1
-%attr(755,root,root) %{_slibdir32}/libitm.so.*.*.*
-%attr(755,root,root) %{_slibdir32}/libssp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir32}/libssp.so.0
-%attr(755,root,root) %ghost %{_slibdir32}/libitm.so.1
+%{_slibdir32}/libgcc_s.so.1
+%{_slibdir32}/libitm.so.*.*.*
+%{_slibdir32}/libssp.so.*.*.*
+%ghost %{_slibdir32}/libssp.so.0
+%ghost %{_slibdir32}/libitm.so.1
 %endif
 
 %if %{with multilib2}
 %files -n libgcc-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdirm2}/libgcc_s.so.1
-%attr(755,root,root) %{_slibdirm2}/libitm.so.*.*.*
-%attr(755,root,root) %{_slibdirm2}/libssp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdirm2}/libssp.so.0
-%attr(755,root,root) %ghost %{_slibdirm2}/libitm.so.1
+%{_slibdirm2}/libgcc_s.so.1
+%{_slibdirm2}/libitm.so.*.*.*
+%{_slibdirm2}/libssp.so.*.*.*
+%ghost %{_slibdirm2}/libssp.so.0
+%ghost %{_slibdirm2}/libitm.so.1
 %endif
 
 %if %{with gomp}
 %files -n libgomp
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir}/libgomp.so.1
+%{_slibdir}/libgomp.so.*.*.*
+%ghost %{_slibdir}/libgomp.so.1
 
 %files -n libgomp-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgomp.so
+%{_libdir}/libgomp.so
 %{_libdir}/libgomp.la
 %{_libdir}/libgomp.spec
-%{?with_fortran:%{gcclibdir}/finclude}
+%if %{with fortran}
+%{gcclibdir}/finclude
+%endif
 %{gcclibdir}/include/acc_prof.h
 %{gcclibdir}/include/omp.h
 %{gcclibdir}/include/openacc.h
@@ -3825,15 +3835,17 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgomp-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir32}/libgomp.so.1
+%{_slibdir32}/libgomp.so.*.*.*
+%ghost %{_slibdir32}/libgomp.so.1
 
 %files -n libgomp-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgomp.so
+%{_libdir32}/libgomp.so
 %{_libdir32}/libgomp.la
 %{_libdir32}/libgomp.spec
-%{?with_fortran:%{gcclibdir}/32/finclude}
+%if %{with fortran}
+%{gcclibdir}/32/finclude
+%endif
 
 %files -n libgomp-multilib-32-static
 %defattr(644,root,root,755)
@@ -3843,15 +3855,17 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgomp-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdirm2}/libgomp.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdirm2}/libgomp.so.1
+%{_slibdirm2}/libgomp.so.*.*.*
+%ghost %{_slibdirm2}/libgomp.so.1
 
 %files -n libgomp-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgomp.so
+%{_libdirm2}/libgomp.so
 %{_libdirm2}/libgomp.la
 %{_libdirm2}/libgomp.spec
-%{?with_fortran:%{gcclibdir}/%{multilib2}/finclude}
+%if %{with fortran}
+%{gcclibdir}/%{multilib2}/finclude
+%endif
 
 %files -n libgomp-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -3864,10 +3878,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/ada/ChangeLog
 %attr(755,root,root) %{_bindir}/gnat*
-%attr(755,root,root) %{_libdir}/libgnarl-*.so
-%attr(755,root,root) %{_libdir}/libgnarl.so
-%attr(755,root,root) %{_libdir}/libgnat-*.so
-%attr(755,root,root) %{_libdir}/libgnat.so
+%{_libdir}/libgnarl-*.so
+%{_libdir}/libgnarl.so
+%{_libdir}/libgnat-*.so
+%{_libdir}/libgnat.so
 %attr(755,root,root) %{gcclibdir}/gnat1
 %{gcclibdir}/ada_target_properties
 %{gcclibdir}/adainclude
@@ -3885,10 +3899,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files ada-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgnarl-*.so
-%attr(755,root,root) %{_libdir32}/libgnarl.so
-%attr(755,root,root) %{_libdir32}/libgnat-*.so
-%attr(755,root,root) %{_libdir32}/libgnat.so
+%{_libdir32}/libgnarl-*.so
+%{_libdir32}/libgnarl.so
+%{_libdir32}/libgnat-*.so
+%{_libdir32}/libgnat.so
 %{gcclibdir}/32/ada_target_properties
 %{gcclibdir}/32/adainclude
 %dir %{gcclibdir}/32/adalib
@@ -3901,10 +3915,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files ada-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgnarl-*.so
-%attr(755,root,root) %{_libdirm2}/libgnarl.so
-%attr(755,root,root) %{_libdirm2}/libgnat-*.so
-%attr(755,root,root) %{_libdirm2}/libgnat.so
+%{_libdirm2}/libgnarl-*.so
+%{_libdirm2}/libgnarl.so
+%{_libdirm2}/libgnat-*.so
+%{_libdirm2}/libgnat.so
 %{gcclibdir}/%{multilib2}/ada_target_properties
 %{gcclibdir}/%{multilib2}/adainclude
 %dir %{gcclibdir}/%{multilib2}/adalib
@@ -3916,10 +3930,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgnat
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgnarl-*.so.1
-%attr(755,root,root) %{_libdir}/libgnarl.so.1
-%attr(755,root,root) %{_libdir}/libgnat-*.so.1
-%attr(755,root,root) %{_libdir}/libgnat.so.1
+%{_libdir}/libgnarl-*.so.1
+%{_libdir}/libgnarl.so.1
+%{_libdir}/libgnat-*.so.1
+%{_libdir}/libgnat.so.1
 
 %files -n libgnat-static
 %defattr(644,root,root,755)
@@ -3929,10 +3943,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgnat-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgnarl-*.so.1
-%attr(755,root,root) %{_libdir32}/libgnarl.so.1
-%attr(755,root,root) %{_libdir32}/libgnat-*.so.1
-%attr(755,root,root) %{_libdir32}/libgnat.so.1
+%{_libdir32}/libgnarl-*.so.1
+%{_libdir32}/libgnarl.so.1
+%{_libdir32}/libgnat-*.so.1
+%{_libdir32}/libgnat.so.1
 
 %files -n libgnat-multilib-32-static
 %defattr(644,root,root,755)
@@ -3948,10 +3962,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgnat-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgnarl-*.so.1
-%attr(755,root,root) %{_libdirm2}/libgnarl.so.1
-%attr(755,root,root) %{_libdirm2}/libgnat-*.so.1
-%attr(755,root,root) %{_libdirm2}/libgnat.so.1
+%{_libdirm2}/libgnarl-*.so.1
+%{_libdirm2}/libgnarl.so.1
+%{_libdirm2}/libgnat-*.so.1
+%{_libdirm2}/libgnat.so.1
 
 %files -n libgnat-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -3996,12 +4010,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++ -f libstdc++.lang
 %defattr(644,root,root,755)
 %doc libstdc++-v3/{ChangeLog,README}
-%attr(755,root,root) %{_slibdir}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir}/libstdc++.so.%{cxx_sover}
+%{_slibdir}/libstdc++.so.*.*.*
+%ghost %{_slibdir}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libstdc++.so
+%{_libdir}/libstdc++.so
 %{_libdir}/libstdc++.modules.json
 %{_libdir}/libstdc++.la
 %{_libdir}/libstdc++exp.a
@@ -4021,12 +4035,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libstdc++-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdir32}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdir32}/libstdc++.so.%{cxx_sover}
+%{_slibdir32}/libstdc++.so.*.*.*
+%ghost %{_slibdir32}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libstdc++.so
+%{_libdir32}/libstdc++.so
 %{_libdir32}/libstdc++.modules.json
 %{_libdir32}/libstdc++.la
 %{_libdir32}/libstdc++exp.a
@@ -4042,12 +4056,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libstdc++-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_slibdirm2}/libstdc++.so.*.*.*
-%attr(755,root,root) %ghost %{_slibdirm2}/libstdc++.so.%{cxx_sover}
+%{_slibdirm2}/libstdc++.so.*.*.*
+%ghost %{_slibdirm2}/libstdc++.so.%{cxx_sover}
 
 %files -n libstdc++-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libstdc++.so
+%{_libdirm2}/libstdc++.so
 %{_libdirm2}/libstdc++.modules.json
 %{_libdirm2}/libstdc++.la
 %{_libdirm2}/libstdc++exp.a
@@ -4092,8 +4106,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gdc
 %attr(755,root,root) %{_bindir}/*-gdc
 %attr(755,root,root) %{gcclibdir}/d21
-%attr(755,root,root) %{_libdir}/libgdruntime.so
-%attr(755,root,root) %{_libdir}/libgphobos.so
+%{_libdir}/libgdruntime.so
+%{_libdir}/libgphobos.so
 %{_libdir}/libgdruntime.la
 %{_libdir}/libgphobos.la
 %{_libdir}/libgphobos.spec
@@ -4104,8 +4118,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files d-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgdruntime.so
-%attr(755,root,root) %{_libdir32}/libgphobos.so
+%{_libdir32}/libgdruntime.so
+%{_libdir32}/libgphobos.so
 %{_libdir32}/libgdruntime.la
 %{_libdir32}/libgphobos.la
 %{_libdir32}/libgphobos.spec
@@ -4114,8 +4128,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files d-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgdruntime.so
-%attr(755,root,root) %{_libdirm2}/libgphobos.so
+%{_libdirm2}/libgdruntime.so
+%{_libdirm2}/libgphobos.so
 %{_libdirm2}/libgdruntime.la
 %{_libdirm2}/libgphobos.la
 %{_libdirm2}/libgphobos.spec
@@ -4123,10 +4137,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgphobos
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgdruntime.so.6
-%attr(755,root,root) %{_libdir}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgphobos.so.6
+%{_libdir}/libgdruntime.so.*.*.*
+%ghost %{_libdir}/libgdruntime.so.6
+%{_libdir}/libgphobos.so.*.*.*
+%ghost %{_libdir}/libgphobos.so.6
 
 %files -n libgphobos-static
 %defattr(644,root,root,755)
@@ -4136,10 +4150,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgphobos-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgdruntime.so.6
-%attr(755,root,root) %{_libdir32}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgphobos.so.6
+%{_libdir32}/libgdruntime.so.*.*.*
+%ghost %{_libdir32}/libgdruntime.so.6
+%{_libdir32}/libgphobos.so.*.*.*
+%ghost %{_libdir32}/libgphobos.so.6
 
 %files -n libgphobos-multilib-32-static
 %defattr(644,root,root,755)
@@ -4150,10 +4164,10 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgphobos-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgdruntime.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgdruntime.so.6
-%attr(755,root,root) %{_libdirm2}/libgphobos.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgphobos.so.6
+%{_libdirm2}/libgdruntime.so.*.*.*
+%ghost %{_libdirm2}/libgdruntime.so.6
+%{_libdirm2}/libgphobos.so.*.*.*
+%ghost %{_libdirm2}/libgphobos.so.6
 
 %files -n libgphobos-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4170,7 +4184,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gfortran
 %attr(755,root,root) %{_bindir}/*-gfortran
 %attr(755,root,root) %{gcclibdir}/f951
-%attr(755,root,root) %{_libdir}/libgfortran.so
+%{_libdir}/libgfortran.so
 %{_libdir}/libgfortran.spec
 %{_libdir}/libgfortran.la
 %{gcclibdir}/include/ISO_Fortran_binding.h
@@ -4183,7 +4197,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files fortran-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgfortran.so
+%{_libdir32}/libgfortran.so
 %{_libdir32}/libgfortran.spec
 %{_libdir32}/libgfortran.la
 %{gcclibdir}/32/libcaf_single.a
@@ -4193,7 +4207,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files fortran-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgfortran.so
+%{_libdirm2}/libgfortran.so
 %{_libdirm2}/libgfortran.spec
 %{_libdirm2}/libgfortran.la
 %{gcclibdir}/%{multilib2}/libcaf_single.a
@@ -4203,8 +4217,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgfortran
 %defattr(644,root,root,755)
 %doc libgfortran/{AUTHORS,README,ChangeLog}
-%attr(755,root,root) %{_libdir}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgfortran.so.5
+%{_libdir}/libgfortran.so.*.*.*
+%ghost %{_libdir}/libgfortran.so.5
 
 %files -n libgfortran-static
 %defattr(644,root,root,755)
@@ -4213,8 +4227,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgfortran-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgfortran.so.5
+%{_libdir32}/libgfortran.so.*.*.*
+%ghost %{_libdir32}/libgfortran.so.5
 
 %files -n libgfortran-multilib-32-static
 %defattr(644,root,root,755)
@@ -4224,8 +4238,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgfortran-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgfortran.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgfortran.so.5
+%{_libdirm2}/libgfortran.so.*.*.*
+%ghost %{_libdirm2}/libgfortran.so.5
 
 %files -n libgfortran-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4235,14 +4249,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with quadmath}
 %files -n libquadmath
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libquadmath.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libquadmath.so.0
+%{_libdir}/libquadmath.so.*.*.*
+%ghost %{_libdir}/libquadmath.so.0
 
 %files -n libquadmath-devel
 %defattr(644,root,root,755)
 %{gcclibdir}/include/quadmath.h
 %{gcclibdir}/include/quadmath_weak.h
-%attr(755,root,root) %{_libdir}/libquadmath.so
+%{_libdir}/libquadmath.so
 %{_libdir}/libquadmath.la
 %{_infodir}/libquadmath.info*
 
@@ -4253,12 +4267,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libquadmath-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libquadmath.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libquadmath.so.0
+%{_libdir32}/libquadmath.so.*.*.*
+%ghost %{_libdir32}/libquadmath.so.0
 
 %files -n libquadmath-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libquadmath.so
+%{_libdir32}/libquadmath.so
 %{_libdir32}/libquadmath.la
 
 %files -n libquadmath-multilib-32-static
@@ -4269,12 +4283,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libquadmath-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libquadmath.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libquadmath.so.0
+%{_libdirm2}/libquadmath.so.*.*.*
+%ghost %{_libdirm2}/libquadmath.so.0
 
 %files -n libquadmath-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libquadmath.so
+%{_libdirm2}/libquadmath.so
 %{_libdirm2}/libquadmath.la
 
 %files -n libquadmath-multilib-%{multilib2}-static
@@ -4288,12 +4302,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libffi
 %defattr(644,root,root,755)
 %doc libffi/{ChangeLog,LICENSE,README}
-%attr(755,root,root) %{_libdir}/libffi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libffi.so.4
+%{_libdir}/libffi.so.*.*.*
+%ghost %{_libdir}/libffi.so.4
 
 %files -n libffi-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libffi.so
+%{_libdir}/libffi.so
 %{_libdir}/libffi.la
 %{gcclibdir}/include/ffi.h
 %{gcclibdir}/include/ffitarget.h
@@ -4308,12 +4322,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libffi-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libffi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libffi.so.4
+%{_libdir32}/libffi.so.*.*.*
+%ghost %{_libdir32}/libffi.so.4
 
 %files -n libffi-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libffi.so
+%{_libdir32}/libffi.so
 %{_libdir32}/libffi.la
 %{_pkgconfigdir32}/libffi.pc
 
@@ -4325,12 +4339,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libffi-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libffi.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libffi.so.4
+%{_libdirm2}/libffi.so.*.*.*
+%ghost %{_libdirm2}/libffi.so.4
 
 %files -n libffi-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libffi.so
+%{_libdirm2}/libffi.so
 %{_libdirm2}/libffi.la
 %{_pkgconfigdirm2}/libffi.pc
 
@@ -4347,12 +4361,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/gm2
 %attr(755,root,root) %{_bindir}/*-gm2
 %attr(755,root,root) %{gcclibdir}/cc1gm2
-%attr(755,root,root) %{gcclibdir}/plugin/m2rte.so
-%attr(755,root,root) %{_libdir}/libm2cor.so
-%attr(755,root,root) %{_libdir}/libm2iso.so
-%attr(755,root,root) %{_libdir}/libm2log.so
-%attr(755,root,root) %{_libdir}/libm2min.so
-%attr(755,root,root) %{_libdir}/libm2pim.so
+%{gcclibdir}/plugin/m2rte.so
+%{_libdir}/libm2cor.so
+%{_libdir}/libm2iso.so
+%{_libdir}/libm2log.so
+%{_libdir}/libm2min.so
+%{_libdir}/libm2pim.so
 %{_libdir}/libm2cor.la
 %{_libdir}/libm2iso.la
 %{_libdir}/libm2log.la
@@ -4366,11 +4380,11 @@ rm -rf $RPM_BUILD_ROOT
 %files m2-multilib-32
 %defattr(644,root,root,755)
 %{gcclibdir}/32/m2
-%attr(755,root,root) %{_libdir32}/libm2cor.so
-%attr(755,root,root) %{_libdir32}/libm2iso.so
-%attr(755,root,root) %{_libdir32}/libm2log.so
-%attr(755,root,root) %{_libdir32}/libm2min.so
-%attr(755,root,root) %{_libdir32}/libm2pim.so
+%{_libdir32}/libm2cor.so
+%{_libdir32}/libm2iso.so
+%{_libdir32}/libm2log.so
+%{_libdir32}/libm2min.so
+%{_libdir32}/libm2pim.so
 %{_libdir32}/libm2cor.la
 %{_libdir32}/libm2iso.la
 %{_libdir32}/libm2log.la
@@ -4382,11 +4396,11 @@ rm -rf $RPM_BUILD_ROOT
 %files m2-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %{gcclibdir}/%{multilib2}/m2
-%attr(755,root,root) %{_libdirm2}/libm2cor.so
-%attr(755,root,root) %{_libdirm2}/libm2iso.so
-%attr(755,root,root) %{_libdirm2}/libm2log.so
-%attr(755,root,root) %{_libdirm2}/libm2min.so
-%attr(755,root,root) %{_libdirm2}/libm2pim.so
+%{_libdirm2}/libm2cor.so
+%{_libdirm2}/libm2iso.so
+%{_libdirm2}/libm2log.so
+%{_libdirm2}/libm2min.so
+%{_libdirm2}/libm2pim.so
 %{_libdirm2}/libm2cor.la
 %{_libdirm2}/libm2iso.la
 %{_libdirm2}/libm2log.la
@@ -4396,16 +4410,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n libgm2
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2cor.so.20
-%attr(755,root,root) %{_libdir}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2iso.so.20
-%attr(755,root,root) %{_libdir}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2log.so.20
-%attr(755,root,root) %{_libdir}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2min.so.20
-%attr(755,root,root) %{_libdir}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libm2pim.so.20
+%{_libdir}/libm2cor.so.*.*.*
+%ghost %{_libdir}/libm2cor.so.20
+%{_libdir}/libm2iso.so.*.*.*
+%ghost %{_libdir}/libm2iso.so.20
+%{_libdir}/libm2log.so.*.*.*
+%ghost %{_libdir}/libm2log.so.20
+%{_libdir}/libm2min.so.*.*.*
+%ghost %{_libdir}/libm2min.so.20
+%{_libdir}/libm2pim.so.*.*.*
+%ghost %{_libdir}/libm2pim.so.20
 
 %files -n libgm2-static
 %defattr(644,root,root,755)
@@ -4418,16 +4432,16 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgm2-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2cor.so.20
-%attr(755,root,root) %{_libdir32}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2iso.so.20
-%attr(755,root,root) %{_libdir32}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2log.so.20
-%attr(755,root,root) %{_libdir32}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2min.so.20
-%attr(755,root,root) %{_libdir32}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libm2pim.so.20
+%{_libdir32}/libm2cor.so.*.*.*
+%ghost %{_libdir32}/libm2cor.so.20
+%{_libdir32}/libm2iso.so.*.*.*
+%ghost %{_libdir32}/libm2iso.so.20
+%{_libdir32}/libm2log.so.*.*.*
+%ghost %{_libdir32}/libm2log.so.20
+%{_libdir32}/libm2min.so.*.*.*
+%ghost %{_libdir32}/libm2min.so.20
+%{_libdir32}/libm2pim.so.*.*.*
+%ghost %{_libdir32}/libm2pim.so.20
 
 %files -n libgm2-multilib-32-static
 %defattr(644,root,root,755)
@@ -4441,16 +4455,16 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgm2-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libm2cor.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2cor.so.20
-%attr(755,root,root) %{_libdirm2}/libm2iso.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2iso.so.20
-%attr(755,root,root) %{_libdirm2}/libm2log.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2log.so.20
-%attr(755,root,root) %{_libdirm2}/libm2min.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2min.so.20
-%attr(755,root,root) %{_libdirm2}/libm2pim.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libm2pim.so.20
+%{_libdirm2}/libm2cor.so.*.*.*
+%ghost %{_libdirm2}/libm2cor.so.20
+%{_libdirm2}/libm2iso.so.*.*.*
+%ghost %{_libdirm2}/libm2iso.so.20
+%{_libdirm2}/libm2log.so.*.*.*
+%ghost %{_libdirm2}/libm2log.so.20
+%{_libdirm2}/libm2min.so.*.*.*
+%ghost %{_libdirm2}/libm2min.so.20
+%{_libdirm2}/libm2pim.so.*.*.*
+%ghost %{_libdirm2}/libm2pim.so.20
 
 %files -n libgm2-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4467,21 +4481,21 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc gcc/objc/README.libobjc
 %attr(755,root,root) %{gcclibdir}/cc1obj
-%attr(755,root,root) %{_libdir}/libobjc.so
+%{_libdir}/libobjc.so
 %{_libdir}/libobjc.la
 %{gcclibdir}/include/objc
 
 %if %{with multilib}
 %files objc-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libobjc.so
+%{_libdir32}/libobjc.so
 %{_libdir32}/libobjc.la
 %endif
 
 %if %{with multilib2}
 %files objc-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libobjc.so
+%{_libdirm2}/libobjc.so
 %{_libdirm2}/libobjc.la
 %endif
 
@@ -4495,8 +4509,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libobjc
 %defattr(644,root,root,755)
 %doc libobjc/{ChangeLog,README*}
-%attr(755,root,root) %{_libdir}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libobjc.so.4
+%{_libdir}/libobjc.so.*.*.*
+%ghost %{_libdir}/libobjc.so.4
 
 %files -n libobjc-static
 %defattr(644,root,root,755)
@@ -4505,8 +4519,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libobjc-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libobjc.so.4
+%{_libdir32}/libobjc.so.*.*.*
+%ghost %{_libdir32}/libobjc.so.4
 
 %files -n libobjc-multilib-32-static
 %defattr(644,root,root,755)
@@ -4516,8 +4530,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libobjc-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libobjc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libobjc.so.4
+%{_libdirm2}/libobjc.so.*.*.*
+%ghost %{_libdirm2}/libobjc.so.4
 
 %files -n libobjc-multilib-%{multilib2}-static
 %defattr(644,root,root,755)
@@ -4561,12 +4575,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libgo
 %defattr(644,root,root,755)
 %doc libgo/{LICENSE,PATENTS,README}
-%attr(755,root,root) %{_libdir}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgo.so.24
+%{_libdir}/libgo.so.*.*.*
+%ghost %{_libdir}/libgo.so.24
 
 %files -n libgo-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libgo.so
+%{_libdir}/libgo.so
 %{_libdir}/libgo.la
 %{_libdir}/libgobegin.a
 %{_libdir}/libgolibbegin.a
@@ -4578,12 +4592,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libgo-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libgo.so.24
+%{_libdir32}/libgo.so.*.*.*
+%ghost %{_libdir32}/libgo.so.24
 
 %files -n libgo-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libgo.so
+%{_libdir32}/libgo.so
 %{_libdir32}/libgo.la
 %{_libdir32}/libgobegin.a
 %{_libdir32}/libgolibbegin.a
@@ -4596,12 +4610,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libgo-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgo.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libgo.so.24
+%{_libdirm2}/libgo.so.*.*.*
+%ghost %{_libdirm2}/libgo.so.24
 
 %files -n libgo-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libgo.so
+%{_libdirm2}/libgo.so
 %{_libdirm2}/libgo.la
 %{_libdirm2}/libgobegin.a
 %{_libdirm2}/libgolibbegin.a
@@ -4616,12 +4630,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libasan
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
-%attr(755,root,root) %{_libdir}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libasan.so.8
+%{_libdir}/libasan.so.*.*.*
+%ghost %{_libdir}/libasan.so.8
 
 %files -n libasan-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libasan.so
+%{_libdir}/libasan.so
 %{_libdir}/libasan_preinit.o
 %{_libdir}/libasan.la
 %{gcclibdir}/include/sanitizer/asan_interface.h
@@ -4633,12 +4647,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libasan-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libasan.so.8
+%{_libdir32}/libasan.so.*.*.*
+%ghost %{_libdir32}/libasan.so.8
 
 %files -n libasan-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libasan.so
+%{_libdir32}/libasan.so
 %{_libdir32}/libasan_preinit.o
 %{_libdir32}/libasan.la
 
@@ -4650,12 +4664,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libasan.so.8
+%{_libdirm2}/libasan.so.*.*.*
+%ghost %{_libdirm2}/libasan.so.8
 
 %files -n libasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libasan.so
+%{_libdirm2}/libasan.so
 %{_libdirm2}/libasan_preinit.o
 %{_libdirm2}/libasan.la
 
@@ -4668,12 +4682,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with hwasan}
 %files -n libhwasan
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libhwasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libhwasan.so.0
+%{_libdir}/libhwasan.so.*.*.*
+%ghost %{_libdir}/libhwasan.so.0
 
 %files -n libhwasan-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libhwasan.so
+%{_libdir}/libhwasan.so
 %{_libdir}/libhwasan_preinit.o
 %{_libdir}/libhwasan.la
 %{gcclibdir}/include/sanitizer/hwasan_interface.h
@@ -4686,12 +4700,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2} && %{with hwasan_m2}
 %files -n libhwasan-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libhwasan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libhwasan.so.0
+%{_libdirm2}/libhwasan.so.*.*.*
+%ghost %{_libdirm2}/libhwasan.so.0
 
 %files -n libhwasan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libhwasan.so
+%{_libdirm2}/libhwasan.so
 %{_libdirm2}/libhwasan_preinit.o
 %{_libdirm2}/libhwasan.la
 %{gcclibdir}/include/sanitizer/hwasan_interface.h
@@ -4704,12 +4718,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with lsan_m0}
 %files -n liblsan
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblsan.so.0
+%{_libdir}/liblsan.so.*.*.*
+%ghost %{_libdir}/liblsan.so.0
 
 %files -n liblsan-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/liblsan.so
+%{_libdir}/liblsan.so
 %{_libdir}/liblsan_preinit.o
 %{_libdir}/liblsan.la
 %{gcclibdir}/include/sanitizer/lsan_interface.h
@@ -4722,12 +4736,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2} && %{with lsan_m2}
 %files -n liblsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/liblsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/liblsan.so.0
+%{_libdirm2}/liblsan.so.*.*.*
+%ghost %{_libdirm2}/liblsan.so.0
 
 %files -n liblsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/liblsan.so
+%{_libdirm2}/liblsan.so
 %{_libdirm2}/liblsan_preinit.o
 %{_libdirm2}/liblsan.la
 # it looks like duplicate of file from liblsan-devel, but actually it isn't:
@@ -4744,12 +4758,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libtsan
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
-%attr(755,root,root) %{_libdir}/libtsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libtsan.so.2
+%{_libdir}/libtsan.so.*.*.*
+%ghost %{_libdir}/libtsan.so.2
 
 %files -n libtsan-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libtsan.so
+%{_libdir}/libtsan.so
 %{_libdir}/libtsan_preinit.o
 %{_libdir}/libtsan.la
 %{gcclibdir}/include/sanitizer/tsan_interface.h
@@ -4763,12 +4777,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libtsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
 %doc libsanitizer/ChangeLog* libsanitizer/LICENSE.TXT
-%attr(755,root,root) %{_libdirm2}/libtsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libtsan.so.2
+%{_libdirm2}/libtsan.so.*.*.*
+%ghost %{_libdirm2}/libtsan.so.2
 
 %files -n libtsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libtsan.so
+%{_libdirm2}/libtsan.so
 %{_libdirm2}/libtsan_preinit.o
 %{_libdirm2}/libtsan.la
 # it looks like duplicate of file from libtsan-devel, but actually it isn't:
@@ -4784,12 +4798,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with Xsan}
 %files -n libubsan
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libubsan.so.1
+%{_libdir}/libubsan.so.*.*.*
+%ghost %{_libdir}/libubsan.so.1
 
 %files -n libubsan-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libubsan.so
+%{_libdir}/libubsan.so
 %{_libdir}/libubsan.la
 
 %files -n libubsan-static
@@ -4799,12 +4813,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libubsan-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libubsan.so.1
+%{_libdir32}/libubsan.so.*.*.*
+%ghost %{_libdir32}/libubsan.so.1
 
 %files -n libubsan-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libubsan.so
+%{_libdir32}/libubsan.so
 %{_libdir32}/libubsan.la
 
 %files -n libubsan-multilib-32-static
@@ -4815,12 +4829,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libubsan-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libubsan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libubsan.so.1
+%{_libdirm2}/libubsan.so.*.*.*
+%ghost %{_libdirm2}/libubsan.so.1
 
 %files -n libubsan-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libubsan.so
+%{_libdirm2}/libubsan.so
 %{_libdirm2}/libubsan.la
 
 %files -n libubsan-multilib-%{multilib2}-static
@@ -4833,12 +4847,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libvtv
 %defattr(644,root,root,755)
 %doc libvtv/ChangeLog
-%attr(755,root,root) %{_libdir}/libvtv.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libvtv.so.0
+%{_libdir}/libvtv.so.*.*.*
+%ghost %{_libdir}/libvtv.so.0
 
 %files -n libvtv-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libvtv.so
+%{_libdir}/libvtv.so
 %{_libdir}/libvtv.la
 
 %files -n libvtv-static
@@ -4848,12 +4862,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libvtv-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libvtv.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libvtv.so.0
+%{_libdir32}/libvtv.so.*.*.*
+%ghost %{_libdir32}/libvtv.so.0
 
 %files -n libvtv-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libvtv.so
+%{_libdir32}/libvtv.so
 %{_libdir32}/libvtv.la
 
 %files -n libvtv-multilib-32-static
@@ -4864,12 +4878,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libvtv-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libvtv.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libvtv.so.0
+%{_libdirm2}/libvtv.so.*.*.*
+%ghost %{_libdirm2}/libvtv.so.0
 
 %files -n libvtv-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libvtv.so
+%{_libdirm2}/libvtv.so
 %{_libdirm2}/libvtv.la
 
 %files -n libvtv-multilib-%{multilib2}-static
@@ -4882,12 +4896,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libatomic
 %defattr(644,root,root,755)
 %doc libatomic/ChangeLog*
-%attr(755,root,root) %{_libdir}/libatomic.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libatomic.so.1
+%{_libdir}/libatomic.so.*.*.*
+%ghost %{_libdir}/libatomic.so.1
 
 %files -n libatomic-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libatomic.so
+%{_libdir}/libatomic.so
 %{_libdir}/libatomic.la
 
 %files -n libatomic-static
@@ -4897,12 +4911,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib}
 %files -n libatomic-multilib-32
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libatomic.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir32}/libatomic.so.1
+%{_libdir32}/libatomic.so.*.*.*
+%ghost %{_libdir32}/libatomic.so.1
 
 %files -n libatomic-multilib-32-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir32}/libatomic.so
+%{_libdir32}/libatomic.so
 %{_libdir32}/libatomic.la
 
 %files -n libatomic-multilib-32-static
@@ -4913,12 +4927,12 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with multilib2}
 %files -n libatomic-multilib-%{multilib2}
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libatomic.so.*.*.*
-%attr(755,root,root) %ghost %{_libdirm2}/libatomic.so.1
+%{_libdirm2}/libatomic.so.*.*.*
+%ghost %{_libdirm2}/libatomic.so.1
 
 %files -n libatomic-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdirm2}/libatomic.so
+%{_libdirm2}/libatomic.so
 %{_libdirm2}/libatomic.la
 
 %files -n libatomic-multilib-%{multilib2}-static
@@ -4930,11 +4944,11 @@ rm -rf $RPM_BUILD_ROOT
 %files gdb-plugin
 %defattr(644,root,root,755)
 %doc libcc1/ChangeLog*
-%attr(755,root,root) %{_libdir}/libcc1.so
-%attr(755,root,root) %{_libdir}/libcc1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcc1.so.0
-%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so.*
-%attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.so.*
+%{_libdir}/libcc1.so.*.*.*
+%ghost %{_libdir}/libcc1.so.0
+%{_libdir}/libcc1.so
+%{gcclibdir}/plugin/libcc1plugin.so.*
+%{gcclibdir}/plugin/libcp1plugin.so.*
 
 %files plugin-devel
 %defattr(644,root,root,755)
@@ -4942,7 +4956,7 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/plugin/gengtype
 %{gcclibdir}/plugin/gtype.state
 %{gcclibdir}/plugin/include
+%{gcclibdir}/plugin/libcc1plugin.so
 %{gcclibdir}/plugin/libcc1plugin.la
-%attr(755,root,root) %{gcclibdir}/plugin/libcc1plugin.so
+%{gcclibdir}/plugin/libcp1plugin.so
 %{gcclibdir}/plugin/libcp1plugin.la
-%attr(755,root,root) %{gcclibdir}/plugin/libcp1plugin.so
