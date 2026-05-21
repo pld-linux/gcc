@@ -4027,6 +4027,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-multilib-32-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir32}/libstdc++.so
+%{_libdir32}/libstdc++.modules.json
 %{_libdir32}/libstdc++.la
 %{_libdir32}/libstdc++exp.a
 %{_libdir32}/libstdc++exp.la
@@ -4047,6 +4048,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-multilib-%{multilib2}-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdirm2}/libstdc++.so
+%{_libdirm2}/libstdc++.modules.json
 %{_libdirm2}/libstdc++.la
 %{_libdirm2}/libstdc++exp.a
 %{_libdirm2}/libstdc++exp.la
