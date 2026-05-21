@@ -5,6 +5,7 @@
 # Conditional build:
 # - languages:
 %bcond_without	ada		# ADA language support
+%bcond_without	cobol		# COBOL language support
 %bcond_without	cxx		# C++ language support
 %bcond_without	d		# D language support
 %bcond_without	fortran		# Fortran language support
@@ -33,6 +34,7 @@
 
 # go and objcxx require C++
 %if %{without cxx}
+%undefine	with_cobol
 %undefine	with_go
 %undefine	with_objcxx
 %endif
@@ -49,6 +51,10 @@
 # used to be broken on sparc64 (to be verified if needed)
 # broken since 5.x on x32 (to be verified if needed)
 %undefine	with_ada
+%endif
+%ifnarch %{x8664} aarch64 ppc64le riscv64
+# see libgcobol/configure.tgt for up to date arch list
+%undefine	with_cobol
 %endif
 
 %ifnarch %{x8664} x32 aarch64 ppc64 s390x sparc64
@@ -967,6 +973,49 @@ API and internal documentation for C++ standard library.
 
 %description -n libstdc++-apidocs -l pl.UTF-8
 Dokumentacja API i wewnętrzna biblioteki standardowej C++.
+
+%package cobol
+Summary:	COLOL language support for GCC
+Summary(pl.UTF-8):	Obsługa języka COBOL dla GCC
+Group:		Development/Languages
+Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libgcobol%{?_isa} = %{epoch}:%{version}-%{release}
+# linking with libgcobol pulls libstdc++
+Requires:	libstdc++-devel%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description cobol
+This package adds support for compiling COBOL programs with the GNU
+compiler.
+
+%description cobol -l pl.UTF-8
+Ten pakiet dodaje obsługę języka COBOL do kompilatora GCC.
+
+%package -n libgcobol
+Summary:	COBOL language runtime library
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa dla języka COBOL
+License:	BSD
+Group:		Libraries
+Requires:	libgcc%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libstdc++%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description -n libgcobol
+COBOL language runtime library.
+
+%description -n libgcobol -l pl.UTF-8
+Biblioteka uruchomieniowa dla języka COBOL.
+
+%package -n libgcobol-static
+Summary:	Static COBOL language runtime library
+Summary(pl.UTF-8):	Statyczna biblioteka uruchomieniowa dla języka COBOL
+License:	BSD
+Group:		Development/Libraries
+Requires:	%{name}-cobol%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description -n libgcobol-static
+Static COBOL language runtime library.
+
+%description -n libgcobol-static -l pl.UTF-8
+Statyczna biblioteka uruchomieniowa dla języka COBOL.
 
 %package d
 Summary:	D language support for GCC
@@ -2931,7 +2980,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_go:,go}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_cobol:,cobol}%{?with_go:,go}" \
 	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
@@ -3211,6 +3260,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
+	%{?with_cobol:libgcobol.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3388,6 +3438,8 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-32
 %post	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libgcobol
+%postun	-p /sbin/ldconfig -n libgcobol
 %post	-p /sbin/ldconfig -n libgphobos
 %postun	-p /sbin/ldconfig -n libgphobos
 %post	-p /sbin/ldconfig -n libgfortran
@@ -4097,6 +4149,33 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html/*
 %endif
+%endif
+
+%if %{with cobol}
+%files cobol
+%defattr(644,root,root,755)
+%doc gcc/cobol/{ChangeLog,TODO}
+%attr(755,root,root) %{_bindir}/gcobc
+%attr(755,root,root) %{_bindir}/gcobol
+%attr(755,root,root) %{_bindir}/*-gcobc
+%attr(755,root,root) %{_bindir}/*-gcobol
+%attr(755,root,root) %{gcclibdir}/cobol1
+%{_libdir}/libgcobol.so
+%{_libdir}/libgcobol.la
+%{_libdir}/libgcobol.spec
+%{_datadir}/gcobol
+%{_mandir}/man1/gcobol.1*
+%{_mandir}/man3/gcobol-io.3*
+
+%files -n libgcobol
+%defattr(644,root,root,755)
+%doc libgcobol/{ChangeLog,LICENSE,README}
+%{_libdir}/libgcobol.so.*.*.*
+%ghost %{_libdir}/libgcobol.so.1
+
+%files -n libgcobol-static
+%defattr(644,root,root,755)
+%{_libdir}/libgcobol.a
 %endif
 
 %if %{with d}
