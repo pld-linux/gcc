@@ -13,6 +13,7 @@
 %bcond_without	modula2		# Modula2 language support
 %bcond_without	objc		# Objective-C language support
 %bcond_without	objcxx		# Objective-C++ language support
+%bcond_with	rust		# Rust language support (incomplete)
 # - features:
 %bcond_without	gomp		# OpenMP support
 %bcond_without	multilib	# 32-bit/64-bit multilib support (which needs glibc[32&64]-devel)
@@ -2069,6 +2070,19 @@ Static Go language library - %{m2_desc} version.
 %description -n libgo-multilib-%{multilib2}-static -l pl.UTF-8
 Statyczna biblioteka języka Go - wersja %{m2_desc}.
 
+%package rust
+Summary:	Rust language support for GCC
+Summary(pl.UTF-8):	Obsługa języka Rust dla kompilatora GCC
+Group:		Development/Languages
+Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description rust
+This package adds Rust language support to the GNU Compiler
+Collection.
+
+%description rust -l pl.UTF-8
+Ten pakiet dodaje obsługę języka Rust do kompilatora GCC.
+
 %package -n libasan
 Summary:	The Address Sanitizer library
 Summary(pl.UTF-8):	Biblioteka Address Sanitizer do kontroli adresów
@@ -2980,7 +2994,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_cobol:,cobol}%{?with_go:,go}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_cobol:,cobol}%{?with_go:,go}%{?with_rust:,rust}" \
 	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
@@ -4703,6 +4717,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdirm2}/libgo.a
 %endif
+%endif
+
+%if %{with rust}
+%files rust
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gccrs
+%attr(755,root,root) %{gcclibdir}/crab1
 %endif
 
 %if %{with Xsan}
