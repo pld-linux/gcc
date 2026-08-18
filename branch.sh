@@ -2,8 +2,8 @@
 set -e
 url=git://gcc.gnu.org/git/gcc.git
 package=gcc
-tag=releases/gcc-15.3.0
-branch=releases/gcc-15
+tag=releases/gcc-16.2.0
+branch=releases/gcc-16
 out=$package-branch.diff
 repo=$package.git
 

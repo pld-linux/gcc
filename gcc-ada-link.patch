@@ -17,8 +17,8 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/gcc/ada/gcc-interface/Makefile.in gcc-10.2
 -GCC_LINK_FLAGS=-static-libstdc++ -static-libgcc
 +GCC_LINK_FLAGS=-static-libstdc++
  
- # End of variables for you to override.
- 
+ # We need to link against libbacktrace because diagnostics use it
+ LIBBACKTRACE = ../../../libbacktrace/.libs/libbacktrace.a
 @@ -670,18 +670,19 @@
  	     LN_S="$(LN_S)" \
               gnatlib

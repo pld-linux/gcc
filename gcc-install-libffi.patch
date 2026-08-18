@@ -38,12 +38,14 @@ Index: Makefile.def
 ===================================================================
 --- Makefile.def	(.../tags/gcc_4_8_0_release)	(revision 199208)
 +++ Makefile.def	(.../branches/gcc-4_8-branch)	(revision 199208)
-@@ -138,7 +138,7 @@
+@@ -199,8 +199,8 @@
                     missing=maintainer-clean; };
  target_modules = { module= winsup; };
  target_modules = { module= libgloss; no_check=true; };
--target_modules = { module= libffi; no_install=true; };
-+target_modules = { module= libffi; };
- target_modules = { module= libjava; raw_cxx=true;
-                    extra_configure_flags="$(EXTRA_CONFIGARGS_LIBJAVA)"; };
- target_modules = { module= zlib; };
+-target_modules = { module= libffi; no_install=true;
+-                   extra_configure_flags='--disable-shared --with-pic'; };
++target_modules = { module= libffi;
++                   extra_configure_flags='--with-pic'; };
+ target_modules = { module= zlib; bootstrap=true; };
+ target_modules = { module= rda; };
+ target_modules = { module= libada; };
