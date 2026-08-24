@@ -598,6 +598,7 @@ Summary:	Static Ada standard libraries
 Summary(pl.UTF-8):	Statyczne biblioteki standardowe dla Ady
 License:	GPL v3+ with GCC Runtime Library Exception v3.1
 Group:		Development/Libraries
+Requires:	%{name}-ada = %{epoch}:%{version}-%{release}
 Obsoletes:	gnat-static < 4
 
 %description -n libgnat-static
@@ -3131,6 +3132,9 @@ ln -sf	libgnat-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnat-%{major_ver}.
 ln -sf	libgnarl-%{major_ver}.so.1 $RPM_BUILD_ROOT%{_libdir}/libgnarl-%{major_ver}.so
 ln -sf	libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnat.so
 ln -sf	libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{_libdir}/libgnarl.so
+# expected here by some software, including gcc build process
+ln -sf	%{_libdir}/libgnat-%{major_ver}.so $RPM_BUILD_ROOT%{gcclibdir}/adalib/libgnat.so
+ln -sf	%{_libdir}/libgnarl-%{major_ver}.so $RPM_BUILD_ROOT%{gcclibdir}/adalib/libgnarl.so
 %if %{with multilib}
 %{__mv}	$RPM_BUILD_ROOT%{gcclibdir}/32/adalib/*.so.1 \
 	$RPM_BUILD_ROOT%{_libdir32}
@@ -3845,6 +3849,8 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/adainclude
 %dir %{gcclibdir}/adalib
 %{gcclibdir}/adalib/*.ali
+%{gcclibdir}/adalib/libgnarl.so
+%{gcclibdir}/adalib/libgnat.so
 %ifarch %{ix86} %{x8664} x32
 %{gcclibdir}/adalib/libgmem.a
 %{gcclibdir}/adalib/libgnarl_pic.a
