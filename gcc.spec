@@ -114,7 +114,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3329,6 +3329,8 @@ cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcc
 
 # plugins, .la not needed
 %{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la \
+	$RPM_BUILD_ROOT%{gcclibdir}/plugin/libcc1plugin.la \
+	$RPM_BUILD_ROOT%{gcclibdir}/plugin/libcp1plugin.la \
 	$RPM_BUILD_ROOT%{_libdir}/libcc1.la
 
 %if %{without lsan_m0} && (%{without multilib2} || %{without lsan_m2})
@@ -5047,8 +5049,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libcc1.so.*.*.*
 %ghost %{_libdir}/libcc1.so.0
 %{_libdir}/libcc1.so
-%{gcclibdir}/plugin/libcc1plugin.so.*
-%{gcclibdir}/plugin/libcp1plugin.so.*
+%dir %{gcclibdir}/plugin
+%{gcclibdir}/plugin/libcc1plugin.so*
+%{gcclibdir}/plugin/libcp1plugin.so*
 
 %files plugin-devel
 %defattr(644,root,root,755)
@@ -5056,7 +5059,3 @@ rm -rf $RPM_BUILD_ROOT
 %{gcclibdir}/plugin/gengtype
 %{gcclibdir}/plugin/gtype.state
 %{gcclibdir}/plugin/include
-%{gcclibdir}/plugin/libcc1plugin.so
-%{gcclibdir}/plugin/libcc1plugin.la
-%{gcclibdir}/plugin/libcp1plugin.so
-%{gcclibdir}/plugin/libcp1plugin.la
