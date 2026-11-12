@@ -114,7 +114,7 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: kompilator C i pliki współdziel
 Summary(pt_BR.UTF-8):	Coleção dos compiladores GNU: o compilador C e arquivos compartilhados
 Name:		gcc
 Version:	%{major_ver}.%{minor_ver}
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL v3+
 Group:		Development/Languages
@@ -3146,6 +3146,30 @@ ln -f $RPM_BUILD_ROOT%{_bindir}/sparc64-pld-linux-g++ \
 
 ln -sf %{_bindir}/cpp $RPM_BUILD_ROOT/lib/cpp
 ln -sf gcc $RPM_BUILD_ROOT%{_bindir}/cc
+
+# POSIX c89/c99 utilities: gcc pinned to that standard, other -std= refused
+cat > $RPM_BUILD_ROOT%{_bindir}/c89 <<'EOF'
+#!/bin/sh
+fl="-std=c89"
+for opt; do
+	case "$opt" in
+	-ansi|-std=c89|-std=iso9899:1990) fl="" ;;
+	-std=*) echo "c89: $opt is not ANSI/ISO C89" >&2; exit 1 ;;
+	esac
+done
+exec %{_bindir}/gcc $fl "$@"
+EOF
+cat > $RPM_BUILD_ROOT%{_bindir}/c99 <<'EOF'
+#!/bin/sh
+fl="-std=c99"
+for opt; do
+	case "$opt" in
+	-std=c99|-std=iso9899:1999) fl="" ;;
+	-std=*) echo "c99: $opt is not ISO C99" >&2; exit 1 ;;
+	esac
+done
+exec %{_bindir}/gcc $fl "$@"
+EOF
 echo ".so man1/gcc.1" > $RPM_BUILD_ROOT%{_mandir}/man1/cc.1
 
 libssp=$(cd $RPM_BUILD_ROOT%{_libdir}; echo libssp.so.*.*.*)
@@ -3326,6 +3350,10 @@ done
 cp -p $RPM_BUILD_ROOT%{gcclibdir}/install-tools/include/*.h $RPM_BUILD_ROOT%{gcclibdir}/include
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/install-tools
 %{__rm} -r $RPM_BUILD_ROOT%{gcclibdir}/include-fixed
+
+# ar/nm/ranlib load LTO plugins only from bfd-plugins
+install -d $RPM_BUILD_ROOT%{_libdir}/bfd-plugins
+ln -s ../gcc/%{_target_platform}/%{version}/liblto_plugin.so $RPM_BUILD_ROOT%{_libdir}/bfd-plugins
 
 # plugins, .la not needed
 %{__rm} $RPM_BUILD_ROOT%{gcclibdir}/liblto_plugin.la \
@@ -3538,6 +3566,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc gcc/{ChangeLog,ONEWS,README.Portability}
 %attr(755,root,root) %{_bindir}/*-gcc*
 %attr(755,root,root) %{_bindir}/cc
+%attr(755,root,root) %{_bindir}/c89
+%attr(755,root,root) %{_bindir}/c99
 %attr(755,root,root) %{_bindir}/cpp
 %attr(755,root,root) %{_bindir}/gcc
 %attr(755,root,root) %{_bindir}/gcc-ar
@@ -3587,6 +3617,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{gcclibdir}/lto-wrapper
 %attr(755,root,root) %{gcclibdir}/lto1
 %attr(755,root,root) %{gcclibdir}/liblto_plugin.so*
+%{_libdir}/bfd-plugins/liblto_plugin.so
 %dir %{gcclibdir}/include
 %dir %{gcclibdir}/include/sanitizer
 %{gcclibdir}/include/sanitizer/common_interface_defs.h
