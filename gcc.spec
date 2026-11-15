@@ -164,26 +164,27 @@ BuildRequires:	gcc(multilib-32)
 %ifarch %{x8664}
 %if %{with multilibx32}
 BuildRequires:	gcc(multilib-x32)
-BuildRequires:	glibc-devel(x32)
+BuildRequires:	glibc-devel(x86-x32)
 %endif
-BuildRequires:	glibc-devel(ix86)
+BuildRequires:	glibc-devel(x86-32)
 %endif
 %ifarch x32
 BuildRequires:	gcc(multilib-64)
-BuildRequires:	glibc-devel(ix86)
-BuildRequires:	glibc-devel(x86_64)
+BuildRequires:	glibc-devel(x86-32)
+BuildRequires:	glibc-devel(x86-64)
 %endif
 %ifarch aarch64
-BuildRequires:	glibc-devel(arm)
+# XXX: which arm* should it be? or some generic alias should be provided beside %%{_isa}?
+BuildRequires:	glibc-devel(arm-32)
 %endif
 %ifarch ppc64
-BuildRequires:	glibc-devel(ppc)
+BuildRequires:	glibc-devel(ppc-32)
 %endif
 %ifarch s390x
-BuildRequires:	glibc-devel(s390)
+BuildRequires:	glibc-devel(s390-32)
 %endif
 %ifarch sparc64
-BuildRequires:	glibc-devel(sparcv9)
+BuildRequires:	glibc-devel(sparc-32)
 %endif
 %endif
 BuildRequires:	gmp-c++-devel >= 4.3.2
@@ -304,16 +305,16 @@ Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	libgcc-multilib-32%{?_isa} = %{epoch}:%{version}-%{release}
 Obsoletes:	libgcc32 < 6:4.4
 %ifarch %{x8664}
-Requires:	glibc-devel(ix86)
+Requires:	glibc-devel(x86-32)
 %endif
 %ifarch ppc64
-Requires:	glibc-devel(ppc)
+Requires:	glibc-devel(ppc-32)
 %endif
 %ifarch s390x
-Requires:	glibc-devel(s390)
+Requires:	glibc-devel(s390-32)
 %endif
 %ifarch sparc64
-Requires:	glibc-devel(sparcv9)
+Requires:	glibc-devel(sparc-32)
 %endif
 Provides:	gcc(multilib-32)
 Obsoletes:	gcc-multilib < 6:4.9.2-4
@@ -341,10 +342,10 @@ Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	libgcc-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
 %{?with_multilib:Provides:	gcc(multilib-%{multilib2})}
 %ifarch %{x8664}
-Requires:	glibc-devel(x32)
+Requires:	glibc-devel(x86-x32)
 %endif
 %ifarch x32
-Requires:	glibc-devel(x86_64)
+Requires:	glibc-devel(x86-64)
 %endif
 
 %description multilib-%{multilib2}
@@ -1965,7 +1966,7 @@ Summary:	Development files for Go language library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go
 License:	BSD
 Group:		Development/Libraries
-Requires:	glibc-devel
+Requires:	glibc-devel%{?_isa}
 Requires:	libgo%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description -n libgo-devel
@@ -2048,7 +2049,7 @@ Summary:	Development files for Go language library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go - wersja %{m2_desc}
 License:	BSD
 Group:		Development/Libraries
-Requires:	glibc-devel%{?_isa}
+Requires:	glibc-devel
 Requires:	libgo-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description -n libgo-multilib-%{multilib2}-devel
