@@ -71,14 +71,14 @@
 %define		with_multilib2	1
 %define		m1_isa	(x86-32)
 %define		m2_isa	(x86-64)
-%define		multilib2	x32
+%define		multilib2	64
 %endif
 %if %{with multilibx32}
 # base arch is x86_64
 %define		with_multilib2	1
 %define		m1_isa	(x86-32)
 %define		m2_isa	(x86-x32)
-%define		multilib2	64
+%define		multilib2	x32
 %endif
 %ifarch aarch64
 # XXX: which arm* should it be? or some generic alias should be provided beside %%{_isa}?
