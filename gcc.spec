@@ -69,11 +69,36 @@
 %if %{with multilib}
 %ifarch x32
 %define		with_multilib2	1
+%define		m1_isa	(x86-32)
+%define		m2_isa	(x86-64)
+%define		multilib2	x32
 %endif
 %if %{with multilibx32}
+# base arch is x86_64
 %define		with_multilib2	1
+%define		m1_isa	(x86-32)
+%define		m2_isa	(x86-x32)
+%define		multilib2	64
+%endif
+%ifarch aarch64
+# XXX: which arm* should it be? or some generic alias should be provided beside %%{_isa}?
+%define		m1_isa	(arm-32)
+%endif
+%ifarch ppc64
+%define		m1_isa	(ppc-32)
+%endif
+%ifarch s390x
+%define		m1_isa	(s390-32)
+%endif
+%ifarch sparc64
+%define		m1_isa	(sparc-32)
 %endif
 %endif
+%if %{without multilib} || %{without multilib2}
+# avoid "Possible unexpanded macro" warning
+%define		multilib2	none
+%endif
+
 %ifarch %{ix86} %{x8664} x32 alpha %{arm} ppc ppc64 sh sparc sparcv9 sparc64 aarch64
 # library for atomic operations not supported by hardware
 %define		with_atomic	1
@@ -161,30 +186,10 @@ BuildRequires:	glibc-devel >= 6:2.4-1
 %if %{with multilib}
 # Formerly known as gcc(multilib)
 BuildRequires:	gcc(multilib-32)
-%ifarch %{x8664}
-%if %{with multilibx32}
-BuildRequires:	gcc(multilib-x32)
-BuildRequires:	glibc-devel(x86-x32)
-%endif
-BuildRequires:	glibc-devel(x86-32)
-%endif
-%ifarch x32
-BuildRequires:	gcc(multilib-64)
-BuildRequires:	glibc-devel(x86-32)
-BuildRequires:	glibc-devel(x86-64)
-%endif
-%ifarch aarch64
-# XXX: which arm* should it be? or some generic alias should be provided beside %%{_isa}?
-BuildRequires:	glibc-devel(arm-32)
-%endif
-%ifarch ppc64
-BuildRequires:	glibc-devel(ppc-32)
-%endif
-%ifarch s390x
-BuildRequires:	glibc-devel(s390-32)
-%endif
-%ifarch sparc64
-BuildRequires:	glibc-devel(sparc-32)
+BuildRequires:	glibc-devel%{?m1_isa}
+%if %{with multilib2}
+BuildRequires:	gcc(multilib-%{multilib2})
+BuildRequires:	glibc-devel%{?m2_isa}
 %endif
 %endif
 BuildRequires:	gmp-c++-devel >= 4.3.2
@@ -233,7 +238,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %if %{with multilib2}
 # x32 environment on x86-64
 %ifarch %{x8664}
-%define		multilib2	x32
 %define		m2_desc		ILP32
 %define		_slibdirm2	/libx32
 %define		_libdirm2	/usr/libx32
@@ -241,17 +245,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %endif
 # 64-bit environment on x32
 %ifarch x32
-%define		multilib2	64
 %define		m2_desc		LP64
 %define		_slibdirm2	/lib64
 %define		_libdirm2	/usr/lib64
 %define		_pkgconfigdirm2	%{_libdir64}/pkgconfig
 %endif
 %endif
-%endif
-%if %{without multilib} || %{without multilib2}
-# avoid "Possible unexpanded macro" warning
-%define		multilib2	none
 %endif
 %define		gcclibdir	%{_libdir}/gcc/%{_target_platform}/%{version}
 
@@ -302,22 +301,11 @@ Summary(pl.UTF-8):	Kolekcja kompilatorów GNU: obsługa binariów 32-bitowych dl
 License:	GPL v3+
 Group:		Development/Languages
 Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	glibc-devel%{?m1_isa}
 Requires:	libgcc-multilib-32%{?_isa} = %{epoch}:%{version}-%{release}
-Obsoletes:	libgcc32 < 6:4.4
-%ifarch %{x8664}
-Requires:	glibc-devel(x86-32)
-%endif
-%ifarch ppc64
-Requires:	glibc-devel(ppc-32)
-%endif
-%ifarch s390x
-Requires:	glibc-devel(s390-32)
-%endif
-%ifarch sparc64
-Requires:	glibc-devel(sparc-32)
-%endif
 Provides:	gcc(multilib-32)
 Obsoletes:	gcc-multilib < 6:4.9.2-4
+Obsoletes:	libgcc32 < 6:4.4
 
 %description multilib-32
 A compiler aimed at integrating all the optimizations and features
@@ -341,12 +329,7 @@ Group:		Development/Languages
 Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	libgcc-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
 %{?with_multilib:Provides:	gcc(multilib-%{multilib2})}
-%ifarch %{x8664}
-Requires:	glibc-devel(x86-x32)
-%endif
-%ifarch x32
-Requires:	glibc-devel(x86-64)
-%endif
+Requires:	glibc-devel%{?m2_isa}
 
 %description multilib-%{multilib2}
 A compiler aimed at integrating all the optimizations and features
@@ -2007,7 +1990,7 @@ Summary:	Development files for Go language library - 32-bit version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go - wersja 32-bitowa
 License:	BSD
 Group:		Development/Libraries
-Requires:	glibc-devel
+Requires:	glibc-devel%{?m1_isa}
 Requires:	libgo-multilib-32%{?_isa} = %{epoch}:%{version}-%{release}
 Obsoletes:	libgo-multilib-devel < 6:4.9.2-4
 
@@ -2049,7 +2032,7 @@ Summary:	Development files for Go language library - %{m2_desc} version
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki języka Go - wersja %{m2_desc}
 License:	BSD
 Group:		Development/Libraries
-Requires:	glibc-devel
+Requires:	glibc-devel%{?m2_isa}
 Requires:	libgo-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description -n libgo-multilib-%{multilib2}-devel
