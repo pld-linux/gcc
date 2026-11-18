@@ -263,3 +263,45 @@ diff -urNp -x '*.orig' gcc-10.2.0.org/libquadmath/libquadmath.texi gcc-10.2.0/li
  @end direntry
  @end format
  
+--- gcc-16.2.0/gcc/algol68/ga68.texi.orig	2026-08-07 09:46:05.762683670 +0200
++++ gcc-16.2.0/gcc/algol68/ga68.texi	2026-11-18 05:39:20.776854353 +0100
+@@ -58,9 +58,9 @@ man page gfdl(7).
+ 
+ @ifinfo
+ @format
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* ga68: (ga68).               A GCC-based compiler for Algol 68
++* ga68: (ga68).				A GCC-based compiler for Algol 68
+ @end direntry
+ @end format
+ 
+--- gcc-16.2.0/gcc/algol68/ga68-coding-guidelines.texi.orig	2026-08-07 09:46:05.762683670 +0200
++++ gcc-16.2.0/gcc/algol68/ga68-coding-guidelines.texi	2026-11-18 05:38:12.597788462 +0100
+@@ -24,9 +24,9 @@ Documentation License''.
+ @end copying
+ 
+ @ifinfo
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* ga68-coding-guidelines: (ga68-coding-guidelines).           GNU Algol 68 Coding Guidelines.
++* ga68-coding-guidelines: (ga68-coding-guidelines).  GNU Algol 68 Coding Guidelines
+ @end direntry
+ This document contains a set of conventions and recommendations for
+ writing Algol 68 code which is part of ga68, the GNU Algol 68
+--- gcc-16.2.0/gcc/algol68/ga68-internals.texi.orig	2026-08-07 09:46:05.762683670 +0200
++++ gcc-16.2.0/gcc/algol68/ga68-internals.texi	2026-11-18 05:38:58.841234913 +0100
+@@ -24,9 +24,9 @@ Documentation License''.
+ @end copying
+ 
+ @ifinfo
+-@dircategory Software development
++@dircategory Programming Languages:
+ @direntry
+-* ga68-internals: (ga68-internals).           The GNU Algol 68 Compiler Internals.
++* ga68-internals: (ga68-internals).	The GNU Algol 68 Compiler Internals
+ @end direntry
+ This file documents the internals of the GNU Algol 68
+ compiler, (@command{ga68}).

@@ -5,6 +5,7 @@
 # Conditional build:
 # - languages:
 %bcond_without	ada		# ADA language support
+%bcond_without	algol		# ALGOL-68 language support
 %bcond_without	cobol		# COBOL language support
 %bcond_without	cxx		# C++ language support
 %bcond_without	d		# D language support
@@ -171,6 +172,15 @@ BuildRequires:	chrpath >= 0.13-2
 BuildRequires:	elfutils-devel >= 0.145-1
 BuildRequires:	fileutils >= 4.0.41
 BuildRequires:	flex >= 2.5.4
+%if %{with algol}
+BuildRequires:	gc-devel
+%if %{with multilib}
+BuildRequires:	gc-devel%{?m1_isa}
+%endif
+%if %{with multilib2}
+BuildRequires:	gc-devel%{?m2_isa}
+%endif
+%endif
 %if %{with ada}
 BuildRequires:	gcc(ada)
 BuildRequires:	gcc-ada
@@ -261,7 +271,14 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 # receiving non constant format strings
 %define		Werror_cflags	%{nil}
 
-%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgnat-%{major_ver}|libgo|libitm|libxmlj|libubsan|lib-gnu-awt-xlib|libm2cor|libm2iso|libm2log|libm2pim)\.so.*'
+# libcc1plugin.so.0, libcp1plugin.so.0: symbols from gcc
+# libgo.so.25: __go_init_main, main.main
+# libm2log.so.21: m2pim_* ???
+# libm2cor.so.21: m2iso_*, m2pim_* ???
+# libm2iso.so.21: m2pim_* ???
+# libm2pim.so.21: m2iso_* (circular?), __cxa_allocate_exception, __cxa_throw, _ZTIi
+# libga68.so.2: __algol68_main
+%define		skip_post_check_so	'.*(libasan|libcc1plugin|libcp1plugin|libgnat-%{major_ver}|libgo|libitm|libxmlj|libubsan|lib-gnu-awt-xlib|libm2cor|libm2iso|libm2log|libm2pim|libga68)\.so.*'
 # private symbols
 %define		_noautoreq		.*\(GLIBC_PRIVATE\)
 
@@ -958,6 +975,123 @@ API and internal documentation for C++ standard library.
 
 %description -n libstdc++-apidocs -l pl.UTF-8
 Dokumentacja API i wewnętrzna biblioteki standardowej C++.
+
+%package algol68
+Summary:	Algol 68 language support for GCC
+Summary(pl.UTF-8):	Obsługa języka Algol 68 dla GCC
+Group:		Development/Languages
+Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libga68%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gc-devel%{?_isa}
+
+%description algol68
+This package adds support for compiling Algol 68 programs with the GNU
+compiler.
+
+%description algol68 -l pl.UTF-8
+Ten pakiet dodaje obsługę języka Algol 68 do kompilatora GCC.
+
+%package algol68-multilib-32
+Summary:	Algol 68 language 32-bit binaries support for GCC
+Summary(pl.UTF-8):	Obsługa binariów 32-bitowych w języku Algol 68 dla GCC
+Group:		Development/Languages
+Requires:	%{name}-algol68%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libga68-multilib-64%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gc-devel%{?m1_isa}
+
+%description algol68-multilib-32
+This package adds support for compiling 32-bit Algol 68 programs with
+the GNU compiler.
+
+%description algol68-multilib-32 -l pl.UTF-8
+Ten pakiet dodaje obsługę 32-bitowych programów w języku Algol 68 do
+kompilatora GCC.
+
+%package algol68-multilib-%{multilib2}
+Summary:	D language %{m2_desc} binaries support for GCC
+Summary(pl.UTF-8):	Obsługa binariów %{m2_desc} w języku D dla GCC
+Group:		Development/Languages
+Requires:	%{name}-algol68%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	libga68-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	gc-devel%{?m2_isa}
+
+%description algol68-multilib-%{multilib2}
+This package adds support for compiling D programs to %{m2_desc}
+binaries with the GNU compiler.
+
+%description algol68-multilib-%{multilib2} -l pl.UTF-8
+Ten pakiet dodaje obsługę binariów %{m2_desc} w języku D do
+kompilatora GCC.
+
+%package -n libga68
+Summary:	Algol 68 language runtime library
+Summary(pl.UTF-8):	Biblioteka uruchomieniowa dla języka Algol 68
+Group:		Libraries
+
+%description -n libga68
+Algol 68 language runtime library.
+
+%description -n libga68 -l pl.UTF-8
+Biblioteka uruchomieniowa dla języka Algol 68.
+
+%package -n libga68-static
+Summary:	Static Algol 68 language runtime library
+Summary(pl.UTF-8):	Statyczna biblioteka uruchomieniowa dla języka Algol 68
+Group:		Development/Libraries
+Requires:	%{name}-algol68%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description -n libga68-static
+Static Algol 68 language runtime library.
+
+%description -n libga68-static -l pl.UTF-8
+Statyczna biblioteka uruchomieniowa dla języka Algol 68.
+
+%package -n libga68-multilib-32
+Summary:	Algol 68 language runtime libraries - 32-bit version
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka Algol 68 - wersja 32-bitowa
+Group:		Libraries
+
+%description -n libga68-multilib-32
+Algol 68 language runtime libraries - 32-bit version.
+
+%description -n libga68-multilib-32 -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka Algol 68 - wersja 32-bitowa.
+
+%package -n libga68-multilib-32-static
+Summary:	Static Algol 68 language runtime libraries - 32-bit version
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka Algol 68 - wersja 32-bitowa
+Group:		Development/Libraries
+Requires:	%{name}-algol68-multilib-32%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description -n libga68-multilib-32-static
+Static Algol 68 language runtime libraries - 32-bit version.
+
+%description -n libga68-multilib-32-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka Algol 68 - wersja
+32-bitowa.
+
+%package -n libga68-multilib-%{multilib2}
+Summary:	Algol 68 language runtime libraries - %{m2_desc} version
+Summary(pl.UTF-8):	Biblioteki uruchomieniowe dla języka Algol 68 - wersja %{m2_desc}
+Group:		Libraries
+
+%description -n libga68-multilib-%{multilib2}
+Algol 68 language runtime libraries - %{m2_desc} version.
+
+%description -n libga68-multilib-%{multilib2} -l pl.UTF-8
+Biblioteki uruchomieniowe dla języka Algol 68 - wersja 32-bitowa.
+
+%package -n libga68-multilib-%{multilib2}-static
+Summary:	Static Algol 68 language runtime libraries - %{m2_desc} version
+Summary(pl.UTF-8):	Statyczne biblioteki uruchomieniowe dla języka Algol 68 - wersja %{m2_desc}
+Group:		Development/Libraries
+Requires:	%{name}-algol68-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
+
+%description -n libga68-multilib-%{multilib2}-static
+Static Algol 68 language runtime libraries - %{m2_desc} version.
+
+%description -n libga68-multilib-%{multilib2}-static -l pl.UTF-8
+Statyczne biblioteki uruchomieniowe dla języka Algol 68 - wersja %{m2_desc}.
 
 %package cobol
 Summary:	COLOL language support for GCC
@@ -2978,7 +3112,7 @@ TEXCONFIG=false \
 	--enable-gnu-unique-object \
 	--enable-initfini-array \
 	--disable-isl-version-check \
-	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_cobol:,cobol}%{?with_go:,go}%{?with_rust:,rust}" \
+	--enable-languages="c%{?with_cxx:,c++}%{?with_d:,d}%{?with_fortran:,fortran}%{?with_modula2:,m2}%{?with_objc:,objc}%{?with_objcxx:,obj-c++}%{?with_ada:,ada}%{?with_algol:,algol68}%{?with_cobol:,cobol}%{?with_go:,go}%{?with_rust:,rust}" \
 	--enable-libgomp%{!?with_gomp:=no} \
 	--enable-libitm \
 	--enable-linker-build-id \
@@ -3282,6 +3416,7 @@ cp -f libobjc/README gcc/objc/README.libobjc
 # normalize libdir, to avoid propagation of unnecessary RPATHs by libtool
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
+	%{?with_algol:libga68.la} \
 	%{?with_cobol:libgcobol.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
@@ -3300,6 +3435,7 @@ done
 %if %{with multilib}
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
+	%{?with_algol:libga68.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3315,6 +3451,7 @@ done
 %if %{with multilib2}
 for f in libitm.la libssp.la libssp_nonshared.la \
 	%{?with_cxx:libstdc++.la libstdc++exp.la libstdc++fs.la libsupc++.la} \
+	%{?with_algol:libga68.la} \
 	%{?with_fortran:libgfortran.la %{?with_quadmath:libquadmath.la}} \
 	%{?with_gomp:libgomp.la} \
 	%{?with_Xsan:libasan.la libubsan.la} \
@@ -3400,6 +3537,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	ada -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
+%post	algol68 -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	algol68 -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	d -p /sbin/postshell
 -/usr/sbin/fix-info-dir -c %{_infodir}
 
@@ -3466,6 +3609,12 @@ rm -rf $RPM_BUILD_ROOT
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-32
 %post	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
 %postun	-p /sbin/ldconfig -n libstdc++-multilib-%{multilib2}
+%post	-p /sbin/ldconfig -n libga68
+%postun	-p /sbin/ldconfig -n libga68
+%post	-p /sbin/ldconfig -n libga68-multilib-32
+%postun	-p /sbin/ldconfig -n libga68-multilib-32
+%post	-p /sbin/ldconfig -n libga68-multilib-%{multilib2}
+%postun	-p /sbin/ldconfig -n libga68-multilib-%{multilib2}
 %post	-p /sbin/ldconfig -n libgcobol
 %postun	-p /sbin/ldconfig -n libgcobol
 %post	-p /sbin/ldconfig -n libgphobos
@@ -4179,6 +4328,69 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libstdc++-apidocs
 %defattr(644,root,root,755)
 %doc libstdc++-v3/doc/html/*
+%endif
+%endif
+
+%if %{with algol}
+%files algol68
+%defattr(644,root,root,755)
+%doc gcc/algol68/{ChangeLog,TODO}
+%attr(755,root,root) %{_bindir}/ga68
+%attr(755,root,root) %{_bindir}/*-ga68
+%{_libdir}/libga68.so
+%{_libdir}/libga68.la
+%{_libdir}/libga68.spec
+%attr(755,root,root) %{gcclibdir}/a681
+%{_mandir}/man1/ga68.1*
+%{_infodir}/ga68.info*
+%{_infodir}/ga68-coding-guidelines.info*
+%{_infodir}/ga68-internals.info*
+
+%if %{with multilib}
+%files algol68-multilib-32
+%defattr(644,root,root,755)
+%{_libdir32}/libga68.so
+%{_libdir32}/libga68.la
+%{_libdir32}/libga68.spec
+%endif
+
+%if %{with multilib2}
+%files algol68-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%{_libdirm2}/libga68.so
+%{_libdirm2}/libga68.la
+%{_libdirm2}/libga68.spec
+%endif
+
+%files -n libga68
+%defattr(644,root,root,755)
+%{_libdir}/libga68.so.*.*.*
+%ghost %{_libdir}/libga68.so.2
+
+%files -n libga68-static
+%defattr(644,root,root,755)
+%{_libdir}/libga68.a
+
+%if %{with multilib}
+%files -n libga68-multilib-32
+%defattr(644,root,root,755)
+%{_libdir32}/libga68.so.*.*.*
+%ghost %{_libdir32}/libga68.so.2
+
+%files -n libga68-multilib-32-static
+%defattr(644,root,root,755)
+%{_libdir32}/libga68.a
+%endif
+
+%if %{with multilib2}
+%files -n libga68-multilib-%{multilib2}
+%defattr(644,root,root,755)
+%{_libdirm2}/libga68.so.*.*.*
+%ghost %{_libdirm2}/libga68.so.2
+
+%files -n libga68-multilib-%{multilib2}-static
+%defattr(644,root,root,755)
+%{_libdirm2}/libga68.a
 %endif
 %endif
 
