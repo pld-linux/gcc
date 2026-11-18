@@ -1020,7 +1020,7 @@ Ten pakiet dodaje obsługę języka D do kompilatora GCC.
 Summary:	D language 32-bit binaries support for GCC
 Summary(pl.UTF-8):	Obsługa binariów 32-bitowych w języku D dla GCC
 Group:		Development/Languages
-Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	%{name}-d%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	libgphobos-multilib-32%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description d-multilib-32
@@ -1035,7 +1035,7 @@ kompilatora GCC.
 Summary:	D language %{m2_desc} binaries support for GCC
 Summary(pl.UTF-8):	Obsługa binariów %{m2_desc} w języku D dla GCC
 Group:		Development/Languages
-Requires:	%{name}%{?_isa} = %{epoch}:%{version}-%{release}
+Requires:	%{name}-d%{?_isa} = %{epoch}:%{version}-%{release}
 Requires:	libgphobos-multilib-%{multilib2}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description d-multilib-%{multilib2}
